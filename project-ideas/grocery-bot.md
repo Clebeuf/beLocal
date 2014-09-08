@@ -1,6 +1,6 @@
-Grocery Bot - Cheap groceries for the lazy.
+###Grocery Bot - Cheap groceries for the lazy.
 
-Use Case:
+####Use Case:
 
 Riz needs groceries. For cheap. He doesn't care much about the brands. Riz is also lazy. So he doesn't want to go to five different places to shop for deals.
 
@@ -22,14 +22,14 @@ Use Case 1
 
 7. Riz then taps "Shop" button which promptly gives him the following list of local stores sorted by the total amount it would cost him to buy the items:
 
-Walmart - 55.00
-Thrifty’s - 62.00
-Fairway - 68.00
+  1. Walmart - 55.00
+  2. Thrifty’s - 62.00
+  3. Fairway - 68.00
 
 8. Riz taps on one of the stores which promptly displays the list of items, along with the brand and prices which are available at that store:
 
-Paper Towels - Bounty - $15.00
-Garbage Bags - Glad - $25.00
-...
+  1. Paper Towels - Bounty - $15.00
+  2. Garbage Bags - Glad - $25.00
+  3. ...
 
 More use cases to follow with regards to being able to specify what size, amount, brand of an item you want.  For example, “garbage bags” is very general.

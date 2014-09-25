@@ -1,6 +1,4 @@
-CSC480B
+startup programming - beLocal
 =======
 
-startup programming
-
-W00t
+Trello link to follow milestone progress: https://trello.com/b/3ivzzaQ3/belocal

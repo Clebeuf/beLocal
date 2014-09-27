@@ -29,7 +29,7 @@ class ObtainAuthToken(APIView):
  
             if user and user.is_active:
                 token, created = Token.objects.get_or_create(user=user)
-                return Response({'id': user.id, 'name': user.username, 'firstname': user.first_name, 'userRole': 'user', 'token': token.key})
+                return Response({'id': user.id, 'name': user.username, 'firstname': user.first_name, 'userType': 'VEN' if user.is_staff else 'CUS', 'token': token.key})
 
 @psa()
 def register_by_access_token(request, backend):

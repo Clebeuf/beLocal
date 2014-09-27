@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .service('AuthService', function AuthService($http, $location, ipCookie) {
+  .service('AuthService', function AuthService($http, $location, ipCookie, StateService) {
   	this.processLogin = function(result) {
 
   		var loggedIn = false;
@@ -10,17 +10,16 @@ angular.module('clientApp')
 		var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/login/' + backend + '/', headers: {'Authorization': token}});
 
 		// loginService.loginUser(loginPromise);
-		loginPromise.success(function (result) {
+		loginPromise.then(function (result) {
 		  loggedIn = true;
-		  if(result.token) {
-		  	ipCookie('beLocalToken', result.token, {expires: 14});
+		  if(result.data.token) {
+		  	ipCookie('beLocalToken', result.data.token, {expires: 14});
 			$http.defaults.headers.common.Authorization = 'Token ' + result.token;		  	
 		  }
-		  console.log(result);
+          StateService.setProfile(result.data);		  
 		});
-		loginPromise.finally(function () {
-		  loggedIn = false;
-		});
+
+		return loginPromise;
   	}
 
     // Check to see if the user is authenticated. If so, set the http Authorization header to include their token.
@@ -37,6 +36,6 @@ angular.module('clientApp')
     this.logout = function() {
       ipCookie.remove('beLocalToken');
       delete $http.defaults.headers.common.Authorization;
-      $location.path('/');    	
+      $location.path('/');  	
     }
   });

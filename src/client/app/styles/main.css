@@ -1,5 +1,14 @@
 /* BELOCAL STYLES */
 
+.alert {
+  width: 100%;
+  position: fixed;
+  z-index: 2000;
+  top: 52px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;  
+}
+
 .navbar-nav.navbar-right:last-child {
   margin-right: 0px !important;
 }

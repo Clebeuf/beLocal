@@ -39,7 +39,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'social.apps.django_app.default',  
+    'social.apps.django_app.default',
+    'be_local_server',
 )
 
 MIDDLEWARE_CLASSES = (

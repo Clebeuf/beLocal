@@ -1,4 +1,9 @@
 /* BELOCAL STYLES */
+
+.navbar-nav.navbar-right:last-child {
+  margin-right: 0px !important;
+}
+
 .beLocal-highlight {
   color: #8ed41e;
   font-weight: bold;
@@ -8,7 +13,7 @@
   width:600px;
 }
 
-.dropdown-toggle {
+.pointer {
   cursor: pointer;
 }
 
@@ -41,9 +46,9 @@
 }
 
 .beLocal-btn {
-  background-color: white;
-  border: 1px solid #8ed41e;
-  color: #8ed41e;
+  background-color: white !important;
+  border: 1px solid #8ed41e !important;
+  color: #8ed41e !important;
 }
 
 .beLocal-btn:hover {

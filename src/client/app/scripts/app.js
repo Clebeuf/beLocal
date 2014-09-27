@@ -4,7 +4,8 @@ angular.module('clientApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute'
+  'ngRoute',
+  'ipCookie'
 ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -15,4 +16,8 @@ angular.module('clientApp', [
       .otherwise({
         redirectTo: '/'
       });
-  });
+  })
+    .run(['$window', 'AuthService', 
+      function($window, authService) {
+        OAuth.initialize('tA3E0EDqXdTfZNRn4oUlGCpHJ8E');
+  }]);

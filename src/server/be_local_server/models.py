@@ -41,7 +41,8 @@ class Address(models.Model):
     created_at = models.DateTimeField()    
     updated_at = models.DateTimeField()
 
-class Vendor(User):
+class Vendor(models.Model):
+    user = models.ForeignKey(User) 
     company_name = models.CharField(max_length=200)
     webpage = models.CharField(max_length=400)
     country_code = models.CharField(max_length=50)

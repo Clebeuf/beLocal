@@ -9,4 +9,4 @@ Follow our team progress here: https://trello.com/b/3ivzzaQ3/belocal
 ###Documents
 [beLocal presentation slides](https://docs.google.com/presentation/d/127o2roBkdHE7jTACNYLP7jXUE_X0euAElPQksTqPJ3A/edit?usp=sharing)
 
-[Entity-Relationship Diagram] (https://www.lucidchart.com/invitations/accept/2084acdf-486c-4db3-bc58-e1d889940b98)
+[Entity-Relationship Diagram] (https://docs.google.com/document/d/1Ki1SjheW_Fv4dR-6vBupUFS9pC-5pYIOk5oFubcxe9s/edit?usp=sharing)

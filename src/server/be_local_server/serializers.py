@@ -58,7 +58,7 @@ class SellerLocationSerializer(serializers.ModelSerializer):
 	address = AddressSerializer()
 
 	class Meta:
-		fields = ('id', 'vendor', 'address', 'tart_time', 'end_time', 'name', 'image_path') #'created_at', 'updated_at')
+		fields = ('id', 'vendor', 'address', 'start_time', 'end_time', 'name', 'image_path') #'created_at', 'updated_at')
 
 class SellerProductAtLocationSerializer(serializers.ModelSerializer):
 

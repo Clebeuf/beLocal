@@ -3,9 +3,19 @@ from django.core.exceptions import ValidationError
 import be_local_server.models
 
 class ProductSerializer(serializers.ModelSerializer):
+	vendor = VendorSerializer()
+	
 	class Meta:
 		model = be_local_server.models.Product
-		fields = ('id', 'description', 'price', 'image_path', 'created_at', 'updated_at')
+		fields = ('id', 
+				  'name',
+				  'description', 
+				  'price', 
+				  #'image_path', 
+				  #'created_at', 
+				  #'updated_at',
+				  'vendor'
+				 )
 
 class TagSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -39,7 +49,7 @@ class AddressSerializer(serializers.ModelSerializer):
 
 class VendorSerializer(serializers.ModelSerializer):
 	user = UserSerializer() #Need to implement a user serializer?
-
+	
 	class Meta:
 		model = be_local_server.models.Vendor
 		fields = ( 	'id'	

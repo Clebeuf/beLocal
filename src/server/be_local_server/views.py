@@ -7,6 +7,8 @@ from rest_framework.authentication import get_authorization_header
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework import generics
+from server.models import Product, Vendor
 
 class ObtainAuthToken(APIView):
     throttle_classes = ()
@@ -50,3 +52,25 @@ def register_by_access_token(request, backend):
     user = backend.do_auth(access_token)
  
     return user
+
+
+class AddProductView(generics.CreateAPIView):
+    """
+    This view provides an endpoint for sellers to
+    add a product to their products list.
+    """        
+
+    def post(self, request, *args, **kwargs):
+        if 'vendor' not in request.DATA:
+            return Response("Vendor ID Missing.",
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        print request.DATA
+        serializer = self.get_serializer(data=request.DATA)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)

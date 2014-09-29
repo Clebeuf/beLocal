@@ -38,8 +38,8 @@ class Address(models.Model):
     latitude = models.FloatField();
     longitude = models.FloatField();
 
-    created_at = models.DateTimeField()    
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(null=True)    
+    updated_at = models.DateTimeField(null=True)
 
 class Vendor(models.Model):
     user = models.ForeignKey(User) 
@@ -48,8 +48,8 @@ class Vendor(models.Model):
     country_code = models.CharField(max_length=50)
     phone = models.CharField(max_length=25)
     extension = models.CharField(max_length=25)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(null=True)
+    updated_at = models.DateTimeField(null=True)
 
 class SellerLocation(models.Model):
     vendor = models.ForeignKey(Vendor)

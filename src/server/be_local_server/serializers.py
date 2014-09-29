@@ -1,71 +1,69 @@
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
 import be_local_server.models
+from django.contrib.auth.models import User
 
-class ProductSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = be_local_server.models.Product
-		fields = ('id', 'description', 'price', 'image_path', 'created_at', 'updated_at')
+# class ProductSerializer(serializers.ModelSerializer):
+# 	class Meta:
+# 		model = be_local_server.models.Product
+# 		fields = ('id', 'description', 'price', 'image_path', 'created_at', 'updated_at')
 
-class TagSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = be_local_server.models.Tag
-		fields = ('id', 'name')
+# class TagSerializer(serializers.ModelSerializer):
+# 	class Meta:
+# 		model = be_local_server.models.Tag
+# 		fields = ('id', 'name')
 
-class ProductTagSerializer(serializers.ModelSerializer):
-	product = ProductSerializer(many = True)
-	tag = TagSerializer()
+# class ProductTagSerializer(serializers.ModelSerializer):
+# 	product = ProductSerializer(many = True)
+# 	tag = TagSerializer()
 
-	class Meta:
-		model = be_local_server.models.ProductTag
-		fields = ('id', 'product', 'tag') #'created_at', 'updated_at')
+# 	class Meta:
+# 		model = be_local_server.models.ProductTag
+# 		fields = ('id', 'product', 'tag') #'created_at', 'updated_at')
 
-class AddressSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = be_local_server.models.Address
-		fields = (	'id'	
-					'addr_type', 
-					'addr_line1', 
-					'addr_line2',
-					'city',
-					'state',
-					'country',
-					'zipcode',
-					'latitude',
-					'longitude'
-					#'created_at',
-					#'updated_at'
-		)
+# class AddressSerializer(serializers.ModelSerializer):
+# 	class Meta:
+# 		model = be_local_server.models.Address
+# 		fields = (	'id'	
+# 					'addr_type', 
+# 					'addr_line1', 
+# 					'addr_line2',
+# 					'city',
+# 					'state',
+# 					'country',
+# 					'zipcode',
+# 					'latitude',
+# 					'longitude'
+# 					#'created_at',
+# 					#'updated_at'
+# 		) 
 
-class VendorSerializer(serializers.ModelSerializer):
-	user = UserSerializer() #Need to implement a user serializer?
+class AddVendorSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = be_local_server.models.Vendor
-		fields = ( 	'id'	
-					'user'
+		fields = ( 	'id',	
+					'user',
 					'company_name',
 					'webpage',
 					'country_code',
 					'phone',
 					'extension'
-					#'created_at',
-					#'updated_at'
-		)
+		)		
 
-class SellerLocationSerializer(serializers.ModelSerializer):
-	vendor = VendorSerializer()
-	address = AddressSerializer()
+# class SellerLocationSerializer(serializers.ModelSerializer):
+# 	vendor = VendorSerializer()
+# 	address = AddressSerializer()
 
-	class Meta:
-		fields = ('id', 'vendor', 'address', 'start_time', 'end_time', 'name', 'image_path') #'created_at', 'updated_at')
+# 	class Meta:
+# 		fields = ('id', 'vendor', 'address', 'start_time', 'end_time', 'name', 'image_path') #'created_at', 'updated_at')
 
-class SellerProductAtLocationSerializer(serializers.ModelSerializer):
+# class SellerProductAtLocationSerializer(serializers.ModelSerializer):
 
-	sellerLocation = SellerLocationSerializer()
-	product = ProductSerializer()
+# 	sellerLocation = SellerLocationSerializer()
+# 	product = ProductSerializer()
 
-	class Meta:
-		model = be_local_server.SellerProductAtLocation
-		fields = ('id', 'sellerLocation', 'product', 'is_visible', 'stock') #created_at', 'updated_at', 'stock')
+# 	class Meta:
+# 		model = be_local_server.SellerProductAtLocation
+# 		fields = ('id', 'sellerLocation', 'product', 'is_visible', 'stock') #created_at', 'updated_at', 'stock')
 

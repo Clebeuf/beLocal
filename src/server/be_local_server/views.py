@@ -61,12 +61,14 @@ class AddProductView(generics.CreateAPIView):
     """        
 
     def post(self, request, *args, **kwargs):
+        permission_classes = (AllowAny,)
+        
         if 'vendor' not in request.DATA:
             return Response("Vendor ID Missing.",
                             status=status.HTTP_400_BAD_REQUEST)
 
         print request.DATA
-        serializer = self.get_serializer(data=request.DATA)
+        serializer = be_local_server.serializers.ProductSerializer.get_serializer(data=request.DATA)
 
         if serializer.is_valid():
             serializer.save()
@@ -74,3 +76,65 @@ class AddProductView(generics.CreateAPIView):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+
+
+class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    This view provides an endpoint for sellers to
+    read-write-delete a product from their products list.
+    """ 
+    
+    def get(self, request, product_id):
+        if 'vendor' not in request.DATA:
+            return Response("Vendor ID Missing.",
+                            status=status.HTTP_400_BAD_REQUEST)
+        
+        print request.DATA
+        product = Product.objects.get(pk=product_id)
+        
+        if product is not None:
+            return Response({'id': product.id, 
+                             'name': product.name, 
+                             'description': product.description,
+                             'price': product.price,
+                             'vendor': product.vendor
+                             }
+                            )
+        else:
+            return Response(status=status.HTTP_204_NO_CONTENT)  
+    
+    def delete(self, request, product_id):
+        if 'vendor' not in request.DATA:
+            return Response("Vendor ID Missing.",
+                            status=status.HTTP_400_BAD_REQUEST)
+        print request.DATA
+        product = Product.objects.get(pk=product_id)
+        
+        if product is not None:
+            product.delete() 
+            return HttpResponse("success") 
+        else:
+            return Response(status=status.HTTP_204_NO_CONTENT)          
+        
+    
+    def patch(self, request, product_id):
+        if 'vendor' not in request.DATA:
+            return Response("Vendor ID Missing.",
+                            status=status.HTTP_400_BAD_REQUEST)
+        
+        print request.DATA
+        product = Product.objects.get(pk=product_id)  
+            
+        if product is not None:
+            serializer = be_local_server.serializers.ProductSerializer.get_serializer((product, data=request.DATA, many=False)
+           
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+        

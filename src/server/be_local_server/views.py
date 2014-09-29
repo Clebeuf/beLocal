@@ -12,8 +12,9 @@ from rest_framework.generics import GenericAPIView
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny
 from django.http import HttpResponse, HttpResponseServerError, Http404
-
 import be_local_server.serializers
+from rest_framework import generics
+from be_local_server.models import Product, Vendor
 
 class ObtainAuthToken(APIView):
     throttle_classes = ()
@@ -73,4 +74,25 @@ class AddVendorView(generics.CreateAPIView):
             return HttpResponse("success")   
         else:
             return Response("Failed to create vendor.",
+                            status=status.HTTP_400_BAD_REQUEST)
+
+class AddProductView(generics.CreateAPIView):
+    """
+    This view provides an endpoint for sellers to
+    add a product to their products list.
+    """        
+
+    def post(self, request, *args, **kwargs):
+        if 'vendor' not in request.DATA:
+            return Response("Vendor ID Missing.",
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        print request.DATA
+        serializer = self.get_serializer(data=request.DATA)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)

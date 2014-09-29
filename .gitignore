@@ -1,4 +1,6 @@
 
 *.pyc
-
 *.sqlite3
+.project
+.pydevproject
+.pydevproject.bak

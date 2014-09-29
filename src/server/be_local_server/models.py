@@ -1,6 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Vendor(models.Model):
+    user = models.ForeignKey(User) 
+    company_name = models.CharField(max_length=200)
+    webpage = models.CharField(max_length=400)
+    country_code = models.CharField(max_length=50)
+    phone = models.CharField(max_length=25)
+    extension = models.CharField(max_length=25)
+    created_at = models.DateTimeField(null=True)
+    updated_at = models.DateTimeField(null=True)
+    
 class Product(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=400)
@@ -8,6 +18,7 @@ class Product(models.Model):
     image_path = models.CharField(max_length=300)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
+    vendor = models.ForeignKey(Vendor)
 
 class Tag(models.Model):
     name = models.CharField(max_length=100)
@@ -39,16 +50,6 @@ class Address(models.Model):
     longitude = models.FloatField();
 
     created_at = models.DateTimeField(null=True)    
-    updated_at = models.DateTimeField(null=True)
-
-class Vendor(models.Model):
-    user = models.ForeignKey(User) 
-    company_name = models.CharField(max_length=200)
-    webpage = models.CharField(max_length=400)
-    country_code = models.CharField(max_length=50)
-    phone = models.CharField(max_length=25)
-    extension = models.CharField(max_length=25)
-    created_at = models.DateTimeField(null=True)
     updated_at = models.DateTimeField(null=True)
 
 class SellerLocation(models.Model):

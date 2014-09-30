@@ -3,7 +3,7 @@ Startup Programming - beLocal
 
 (Scott Low, Sam Navarette, Riz Panjwani, Carly Lebeuf, Jyoti Sheoran)
 
-**Description:**  A web application that allows local vendors to connect with the community by allowing them to post information about their business, what items they produce, and where they will be selling.
+**Description:**  A web application that connects Local Vendors with the community by allowing them to post information about their business, what items they produce, and where they will be selling.
 
 
 ###Trello 

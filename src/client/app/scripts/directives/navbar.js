@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .directive('navBar', function (StateService, AuthService) {
+  .directive('navBar', function (StateService, AuthService, $location) {
     return {
       restrict: 'E',
       templateUrl: 'scripts/directives/navbar.html',
@@ -22,8 +22,7 @@ angular.module('clientApp')
 		            	console.log("You're a customer!");
 		              // $location.path('/customer');
 		            } else if(StateService.getUserType() === 'VEN') {
-		            	console.log("You're a seller!");
-		              // $location.path('/seller');
+			            $location.path('/seller');
 		            }
 		          }        	
 		        });		        

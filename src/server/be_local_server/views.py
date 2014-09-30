@@ -90,7 +90,7 @@ class AddProductView(generics.CreateAPIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
         print request.DATA
-        serializer = be_local_server.serializers.ProductSerializer.get_serializer(data=request.DATA)
+        serializer = be_local_server.serializers.ProductSerializer(data=request.DATA)
 
         if serializer.is_valid():
             serializer.save()
@@ -153,7 +153,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         product = Product.objects.get(pk=product_id)  
             
         if product is not None:
-            serializer = be_local_server.serializers.ProductSerializer.get_serializer((product, data=request.DATA, many=False)
+            serializer = be_local_server.serializers.ProductSerializer(product, data=request.DATA, many=False)
            
             if serializer.is_valid():
                 serializer.save()

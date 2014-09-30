@@ -23,8 +23,6 @@ class VendorSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-	vendor = VendorSerializer()
-	
 	class Meta:
 		model = be_local_server.models.Product
 		fields = ('id', 

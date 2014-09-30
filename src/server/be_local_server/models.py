@@ -8,16 +8,16 @@ class Vendor(models.Model):
     country_code = models.CharField(max_length=50)
     phone = models.CharField(max_length=25)
     extension = models.CharField(max_length=25)
-    created_at = models.DateTimeField(null=True)
-    updated_at = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
 class Product(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=400)
-    price = models.IntegerField()
+    price = models.FloatField()
     image_path = models.CharField(max_length=300)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     vendor = models.ForeignKey(Vendor)
 
 class Tag(models.Model):
@@ -26,8 +26,8 @@ class Tag(models.Model):
 class ProductTag(models.Model):
     product = models.ManyToManyField(Product)
     tag = models.ForeignKey(Tag)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Address(models.Model):
     MARKET = 'MAR'
@@ -49,8 +49,8 @@ class Address(models.Model):
     latitude = models.FloatField();
     longitude = models.FloatField();
 
-    created_at = models.DateTimeField(null=True)    
-    updated_at = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class SellerLocation(models.Model):
     vendor = models.ForeignKey(Vendor)
@@ -59,13 +59,13 @@ class SellerLocation(models.Model):
     end_time = models.DateTimeField()
     name = models.CharField(max_length=200)
     image_path = models.CharField(max_length=300)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class SellerProductAtLocation(models.Model):
     sellerLocation = models.ForeignKey(SellerLocation)
     product = models.ForeignKey(Product)
     is_visible = models.BooleanField(default=False)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     stock = models.CharField(max_length=100)

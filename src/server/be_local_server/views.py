@@ -1,3 +1,4 @@
+from rest_framework import generics, status, viewsets, mixins
 from social.apps.django_app.utils import psa
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -7,6 +8,13 @@ from rest_framework.authentication import get_authorization_header
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.generics import GenericAPIView
+from django.contrib.auth.models import User
+from rest_framework.permissions import AllowAny
+from django.http import HttpResponse, HttpResponseServerError, Http404
+import be_local_server.serializers
+from rest_framework import generics
+from be_local_server.models import Product, Vendor
 
 class ObtainAuthToken(APIView):
     throttle_classes = ()
@@ -50,3 +58,95 @@ def register_by_access_token(request, backend):
     user = backend.do_auth(access_token)
  
     return user
+
+class AddVendorView(generics.CreateAPIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = be_local_server.serializers.AddVendorSerializer(data=request.DATA)
+
+        if serializer.is_valid():
+            user = User.objects.get(id=serializer.init_data['user'])
+            user.is_staff = 1 # make the user a vendor
+            user.save()
+
+            serializer.save()
+            return HttpResponse("success")   
+        else:
+            return Response("Failed to create vendor.",
+                            status=status.HTTP_400_BAD_REQUEST)
+
+class AddProductView(generics.CreateAPIView):
+    """
+    This view provides an endpoint for sellers to
+    add a product to their products list.
+    """        
+
+    def post(self, request, *args, **kwargs):
+        permission_classes = (AllowAny,)
+
+        print request.DATA
+        serializer = be_local_server.serializers.ProductSerializer(data=request.DATA)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
+class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    This view provides an endpoint for sellers to
+    read-write-delete a product from their products list.
+    """ 
+    
+    def get(self, request, product_id):
+        permission_classes = (AllowAny,)
+        
+        print request.DATA
+        product = Product.objects.get(pk=product_id)
+        
+        if product is not None:
+            return Response({'id': product.id, 
+                             'name': product.name, 
+                             'description': product.description,
+                             'price': product.price,
+                             'vendor': product.vendor
+                             }
+                            )
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)  
+    
+    def delete(self, request, product_id):
+        permission_classes = (AllowAny,)
+        
+        print request.DATA
+        product = Product.objects.get(pk=product_id)
+        
+        if product is not None:
+            product.delete() 
+            return HttpResponse("success") 
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)          
+        
+    
+    def patch(self, request, product_id):
+        permission_classes = (AllowAny,)
+        
+        print request.DATA
+        product = Product.objects.get(pk=product_id) 
+            
+        if product is not None:
+            serializer = be_local_server.serializers.ProductSerializer(product, data=request.DATA, many=False)
+           
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+        

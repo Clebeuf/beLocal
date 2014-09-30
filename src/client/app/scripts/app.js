@@ -13,8 +13,12 @@ angular.module('clientApp', [
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/seller',{
+        templateUrl: 'views/seller.html',
+        controller: 'SellerCtrl'
+      })
       .otherwise({
-        redirectTo: '/'
+        templateUrl: '404.html'
       });
   })
     .run(['$window', 'AuthService', 

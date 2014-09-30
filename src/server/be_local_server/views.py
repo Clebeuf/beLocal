@@ -80,12 +80,11 @@ class AddProductView(generics.CreateAPIView):
     """
     This view provides an endpoint for sellers to
     add a product to their products list.
-    """        
+    """   
+
+    permission_classes = (AllowAny,)     
 
     def post(self, request, *args, **kwargs):
-        permission_classes = (AllowAny,)
-
-        print request.DATA
         serializer = be_local_server.serializers.ProductSerializer(data=request.DATA)
 
         if serializer.is_valid():
@@ -101,27 +100,18 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     read-write-delete a product from their products list.
     """ 
     
+    permission_classes = (AllowAny,)
+
     def get(self, request, product_id):
-        permission_classes = (AllowAny,)
-        
-        print request.DATA
         product = Product.objects.get(pk=product_id)
+        serializer = be_local_server.serializers.ProductSerializer(product)        
         
         if product is not None:
-            return Response({'id': product.id, 
-                             'name': product.name, 
-                             'description': product.description,
-                             'price': product.price,
-                             'vendor': product.vendor
-                             }
-                            )
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)  
     
-    def delete(self, request, product_id):
-        permission_classes = (AllowAny,)
-        
-        print request.DATA
+    def delete(self, request, product_id):        
         product = Product.objects.get(pk=product_id)
         
         if product is not None:
@@ -132,9 +122,6 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         
     
     def patch(self, request, product_id):
-        permission_classes = (AllowAny,)
-        
-        print request.DATA
         product = Product.objects.get(pk=product_id) 
             
         if product is not None:

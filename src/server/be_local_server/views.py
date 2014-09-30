@@ -84,10 +84,6 @@ class AddProductView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         permission_classes = (AllowAny,)
-        
-        if 'vendor' not in request.DATA:
-            return Response("Vendor ID Missing.",
-                            status=status.HTTP_400_BAD_REQUEST)
 
         print request.DATA
         serializer = be_local_server.serializers.ProductSerializer(data=request.DATA)
@@ -108,10 +104,6 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, product_id):
         permission_classes = (AllowAny,)
         
-        if 'vendor' not in request.DATA:
-            return Response("Vendor ID Missing.",
-                            status=status.HTTP_400_BAD_REQUEST)
-        
         print request.DATA
         product = Product.objects.get(pk=product_id)
         
@@ -124,14 +116,11 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
                              }
                             )
         else:
-            return Response(status=status.HTTP_204_NO_CONTENT)  
+            return Response(status=status.HTTP_400_BAD_REQUEST)  
     
     def delete(self, request, product_id):
         permission_classes = (AllowAny,)
         
-        if 'vendor' not in request.DATA:
-            return Response("Vendor ID Missing.",
-                            status=status.HTTP_400_BAD_REQUEST)
         print request.DATA
         product = Product.objects.get(pk=product_id)
         
@@ -139,25 +128,21 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
             product.delete() 
             return HttpResponse("success") 
         else:
-            return Response(status=status.HTTP_204_NO_CONTENT)          
+            return Response(status=status.HTTP_400_BAD_REQUEST)          
         
     
     def patch(self, request, product_id):
         permission_classes = (AllowAny,)
         
-        if 'vendor' not in request.DATA:
-            return Response("Vendor ID Missing.",
-                            status=status.HTTP_400_BAD_REQUEST)
-        
         print request.DATA
-        product = Product.objects.get(pk=product_id)  
+        product = Product.objects.get(pk=product_id) 
             
         if product is not None:
             serializer = be_local_server.serializers.ProductSerializer(product, data=request.DATA, many=False)
            
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)

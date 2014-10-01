@@ -1,0 +1,39 @@
+<nav-bar></nav-bar>
+<div class="container marketing">
+	<div class="row">
+		<!-- Button trigger modal -->
+		<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+		  Create New Item
+		</button>
+		<div class="modal fade" id="myModal">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title">Create New Item</h4>
+		      </div>
+		      <form role="form">
+		      <div class="modal-body">
+				  <div class="form-group">
+				    <label for="item-name">Item Name</label>
+				    <input type="email" class="form-control" id="item-name" placeholder="Enter Item Name"/>
+				  </div>
+				  <div class="form-group">
+				    <label for="item-description">Item Description</label>
+				    <textarea class="form-control" id="item-description" placeholder="Enter Description"/>
+				  </div>
+				  <div class="form-group">
+				    <label for="item-image">Upload Image</label>
+				    <input type="file" id="item-image">
+				  </div>
+		      </div>		
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="submit" class="btn btn-primary">Save</button>
+		      </div>
+		      </form>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+	</div>	
+</div>

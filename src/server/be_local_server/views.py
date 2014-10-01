@@ -102,8 +102,8 @@ class TrendingProductView(generics.ListAPIView):
     view currently trending products.
     """   
 
-    permission_classes = (AllowAny,)     
-    serializer_class = serializers.ProductSerializer
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.ProductDisplaySerializer
 
     def get_queryset(self):
         return Product.objects.all()

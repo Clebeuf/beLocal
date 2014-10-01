@@ -1,5 +1,35 @@
 /* BELOCAL STYLES */
 
+.nav-pills-home > li > a {
+ border-radius: 0px !important; 
+}
+
+.price {
+  color: #78c042;
+}
+
+.full-width-tabs > ul.nav.nav-pills {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* To make all "columns" equal width regardless of content */
+}
+.full-width-tabs > ul.nav.nav-pills > li {
+    float: none;
+    display: table-cell;
+}
+.full-width-tabs > ul.nav.nav-pills > li > a {
+    text-align: center;
+}
+
+.container-home-page {
+  margin-top: 25px;
+  max-width: 1170px !important;
+}
+
+.full-width {
+  width: 100%;
+}
+
 .alert {
   width: 100%;
   position: fixed;

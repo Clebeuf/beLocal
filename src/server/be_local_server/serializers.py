@@ -21,6 +21,16 @@ class VendorSerializer(serializers.ModelSerializer):
 					'extension'
 		)
 
+class BusinessVendorSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = be_local_server.models.Vendor
+		fields = ( 	'id',	
+					'company_name',
+					'webpage',
+					'country_code',
+					'phone',
+					'extension'
+		)		
 
 class ProductSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -34,6 +44,20 @@ class ProductSerializer(serializers.ModelSerializer):
 				  #'updated_at',
 				  'vendor'
 				 )
+
+class ProductDisplaySerializer(serializers.ModelSerializer):
+	vendor = BusinessVendorSerializer()	
+	class Meta:
+		model = be_local_server.models.Product
+		fields = ('id', 
+				  'name',
+				  'description', 
+				  'price', 
+				  #'image_path', 
+				  #'created_at', 
+				  #'updated_at',
+				  'vendor'
+				 )		
 
 # class TagSerializer(serializers.ModelSerializer):
 # 	class Meta:

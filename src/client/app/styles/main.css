@@ -1,7 +1,20 @@
 /* BELOCAL STYLES */
 
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+  background-color: #8ed41e;
+}
+
+.nav > li > a {
+  color: #8ed41e;
+}
+
 .nav-pills-home > li > a {
  border-radius: 0px !important; 
+}
+
+.btn-more-details {
+  float:right;
+  margin-top:12px;
 }
 
 .price {

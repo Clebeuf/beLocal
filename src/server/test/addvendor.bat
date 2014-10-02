@@ -1,0 +1,1 @@
+curl -H "Content-Type: application/json" -X POST http://127.0.0.1:8000/vendor/add -d "{\"user\": \"1\", \"company_name\" : \"test\", \"webpage\" : \"test.com\", \"country_code\" : \"250\", \"phone\" : \"1234567\", \"extension\" : \"lol\"}" > out.html

@@ -63,9 +63,18 @@ class SellerLocation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class SellerProductAtLocation(models.Model):
+    IN_STOCK = 'IS'
+    LOW_STOCK = 'LS'
+    OUT_OF_STOCK = 'OOS'
+    STOCK_TYPES = (
+        (IN_STOCK, 'In Stock'),
+        (LOW_STOCK, 'Low Stock'),
+        (OUT_OF_STOCK, 'Out of Stock'),
+    )
+
     sellerLocation = models.ForeignKey(SellerLocation)
     product = models.ForeignKey(Product)
     is_visible = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    stock = models.CharField(max_length=100)
+    stock = models.CharField(max_length=3, choices=STOCK_TYPES, default=IN_STOCK)

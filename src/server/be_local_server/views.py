@@ -61,8 +61,7 @@ def register_by_access_token(request, backend):
     return user
 
 class AddVendorView(generics.CreateAPIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
 
@@ -163,8 +162,6 @@ class AddSellerLocationView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
 
         vendor = Vendor.objects.get(user=request.user)
-
-        print vendor.id
 
         serializer = serializers.AddSellerLocationSerializer(data = request.DATA)
 

@@ -105,8 +105,7 @@ class TrendingProductView(generics.ListAPIView):
     This view provides an endpoint for customers to
     view currently trending products.
     """   
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
 
     serializer_class = serializers.ProductDisplaySerializer
 

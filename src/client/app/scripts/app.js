@@ -1,11 +1,12 @@
 'use strict';
 
-angular.module('clientApp', [
+var app = angular.module('clientApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'ipCookie'
+  'ipCookie',
+  'angular.filter',
 ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -25,3 +26,11 @@ angular.module('clientApp', [
       function($window, authService) {
         OAuth.initialize('tA3E0EDqXdTfZNRn4oUlGCpHJ8E');
   }]);
+
+app.directive('holderFix', function () {
+    return {
+        link: function (scope, element, attrs) {
+            Holder.run({ images: element[0], nocss: true });
+        }
+    };
+});

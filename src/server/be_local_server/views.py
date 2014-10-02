@@ -12,7 +12,7 @@ from rest_framework.generics import GenericAPIView
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny
 from django.http import HttpResponse, HttpResponseServerError, Http404
-import be_local_server.serializers
+from be_local_server import serializers
 from rest_framework import generics
 from be_local_server.models import Product, Vendor
 
@@ -65,6 +65,7 @@ class AddVendorView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
 
         serializer = be_local_server.serializers.AddVendorSerializer(data=request.DATA)
+        serializer = serializers.AddVendorSerializer(data=request.DATA)
 
         if serializer.is_valid():
             user = User.objects.get(id=serializer.init_data['user'])
@@ -105,7 +106,7 @@ class AddProductView(generics.CreateAPIView):
     permission_classes = (AllowAny,)     
 
     def post(self, request, *args, **kwargs):
-        serializer = be_local_server.serializers.ProductSerializer(data=request.DATA)
+        serializer = serializers.ProductSerializer(data=request.DATA)
 
         if serializer.is_valid():
             serializer.save()
@@ -113,6 +114,20 @@ class AddProductView(generics.CreateAPIView):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+
+#TODO: Currenty this view simply returns all products rather
+# than trending ones
+class TrendingProductView(generics.ListAPIView):
+    """
+    This view provides an endpoint for customers to
+    view currently trending products.
+    """   
+
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.ProductDisplaySerializer
+
+    def get_queryset(self):
+        return Product.objects.all()
 
 class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -123,7 +138,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, product_id):
         product = Product.objects.get(pk=product_id)
-        serializer = be_local_server.serializers.ProductSerializer(product)        
+        serializer = serializers.ProductSerializer(product)        
         
         if product is not None:
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -144,7 +159,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         product = Product.objects.get(pk=product_id) 
             
         if product is not None:
-            serializer = be_local_server.serializers.ProductSerializer(product, data=request.DATA, many=False)
+            serializer = serializers.ProductSerializer(product, data=request.DATA, many=False)
            
             if serializer.is_valid():
                 serializer.save()

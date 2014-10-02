@@ -16,4 +16,6 @@ urlpatterns = patterns('',
     url(r'^vendor/location/add/?', views.AddSellerLocationView.as_view()),
     url(r'^vendor/products/add/?', views.AddProductView.as_view()),
     url(r'^vendor/products/(?P<product_id>[0-9-]+)$', views.RWDProductView.as_view()),
+
+    url(r'^products/trending/?', views.TrendingProductView.as_view()),
 )

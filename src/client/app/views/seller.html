@@ -1,11 +1,11 @@
 <nav-bar></nav-bar>
-<div class="container marketing">
+<div class="container-fluid marketing">
 	<div class="row">
 		<!-- Button trigger modal -->
-		<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+		<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#itemModal">
 		  Create New Item
 		</button>
-		<div class="modal fade" id="myModal">
+		<div class="modal fade" id="itemModal">
 		  <div class="modal-dialog">
 		    <div class="modal-content">
 		      <div class="modal-header">
@@ -28,7 +28,7 @@
 				  </div>
 		      </div>		
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-defadivt" data-dismiss="modal">Close</button>
 		        <button type="submit" class="btn btn-primary">Save</button>
 		      </div>
 		      </form>
@@ -36,4 +36,28 @@
 		  </div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
 	</div>	
+	<div class="row">
+		<div class="col-md-6">
+			<h3>Your Items</h3>
+			<div class="list-group">
+				<div class="list-group-item clearfix">
+					Carrots
+					<button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#itemModal">
+						Edit
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<h3>Your Locations</h3>
+			<div class="list-group">
+				<div class="list-group-item clearfix">
+					Saanich Market
+					<button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#itemModal">
+						Edit
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

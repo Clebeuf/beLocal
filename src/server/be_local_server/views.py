@@ -10,11 +10,12 @@ from rest_framework import status
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.generics import GenericAPIView
 from django.contrib.auth.models import User
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.http import HttpResponse, HttpResponseServerError, Http404
 from be_local_server import serializers
 from rest_framework import generics
 from be_local_server.models import Product, Vendor
+from rest_framework.authentication import TokenAuthentication
 
 class ObtainAuthToken(APIView):
     throttle_classes = ()
@@ -60,7 +61,8 @@ def register_by_access_token(request, backend):
     return user
 
 class AddVendorView(generics.CreateAPIView):
-    permission_classes = (AllowAny,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
 
@@ -78,32 +80,13 @@ class AddVendorView(generics.CreateAPIView):
             return Response("Failed to create vendor.",
                             status=status.HTTP_400_BAD_REQUEST)
 
-class GetVendorID(generics.CreateAPIView):
-    """ 
-    This is an endpoint used to obtain a user's vendor ID (which many
-        differ form the uesr ID)
-    """
-    permissions_classes = (AllowAny,)
-
-    def get(self, request, *args, **kwargs):
-        serializer = be_local_server.serializers.GetVendorIDSerializer(data=request.DATA)
-
-        user_id=serializer.init_data['user']
-        
-        vendor = Vendor.objects.get(user=user_id)
-
-        if vendor is not None:
-            return HttpResponse(vendor.id)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
 class AddProductView(generics.CreateAPIView):
     """
     This view provides an endpoint for sellers to
     add a product to their products list.
     """   
-
-    permission_classes = (AllowAny,)     
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)     
 
     def post(self, request, *args, **kwargs):
         serializer = serializers.ProductSerializer(data=request.DATA)
@@ -122,8 +105,9 @@ class TrendingProductView(generics.ListAPIView):
     This view provides an endpoint for customers to
     view currently trending products.
     """   
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
-    permission_classes = (AllowAny,)
     serializer_class = serializers.ProductDisplaySerializer
 
     def get_queryset(self):
@@ -134,7 +118,8 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     This view provides an endpoint for sellers to
     read-write-delete a product from their products list.
     """ 
-    permission_classes = (AllowAny,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, product_id):
         product = Product.objects.get(pk=product_id)
@@ -173,11 +158,16 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         
 
 class AddSellerLocationView(generics.CreateAPIView):
-    permission_classes = (AllowAny,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
 
-        serializer = be_local_server.serializers.AddSellerLocationSerializer(data = request.DATA)
+        vendor = Vendor.objects.get(user=request.user)
+
+        print vendor.id
+
+        serializer = serializers.AddSellerLocationSerializer(data = request.DATA)
 
         if serializer.is_valid(): 
             serializer.save()

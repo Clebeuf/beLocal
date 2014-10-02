@@ -11,6 +11,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/(?P<backend>.+)/$', views.ObtainAuthToken.as_view()),
     url(r'^vendor/add/?', views.AddVendorView.as_view()),  
+    #url(r'^vendor/(?P<vendor_id>[0-9-]+)$', views.RWDVendorView.as_view()),
+    url(r'^vendor/location/add/?', views.AddSellerLocationView.as_view()),
     url(r'^vendor/products/add/?', views.AddProductView.as_view()),
     url(r'^vendor/products/(?P<product_id>[0-9-]+)$', views.RWDProductView.as_view()),
 )

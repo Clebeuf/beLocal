@@ -63,6 +63,7 @@ class AddVendorView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
+
         serializer = be_local_server.serializers.AddVendorSerializer(data=request.DATA)
 
         if serializer.is_valid():
@@ -99,7 +100,6 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     This view provides an endpoint for sellers to
     read-write-delete a product from their products list.
     """ 
-    
     permission_classes = (AllowAny,)
 
     def get(self, request, product_id):
@@ -137,3 +137,22 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
         
+
+
+class AddSellerLocationView(generics.CreateAPIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request, *args, **kwargs):
+        print "test"
+
+        print request.DATA
+
+        serializer = be_local_server.serializers.AddSellerLocationSerializer(data = request.DATA)
+
+        if serializer.is_valid(): 
+            serializer.save()
+            return HttpResponse("success");
+
+        else:
+            return Response("Failed to create SellerLocation.",
+                            status=status.HTTP_400_BAD_REQUEST)

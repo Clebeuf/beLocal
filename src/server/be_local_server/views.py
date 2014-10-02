@@ -64,6 +64,7 @@ class AddVendorView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = be_local_server.serializers.AddVendorSerializer(data=request.DATA)
+        print request.DATA
 
         if serializer.is_valid():
             user = User.objects.get(id=serializer.init_data['user'])
@@ -73,7 +74,8 @@ class AddVendorView(generics.CreateAPIView):
             serializer.save()
             return HttpResponse("success")   
         else:
-            return Response("Failed to create vendor.",
+            return Response(#"Failed to create vendor.",
+                            serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
 
 class AddProductView(generics.CreateAPIView):
@@ -150,3 +152,16 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
         
+class VendorProductView(generics.ListAPIView):
+    """
+    This view provides an endpoint for vendors to
+    view their products.
+    """   
+
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.ProductSerializer
+
+    def get_queryset(self):
+        vendor_id = self.kwargs['vendor_id']
+        return Product.objects.filter(vendor=vendor_id) 
+    

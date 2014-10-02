@@ -143,9 +143,6 @@ class AddSellerLocationView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
-        print "test"
-
-        print request.DATA
 
         serializer = be_local_server.serializers.AddSellerLocationSerializer(data = request.DATA)
 

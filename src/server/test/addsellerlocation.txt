@@ -1,6 +1,8 @@
 {
 	"address":{
 		"addr_type":"FAR",
+		"addr_line1":"1337 myroad",
+		"addr_line2":"(basement suite)",
 		"city":"vic",
 		"zipcode":"ers",
 		"latitude":"1",

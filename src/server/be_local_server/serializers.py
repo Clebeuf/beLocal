@@ -79,11 +79,11 @@ class AddVendorSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = be_local_server.models.Address
-		fields = ( 'id', 'addr_type', 'city', 'zipcode', 'latitude', 'longitude')
+		fields = ( 'id', 'addr_type', 'addr_line1', 'addr_line2', 'city', 'zipcode', 'latitude', 'longitude')
 
 class AddSellerLocationSerializer(serializers.ModelSerializer):
 	address = AddressSerializer()
-	
+
 	class Meta:
 		model = be_local_server.models.SellerLocation
 		fields = ('id', 'address', 'vendor', 'name', 'image_path','start_time', 'end_time')

@@ -1,0 +1,14 @@
+{
+	"address":{
+		"addr_type":"FAR",
+		"city":"vic",
+		"zipcode":"ers",
+		"latitude":"1",
+		"longitude":"1"
+	},
+	"vendor":"1",
+	"name":"location1",
+	"image_path":"path123",
+	"start_time":"2014-10-01T08:00:00-09:00",
+	"end_time":"2014-10-01T16:00:00-09:00"
+}

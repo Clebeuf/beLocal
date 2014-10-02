@@ -77,6 +77,25 @@ class AddVendorView(generics.CreateAPIView):
             return Response("Failed to create vendor.",
                             status=status.HTTP_400_BAD_REQUEST)
 
+class GetVendorID(generics.CreateAPIView):
+    """ 
+    This is an endpoint used to obtain a user's vendor ID (which many
+        differ form the uesr ID)
+    """
+    permissions_classes = (AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        serializer = be_local_server.serializers.GetVendorIDSerializer(data=request.DATA)
+
+        user_id=serializer.init_data['user']
+        
+        vendor = Vendor.objects.get(user=user_id)
+
+        if vendor is not None:
+            return HttpResponse(vendor.id)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
 class AddProductView(generics.CreateAPIView):
     """
     This view provides an endpoint for sellers to
@@ -138,7 +157,6 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
                             status=status.HTTP_400_BAD_REQUEST)
         
 
-
 class AddSellerLocationView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
 
@@ -153,3 +171,4 @@ class AddSellerLocationView(generics.CreateAPIView):
         else:
             return Response("Failed to create SellerLocation.",
                             status=status.HTTP_400_BAD_REQUEST)
+

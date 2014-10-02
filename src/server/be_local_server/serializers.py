@@ -20,6 +20,11 @@ class VendorSerializer(serializers.ModelSerializer):
 					'extension'
 		)
 
+class GetVendorIDSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = be_local_server.models.Vendor
+		fields = ('user',)
+
 
 class ProductSerializer(serializers.ModelSerializer):
 	class Meta:

@@ -6,7 +6,8 @@ angular.module('clientApp', [
   'ngSanitize',
   'ngRoute',
   'ipCookie',
-  'mgcrea.ngStrap',
+  'ui.bootstrap',
+  'mgcrea.ngStrap.timepicker',
 ])
   .config(function ($routeProvider) {
     $routeProvider

@@ -5,7 +5,8 @@ angular.module('clientApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'ipCookie'
+  'ipCookie',
+  'mgcrea.ngStrap',
 ])
   .config(function ($routeProvider) {
     $routeProvider

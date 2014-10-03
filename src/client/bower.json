@@ -12,7 +12,8 @@
     "angular-sanitize": "1.2.6",
     "angular-route": "1.2.6",
     "oauth-js": "~0.2.4",
-    "angular-cookie": "~4.0.2"
+    "angular-cookie": "~4.0.2",
+    "angular-strap": "~2.1.1"
   },
   "devDependencies": {
     "angular-mocks": "1.2.6",

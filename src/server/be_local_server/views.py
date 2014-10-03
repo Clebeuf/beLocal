@@ -46,7 +46,7 @@ def register_by_access_token(request, backend):
     # Split by spaces and get the array
     auth = get_authorization_header(request).split()
  
-    if not auth or auth[0].lower() != b'token':
+    if not auth or auth[0].lower() != 'token':
         msg = 'No token header provided.'
         return msg
  
@@ -65,7 +65,6 @@ class AddVendorView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
 
-        serializer = be_local_server.serializers.AddVendorSerializer(data=request.DATA)
         serializer = serializers.AddVendorSerializer(data=request.DATA)
 
         if serializer.is_valid():

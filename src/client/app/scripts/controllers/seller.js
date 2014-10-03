@@ -11,7 +11,7 @@ angular.module('clientApp')
   .controller('SellerCtrl', function ($scope) {
   	$scope.opened = false;
   	$scope.minDate = new Date();
-  	$scope.newLocationDate = new Date();
+  	$scope.locationDate = new Date();
   	var tempDate = new Date();
   	tempDate.setHours(tempDate.getHours() + 1);
 
@@ -29,5 +29,10 @@ angular.module('clientApp')
 
 	    $scope.opened = true;
 	};
+
+	$scope.newLocationSubmit = function() {
+		$scope.newLocationSubmitted = true;
+		console.log('Submitted');
+	}
 
   });

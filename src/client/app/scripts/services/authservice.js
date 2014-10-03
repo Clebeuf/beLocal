@@ -4,8 +4,8 @@ angular.module('clientApp')
   .service('AuthService', function AuthService($http, $location, ipCookie, StateService) {
   	this.processLogin = function(result) {
 
-  		var loggedIn = false;
-  		var backend = 'facebook';
+  	var loggedIn = false;
+  	var backend = 'facebook';
 		var token = "Token " + result.access_token;
 		var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/login/' + backend + '/', headers: {'Authorization': token}});
 
@@ -14,6 +14,7 @@ angular.module('clientApp')
 		  loggedIn = true;
 		  if(result.data.token) {
 		  	ipCookie('beLocalToken', result.data.token, {expires: 14});
+        ipCookie('beLocalUser', result.data, {expires: 14});
 			$http.defaults.headers.common.Authorization = 'Token ' + result.token;		  	
 		  }
           StateService.setProfile(result.data);		  

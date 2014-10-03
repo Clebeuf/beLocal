@@ -16,7 +16,7 @@
 				<img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
 			</div>
 	  	</div>
-		<div class="seller-Name col-sm-9"><h1>Sellers Name Here</h1></div>
+		<div class="seller-Name col-sm-9"><h1>{{StateService.getCurrentUser().vendor.company_name}}</h1></div>
 	</row>
 </div>
 
@@ -30,18 +30,8 @@
 		</ul></div>
 	</row>
 </div>
-<!--
-<div class="full-width-tabs container-fluid">
-  <ul class="nav nav-pills nav-pills-home" role="tablist">
-    <li class="full-width"><a href="#">Markets</a></li>  
-    <li class="full-width active"><a href="#">Trending</a></li>
-    <li class="full-width"><a href="#">Vendors</a></li>
-  </ul>
-</div>
--->
 
 <div class="container marketing">
-
 
 	<!-- Modal for Seller Adding an Item -->
 	<div class="row">
@@ -79,7 +69,6 @@
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
-
 
 	</div>	
 	<div class="row">

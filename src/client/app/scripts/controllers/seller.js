@@ -8,10 +8,6 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('SellerCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('SellerCtrl', function ($scope, StateService) {
+    $scope.StateService = StateService;
   });

@@ -13,24 +13,22 @@
 
 <div id="twitter-feed"></div>
 
-<div class="container">
-  <div class="row marketing">
-    <h4>HTML5 Boilerplate</h4>
-    <p>
-      HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.
-    </p>
+<div class="full-width-tabs container-fluid">
+  <ul class="nav nav-pills nav-pills-home" role="tablist">
+    <li class="full-width"><a href="#">Markets</a></li>  
+    <li class="full-width active"><a href="#">Trending</a></li>
+    <li class="full-width"><a href="#">Vendors</a></li>
+  </ul>
+</div>
 
-    <h4>Angular</h4>
-    <p>
-      AngularJS is a toolset for building the framework most suited to your application development.
-    </p>
-
-    <h4>Karma</h4>
-    <p>Spectacular Test Runner for JavaScript.</p>
-  </div>
-
+<div class="container container-home-page">
+  <div ng-repeat="items in trendingProducts | groupBy:3" class="row">
+    <div class="col-sm-4" ng-repeat="item in items" >
+      <product-card data="item"></product-card>
+    </div>  
+    </div>
   <div class="footer">
-    <p>♥ from the Yeoman team</p>
+    <p>♥ from the beLocal team</p>
   </div>
 </div>
 

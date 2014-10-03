@@ -272,15 +272,11 @@ body {
 
 /*seller-ui stuff*/
 /* Customize container */
-@media (min-width: 768px) {
-  .container-seller {
-    max-width: 730px;
-    margin: 50px 0px 0px 50px;
-  }
+.container-seller {
+  max-width: 970px !important;
 }
 
 .seller-item{
-	margin: 10px 0px 0px 30px;
 	padding-left:0;
 	padding-right:0;
 }

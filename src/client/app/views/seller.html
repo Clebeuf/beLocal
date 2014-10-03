@@ -1,177 +1,164 @@
 <nav-bar></nav-bar>
+<div style="position:relative;">
+    <div class="jumbotron beLocal-header-seller">
+        <div class="container">
+        </div>
+    </div>
+    <!--Seller-Navigation-->
+    <div class="seller-banner">
+        <row >
+            <div class="seller-Avatar col-sm-3">
+                <div class="AvatarContainer">
+                    <img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
+                </div>
+            </div>
+            <div class="seller-Name col-sm-9">
+                <h1>Sellers Name Here</h1>
+            </div>
+        </row>
+    </div>
+    <div class="seller-tabs">
+        <row>
+            <div class="seller-tabs col-md-offset-3">
+                <ul class="nav nav-pills nav-justified">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a class="inactive" href="#">Profile</a></li>
+                    <li><a class="inactive" href="#">Messages</a></li>
+                </ul>
+            </div>
+        </row>
+    </div>
 
-<div class="container-seller">
-	<div style="position:relative;">
-	  <div class="jumbotron beLocal-header-seller">
-	    <div class="container">
-
-	    </div>
-	  </div>
-
-
-	<!--Seller-Navigation-->
-	<div class="seller-banner">
-		<row >
-			<div class="seller-Avatar col-sm-3">
-				<div class="AvatarContainer">
-					<img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
-				</div>
-		  	</div>
-			<div class="seller-Name col-sm-9"><h1>Sellers Name Here</h1></div>
-		</row>
-	</div>
-
-	<div class="seller-tabs">
-		<row>
-			<div class="seller-tabs col-md-offset-3">
-			<ul class="nav nav-pills nav-justified">
-	  			<li class="active"><a href="#">Home</a></li>
-	  			<li><a class="inactive" href="#">Profile</a></li>
-	  			<li><a class="inactive" href="#">Messages</a></li>
-			</ul></div>
-		</row>
-	</div>
-	<!--
-	<div class="full-width-tabs container-fluid">
-	  <ul class="nav nav-pills nav-pills-home" role="tablist">
-	    <li class="full-width"><a href="#">Markets</a></li>  
-	    <li class="full-width active"><a href="#">Trending</a></li>
-	    <li class="full-width"><a href="#">Vendors</a></li>
-	  </ul>
-	</div>
-	-->
-
-
-
-
-		<!-- Modal for Seller Adding an Item -->
-		<div class="row">
-
-			<div class="modal fade" id="itemModal">
-			  <div class="modal-dialog">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-			        <h4 class="modal-title">Create New Item</h4>
-			      </div>
-			      <form role="form">
-			      <div class="modal-body">
-					  <div class="form-group">
-					    <label for="item-name">Item Name</label>
-					    <input type="email" class="form-control" id="item-name" placeholder="Enter Item Name"/>
-					  </div>
-					  <div class="form-group">
-					    <label for="item-description">Item Description</label>
-					    <textarea class="form-control" id="item-description" placeholder="Enter Description"/>
-					  </div>
-					  <div class="form-group">
-					    <label for="item-image">Upload Image</label>
-					    <input type="file" id="item-image">
-					  </div>
-			      </div>		
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-defadivt" data-dismiss="modal">Close</button>
-			        <button type="submit" class="btn btn-primary">Save</button>
-			      </div>
-			      </form>
-			    </div><!-- /.modal-content -->
-			  </div><!-- /.modal-dialog -->
-			</div><!-- /.modal -->
-
-
-		</div>	
-		<div class="row">
-			
-			<div class="modal fade" id="locationModal">
-			  <div class="modal-dialog">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-			        <h4 class="modal-title">Create New Location</h4>
-			      </div>
-			      <form role="form">
-			      <div class="modal-body">
-					  <div class="form-group">
-					    <label for="item-name">Location Name</label>
-					    <input type="email" class="form-control" id="item-name" placeholder="Enter Item Name"/>
-					  </div>
-					  <div class="form-group">
-					    <label for="item-description">Location Description</label>
-					    <textarea class="form-control" id="item-description" placeholder="Enter Description"/>
-					  </div>
-					  <div class="form-group">
-					    <label for="item-image">Upload Image</label>
-					    <input type="file" id="item-image">
-					  </div>
-			      </div>		
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-defadivt" data-dismiss="modal">Close</button>
-			        <button type="submit" class="btn btn-primary">Save</button>
-			      </div>
-			      </form>
-			    </div><!-- /.modal-content -->
-			  </div><!-- /.modal-dialog -->
-			</div><!-- /.modal -->
-		</div>
-		<div class="row">
-			<h3>Your Locations</h3>
-			<div class="list-group">
-				<div class="list-group-item">
-					<!-- Button trigger modal -->
-					<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#locationModal">
-					  Create New Location
-					</button>
-				</div>
-				<div class="list-group-item clearfix">
-					Saanich Market
-					<button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#itemModal">
-						Edit
-					</button>
-				</div>
-			</div>
-		</div>	
-		<div class="row">
-				<h3>Your Items</h3>
-				<div class="list-group">
-					<div class="list-group-item">
-						<!-- Button trigger modal -->
-						<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#itemModal">
-						  Create New Item
-						</button>
-					</div>
-					<div class="list-group-item seller-item">
-						<div class="clearfix seller-item">
-							<img width="100px" height="100px" src="http://media.mercola.com/assets/images/food-facts/carrot-nutrition-facts.jpg"/>Carrots
-							<button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#itemModal">
-								Edit
-							</button>
-						</div>
-						<div class="list-group">
-							<div class="list-group-item seller-item-location clearfix">
-								All Locations
-								<div class="pull-right seller-item-stock">
-									<input type="radio" name="stock-status" value="InStock"> In Stock 
-									<input type="radio" name="stock-status" value="OutOfStock"> Out of Stock 
-								</div>
-							</div>
-							<div class="list-group-item seller-item-location clearfix">
-								Market Stand
-								<div class="pull-right seller-item-stock">
-									<input type="radio" name="stock-status-1" value="InStock"> In Stock 
-									<input type="radio" name="stock-status-1" value="OutOfStock"> Out of Stock 
-								</div>
-							</div>
-							<div class="list-group-item seller-item-location clearfix">
-								Farm Stand
-								<div class="pull-right seller-item-stock">
-									<input type="radio" name="stock-status-2" value="InStock"> In Stock 
-									<input type="radio" name="stock-status-2" value="OutOfStock"> Out of Stock 
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-		</div>
-
-	</div>
+    <div class="container container-seller">
+        <!-- Modal for Seller Adding an Item -->
+        <div class="row">
+            <div class="modal fade" id="itemModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title">Create New Item</h4>
+                        </div>
+                        <form role="form">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="item-name">Item Name</label>
+                                    <input type="email" class="form-control" id="item-name" placeholder="Enter Item Name"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="item-description">Item Description</label>
+                                    <textarea class="form-control" id="item-description" placeholder="Enter Description"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="item-image">Upload Image</label>
+                                    <input type="file" id="item-image">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+        <div class="row">
+            <div class="modal fade" id="locationModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title">Create New Location</h4>
+                        </div>
+                        <form role="form">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="item-name">Location Name</label>
+                                    <input type="email" class="form-control" id="item-name" placeholder="Enter Item Name"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="item-description">Location Description</label>
+                                    <textarea class="form-control" id="item-description" placeholder="Enter Description"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="item-image">Upload Image</label>
+                                    <input type="file" id="item-image">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+        <div class="row">
+            <h3>Your Locations</h3>
+            <div class="list-group">
+                <div class="list-group-item">
+                    <!-- Button trigger modal -->
+                    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#locationModal">
+                    Create New Location
+                    </button>
+                </div>
+                <div class="list-group-item clearfix">
+                    Saanich Market
+                    <button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#itemModal">
+                    Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <h3>Your Items</h3>
+            <div class="list-group">
+                <div class="list-group-item">
+                    <!-- Button trigger modal -->
+                    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#itemModal">
+                    Create New Item
+                    </button>
+                </div>
+                <div class="list-group-item seller-item">
+                    <div class="clearfix seller-item">
+                        <img width="100px" height="100px" src="http://media.mercola.com/assets/images/food-facts/carrot-nutrition-facts.jpg"/>Carrots
+                        <button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#itemModal">
+                        Edit
+                        </button>
+                    </div>
+                    <div class="list-group">
+                        <div class="list-group-item seller-item-location clearfix">
+                            All Locations
+                            <div class="pull-right seller-item-stock">
+                                <input type="radio" name="stock-status" value="InStock"> In Stock 
+                                <input type="radio" name="stock-status" value="OutOfStock"> Out of Stock 
+                            </div>
+                        </div>
+                        <div class="list-group-item seller-item-location clearfix">
+                            Market Stand
+                            <div class="pull-right seller-item-stock">
+                                <input type="radio" name="stock-status-1" value="InStock"> In Stock 
+                                <input type="radio" name="stock-status-1" value="OutOfStock"> Out of Stock 
+                            </div>
+                        </div>
+                        <div class="list-group-item seller-item-location clearfix">
+                            Farm Stand
+                            <div class="pull-right seller-item-stock">
+                                <input type="radio" name="stock-status-2" value="InStock"> In Stock 
+                                <input type="radio" name="stock-status-2" value="OutOfStock"> Out of Stock 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

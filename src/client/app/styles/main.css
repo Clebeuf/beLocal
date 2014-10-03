@@ -35,6 +35,16 @@
   margin-bottom: 0px;
 }
 
+.beLocal-header-seller {
+  background-position-x: center;
+  height: 300px;
+  margin-bottom: -25px;
+  background-image: url("/images/sellerbanner-peas.jpg");
+  background-size:1500px;
+  background-position-x: center;
+  background-position-y: 37%;
+}
+
 .navbar-footer {
   border-top: none;
   position:absolute;
@@ -216,6 +226,48 @@ body {
     .collapse.in{
         display:block !important;
     }
+
+}
+
+/* SELLER UI STARTS */
+
+.seller-Avatar  {
+    height: 0px;
+    z-index: 0;
+} 
+
+.AvatarContainer  {
+    top: -200px;
+    position:relative;
+    text-align: center;
+    border-color: black;
+    border: 2px;
+} 
+
+.AvatarContainer img {
+   padding:5px;
+   border:1px solid #696969;
+   background-color: #FFFFFF;
+   border-radius: 5px;
+   height: 100%;
+   width: 100%;
+   min-height: 190px;
+   min-width:190px;
+   max-width: 250px;
+   max-height: 250px;
+}
+
+.seller-Name {
+  height: 0px;
+  top:-75px;
+  color: #FFFFFF;
+  text-shadow: 0 0 5px #696969;
+}
+
+.seller-tabs {
+  padding-bottom: 0px;
+  z-index: -1;
+  background-color: #F1F1F1;
 }
 
 /*seller-ui stuff*/
@@ -244,4 +296,35 @@ body {
 .seller-item-stock input[type="radio"]{
 	margin-left:15px;
 }
+
+@media (max-width: 767px) {
+
+  .seller-Name {
+      text-align: center;
+  }
+
+}
+
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+  background-color: #FFFFFF;
+  color: #6CAA0A;
+}
+
+.nav > li > a {
+  color: #A5A5A5;
+}
+
+.nav-pills li {
+text-decoration: none;
+font-weight: bold;
+border-radius:0px;
+border-left: 2px solid #EBEBEB !important;
+color: #000 !important;
+}
+.nav-pills > li > a{
+    border-radius:0px;
+}
+
+/* SELLER UI ENDS*/
 

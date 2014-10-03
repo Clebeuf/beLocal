@@ -84,6 +84,45 @@ class AddVendorView(generics.CreateAPIView):
             return Response("Failed to create vendor.",
                             status=status.HTTP_400_BAD_REQUEST)
 
+class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    This view  provides an endpoint for Sellers to view and
+    modify their information
+    """
+    
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.VendorSerializer
+
+    def get(self, request):
+        vendor = Vendor.objects.get(user=request.user)
+        serializer = serializers.VendorSerializer(vendor)
+
+        if vendor is not None:
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    #Do we want to have a vendor delete here?
+    def delete(self, request):
+        vendor = Vendor.objects.get(user=request.user)
+
+        if vendor is not None:
+            user = User.objects.get(id=serializer.init_data['user'])
+            user.is_staff = 0
+            user.save()
+            vendor.delete()
+            return HttpResponse("success")
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+    def get_object(self):
+        vendor = Vendor.objects.get(user=self.request.user)
+        return vendor
+
 class AddProductView(generics.CreateAPIView):
     """
     This view provides an endpoint for sellers to

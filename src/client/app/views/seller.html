@@ -3,6 +3,7 @@
     <div class="container">
     </div>
 </div>
+
 <!--Seller-Navigation-->
 <div class="seller-banner">
     <div class="seller-Avatar col-sm-3">
@@ -23,61 +24,82 @@
         </ul>
     </div>
 </div>
+<!--Seller-Navigation End-->
+
 
 <div class="container container-seller">
-    <div class="row">
-        <h3>Your Locations</h3>
-        <div class="list-group">
-            <div class="list-group-item">
-                <!-- Button trigger modal -->
-                <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#locationModal">Create New Location</button>
-            </div>
-            <div class="list-group-item clearfix">
-                Saanich Market
-                <button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#itemModal">Edit</button>
-            </div>
+    
+
+<!--Display Seller's Locations-->
+    <div class="row ">
+        <div class="col-xs-10 seller-title-bar">
+            <h3>Your Locations</h3>
+        </div>
+        <div class="col-xs-2 add-new-button-container">
+            <button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#locationModal">Create New Location</button>
         </div>
     </div>
-    <div class="row">
-        <h3>Your Items</h3>
-        <div class="list-group">
-            <div class="list-group-item">
-                <!-- Button trigger modal -->
-                <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#itemModal">Create New Item</button>
-            </div>
-            <div class="list-group-item seller-item">
-                <div class="clearfix seller-item">
-                    <img width="100px" height="100px" src="http://media.mercola.com/assets/images/food-facts/carrot-nutrition-facts.jpg"/>
-                    Carrots
-                    <button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#itemModal">Edit</button>
-                </div>
-                <div class="list-group">
-                    <div class="list-group-item seller-item-location clearfix">
-                        All Locations
-                        <div class="pull-right seller-item-stock">
-                            <input type="radio" name="stock-status" value="InStock"> In Stock 
-                            <input type="radio" name="stock-status" value="OutOfStock"> Out of Stock 
-                        </div>
-                    </div>
-                    <div class="list-group-item seller-item-location clearfix">
-                        Market Stand
-                        <div class="pull-right seller-item-stock">
-                            <input type="radio" name="stock-status-1" value="InStock"> In Stock 
-                            <input type="radio" name="stock-status-1" value="OutOfStock"> Out of Stock 
-                        </div>
-                    </div>
-                    <div class="list-group-item seller-item-location clearfix">
-                        Farm Stand
-                        <div class="pull-right seller-item-stock">
-                            <input type="radio" name="stock-status-2" value="InStock"> In Stock 
-                            <input type="radio" name="stock-status-2" value="OutOfStock"> Out of Stock 
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+    <!-- repeating for each location that seller has in the db -->
+    <div class="row list-group-item">
+        <div class="col-xs-10">
+            <h4>Location Name</h4>
+            Location Address
+        </div>
+        <div class="col-xs-2 edit-button-container">
+            <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#locationModal">Edit</button>
         </div>
     </div>
+    <!-- end of repeating for each location that seller has in the db -->
+
+
+<!--Display Seller's Inventory-->
+    <div class="row">
+        <div class="col-xs-6 seller-title-bar">
+            <h3>Your Inventory</h3>
+        </div>
+        <div class="col-xs-6 add-new-button-container">
+            <button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#itemModal">Create New Item</button>
+        </div>
+    </div>
+
+    <!-- repeating for each item that seller has in the db -->
+    <div class="row list-group-item">
+        <div class="col-sm-2 thumbnail hidden-xs">
+            <img src="http://media.mercola.com/assets/images/food-facts/carrot-nutrition-facts.jpg"/>
+        </div>
+        <div class="col-sm-8 col-xs-10">
+            <h4>Item Name</h4>
+            Item Description
+        </div>
+        <div class="col-sm-2 col-xs-2 edit-button-container">
+            <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#locationModal">Edit</button>
+        </div>
+    </div>
+    <div class="row list-group-item all-locations">
+        All Locations
+        <div class="pull-right seller-item-stock">
+            <input type="radio" name="stock-status" value="InStock"> In Stock 
+            <input type="radio" name="stock-status" value="OutOfStock"> Out of Stock 
+        </div>
+    </div>
+
+    <!-- repeat for each seller location -->
+    <div class="row list-group-item">
+        Sample Location
+        <div class="pull-right seller-item-stock">
+            <input type="radio" name="stock-status2" value="InStock"> In Stock 
+            <input type="radio" name="stock-status2" value="OutOfStock"> Out of Stock 
+        </div>
+    </div>
+    <!--  end of repeat for each seller location -->
+    
+
+
 </div>
+<!-- END OF CONTAINTER-SELLER -->
+
+
 
 <!-- Seller Add/Edit Item Modal -->
 <div class="modal fade" id="itemModal">

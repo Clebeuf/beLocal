@@ -276,31 +276,55 @@ body {
   max-width: 970px !important;
 }
 
-.seller-item{
-	padding-left:0;
-	padding-right:0;
-}
-.seller-item>button{
-	margin-right:25px;
-}
-
-.seller-item-location{
-	border-right:0;
-	border-left:0;
-}
-
 .seller-item-stock input[type="radio"]{
-	margin-left:15px;
+	margin-left:25px;
 }
 
 @media (max-width: 767px) {
-
   .seller-Name {
       text-align: center;
   }
 
+  .seller-title-bar {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .list-group-item {
+    /*text-align: center !important;*/
+  }
+
+  .thumbnail {
+    text-align: center !important;
+    float: none !important;
+    display: inline-block;
+  }
 }
 
+.edit-button-container {
+  text-align: right;
+  vertical-align: center;
+}
+
+.add-new-button-container {
+  top:15px;
+  text-align: right;
+  padding-right: 0px;
+}
+
+.seller-title-bar{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.all-locations {
+  background-color: #F1F1F1;
+}
+
+.thumbnail {
+  max-width: 200px;
+  max-height: 200px;
+}
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
   background-color: #FFFFFF;

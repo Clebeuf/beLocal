@@ -40,7 +40,6 @@ class Address(models.Model):
     addr_type = models.CharField(max_length=3, choices=ADDR_TYPES, default=FARM)
 
     addr_line1 = models.CharField(max_length=400)
-    addr_line2 = models.CharField(max_length=400)
     city = models.CharField(max_length=200)
     state = models.CharField(max_length=200)
     country = models.CharField(max_length=200)

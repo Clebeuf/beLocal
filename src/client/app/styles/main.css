@@ -1,48 +1,5 @@
 /* BELOCAL STYLES */
 
-.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
-  background-color: #8ed41e;
-}
-
-.nav > li > a {
-  color: #8ed41e;
-}
-
-.nav-pills-home > li > a {
- border-radius: 0px !important; 
-}
-
-.btn-more-details {
-  float:right;
-  margin-top:12px;
-}
-
-.price {
-  color: #78c042;
-}
-
-.full-width-tabs > ul.nav.nav-pills {
-    display: table;
-    width: 100%;
-    table-layout: fixed; /* To make all "columns" equal width regardless of content */
-}
-.full-width-tabs > ul.nav.nav-pills > li {
-    float: none;
-    display: table-cell;
-}
-.full-width-tabs > ul.nav.nav-pills > li > a {
-    text-align: center;
-}
-
-.container-home-page {
-  margin-top: 25px;
-  max-width: 1170px !important;
-}
-
-.full-width {
-  width: 100%;
-}
-
 .alert {
   width: 100%;
   position: fixed;
@@ -313,14 +270,61 @@ body {
   background-color: #F1F1F1;
 }
 
-@media (max-width: 767px) {
+/*seller-ui stuff*/
+/* Customize container */
+.container-seller {
+  max-width: 970px !important;
+}
 
+.seller-item-stock input[type="radio"]{
+  margin-left:25px;
+}
+
+@media (max-width: 767px) {
   .seller-Name {
       text-align: center;
   }
 
+  .seller-title-bar {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .list-group-item {
+    /*text-align: center !important;*/
+  }
+
+  .thumbnail {
+    text-align: center !important;
+    float: none !important;
+    display: inline-block;
+  }
 }
 
+.edit-button-container {
+  text-align: right;
+  vertical-align: center;
+}
+
+.add-new-button-container {
+  top:15px;
+  text-align: right;
+  padding-right: 0px;
+}
+
+.seller-title-bar{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.all-locations {
+  background-color: #F1F1F1;
+}
+
+.thumbnail {
+  max-width: 200px;
+  max-height: 200px;
+}
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
   background-color: #FFFFFF;
@@ -341,7 +345,5 @@ color: #000 !important;
 .nav-pills > li > a{
     border-radius:0px;
 }
-
-
 
 /* SELLER UI ENDS*/

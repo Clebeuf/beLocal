@@ -8,6 +8,8 @@ var app = angular.module('clientApp', [
   'ipCookie',
   'angular.filter',
   'ui.router',
+  'ui.bootstrap',
+  'mgcrea.ngStrap.timepicker',
 ])
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider

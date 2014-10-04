@@ -28,15 +28,24 @@ angular.module('clientApp')
     }
 
     this.getServerAddress = function() {
-    	return 'http://localhost:8000/';
+      return 'http://localhost:8000/';
     }
 
     this.getTrendingProductsList = function() {
-    	return trendingProducts;
+      return trendingProducts;
     }
 
     this.setProfileFromCookie = function() {
       this.setProfile(ipCookie('beLocalUser'));
-    }    
+    }
 
+    this.createSellerLocation = function(sellerLocation) {
+      return $http.post(this.getServerAddress() + 'vendor/location/add/', sellerLocation)
+      .success(function() {
+        console.log("Created a new location!");
+      })
+      .error(function() {
+        console.log("Error creating a new location!");
+      })
+    }
   });

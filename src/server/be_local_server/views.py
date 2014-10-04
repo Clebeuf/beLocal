@@ -153,7 +153,7 @@ class TrendingProductView(generics.ListAPIView):
     serializer_class = serializers.ProductDisplaySerializer
 
     def get_queryset(self):
-        return Product.objects.all()
+        return Product.objects.all()      
 
 class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -197,7 +197,6 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
-        
 
 class AddSellerLocationView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -207,13 +206,14 @@ class AddSellerLocationView(generics.CreateAPIView):
 
         vendor = Vendor.objects.get(user=request.user)
 
-        serializer = serializers.AddSellerLocationSerializer(data = request.DATA)
+        request.DATA['vendor'] = vendor.id       
+
+        serializer = serializers.AddSellerLocationSerializer(data=request.DATA, many=False)
 
         if serializer.is_valid(): 
             serializer.save()
             return HttpResponse("success");
 
         else:
-            return Response("Failed to create SellerLocation.",
-                            status=status.HTTP_400_BAD_REQUEST)
-
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)  

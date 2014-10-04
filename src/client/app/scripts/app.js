@@ -44,18 +44,16 @@ var app = angular.module('clientApp', [
         if(toState.url === '/') {
           // We are hitting the root of the page. If this is happeneing, we should check to see if the user has the cookie set to login.
           if(AuthService.isAuthenticated() === true) {
-
-            // Retrieve information from cookies and put into local profile
-            StateService.setProfileFromCookie();
-
-            // Force the seller to go back to the sender view. We might want to get rid of this.
             if(StateService.getUserType() === 'VEN') {
               $state.transitionTo('seller', null, {location: 'replace'});
+              event.preventDefault();
             }
-            event.preventDefault();
           }
         } else if(StateService.getCurrentUser() === undefined) {
             $state.transitionTo('main');
+        } else if (toState.url === '/seller' && StateService.getUserType() !== 'VEN') {
+          $state.transitionTo('main', null, {location: 'replace'});
+          event.preventDefault();
         }
 
         if (toState.authenticate && !AuthService.isAuthenticated()){

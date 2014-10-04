@@ -141,43 +141,90 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Create New Location</h4>
+                <h4 class="modal-title">Create New Location<br /><small>Please complete the following fields to add a new seller location</small></h4>
             </div>
             <div class="modal-body">  
                 <div class="container-fluid">                   
-                    <form role="form" name="locationForm">
+                    <form role="form" name="locationForm" novalidate ng-submit="newLocationSubmit()">
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
-                                <div class="form-group">
+                                <div class="form-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationField.$invalid }">
                                     <label for="item-name">Location Name</label>
-                                    <input type="text" class="form-control" id="item-name" placeholder="Enter Item Name"/>
-                                </div>
-                                <!-- Basic example -->
-                                <div class="form-group" ng-class="{'has-error': timepickerForm.time.$invalid}">
-                                    <label class="control-label"><i class="fa fa-clock-o"></i> Time <small>(as date)</small></label>
-                                    <input type="text" class="form-control" size="8" ng-model="time" name="time" bs-timepicker>
+                                    <input required ng-model="locationName" type="text" name="locationField" class="form-control" id="item-name" placeholder="Enter Location Name"/>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-12 col-md-12">
+                            <div class="col-xs-6 col-md-6">
                                 <div class="form-group">
-                                    <label for="item-name">Location Name</label>
-                                    <input type="text" class="form-control" id="item-name" placeholder="Enter Item Name"/>
+                                  <label>Start date:</label>                      
+                                  <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.dateField.$invalid }">
+                                    <input required type="text" name="dateField" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="locationDate" is-open="opened" min="minDate" max="'2015-06-22'" close-text="Close" />
+                                    <span class="input-group-btn">
+                                      <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>                       
+                                  </div>
+                                </div>                               
+                            </div>                        
+                            <div class="col-xs-3 col-md-3">
+                                <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.startField.$invalid}">
+                                    <label class="control-label"><i class="fa fa-clock-o"></i>Start Time</label>
+                                    <input required type="text" class="form-control" size="8" ng-model="startTime" name="startField" bs-timepicker>
                                 </div>
-                                <!-- Basic example -->
-                                <div class="form-group" ng-class="{'has-error': timepickerForm.time.$invalid}">
-                                    <label class="control-label"><i class="fa fa-clock-o"></i> Time <small>(as date)</small></label>
-                                    <input type="text" class="form-control" size="8" ng-model="time" name="time" bs-timepicker>
+                            </div>
+                            <div class="col-xs-3 col-md-3">
+                                <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.endField.$invalid}">
+                                    <label class="control-label"><i class="fa fa-clock-o"></i>End Time</label>
+                                    <input required type="text" class="form-control" size="8" ng-model="endTime" name="endField" bs-timepicker>
                                 </div>
-                            </div>                                    
-                        </div>                        
+                            </div>
+                        </div>    
+                        <div class="row">
+                            <div class="well">
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-12" ng-class="{'has-error': newLocationSubmitted && locationForm.addressField.$invalid}">
+                                        <div class="form-group">
+                                            <label for="item-name">Street Address</label>
+                                            <input required ng-model="locationAddress" type="text" class="form-control" id="item-name" name="addressField" placeholder="Address"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-6">
+                                        <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.cityField.$invalid}">
+                                            <label for="item-name">City</label>
+                                            <input required ng-model="locationCity" type="text" class="form-control" id="item-name" name="cityField" placeholder="City"/>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-6" ng-class="{'has-error': newLocationSubmitted && locationForm.provinceField.$invalid}">
+                                        <div class="form-group">
+                                            <label for="item-name">Province</label>
+                                            <input required ng-model="locationProvince" type="text" class="form-control" id="item-name" name="provinceField" placeholder="Province"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 col-md-6">
+                                        <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.postalCodeField.$invalid}">
+                                            <label for="item-name">Postal Code</label>
+                                            <input required type="text" ng-model="locationPostalCode" class="form-control" id="item-name" name="postalCodeField" placeholder="Postal Code"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 col-md-6" ng-class="{'has-error': newLocationSubmitted && locationForm.countryField.$invalid}">
+                                        <div class="form-group">
+                                            <label for="item-name">Country</label>
+                                            <input required ng-model="locationCountry" type="text" class="form-control" id="item-name" name="countryField" placeholder="Country"/>
+                                        </div>
+                                    </div>                                                                    
+                                </div>                                                                                                  
+                            </div>                            
+                        </div>                    
                     </form>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" ng-click="newLocationSubmit()" class="btn btn-primary">Add Location</button>
             </div>
         </div>
         <!-- /.modal-content -->

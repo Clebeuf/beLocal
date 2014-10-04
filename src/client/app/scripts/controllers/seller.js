@@ -15,6 +15,7 @@ angular.module('clientApp')
     $scope.locationDate = new Date();
     var tempDate = new Date();
     tempDate.setHours(tempDate.getHours() + 1);
+    $scope.locationType = 'FAR';
 
     $scope.roundTimeToNearestFive = function(date) {
       var coeff = 1000 * 60 * 5;
@@ -51,7 +52,8 @@ angular.module('clientApp')
                     "country" : $scope.locationCountry,
                     "zipcode" : $scope.locationPostalCode,
                     "latitude" : "0",
-                    "longitude" : "0"
+                    "longitude" : "0",
+                    "addr_type" : $scope.locationType,
                 };
 
                 var sellerLocation = {

@@ -16,6 +16,7 @@ angular.module('clientApp')
     var tempDate = new Date();
     tempDate.setHours(tempDate.getHours() + 1);
     $scope.locationType = 'FAR';
+    $scope.sellerLocations = [];
 
     $scope.roundTimeToNearestFive = function(date) {
       var coeff = 1000 * 60 * 5;
@@ -31,6 +32,12 @@ angular.module('clientApp')
 
         $scope.opened = true;
     };
+
+    $scope.getSellerLocations = function() {
+        StateService.getSellerLocations().then(function(response) {
+            $scope.sellerLocations = response.data;
+        })
+    }
 
     $scope.newLocationSubmit = function() {
         $scope.newLocationSubmitted = true;
@@ -64,7 +71,16 @@ angular.module('clientApp')
                     "image_path" : "lol",
                 };
 
-                StateService.createSellerLocation(sellerLocation);
+                StateService.createSellerLocation(sellerLocation).then(function() {
+                    $scope.getSellerLocations();
+                });
             }
         }
+
+    $scope.init = function() {
+        $scope.getSellerLocations();
+    }  
+
+    $scope.init();   
+
   });

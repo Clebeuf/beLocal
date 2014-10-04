@@ -14,7 +14,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.http import HttpResponse, HttpResponseServerError, Http404
 from be_local_server import serializers
 from rest_framework import generics
-from be_local_server.models import Product, Vendor
+from be_local_server.models import *
 from rest_framework.authentication import TokenAuthentication
 
 class ObtainAuthToken(APIView):
@@ -197,6 +197,17 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+
+class ListVendorLocations(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    serializer_class = serializers.AddSellerLocationSerializer
+
+    def get_queryset(self):
+        vendor = Vendor.objects.get(user=self.request.user)
+
+        return SellerLocation.objects.filter(vendor=vendor)
 
 class AddSellerLocationView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)

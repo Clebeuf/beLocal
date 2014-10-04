@@ -1,5 +1,7 @@
-
 *.pyc
+*.log
+*.sql
+*.sqlite
 *.sqlite3
 
 # Eclipse files

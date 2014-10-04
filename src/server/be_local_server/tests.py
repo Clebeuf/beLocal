@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from django.test import TestCase
-from rest_framework.test import APIClient, APITestCase
+from django.contrib.auth.models import User
+from rest_framework.test import APIRequestFactory, APIClient, APITestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
+from rest_framework.authtoken.models import Token
 from be_local_server.models import Vendor, Product
-from django.contrib.auth.models import User
-import json
+from be_local_server.views import *
 
 # Create your tests here.
 
 class ProductTestCase(APITestCase):
     def setUp(self):
+        self.factory = APIRequestFactory()
         self.client = APIClient()
         
         # Load some data in database 
@@ -46,18 +48,22 @@ class ProductTestCase(APITestCase):
                                price="5"
                                )
         
-        self.client.login(username='john', password='john') 
+        # Token Authentication
+        token = Token.objects.create(user=user2)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key) 
     
     def tearDown(self):
-        self.client.logout()
+        self.client.credentials()
     
-    def test_list_vendor_products(self):             
-        url = reverse('vendor-products-list', kwargs={'vendor_id': '2'})
+    def test_list_vendor_products(self):   
+        #view = VendorProductView.as_view()          
+        url = reverse('vendor-product-list', kwargs={'vendor_id': '2'}) 
         response = self.client.get(url)
+        print response.data
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
     
     def test_add_product(self):  
-        url = reverse('product-add')  
+        url = reverse('vendor-product-add')  
         data = {
                 'vendor':"2",
                 'name':"carrots",
@@ -66,19 +72,22 @@ class ProductTestCase(APITestCase):
                 } 
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data, unicode("Success"))
         
     def test_read_product(self):             
-        url = reverse('vendor-product', kwargs={'product_id': '2'})
+        url = reverse('vendor-product-details', kwargs={'product_id': '2'})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)   
     
     def test_edit_product(self): 
-        url = reverse('vendor-product', kwargs={'product_id': '2'})
+        url = reverse('vendor-product-details', kwargs={'product_id': '2'})
         data = {'price':"20"}
         response = self.client.patch(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)  
+        self.assertEqual(response.data, unicode("Success"))
         
     def test_delete_product(self):
-        url = reverse('vendor-product', kwargs={'product_id': '2'})
+        url = reverse('vendor-product-details', kwargs={'product_id': '2'})
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)   
+        self.assertEqual(response.status_code, status.HTTP_200_OK) 
+        self.assertEqual(response.data, unicode("Success"))  

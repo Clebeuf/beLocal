@@ -1,20 +1,18 @@
-from rest_framework import generics, status, viewsets, mixins
-from social.apps.django_app.utils import psa
+from rest_framework import generics, status, viewsets, mixins, parsers, renderers, status, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
-from rest_framework import parsers
-from rest_framework import renderers
 from rest_framework.authentication import get_authorization_header
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth.models import User
-from rest_framework.permissions import AllowAny
 from django.http import HttpResponse, HttpResponseServerError, Http404
-import be_local_server.serializers
-from rest_framework import generics
-from be_local_server.models import Product, Vendor
+from social.apps.django_app.utils import psa
+from be_local_server import serializers
+from be_local_server.models import *
+
 
 class ObtainAuthToken(APIView):
     throttle_classes = ()
@@ -37,7 +35,13 @@ class ObtainAuthToken(APIView):
  
             if user and user.is_active:
                 token, created = Token.objects.get_or_create(user=user)
-                return Response({'id': user.id, 'name': user.username, 'firstname': user.first_name, 'userType': 'VEN' if user.is_staff else 'CUS', 'token': token.key})
+                response = {}
+                if user.is_staff:
+                    vendor = Vendor.objects.get(user=user)
+                    response = {'id': user.id, 'name': user.username, 'firstname': user.first_name, 'userType': 'VEN', 'vendor' : {'company_name' : vendor.company_name}, 'token': token.key}
+                else:
+                    response = {'id': user.id, 'name': user.username, 'firstname': user.first_name, 'userType': 'CUS', 'token': token.key}
+                return Response(response)
 
 @psa()
 def register_by_access_token(request, backend):
@@ -45,7 +49,7 @@ def register_by_access_token(request, backend):
     # Split by spaces and get the array
     auth = get_authorization_header(request).split()
  
-    if not auth or auth[0].lower() != b'token':
+    if not auth or auth[0].lower() != 'token':
         msg = 'No token header provided.'
         return msg
  
@@ -63,8 +67,7 @@ class AddVendorView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
-        serializer = be_local_server.serializers.VendorSerializer(data=request.DATA)
-        print request.DATA
+        serializer = serializers.VendorSerializer(data=request.DATA)
 
         if serializer.is_valid():
             user = User.objects.get(id=serializer.init_data['user'])
@@ -74,20 +77,62 @@ class AddVendorView(generics.CreateAPIView):
             serializer.save()
             return HttpResponse("success")   
         else:
-            return Response(#"Failed to create vendor.",
-                            serializer.errors,
+            return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+
+class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    This view  provides an endpoint for Sellers to view and
+    modify their information
+    """
+    
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.VendorSerializer
+
+    def get(self, request):
+        vendor = Vendor.objects.get(user=request.user)
+        
+        if vendor is not None:
+            serializer = serializers.VendorSerializer(vendor)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    #Do we want to have a vendor delete here?
+    def delete(self, request):
+        vendor = Vendor.objects.get(user=request.user)
+
+        if vendor is not None:
+            user = User.objects.get(id=serializer.init_data['user'])
+            user.is_staff = 0
+            user.save()
+            vendor.delete()
+            return HttpResponse("success")
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+    def get_object(self):
+        vendor = Vendor.objects.get(user=self.request.user)
+        return vendor
 
 class AddProductView(generics.CreateAPIView):
     """
     This view provides an endpoint for sellers to
     add a product to their products list.
     """        
+  
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)     
 
     def post(self, request, *args, **kwargs):
-        permission_classes = (AllowAny,)
-
-        serializer = be_local_server.serializers.ProductSerializer(data=request.DATA)
+        vendor = Vendor.objects.get(user=request.user)
+        request.DATA['vendor'] = vendor.id
+        
+        serializer = serializers.ProductSerializer(data=request.DATA)
 
         if serializer.is_valid():
             serializer.save()
@@ -100,21 +145,17 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     """
     This view provides an endpoint for sellers to
     read-write-delete a product from their products list.
-    """ 
-    permission_classes = (AllowAny,)
-    serializer_class = be_local_server.serializers.ProductSerializer
+    """   
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+    #serializer_class = serializers.ProductSerializer
     
-    def get(self, request, product_id):
+    def get(self, request, product_id):       
         product = Product.objects.get(pk=product_id)
-
+        
         if product is not None:
-            return Response({'id': product.id, 
-                             'name': product.name, 
-                             'description': product.description,
-                             'price': product.price,
-                             'vendor': product.vendor.id,
-                             }
-                            )
+            serializer = serializers.ProductSerializer(product) 
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)  
     
@@ -127,31 +168,79 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)                  
     
-    def patch(self, request, product_id): 
+    def patch(self, request, product_id):         
         product = Product.objects.get(pk=product_id) 
    
         if product is not None:
-            serializer = be_local_server.serializers.ProductSerializer(product, data=request.DATA, partial=True)
+            serializer = serializers.ProductSerializer(product, data=request.DATA, partial=True)
            
             if serializer.is_valid():
                 serializer.save()
                 return Response("Success", status=status.HTTP_200_OK)
             else:
-                return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
         else:
-            return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)          
         
 class VendorProductView(generics.ListAPIView):
     """
     This view provides an endpoint for vendors to view their products.
     """   
-
-    permission_classes = (AllowAny,)
-    serializer_class = be_local_server.serializers.ProductSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.ProductSerializer
 
     def get_queryset(self):
         vendor_id = self.kwargs['vendor_id']
-        return Product.objects.filter(vendor=vendor_id) 
-    
+        product = Product.objects.filter(vendor=vendor_id)
+          
+        if product is not None:
+            return product
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST) 
+
+#TODO: Currenty this view simply returns all products rather
+# than trending ones
+class TrendingProductView(generics.ListAPIView):
+    """
+    This view provides an endpoint for customers to
+    view currently trending products.
+    """   
+    permission_classes = (AllowAny,)
+
+    serializer_class = serializers.ProductDisplaySerializer
+
+    def get_queryset(self):
+        return Product.objects.all()      
+
+class ListVendorLocations(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    serializer_class = serializers.AddSellerLocationSerializer
+
+    def get_queryset(self):
+        vendor = Vendor.objects.get(user=self.request.user)
+
+        return SellerLocation.objects.filter(vendor=vendor)
+
+class AddSellerLocationView(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+
+        vendor = Vendor.objects.get(user=request.user)
+
+        request.DATA['vendor'] = vendor.id       
+
+        serializer = serializers.AddSellerLocationSerializer(data=request.DATA, many=False)
+
+        if serializer.is_valid(): 
+            serializer.save()
+            return HttpResponse("success");
+
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)  
+

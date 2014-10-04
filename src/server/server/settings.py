@@ -36,10 +36,15 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
     'social.apps.django_app.default',
+    #'account',
+    #'photologue',
+    #'sortedm2m',
+    #'south',   # Only if you're relying on South for migrations.
     'be_local_server',
 )
 
@@ -66,7 +71,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'social.apps.django_app.context_processors.backends',
     'social.apps.django_app.context_processors.login_redirect',
  
-    'account.context_processors.account',
+    #'account.context_processors.account',
  
 )
 
@@ -137,3 +142,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# User-uploaded images
+# https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user
+#_base = '/Volumes/JSLibrary/Code/Grad/cook-for-me/server-media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = 'http://127.0.0.1:8000/media/'
+ADMIN_MEDIA_PREFIX = '/admin-media/'
+
+# site id for sites framework
+# https://docs.djangoproject.com/en/dev/ref/contrib/sites/#enabling-the-sites-framework
+SITE_ID = 1

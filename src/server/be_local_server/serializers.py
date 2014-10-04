@@ -9,7 +9,6 @@ class UserSerializer(serializers.ModelSerializer):
 		fields = ('id', 'first_name')
 
 class VendorSerializer(serializers.ModelSerializer):
-	user = UserSerializer()
 	class Meta:
 		model = be_local_server.models.Vendor
 		fields = ( 	'id',	
@@ -21,7 +20,6 @@ class VendorSerializer(serializers.ModelSerializer):
 					'extension'
 		)
 
-
 class ProductSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = be_local_server.models.Product
@@ -29,11 +27,10 @@ class ProductSerializer(serializers.ModelSerializer):
 				  'name',
 				  'description', 
 				  'price', 
-				  #'image_path', 
-				  #'created_at', 
-				  #'updated_at',
+				  #'image',
 				  'vendor'
 				 )
+
 
 # class TagSerializer(serializers.ModelSerializer):
 # 	class Meta:
@@ -64,18 +61,7 @@ class ProductSerializer(serializers.ModelSerializer):
 # 					#'created_at',
 # 					#'updated_at'
 # 		) 
-
-class AddVendorSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = be_local_server.models.Vendor
-		fields = ( 	'id',	
-					'user',
-					'company_name',
-					'webpage',
-					'country_code',
-					'phone',
-					'extension'
-		)		
+		
 
 # class SellerLocationSerializer(serializers.ModelSerializer):
 # 	vendor = VendorSerializer()

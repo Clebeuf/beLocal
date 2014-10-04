@@ -63,7 +63,7 @@ class AddVendorView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
-        serializer = be_local_server.serializers.AddVendorSerializer(data=request.DATA)
+        serializer = be_local_server.serializers.VendorSerializer(data=request.DATA)
         print request.DATA
 
         if serializer.is_valid():
@@ -87,12 +87,11 @@ class AddProductView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         permission_classes = (AllowAny,)
 
-        print request.DATA
         serializer = be_local_server.serializers.ProductSerializer(data=request.DATA)
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response("Success", status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
@@ -102,41 +101,33 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     This view provides an endpoint for sellers to
     read-write-delete a product from their products list.
     """ 
+    permission_classes = (AllowAny,)
+    serializer_class = be_local_server.serializers.ProductSerializer
     
     def get(self, request, product_id):
-        permission_classes = (AllowAny,)
-        
-        print request.DATA
         product = Product.objects.get(pk=product_id)
-        
+
         if product is not None:
             return Response({'id': product.id, 
                              'name': product.name, 
                              'description': product.description,
                              'price': product.price,
-                             'vendor': product.vendor
+                             'vendor': product.vendor.id,
                              }
                             )
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)  
     
-    def delete(self, request, product_id):
-        permission_classes = (AllowAny,)
-        
-        print request.DATA
+    def delete(self, request, product_id):       
         product = Product.objects.get(pk=product_id)
         
         if product is not None:
             product.delete() 
             return HttpResponse("success") 
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)          
-        
+            return Response(status=status.HTTP_400_BAD_REQUEST)                  
     
-    def patch(self, request, product_id):
-        permission_classes = (AllowAny,)
-        
-        print request.DATA
+    def patch(self, request, product_id): 
         product = Product.objects.get(pk=product_id) 
             
         if product is not None:
@@ -144,7 +135,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
            
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response("Success", status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
@@ -154,12 +145,11 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         
 class VendorProductView(generics.ListAPIView):
     """
-    This view provides an endpoint for vendors to
-    view their products.
+    This view provides an endpoint for vendors to view their products.
     """   
 
     permission_classes = (AllowAny,)
-    serializer_class = serializers.ProductSerializer
+    serializer_class = be_local_server.serializers.ProductSerializer
 
     def get_queryset(self):
         vendor_id = self.kwargs['vendor_id']

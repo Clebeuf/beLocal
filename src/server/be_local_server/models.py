@@ -10,15 +10,17 @@ class Vendor(models.Model):
     extension = models.CharField(max_length=25)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    photo = models.ImageField(upload_to='vendor')
     
 class Product(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=400)
     price = models.FloatField()
-    image_path = models.CharField(max_length=300)
+    photo = models.ImageField(upload_to='product')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     vendor = models.ForeignKey(Vendor)
+    #tag = models.ManyToManyField(Tag)
 
 class Tag(models.Model):
     name = models.CharField(max_length=100)
@@ -58,7 +60,7 @@ class SellerLocation(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     name = models.CharField(max_length=200)
-    image_path = models.CharField(max_length=300)
+    photo = models.ImageField(upload_to='seller-location')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

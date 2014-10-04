@@ -1,6 +1,11 @@
 
 *.pyc
 *.sqlite3
+
+# Eclipse files
 .project
 .pydevproject
 .pydevproject.bak
+src/.settings
+
+src/server/be_local_server/migrations/*

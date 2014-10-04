@@ -123,15 +123,15 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         
         if product is not None:
             product.delete() 
-            return HttpResponse("success") 
+            return Response("Success", status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)                  
     
     def patch(self, request, product_id): 
         product = Product.objects.get(pk=product_id) 
-            
+   
         if product is not None:
-            serializer = be_local_server.serializers.ProductSerializer(product, data=request.DATA, many=False)
+            serializer = be_local_server.serializers.ProductSerializer(product, data=request.DATA, partial=True)
            
             if serializer.is_valid():
                 serializer.save()

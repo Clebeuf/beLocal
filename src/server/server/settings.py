@@ -82,11 +82,12 @@ CORS_ORIGIN_WHITELIST = None
 
 WSGI_APPLICATION = 'server.wsgi.application'
 
-# REST_FRAMEWORK = {
+REST_FRAMEWORK = {
 #     'DEFAULT_PERMISSION_CLASSES': [
 #         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
 #     ]
-# }
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+ }
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases

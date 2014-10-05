@@ -70,7 +70,6 @@ class SellerLocation(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     name = models.CharField(max_length=200)
-    photo = models.ImageField(upload_to='seller-location', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -8,10 +8,14 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseServerError, Http404
+from django.http import HttpResponse, HttpResponseServerError, Http404, HttpResponseRedirect
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 from social.apps.django_app.utils import psa
 from be_local_server import serializers
 from be_local_server.models import *
+from be_local_server.forms import UploadProductPhotoForm
+
 
 
 class ObtainAuthToken(APIView):
@@ -75,7 +79,7 @@ class AddVendorView(generics.CreateAPIView):
             user.save()
 
             serializer.save()
-            return HttpResponse("success")   
+            return Response(serializer.data, status=status.HTTP_201_CREATED)   
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
@@ -97,7 +101,7 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
             serializer = serializers.VendorSerializer(vendor)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     #Do we want to have a vendor delete here?
     def delete(self, request):
@@ -108,23 +112,25 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
             user.is_staff = 0
             user.save()
             vendor.delete()
-            return HttpResponse("success")
+            return Response("Success", status=status.HTTP_204_NO_CONTENT)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response("Vendor not found", status=status.HTTP_404_NOT_FOUND)
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
     def get_object(self):
-        vendor = Vendor.objects.get(user=self.request.user)
+        try:
+            vendor = Vendor.objects.get(user=self.request.user)
+        except vendor.DoesNotExist:
+            raise Http404
         return vendor
 
 class AddProductView(generics.CreateAPIView):
     """
     This view provides an endpoint for sellers to
     add a product to their products list.
-    """        
-  
+    """         
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)     
 
@@ -132,11 +138,11 @@ class AddProductView(generics.CreateAPIView):
         vendor = Vendor.objects.get(user=request.user)
         request.DATA['vendor'] = vendor.id
         
-        serializer = serializers.ProductSerializer(data=request.DATA)
+        serializer = serializers.ProductSerializer(data=request.DATA, partial=True)
 
         if serializer.is_valid():
             serializer.save()
-            return Response("Success", status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
@@ -148,7 +154,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     """   
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,) 
-    #serializer_class = serializers.ProductSerializer
+    serializer_class = serializers.ProductSerializer
     
     def get(self, request, product_id):       
         product = Product.objects.get(pk=product_id)
@@ -157,16 +163,16 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
             serializer = serializers.ProductSerializer(product) 
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)  
+            return Response("Product not found", status=status.HTTP_404_NOT_FOUND)  
     
     def delete(self, request, product_id):       
         product = Product.objects.get(pk=product_id)
         
         if product is not None:
             product.delete() 
-            return Response("Success", status=status.HTTP_200_OK)
+            return Response("Success", status=status.HTTP_204_NO_CONTENT)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)                  
+            return Response("Product not found", status=status.HTTP_404_NOT_FOUND)                  
     
     def patch(self, request, product_id):         
         product = Product.objects.get(pk=product_id) 
@@ -176,12 +182,51 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
            
             if serializer.is_valid():
                 serializer.save()
-                return Response("Success", status=status.HTTP_200_OK)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)          
-        
+            return Response("Product not found", status=status.HTTP_404_NOT_FOUND)          
+
+class AddProductPhotoView(generics.CreateAPIView):
+    """
+    This view provides an endpoint to save product photo. 
+    """
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+    serializer_class = serializers.ProductPhotoSerializer
+    model = ProductPhoto
+    
+    def post(self, request, *args, **kwargs):
+        form = UploadProductPhotoForm(request.POST, request.FILES)
+        if form.is_valid():
+            request.DATA['image'] = request.FILES['imagefile']
+            serializer = serializers.ProductPhotoSerializer(data=request.DATA)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            form = UploadProductPhotoForm()
+            # Render the form
+            return render_to_response(
+                                      'product_photo_upload.html',
+                                      {'form': form},
+                                      context_instance=RequestContext(request)
+            )
+    
+class RWDProductPhotoView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    This view provides an endpoint for sellers to
+    read-write-delete a product's image.
+    """  
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    
+    serializer_class = serializers.ProductPhotoSerializer
+    model = ProductPhoto  
+            
 class VendorProductView(generics.ListAPIView):
     """
     This view provides an endpoint for vendors to view their products.
@@ -197,7 +242,7 @@ class VendorProductView(generics.ListAPIView):
         if product is not None:
             return product
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST) 
+            return Response(status=status.HTTP_404_NOT_FOUND) 
 
 #TODO: Currenty this view simply returns all products rather
 # than trending ones

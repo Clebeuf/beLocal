@@ -146,7 +146,6 @@ STATIC_URL = '/static/'
 
 # User-uploaded images
 # https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user
-#_base = '/Volumes/JSLibrary/Code/Grad/cook-for-me/server-media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = 'http://127.0.0.1:8000/media/'
 ADMIN_MEDIA_PREFIX = '/admin-media/'

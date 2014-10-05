@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from be_local_server import views
-
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 admin.autodiscover()
 
@@ -11,15 +12,17 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls), name='admin'),
     url(r'^login/(?P<backend>.+)/$', views.ObtainAuthToken.as_view(), name='login'),
     
-    url(r'^vendor/add/?', views.AddVendorView.as_view(), name='vendor-add'),    
+    url(r'^vendor/add/$', views.AddVendorView.as_view(), name='vendor-add'),    
     url(r'^vendor/?$', views.RWDVendorView.as_view(), name='vendor-details'),    
 
-    url(r'^vendor/location/add/?', views.AddSellerLocationView.as_view(), name='vendor-location-add'),
-    url(r'^vendor/location/list/?', views.ListVendorLocations.as_view(), name='vendor-location-list'), 
+    url(r'^vendor/location/add/$', views.AddSellerLocationView.as_view(), name='vendor-location-add'),
+    url(r'^vendor/location/list/$', views.ListVendorLocations.as_view(), name='vendor-location-list'), 
        
-    url(r'^vendor/products/add/?', views.AddProductView.as_view(), name='vendor-product-add'),
-    url(r'^vendor/products/(?P<product_id>[0-9-]+)$', views.RWDProductView.as_view(), name='vendor-product-details'),
-    url(r'^vendor/(?P<vendor_id>[0-9-]+)/products/$', views.VendorProductView.as_view(), name='vendor-product-list'),
+    url(r'^vendor/products/add/$', views.AddProductView.as_view(), name='vendor-products-add'),
+    url(r'^vendor/products/photo/add/$', views.AddProductPhotoView.as_view(), name='vendor-products-photo-add'),
+    url(r'^vendor/products/photo/(?P<pk>[0-9-]+)/$', views.RWDProductPhotoView.as_view(), name='vendor-products-photo-details'),
+    url(r'^vendor/products/(?P<product_id>[0-9-]+)/$', views.RWDProductView.as_view(), name='vendor-products-details'),
+    url(r'^vendor/(?P<vendor_id>[0-9-]+)/products/$', views.VendorProductView.as_view(), name='vendor-products-list'),
     
-    url(r'^products/trending/?', views.TrendingProductView.as_view(), name='product-trending-list'),
-)
+    url(r'^products/trending/$', views.TrendingProductView.as_view(), name='product-trending-list'),
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -31,15 +31,21 @@ class BusinessVendorSerializer(serializers.ModelSerializer):
                     'extension'
         )       
 
+class ProductPhotoSerializer(serializers.ModelSerializer):
+	image = serializers.ImageField(source='image')	
+	class Meta:
+		model = be_local_server.models.ProductPhoto
+        fields = ('id', 'image')
+        
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = be_local_server.models.Product
         fields = ('id', 
                   'name',
                   'description', 
-                  'price', 
-                  #'image', 
-                  'vendor'
+                  'price',  
+                  'vendor',
+                  'photo'
                  )
 
 class ProductDisplaySerializer(serializers.ModelSerializer):
@@ -50,8 +56,8 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
                   'name',
                   'description', 
                   'price', 
-                  #'image', 
-                  'vendor'
+                  'vendor',
+                  'photo'
                  )           
 
 class AddressSerializer(serializers.ModelSerializer):

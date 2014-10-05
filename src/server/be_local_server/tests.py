@@ -55,15 +55,15 @@ class ProductTestCase(APITestCase):
     def tearDown(self):
         self.client.credentials()
     
-    def test_list_vendor_products(self):   
-        #view = VendorProductView.as_view()          
-        url = reverse('vendor-product-list', kwargs={'vendor_id': '2'}) 
+    # product lists
+    def test_list_vendor_products(self):            
+        url = reverse('vendor-products-list', kwargs={'vendor_id': '2'}) 
         response = self.client.get(url)
-        print response.data
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
     
+    # product details
     def test_add_product(self):  
-        url = reverse('vendor-product-add')  
+        url = reverse('vendor-products-add')  
         data = {
                 'vendor':"2",
                 'name':"carrots",
@@ -72,22 +72,19 @@ class ProductTestCase(APITestCase):
                 } 
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data, unicode("Success"))
         
     def test_read_product(self):             
-        url = reverse('vendor-product-details', kwargs={'product_id': '2'})
+        url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)   
     
     def test_edit_product(self): 
-        url = reverse('vendor-product-details', kwargs={'product_id': '2'})
+        url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         data = {'price':"20"}
         response = self.client.patch(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)  
-        self.assertEqual(response.data, unicode("Success"))
         
     def test_delete_product(self):
-        url = reverse('vendor-product-details', kwargs={'product_id': '2'})
+        url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK) 
-        self.assertEqual(response.data, unicode("Success"))  
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)      

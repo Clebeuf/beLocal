@@ -1,5 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+import os
+
+fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
 class Vendor(models.Model):
     user = models.ForeignKey(User) 
@@ -11,15 +16,21 @@ class Vendor(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     photo = models.ImageField(upload_to='vendor')
+
+class ProductPhoto(models.Model):
+    image = models.ImageField(storage = fs, upload_to='products', blank=True)
+    
+    def get_image_abs_path(self):
+        return os.path.join(settings.MEDIA_ROOT, self.image.name)
     
 class Product(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=400)
     price = models.FloatField()
-    photo = models.ImageField(upload_to='product')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     vendor = models.ForeignKey(Vendor)
+    photo = models.ForeignKey(ProductPhoto, blank=True, null=True)
     #tag = models.ManyToManyField(Tag)
 
 class Tag(models.Model):

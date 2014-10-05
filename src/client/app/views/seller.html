@@ -41,19 +41,39 @@
     </div>
 
     <!-- repeating for each location that seller has in the db -->
-    <div ng-repeat="location in sellerLocations" class="row list-group-item">
-        <div class="col-xs-10">
-            <h4>{{location.name}}</h4>
-            <address>
-                {{location.address.addr_line1}}<br />
-                {{location.address.city}}, {{location.address.state}}, {{location.address.zipcode}}<br />
-                {{location.address.country}}
-            </address>
+    <div ng-repeat="location in sellerLocations">
+        <div class="row list-group-item">
+            <div class="col-xs-10">
+                <h4>{{location.name}}</h4>
+                <div class="seller-location-details">
+                    <p><b>DATE:</b>
+                        {{location.start_time | date:" EEEE',' MMMM d',' h:mma' - '"}}
+                        {{location.end_time | date:" h:mma"}}
+                    </p>
+                    <p><b>LOCATION:</b>
+                        {{location.address.addr_line1}}
+                        {{location.address.city}}, 
+                        {{location.address.state}}, 
+                        {{location.address.zipcode}}
+                    </p>
+
+                    <p><b>CONTACT INFORMATION:</b>
+                    </p>
+
+                    <p><b>DETAILS:</b>
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="col-xs-2 edit-button-container">
+                <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#locationModal">Edit</button>
+            </div>
+
         </div>
-        <div class="col-xs-2 edit-button-container">
-            <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#locationModal">Edit</button>
-        </div>
+        <br>
     </div>
+
     <!-- end of repeating for each location that seller has in the db -->
 
 <!--Display Seller's Inventory-->

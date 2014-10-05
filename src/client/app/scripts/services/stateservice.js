@@ -28,7 +28,7 @@ angular.module('clientApp')
     }
 
     this.getSellerLocations = function() {
-      return $http.get(this.getServerAddress() + 'vendor/location/list')
+      return $http.get(this.getServerAddress() + 'vendor/location/list/')
       .error(function(data) {
         console.log('Error retrieving seller locations');
       }) 

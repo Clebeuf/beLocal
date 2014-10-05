@@ -68,7 +68,6 @@ angular.module('clientApp')
                     "start_time" : $scope.startTime,
                     "end_time" : $scope.endTime,
                     "name" : $scope.locationName,
-                    "image_path" : "lol",
                 };
 
                 StateService.createSellerLocation(sellerLocation).then(function() {

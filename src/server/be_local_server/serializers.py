@@ -70,7 +70,7 @@ class AddSellerLocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = be_local_server.models.SellerLocation
-        fields = ('id', 'address', 'name', 'image_path','start_time', 'end_time', 'vendor')
+        fields = ('id', 'address', 'name', 'photo','start_time', 'end_time', 'vendor')
 
 
 # class TagSerializer(serializers.ModelSerializer):

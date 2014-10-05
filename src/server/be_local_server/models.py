@@ -15,7 +15,7 @@ class Vendor(models.Model):
     extension = models.CharField(max_length=25)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    photo = models.ImageField(upload_to='vendor')
+    photo = models.ImageField(upload_to='vendor', null=True)
 
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)
@@ -70,7 +70,7 @@ class SellerLocation(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     name = models.CharField(max_length=200)
-    photo = models.ImageField(upload_to='seller-location')
+    photo = models.ImageField(upload_to='seller-location', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

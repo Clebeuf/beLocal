@@ -63,7 +63,7 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = be_local_server.models.Address
-        fields = ( 'id', 'addr_type', 'addr_line1', 'city', 'zipcode', 'state', 'latitude', 'longitude')
+        fields = ( 'id', 'addr_type', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude')
 
 class AddSellerLocationSerializer(serializers.ModelSerializer):
     address = AddressSerializer()

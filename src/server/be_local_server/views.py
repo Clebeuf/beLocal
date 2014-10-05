@@ -186,7 +186,35 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
         else:
-            return Response("Product not found", status=status.HTTP_404_NOT_FOUND)          
+            return Response("Product not found", status=status.HTTP_404_NOT_FOUND) 
+
+
+class RWDSellerLocationView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    This view provides an endpoint for deleting and modifying views         
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.AddSellerLocationSerializer
+
+    def patch(self, request, location_id):
+        self.id = location_id
+        return self.partial_update(request)
+
+    def get_object(self):
+        try:
+            location = SellerLocation.objects.get(pk = self.id)  
+        except location.DoesNotExist:
+            raise Http404
+        return location
+
+    def delete(self, request, location_id):
+        location = SellerLocation.objects.get(pk=location_id)
+
+        if location is not None:
+            location.delete()
+            return Response("Sucessfully deleted location", status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response("location not found", status=status.HTTP_404_NOT_FOUND)
 
 class AddProductPhotoView(generics.CreateAPIView):
     """

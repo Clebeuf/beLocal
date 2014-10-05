@@ -12,19 +12,51 @@ angular.module('clientApp')
     $scope.StateService = StateService;
     $scope.opened = false;
     $scope.minDate = new Date();
-    $scope.locationDate = new Date();
-    var tempDate = new Date();
-    tempDate.setHours(tempDate.getHours() + 1);
     $scope.locationType = 'FAR';
     $scope.sellerLocations = [];
+
+    $scope.resetLocationModal = function() {
+        $scope.newLocationSubmitted = false;
+        $scope.isEditingLocation = false;       
+        $scope.submitLocationButtonText = "Add Location";
+
+        var tempDate = new Date();
+        tempDate.setHours(tempDate.getHours() + 1);
+        $scope.startTime = $scope.roundTimeToNearestFive(new Date());
+        $scope.endTime = $scope.roundTimeToNearestFive(tempDate);
+        $scope.locationDate = new Date();        
+
+        $scope.locationAddress = undefined;
+        $scope.locationCity = undefined;
+        $scope.locationProvince = undefined;
+        $scope.locationCountry = undefined;
+        $scope.locationPostalCode = undefined;
+        $scope.locationType = 'FAR';
+        $scope.locationName = undefined;  
+    }
+
+    $scope.editLocation = function(location) {
+        $scope.isEditingLocation = true;
+        $scope.newLocationSubmitted = false;
+        $scope.submitLocationButtonText = "Edit Location";
+
+        $scope.startTime = location.start_time;
+        $scope.endTime = location.end_time;
+        $scope.locationDate = location.start_time;
+
+        $scope.locationAddress = location.address.addr_line1;
+        $scope.locationCity = location.address.city;
+        $scope.locationProvince = location.address.state;
+        $scope.locationCountry = location.address.country;
+        $scope.locationType = location.address.addr_type;
+        $scope.locationName = location.name;
+        $scope.locationPostalCode = location.address.zipcode;
+    }
 
     $scope.roundTimeToNearestFive = function(date) {
       var coeff = 1000 * 60 * 5;
       return new Date(Math.round(date.getTime() / coeff) * coeff);
     };
-
-    $scope.startTime = $scope.roundTimeToNearestFive(new Date());
-    $scope.endTime = $scope.roundTimeToNearestFive(tempDate);
 
     $scope.open = function($event) {
         $event.preventDefault();
@@ -78,6 +110,7 @@ angular.module('clientApp')
 
     $scope.init = function() {
         $scope.getSellerLocations();
+        $scope.resetLocationModal();
     }  
 
     $scope.init();   

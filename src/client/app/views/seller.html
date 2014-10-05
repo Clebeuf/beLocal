@@ -36,7 +36,7 @@
             <h3>Your Locations</h3>
         </div>
         <div class="col-xs-2 add-new-button-container">
-            <button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#locationModal">Create New Location</button>
+            <button class="btn btn-primary btn-md pull-right" ng-click="resetLocationModal()" data-toggle="modal" data-target="#locationModal">Create New Location</button>
         </div>
     </div>
 
@@ -51,7 +51,7 @@
             </address>
         </div>
         <div class="col-xs-2 edit-button-container">
-            <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#locationModal">Edit</button>
+            <button class="btn btn-primary btn-md" data-toggle="modal" ng-click="editLocation(location)" data-target="#locationModal">Edit</button>
         </div>
     </div>
     <!-- end of repeating for each location that seller has in the db -->
@@ -234,7 +234,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" ng-click="newLocationSubmit()" class="btn btn-primary">Add Location</button>
+                <button type="submit" ng-click="newLocationSubmit()" class="btn btn-primary">{{submitLocationButtonText}}</button>
             </div>
         </div>
         <!-- /.modal-content -->

@@ -26,7 +26,7 @@ class ProductPhoto(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=400)
-    price = models.FloatField()
+    price = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     vendor = models.ForeignKey(Vendor)

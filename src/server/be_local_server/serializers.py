@@ -29,7 +29,13 @@ class BusinessVendorSerializer(serializers.ModelSerializer):
                     'country_code',
                     'phone',
                     'extension'
-        )       
+        ) 
+
+class PhotoPathSerializer(serializers.ModelSerializer):
+    image_url = serializers.Field(source="image_url")  
+    class Meta:
+        model = be_local_server.models.ProductPhoto
+        fields = ('image_url',)
 
 class ProductPhotoSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -49,6 +55,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ProductDisplaySerializer(serializers.ModelSerializer):
     vendor = BusinessVendorSerializer() 
+    photo = PhotoPathSerializer()
     class Meta:
         model = be_local_server.models.Product
         fields = ('id', 

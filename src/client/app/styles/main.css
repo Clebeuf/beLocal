@@ -4,6 +4,10 @@
   background-color: #8ed41e;
 }
 
+.btn-action {
+  margin-right: 15px;
+}
+
 .nav > li > a {
   color: #8ed41e;
 }
@@ -121,7 +125,7 @@
 
 .beLocal-btn-filled {
   background-color: #8ed41e;
-  color: white;
+  color: white !important;
 }
 
 .beLocal-btn-filled:hover {

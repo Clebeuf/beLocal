@@ -249,16 +249,20 @@ class VendorProductView(generics.ListAPIView):
     """
     This view provides an endpoint for vendors to view their products.
     """   
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    #authentication_classes = (TokenAuthentication,)
+    #permission_classes = (IsAuthenticated,)
     serializer_class = serializers.ProductSerializer
 
     def get_queryset(self):
         vendor_id = self.kwargs['vendor_id']
-        product = Product.objects.filter(vendor=vendor_id)
+        products = Product.objects.filter(vendor=vendor_id)
           
-        if product is not None:
-            return product
+        for product in products:
+            inventories = SellerProductAtLocation.objects.filter(product=product)
+            product.inventories = inventories 
+
+        if products is not None:
+            return products 
         else:
             return Response(status=status.HTTP_404_NOT_FOUND) 
 

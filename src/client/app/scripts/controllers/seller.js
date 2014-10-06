@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('SellerCtrl', function ($scope, StateService) {
+  .controller('SellerCtrl', function ($scope, StateService, $timeout) {
     $scope.StateService = StateService;
     $scope.opened = false;
     $scope.minDate = new Date();
@@ -38,7 +38,7 @@ angular.module('clientApp')
     $scope.editLocation = function(location) {
         $scope.isEditingLocation = true;
         $scope.newLocationSubmitted = false;
-        $scope.submitLocationButtonText = "Edit Location";
+        $scope.submitLocationButtonText = "Save Changes";
 
         $scope.startTime = new Date(location.start_time);
         $scope.endTime = new Date(location.end_time);
@@ -141,7 +141,11 @@ angular.module('clientApp')
 
     $scope.init = function() {
         $scope.getSellerLocations();
-        $scope.resetLocationModal();
+        $timeout(function(){
+            angular.element("[data-toggle='tooltip']").tooltip();
+        }, 1000)
+
+        $scope.resetLocationModal();3
     }  
 
     $scope.init();   

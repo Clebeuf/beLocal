@@ -225,25 +225,6 @@ class AddProductPhotoView(generics.CreateAPIView):
     serializer_class = serializers.ProductPhotoSerializer
     model = ProductPhoto
     
-    def post(self, request, *args, **kwargs):
-        form = UploadProductPhotoForm(request.POST, request.FILES)
-        if form.is_valid():
-            request.DATA['image'] = request.FILES['imagefile']
-            serializer = serializers.ProductPhotoSerializer(data=request.DATA)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            form = UploadProductPhotoForm()
-            # Render the form
-            return render_to_response(
-                                      'product_photo_upload.html',
-                                      {'form': form},
-                                      context_instance=RequestContext(request)
-            )
-    
 class RWDProductPhotoView(generics.RetrieveUpdateDestroyAPIView):
     """
     This view provides an endpoint for sellers to

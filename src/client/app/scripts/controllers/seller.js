@@ -53,6 +53,18 @@ angular.module('clientApp')
         $scope.locationPostalCode = location.address.zipcode;
     }
 
+    $scope.resetItemModal = function() {
+        $scope.submitItemButtonText = "Add Item";        
+    }
+
+    $scope.fileNameChanged = function(file) {
+        console.log(file);
+        StateService.uploadFile(file[0])
+        .success(function(response) {
+            $scope.newImageID = response.id;
+        });
+    }
+
     $scope.roundTimeToNearestFive = function(date) {
       var coeff = 1000 * 60 * 5;
       return new Date(Math.round(date.getTime() / coeff) * coeff);
@@ -69,6 +81,23 @@ angular.module('clientApp')
         StateService.getSellerLocations().then(function(response) {
             $scope.sellerLocations = response.data;
         })
+    }
+
+    $scope.newItemSubmit = function() {
+        $scope.newItemSubmitted = true;
+        if($scope.itemForm.$valid) {
+            angular.element('#itemModal').modal('hide');
+
+            var item = {
+                "name" : $scope.itemName,
+                "description" : $scope.itemDescription,
+                "photo" : $scope.newImageID
+            };
+
+            StateService.createItem(item).then(function() {
+                console.log('Whee');
+            });
+        }
     }
 
     $scope.newLocationSubmit = function() {

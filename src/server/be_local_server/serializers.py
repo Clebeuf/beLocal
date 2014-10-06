@@ -32,7 +32,6 @@ class BusinessVendorSerializer(serializers.ModelSerializer):
         )       
 
 class ProductPhotoSerializer(serializers.ModelSerializer):
-	image = serializers.ImageField(source='image')	
 	class Meta:
 		model = be_local_server.models.ProductPhoto
         fields = ('id', 'image')

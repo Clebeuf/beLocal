@@ -38,6 +38,25 @@ angular.module('clientApp')
       return 'http://localhost:8000/';
     }
 
+    this.uploadFile = function(file) {
+      var fd = new FormData();
+      fd.append('image', file);
+      return $http.post(this.getServerAddress() + 'vendor/products/photo/add/', fd, {
+        headers: {'Content-Type' : undefined},
+        transformRequest: angular.identity,
+      })
+      .error(function(data) {
+        console.log('Error uploading image.');
+      })
+    }
+
+    this.createItem = function(item) {
+      return $http.post(this.getServerAddress() + 'vendor/products/add/', item)
+      .success(function() {
+        console.log("Created a new item!");
+      })
+    }
+
     this.getTrendingProductsList = function() {
       return trendingProducts;
     }

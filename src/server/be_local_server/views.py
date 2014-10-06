@@ -14,9 +14,6 @@ from django.template import RequestContext
 from social.apps.django_app.utils import psa
 from be_local_server import serializers
 from be_local_server.models import *
-from be_local_server.forms import UploadProductPhotoForm
-
-
 
 class ObtainAuthToken(APIView):
     throttle_classes = ()

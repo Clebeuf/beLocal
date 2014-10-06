@@ -42,7 +42,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ('id', 
                   'name',
                   'description', 
-                  'price',  
+                  #'price',  
                   'vendor',
                   'photo'
                  )
@@ -54,7 +54,7 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
         fields = ('id', 
                   'name',
                   'description', 
-                  'price', 
+                  #'price', 
                   'vendor',
                   'photo'
                  )           
@@ -66,10 +66,16 @@ class AddressSerializer(serializers.ModelSerializer):
 
 class AddSellerLocationSerializer(serializers.ModelSerializer):
     address = AddressSerializer()
-
     class Meta:
         model = be_local_server.models.SellerLocation
         fields = ('id', 'address', 'name','start_time', 'end_time', 'vendor')
+
+class SellerProductAtLocationSerializer(serializers.ModelSerializer): 
+    sellerLocation = AddSellerLocationSerializer()
+    product = ProductSerializer()
+    class Meta:
+        model = be_local_server.models.SellerProductAtLocation
+        fields = ('id', 'sellerLocation', 'product', 'is_visible', 'stock')
 
 
 # class TagSerializer(serializers.ModelSerializer):
@@ -85,10 +91,4 @@ class AddSellerLocationSerializer(serializers.ModelSerializer):
 # 		model = be_local_server.models.ProductTag
 # 		fields = ('id', 'product', 'tag') #'created_at', 'updated_at')
 
-# class SellerProductAtLocationSerializer(serializers.ModelSerializer):
-# 	sellerLocation = SellerLocationSerializer()
-# 	product = ProductSerializer()
 
-# 	class Meta:
-# 		model = be_local_server.SellerProductAtLocation
-# 		fields = ('id', 'sellerLocation', 'product', 'is_visible', 'stock') #created_at', 'updated_at', 'stock')

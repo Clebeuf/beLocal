@@ -40,9 +40,9 @@ angular.module('clientApp')
         $scope.newLocationSubmitted = false;
         $scope.submitLocationButtonText = "Edit Location";
 
-        $scope.startTime = location.start_time;
-        $scope.endTime = location.end_time;
-        $scope.locationDate = location.start_time;
+        $scope.startTime = new Date(location.start_time);
+        $scope.endTime = new Date(location.end_time);
+        $scope.locationDate = new Date(location.start_time);
 
         $scope.locationAddress = location.address.addr_line1;
         $scope.locationCity = location.address.city;
@@ -51,6 +51,7 @@ angular.module('clientApp')
         $scope.locationType = location.address.addr_type;
         $scope.locationName = location.name;
         $scope.locationPostalCode = location.address.zipcode;
+        $scope.locationId = location.id;
     }
 
     $scope.resetItemModal = function() {
@@ -107,11 +108,11 @@ angular.module('clientApp')
 
                 $scope.startTime.setDate($scope.locationDate.getDate());
                 $scope.startTime.setMonth($scope.locationDate.getMonth());
-                $scope.startTime.setYear($scope.locationDate.getYear());
+                $scope.startTime.setFullYear($scope.locationDate.getFullYear());
 
                 $scope.endTime.setDate($scope.locationDate.getDate());
                 $scope.endTime.setMonth($scope.locationDate.getMonth());
-                $scope.endTime.setYear($scope.locationDate.getYear());                    
+                $scope.endTime.setFullYear($scope.locationDate.getFullYear());                    
 
                 var address = {
                     "addr_line1" : $scope.locationAddress,
@@ -125,13 +126,14 @@ angular.module('clientApp')
                 };
 
                 var sellerLocation = {
+                    "id" : $scope.locationId,
                     "address" : address,
                     "start_time" : $scope.startTime,
                     "end_time" : $scope.endTime,
                     "name" : $scope.locationName,
                 };
 
-                StateService.createSellerLocation(sellerLocation).then(function() {
+                StateService.createSellerLocation(sellerLocation, $scope.isEditingLocation).then(function() {
                     $scope.getSellerLocations();
                 });
             }

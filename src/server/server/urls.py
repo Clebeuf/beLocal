@@ -17,6 +17,7 @@ urlpatterns = patterns('',
 
     url(r'^vendor/location/add/$', views.AddSellerLocationView.as_view(), name='vendor-location-add'),
     url(r'^vendor/location/list/$', views.ListVendorLocations.as_view(), name='vendor-location-list'), 
+    url(r'^vendor/location/(?P<location_id>[0-9-]+)/$', views.RWDSellerLocationView.as_view(), name='vendor-location-details'),
        
     url(r'^vendor/products/add/$', views.AddProductView.as_view(), name='vendor-products-add'),
     url(r'^vendor/products/photo/add/$', views.AddProductPhotoView.as_view(), name='vendor-products-photo-add'),

@@ -186,7 +186,35 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
         else:
-            return Response("Product not found", status=status.HTTP_404_NOT_FOUND)          
+            return Response("Product not found", status=status.HTTP_404_NOT_FOUND) 
+
+
+class RWDSellerLocationView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    This view provides an endpoint for deleting and modifying views         
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.AddSellerLocationSerializer
+
+    def patch(self, request, location_id):
+        self.id = location_id
+        return self.partial_update(request)
+
+    def get_object(self):
+        try:
+            location = SellerLocation.objects.get(pk = self.id)  
+        except location.DoesNotExist:
+            raise Http404
+        return location
+
+    def delete(self, request, location_id):
+        location = SellerLocation.objects.get(pk=location_id)
+
+        if location is not None:
+            location.delete()
+            return Response("Sucessfully deleted location", status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response("location not found", status=status.HTTP_404_NOT_FOUND)
 
 class AddProductPhotoView(generics.CreateAPIView):
     """
@@ -196,25 +224,6 @@ class AddProductPhotoView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,) 
     serializer_class = serializers.ProductPhotoSerializer
     model = ProductPhoto
-    
-    def post(self, request, *args, **kwargs):
-        form = UploadProductPhotoForm(request.POST, request.FILES)
-        if form.is_valid():
-            request.DATA['image'] = request.FILES['imagefile']
-            serializer = serializers.ProductPhotoSerializer(data=request.DATA)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            form = UploadProductPhotoForm()
-            # Render the form
-            return render_to_response(
-                                      'product_photo_upload.html',
-                                      {'form': form},
-                                      context_instance=RequestContext(request)
-            )
     
 class RWDProductPhotoView(generics.RetrieveUpdateDestroyAPIView):
     """

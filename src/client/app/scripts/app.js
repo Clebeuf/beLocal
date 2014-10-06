@@ -11,7 +11,7 @@ var app = angular.module('clientApp', [
   'ui.bootstrap',
   'mgcrea.ngStrap.timepicker',
 ])
-  .config(function ($stateProvider, $urlRouterProvider) {
+  .config(function ($stateProvider, $httpProvider, $urlRouterProvider) {
     $stateProvider
     .state('main', {
       url: '/',
@@ -25,6 +25,10 @@ var app = angular.module('clientApp', [
       controller: 'SellerCtrl',
       authenticate: true
     });
+
+    $httpProvider.defaults.headers.patch = {
+        'Content-Type': 'application/json;charset=utf-8'
+    };    
 
     // Define the default action to be taken if an unrecognized route is taken.
     $urlRouterProvider.otherwise('/');

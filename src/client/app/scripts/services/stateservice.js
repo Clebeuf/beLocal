@@ -38,6 +38,25 @@ angular.module('clientApp')
       return 'http://localhost:8000/';
     }
 
+    this.uploadFile = function(file) {
+      var fd = new FormData();
+      fd.append('image', file);
+      return $http.post(this.getServerAddress() + 'vendor/products/photo/add/', fd, {
+        headers: {'Content-Type' : undefined},
+        transformRequest: angular.identity,
+      })
+      .error(function(data) {
+        console.log('Error uploading image.');
+      })
+    }
+
+    this.createItem = function(item) {
+      return $http.post(this.getServerAddress() + 'vendor/products/add/', item)
+      .success(function() {
+        console.log("Created a new item!");
+      })
+    }
+
     this.getTrendingProductsList = function() {
       return trendingProducts;
     }
@@ -46,13 +65,24 @@ angular.module('clientApp')
       this.setProfile(ipCookie('beLocalUser'));
     }
 
-    this.createSellerLocation = function(sellerLocation) {
-      return $http.post(this.getServerAddress() + 'vendor/location/add/', sellerLocation)
-      .success(function() {
-        console.log("Created a new location!");
-      })
-      .error(function() {
-        console.log("Error creating a new location!");
-      })
+    this.createSellerLocation = function(sellerLocation, isEditing) {
+      if(isEditing) {
+        var url = this.getServerAddress() + 'vendor/location/' + sellerLocation.id + '/';
+        return $http({method: 'PATCH', url: url, data: sellerLocation})
+        .success(function() {
+          console.log("Edited a location!");
+        })
+        .error(function() {
+          console.log("Error editing location!");
+        })         
+      } else {
+        return $http.post(this.getServerAddress() + 'vendor/location/add/', sellerLocation)
+        .success(function() {
+          console.log("Created a new location!");
+        })
+        .error(function() {
+          console.log("Error creating a new location!");
+        })        
+      }
     }
   });

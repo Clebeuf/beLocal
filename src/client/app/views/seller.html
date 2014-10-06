@@ -36,7 +36,8 @@
             <h3>Your Locations</h3>
         </div>
         <div class="col-xs-3 add-new-button-container">
-            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" data-target="#locationModal">Create New Location</button>
+            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" ng-click="resetLocationModal()" data-target="#locationModal">Create New Location</button>
+
         </div>
     </div>
 
@@ -53,7 +54,7 @@
                 <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
                 <div class="col-xs-3 edit-text-container">
                     <span data-toggle="tooltip" data-placement="bottom" title="Edit Location">
-                        <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal"></span>
+                        <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
                     </span>
                     <span data-toggle="tooltip" data-placement="bottom" title="Delete Location">
                         <span class="edit-text glyphicon glyphicon-trash" data-toggle="modal" data-target="TBA"></span>
@@ -83,7 +84,6 @@
                     details go here
                 </p>
                 </div>
-
         </div>
         <br>
     </div>
@@ -98,7 +98,7 @@
             <h3>Your Inventory</h3>
         </div>
         <div class="col-xs-2 add-new-button-container">
-            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" data-target="#itemModal">Create New Item</button>
+            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" data-target="#itemModal" ng-click="resetItemModal()">Create New Item</button>
         </div>
     </div>
 
@@ -152,28 +152,43 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Create New Item</h4>
+                <h4 ng-hide="isEditingItem" class="modal-title">Add New Item<br /><small>Please complete the following fields to add a new item</small></h4>
+                <h4 ng-show="isEditingItem" class="modal-title">Edit Location<br /><small>Please change any of the fields below to update an existing item</small></h4>                
             </div>
-            <form role="form">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="item-name">Item Name</label>
-                        <input type="email" class="form-control" id="item-name" placeholder="Enter Item Name"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="item-description">Item Description</label>
-                        <textarea class="form-control" id="item-description" placeholder="Enter Description"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="item-image">Upload Image</label>
-                        <input type="file" id="item-image">
-                    </div>
+            <div class="modal-body">  
+                <div class="container-fluid">                   
+                    <form role="form" name="itemForm" novalidate>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.itemField.$invalid }">
+                                    <label for="item-name">Item Name</label>
+                                    <input required ng-model="itemName" type="text" name="itemField" class="form-control" id="item-name" placeholder="Item Name"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.descriptionField.$invalid }">
+                                    <label for="item-name">Item Description</label>
+                                    <textarea required ng-model="itemDescription" type="text" name="descriptionField" class="form-control" id="item-name" placeholder="Item Description"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.imageField.$invalid }">
+                                    <label for="item-image">Upload Image</label>
+                                    <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" ng-click="newItemSubmit()" class="btn btn-primary">{{submitItemButtonText}}</button>
+            </div>
         </div>
         <!-- /.modal-content -->
     </div>
@@ -186,16 +201,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Create New Location<br /><small>Please complete the following fields to add a new seller location</small></h4>
+                <h4 ng-hide="isEditingLocation" class="modal-title">Add New Location<br /><small>Please complete the following fields to add a new seller location</small></h4>
+                <h4 ng-show="isEditingLocation" class="modal-title">Edit Location<br /><small>Please change any of the fields below to update an existing seller location</small></h4>                
             </div>
             <div class="modal-body">  
                 <div class="container-fluid">                   
-                    <form role="form" name="locationForm" novalidate ng-submit="newLocationSubmit()">
+                    <form role="form" name="locationForm" novalidate>
                         <div class="row">
                             <div class="col-xs-6 col-md-6">
                                 <div class="form-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationField.$invalid }">
                                     <label for="item-name">Location Name</label>
-                                    <input required ng-model="locationName" type="text" name="locationField" class="form-control" id="item-name" placeholder="Enter Location Name"/>
+                                    <input required ng-model="locationName" type="text" name="locationField" class="form-control" id="item-name" placeholder="Location Name"/>
                                 </div>
                             </div>
                             <div class="col-xs-6 col-md-6">
@@ -280,7 +296,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" ng-click="newLocationSubmit()" class="btn btn-primary">Add Location</button>
+                <button type="submit" ng-click="newLocationSubmit()" class="btn btn-primary">{{submitLocationButtonText}}</button>
             </div>
         </div>
         <!-- /.modal-content -->

@@ -15,19 +15,25 @@
 
 <div class="full-width-tabs seller-tabs container-fluid">
   <ul class="nav nav-pills" role="tablist">
-    <li class="full-width"><a href="#">Markets</a></li>  
-    <li class="full-width active"><a href="#">Trending</a></li>
-    <li class="full-width"><a href="#">Vendors</a></li>
+    <li class="full-width"><a href="#markets" role="tab" data-toggle="tab">Markets</a></li>  
+    <li class="full-width active"><a href="#trending" role="tab" data-toggle="tab">Trending</a></li>
+    <li class="full-width"><a href="#vendors" role="tab" data-toggle="tab">Vendors</a></li>
   </ul>
 </div>
 
-<div class="container container-home-page">
-  <div ng-repeat="items in trendingProducts | groupBy:3" class="row">
-    <div class="col-sm-4" ng-repeat="item in items" >
-      <product-card data="item"></product-card>
-    </div>  
+<div class="tab-content">
+  <div class="tab-pane" id="markets"></div>
+  <div class="tab-pane active" id="trending">
+    <div class="container container-home-page">
+      <div ng-repeat="items in trendingProducts | groupBy:3" class="row">
+        <div class="col-sm-4" ng-repeat="item in items" >
+          <product-card data="item"></product-card>
+        </div>  
+        </div>
+      <div class="footer">
+        <p>♥ from the beLocal team</p>
+      </div>
     </div>
-  <div class="footer">
-    <p>♥ from the beLocal team</p>
   </div>
+  <div class="tab-pane" id="vendors"></div>  
 </div>

@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('SellerCtrl', function ($scope, StateService) {
+  .controller('SellerCtrl', function ($scope, StateService, $timeout) {
     $scope.StateService = StateService;
     $scope.opened = false;
     $scope.minDate = new Date();
@@ -78,6 +78,9 @@ angular.module('clientApp')
 
     $scope.init = function() {
         $scope.getSellerLocations();
+        $timeout(function(){
+            angular.element("[data-toggle='tooltip']").tooltip();
+        }, 1000)
     }  
 
     $scope.init();   

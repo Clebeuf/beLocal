@@ -28,97 +28,123 @@
 
 
 <div class="container container-seller">
-    
+<br>    
 
 <!--Display Seller's Locations-->
-    <div class="row ">
-        <div class="col-xs-10 seller-title-bar">
+    <div class="row">
+        <div class="col-xs-9 seller-title-bar">
             <h3>Your Locations</h3>
         </div>
-        <div class="col-xs-2 add-new-button-container">
-            <button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#locationModal">Create New Location</button>
+        <div class="col-xs-3 add-new-button-container">
+            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" data-target="#locationModal">Create New Location</button>
         </div>
     </div>
 
     <!-- repeating for each location that seller has in the db -->
     <div ng-repeat="location in sellerLocations">
-        <div class="row list-group-item">
-            <div class="col-xs-10">
-                <h4>{{location.name}}</h4>
-                <div class="seller-location-details">
-                    <p><b>DATE:</b>
-                        {{location.start_time | date:" EEEE',' MMMM d',' h:mma' - '"}}
-                        {{location.end_time | date:" h:mma"}}
-                    </p>
-                    <p><b>LOCATION:</b>
-                        {{location.address.addr_line1}}
-                        {{location.address.city}}, 
-                        {{location.address.state}}, 
-                        {{location.address.zipcode}}
-                    </p>
+        <div class="list-group-item">
+            <div class="row">
 
-                    <p><b>CONTACT INFORMATION:</b>
-                    </p>
-
-                    <p><b>DETAILS:</b>
-                    </p>
+                <!-- Display the locations name -->
+                <div class="col-xs-9">
+                    <h4>{{location.name}}</h4> 
                 </div>
 
+                <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
+                <div class="col-xs-3 edit-text-container">
+                    <span data-toggle="tooltip" data-placement="bottom" title="Edit Location">
+                        <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal"></span>
+                    </span>
+                    <span data-toggle="tooltip" data-placement="bottom" title="Delete Location">
+                        <span class="edit-text glyphicon glyphicon-trash" data-toggle="modal" data-target="TBA"></span>
+                    </span>
+                </div> 
+
             </div>
 
-            <div class="col-xs-2 edit-button-container">
-                <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#locationModal">Edit</button>
-            </div>
+            <div class="well">
+
+                <p><b>DATE:</b>
+                    {{location.start_time | date:" EEEE',' MMMM d',' h:mma' - '"}}
+                    {{location.end_time | date:" h:mma"}}
+                </p>
+                <p><b>LOCATION:</b>
+                    {{location.address.addr_line1}},
+                    {{location.address.city}}, 
+                    {{location.address.state}}, 
+                    {{location.address.zipcode}}
+                </p>
+
+                <p><b>CONTACT INFORMATION:</b>
+                    contact info goes here
+                </p>
+
+                <p><b>DETAILS:</b>
+                    details go here
+                </p>
+                </div>
 
         </div>
         <br>
     </div>
+<!-- end of repeating for each location that seller has in the db -->
 
-    <!-- end of repeating for each location that seller has in the db -->
+
 
 <!--Display Seller's Inventory-->
-    <div class="row">
-        <div class="col-xs-6 seller-title-bar">
+
+   <div class="row">
+        <div class="col-xs-10 seller-title-bar">
             <h3>Your Inventory</h3>
         </div>
-        <div class="col-xs-6 add-new-button-container">
-            <button class="btn btn-primary btn-md pull-right" data-toggle="modal" data-target="#itemModal">Create New Item</button>
+        <div class="col-xs-2 add-new-button-container">
+            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" data-target="#itemModal">Create New Item</button>
         </div>
     </div>
 
-    <!-- repeating for each item that seller has in the db -->
-    <div class="row list-group-item">
-        <div class="col-sm-2 thumbnail hidden-xs">
-            <img src="http://media.mercola.com/assets/images/food-facts/carrot-nutrition-facts.jpg"/>
-        </div>
-        <div class="col-sm-8 col-xs-10">
-            <h4>Item Name</h4>
-            Item Description
-        </div>
-        <div class="col-sm-2 col-xs-2 edit-button-container">
-            <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#locationModal">Edit</button>
-        </div>
-    </div>
-    <div class="row list-group-item all-locations">
-        All Locations
-        <div class="pull-right seller-item-stock">
-            <input type="radio" name="stock-status" value="InStock"> In Stock 
-            <input type="radio" name="stock-status" value="OutOfStock"> Out of Stock 
-        </div>
-    </div>
 
-    <!-- repeat for each seller location -->
-    <div class="row list-group-item">
-        Sample Location
-        <div class="pull-right seller-item-stock">
-            <input type="radio" name="stock-status2" value="InStock"> In Stock 
-            <input type="radio" name="stock-status2" value="OutOfStock"> Out of Stock 
+
+<!-- repeating for each item that seller has in the db -->
+ <div ng-repeat="location in sellerLocations">
+        <div class="list-group-item">
+            <div class="row">
+
+            <div class="col-sm-2 thumbnail hidden-xs">
+                <img src="http://media.mercola.com/assets/images/food-facts/carrot-nutrition-facts.jpg"/>
+            </div>
+            <div class="col-sm-8 col-xs-10">
+                <h4>Item Name</h4>
+                Item Description
+            </div>
+            <div class="col-sm-2 col-xs-2 edit-button-container">
+                <button class="btn btn-primary btn-md" data-toggle="modal" data-target="#locationModal">Edit</button>
+            </div>
         </div>
+        <div class="row list-group-item all-locations">
+            All Locations
+            <div class="pull-right seller-item-stock">
+                <input type="radio" name="stock-status" value="InStock"> In Stock 
+                <input type="radio" name="stock-status" value="OutOfStock"> Out of Stock 
+            </div>
+        </div>
+
+        <!-- repeat for each seller location -->
+        <div class="row list-group-item">
+            Sample Location
+            <div class="pull-right seller-item-stock">
+                <input type="radio" name="stock-status2" value="InStock"> In Stock 
+                <input type="radio" name="stock-status2" value="OutOfStock"> Out of Stock 
+            </div>
+        </div>
+
     </div>
     <!--  end of repeat for each seller location -->
+    <br>
+</div>
 
 </div>
 <!-- END OF CONTAINTER-SELLER -->
+
 
 <!-- Seller Add/Edit Item Modal -->
 <div class="modal fade" id="itemModal">

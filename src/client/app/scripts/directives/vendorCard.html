@@ -1,9 +1,20 @@
-<div class="thumbnail">
-      <!-- <img data-src="holder.js/350x300" alt="..." holder-fix> -->
-      <img ng-src="{{vendor.photo.image_url}}" />
-      <div class="caption">
-        <h4>{{vendor.company_name}}</h4>
-        <a href="#" class="btn btn-primary btn-more-details" role="button">More Details</a>
+<div class="list-group-item">
+	<div class="row">
+      <div class="col-xs-9">
+       	<h4>{{vendor.company_name}}</h4>
       </div>
     </div>
+    <div class="well">
+    	<p>
+    		<a href="http://{{vendor.webpage}}">Vendor Website</a>
+    	</p>
+	    <p><b>PHONE:</b>
+	    	{{vendor.phone}}
+	    	<b>EXT:</b>
+	    	{{vendor.extension}}
+	    </p>
+	    <p><b>ADDRESS:</b>123 La La Land, Victoria, BC
+	    </p>
+    </div>
 </div>
+

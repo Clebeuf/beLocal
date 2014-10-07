@@ -1,5 +1,19 @@
 /* BELOCAL STYLES */
 
+.container-md {
+  text-align: right;
+}
+
+.container-trending {
+  text-align: center;
+}
+
+.product-card {
+  max-width: 485px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
   background-color: #8ed41e;
 }
@@ -14,11 +28,6 @@
 
 .nav-pills-home > li > a {
  border-radius: 0px !important; 
-}
-
-.btn-more-details {
-  float:right;
-  margin-top:12px;
 }
 
 .price {
@@ -195,6 +204,14 @@ body {
   .container {
     max-width: 730px;
   }
+  
+  .col-trending {
+    text-align: center;
+  }  
+
+  .trending-caption {
+    text-align: left !important;
+  }  
 }
 .container-narrow > hr {
   margin: 30px 0;
@@ -216,6 +233,15 @@ body {
 }
 .marketing p + h4 {
   margin-top: 28px;
+}
+
+/* Customize container */
+@media (max-width: 768px) {
+  .product-card {
+    max-width: 335px;
+    margin-right: auto;
+    margin-left: auto;
+  }
 }
 
 /* Responsive: Portrait tablets and up */
@@ -272,7 +298,7 @@ body {
     }
     .collapse.in{
         display:block !important;
-    }
+    }   
 
 }
 
@@ -327,9 +353,11 @@ body {
   margin-left:25px;
 }
 
-@media (max-width: 767px) {
+
+
+@media (max-width: 768px) {
   .seller-Name {
-      text-align: center;
+      text-align: center !important;
   }
 
   .seller-title-bar {
@@ -341,6 +369,9 @@ body {
     text-align: center !important;
     float: none !important;
     display: inline-block;
+  }
+  .container-md {
+    text-align: center !important;
   }
 }
 

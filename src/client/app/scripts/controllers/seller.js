@@ -78,6 +78,12 @@ angular.module('clientApp')
         $scope.opened = true;
     };
 
+    $scope.getSellerItems = function() {
+        StateService.getSellerItems().then(function(response) {
+            $scope.sellerItems = response.data;
+        })
+    }
+
     $scope.getSellerLocations = function() {
         StateService.getSellerLocations().then(function(response) {
             $scope.sellerLocations = response.data;
@@ -139,8 +145,11 @@ angular.module('clientApp')
             }
         }
 
+
+
     $scope.init = function() {
         $scope.getSellerLocations();
+        $scope.getSellerItems();
         $timeout(function(){
             angular.element("[data-toggle='tooltip']").tooltip();
         }, 1000)

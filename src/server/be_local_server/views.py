@@ -246,13 +246,13 @@ class VendorProductView(generics.ListAPIView):
     """
     This view provides an endpoint for vendors to view their products.
     """   
-    #authentication_classes = (TokenAuthentication,)
-    #permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.ProductSerializer
 
     def get_queryset(self):
-        vendor_id = self.kwargs['vendor_id']
-        products = Product.objects.filter(vendor=vendor_id)
+        vendor = Vendor.objects.get(user=self.request.user)
+        products = Product.objects.filter(vendor=vendor)
           
         for product in products:
             inventories = SellerProductAtLocation.objects.filter(product=product)

@@ -23,7 +23,7 @@ urlpatterns = patterns('',
     url(r'^vendor/products/photo/add/$', views.AddProductPhotoView.as_view(), name='vendor-products-photo-add'),
     url(r'^vendor/products/photo/(?P<pk>[0-9-]+)/$', views.RWDProductPhotoView.as_view(), name='vendor-products-photo-details'),
     url(r'^vendor/products/(?P<product_id>[0-9-]+)/$', views.RWDProductView.as_view(), name='vendor-products-details'),
-    url(r'^vendor/(?P<vendor_id>[0-9-]+)/products/$', views.VendorProductView.as_view(), name='vendor-products-list'),
+    url(r'^vendor/products/list/$', views.VendorProductView.as_view(), name='vendor-products-list'),
     
     url(r'^products/trending/$', views.TrendingProductView.as_view(), name='product-trending-list'),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

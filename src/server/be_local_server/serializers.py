@@ -63,6 +63,7 @@ class SellerProductAtLocationSerializer(serializers.ModelSerializer):
         
 class ProductSerializer(serializers.ModelSerializer):
     inventories = SellerProductAtLocationSerializer(many=True)
+    photo = PhotoPathSerializer()    
     class Meta:
         model = be_local_server.models.Product
         fields = ('id', 

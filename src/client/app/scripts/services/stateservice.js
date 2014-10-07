@@ -34,6 +34,13 @@ angular.module('clientApp')
       }) 
     }
 
+    this.getSellerItems = function() {
+      return $http.get(this.getServerAddress() + 'vendor/products/list/')
+      .error(function(data) {
+        console.log('Error retrieving seller products');
+      }) 
+    }
+
     this.getServerAddress = function() {
       return 'http://localhost:8000/';
     }

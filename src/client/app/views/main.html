@@ -26,7 +26,7 @@
   <div class="tab-pane active" id="trending">
     <div class="container container-home-page">
       <div ng-repeat="items in trendingProducts | groupBy:3" class="row container-trending">
-        <div class="col-trending col-lg-4 col-md-6 col-sm-6" ng-repeat="item in items" >
+        <div class="col-trending col-lg-4 col-md-4 col-sm-6" ng-repeat="item in items" >
           <product-card data="item"></product-card>
         </div>  
         </div>

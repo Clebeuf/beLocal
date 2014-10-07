@@ -7,5 +7,8 @@ angular.module('clientApp')
       $scope.trendingProducts = StateService.getTrendingProductsList();
     })
 
+    StateService.getVendors().then(function() {
+    	$scope.vendors = StateService.getVendorsList();
+    })
 
   });

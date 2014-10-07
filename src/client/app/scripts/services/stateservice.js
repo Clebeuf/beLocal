@@ -4,6 +4,7 @@ angular.module('clientApp')
   .service('StateService', function StateService($http, ipCookie) {
     var currentUser = undefined; // Currently authenticated user
     var trendingProducts = []; // Currently trending products
+    var vendors = [];
 
     this.setProfile = function(u) {
       currentUser = u;
@@ -24,6 +25,16 @@ angular.module('clientApp')
       })
       .error(function(data) {
         console.log('Error retrieving trending products');
+      });
+    }
+
+    this.getVendors = function() {
+      return $http.get(this.getServerAddress() + 'vendors')
+      .success(function(data) {
+        vendors = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving vendors');
       });
     }
 
@@ -59,6 +70,10 @@ angular.module('clientApp')
 
     this.getTrendingProductsList = function() {
       return trendingProducts;
+    }
+
+    this.getVendorsList = function() {
+      return vendors;
     }
 
     this.setProfileFromCookie = function() {

@@ -273,6 +273,18 @@ class TrendingProductView(generics.ListAPIView):
     def get_queryset(self):
         return Product.objects.all()      
 
+class VendorsView(generics.ListAPIView):
+    """
+    This view provides an endpoint for customers to view
+    vendors.
+    """
+    permission_classes = (AllowAny,)
+
+    serializer_class = serializers.BusinessVendorSerializer
+
+    def get_queryset(self):
+        return Vendor.objects.all()
+
 class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)

@@ -31,6 +31,17 @@ class BusinessVendorSerializer(serializers.ModelSerializer):
                     'extension'
         ) 
 
+class VendorDisplaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = be_local_server.models.Vendor
+        fields = (  'id',   
+                    'company_name',
+                    'webpage',
+                    'country_code',
+                    'phone',
+                    'extension'
+        ) 
+
 class PhotoPathSerializer(serializers.ModelSerializer):
     image_url = serializers.Field(source="image_url")  
     class Meta:

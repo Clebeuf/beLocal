@@ -14,9 +14,6 @@ from django.template import RequestContext
 from social.apps.django_app.utils import psa
 from be_local_server import serializers
 from be_local_server.models import *
-from be_local_server.forms import UploadProductPhotoForm
-
-
 
 class ObtainAuthToken(APIView):
     throttle_classes = ()
@@ -141,8 +138,18 @@ class AddProductView(generics.CreateAPIView):
         serializer = serializers.ProductSerializer(data=request.DATA, partial=True)
 
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            current_product = serializer.save()
+            current_vendor = Vendor.objects.get(pk=vendor.id)
+
+            #Find all locations belonging to the current vendor
+            locations = SellerLocation.objects.filter(vendor=current_vendor)
+
+            for location in locations: 
+                spal = SellerProductAtLocation(product=current_product, sellerLocation=location, stock='OOS')
+                spal.save()
+
+            return Response(status=status.HTTP_201_CREATED)
+
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
@@ -187,7 +194,6 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
         else:
             return Response("Product not found", status=status.HTTP_404_NOT_FOUND) 
-
 
 class RWDSellerLocationView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -240,16 +246,20 @@ class VendorProductView(generics.ListAPIView):
     """
     This view provides an endpoint for vendors to view their products.
     """   
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    #authentication_classes = (TokenAuthentication,)
+    #permission_classes = (IsAuthenticated,)
     serializer_class = serializers.ProductSerializer
 
     def get_queryset(self):
         vendor_id = self.kwargs['vendor_id']
-        product = Product.objects.filter(vendor=vendor_id)
+        products = Product.objects.filter(vendor=vendor_id)
           
-        if product is not None:
-            return product
+        for product in products:
+            inventories = SellerProductAtLocation.objects.filter(product=product)
+            product.inventories = inventories 
+
+        if products is not None:
+            return products 
         else:
             return Response(status=status.HTTP_404_NOT_FOUND) 
 
@@ -283,16 +293,24 @@ class AddSellerLocationView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-
         vendor = Vendor.objects.get(user=request.user)
-
         request.DATA['vendor'] = vendor.id       
 
         serializer = serializers.AddSellerLocationSerializer(data=request.DATA, many=False)
 
         if serializer.is_valid(): 
-            serializer.save()
-            return HttpResponse("success");
+            current_location = serializer.save()
+            current_vendor = Vendor.objects.filter(user=request.user)
+
+            #Go through every product of current user's list and add this new location
+            products = Product.objects.filter(vendor=current_vendor)
+
+            if products is not None:
+                for product in products:
+                    spal = SellerProductAtLocation(product=product, sellerLocation=current_location, stock='OOS')
+                    spal.save()
+
+            return HttpResponse(status=status.HTTP_201_CREATED)
 
         else:
             return Response(serializer.errors,

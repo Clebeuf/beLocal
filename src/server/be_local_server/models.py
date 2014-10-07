@@ -74,6 +74,9 @@ class SellerLocation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    #SellerProductAtLocation
+    products = models.ManyToManyField(Product, through="SellerProductAtLocation")
+
 class SellerProductAtLocation(models.Model):
     IN_STOCK = 'IS'
     LOW_STOCK = 'LS'

@@ -73,6 +73,9 @@ class SellerLocation(models.Model):
     name = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    email = models.CharField(max_length=50)
+    phone = models.CharField(max_length=25)
+    description = models.CharField(max_length=400)    
 
     #SellerProductAtLocation
     products = models.ManyToManyField(Product, through="SellerProductAtLocation")

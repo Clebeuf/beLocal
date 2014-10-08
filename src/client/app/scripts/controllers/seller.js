@@ -14,6 +14,7 @@ angular.module('clientApp')
     $scope.minDate = new Date();
     $scope.locationType = 'FAR';
     $scope.sellerLocations = [];
+    $scope.emailAtLocation = StateService.getCurrentUser().email;
 
     $scope.resetLocationModal = function() {
         $scope.newLocationSubmitted = false;
@@ -137,6 +138,9 @@ angular.module('clientApp')
                     "start_time" : $scope.startTime,
                     "end_time" : $scope.endTime,
                     "name" : $scope.locationName,
+                    'email' : $scope.emailAtLocation,
+                    'phone' : $scope.phoneAtLocation,
+                    'description' : $scope.locationDescription,
                 };
 
                 StateService.createSellerLocation(sellerLocation, $scope.isEditingLocation).then(function() {

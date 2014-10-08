@@ -39,9 +39,9 @@ class ObtainAuthToken(APIView):
                 response = {}
                 if user.is_staff:
                     vendor = Vendor.objects.get(user=user)
-                    response = {'id': user.id, 'name': user.username, 'firstname': user.first_name, 'userType': 'VEN', 'vendor' : {'company_name' : vendor.company_name}, 'token': token.key}
+                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'firstname': user.first_name, 'userType': 'VEN', 'vendor' : {'company_name' : vendor.company_name}, 'token': token.key}
                 else:
-                    response = {'id': user.id, 'name': user.username, 'firstname': user.first_name, 'userType': 'CUS', 'token': token.key}
+                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'firstname': user.first_name, 'userType': 'CUS', 'token': token.key}
                 return Response(response)
 
 @psa()
@@ -61,7 +61,7 @@ def register_by_access_token(request, backend):
     access_token = auth[1]
  
     user = backend.do_auth(access_token)
- 
+
     return user
 
 class AddVendorView(generics.CreateAPIView):

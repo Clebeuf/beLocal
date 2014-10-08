@@ -29,11 +29,20 @@
         <div class="col-trending col-lg-4 col-md-4 col-sm-6" ng-repeat="item in items" >
           <product-card data="item"></product-card>
         </div>  
-        </div>
+       </div>
       <div class="footer">
         <p>♥ from the beLocal team</p>
       </div>
     </div>
   </div>
-  <div class="tab-pane" id="vendors"></div>  
+  <div class="tab-pane" id="vendors">
+    <div class="container container-home-page">
+      <div ng-repeat="vendor in vendors">
+      	<vendor-card data="vendor"></vendor-card>
+      </div> 
+      <div class="footer">
+        <p>♥ from the beLocal team</p>
+      </div>
+    </div>  	
+  </div>  
 </div>

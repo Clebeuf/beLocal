@@ -33,7 +33,10 @@ angular.module('clientApp')
         $scope.locationCountry = undefined;
         $scope.locationPostalCode = undefined;
         $scope.locationType = 'FAR';
-        $scope.locationName = undefined;  
+        $scope.locationName = undefined;
+        $scope.emailAtLocation = StateService.getCurrentUser().email;
+        $scope.phoneAtLocation = undefined;
+        $scope.locationDescription = undefined;  
     }
 
     $scope.editLocation = function(location) {
@@ -53,6 +56,9 @@ angular.module('clientApp')
         $scope.locationName = location.name;
         $scope.locationPostalCode = location.address.zipcode;
         $scope.locationId = location.id;
+        $scope.emailAtLocation = location.email;
+        $scope.phoneAtLocation = location.phone;
+        $scope.locationDescription  = location.description;
     }
 
     $scope.resetItemModal = function() {
@@ -103,7 +109,7 @@ angular.module('clientApp')
             };
 
             StateService.createItem(item).then(function() {
-                console.log('Whee');
+                $scope.getSellerItems();
             });
         }
     }
@@ -145,6 +151,7 @@ angular.module('clientApp')
 
                 StateService.createSellerLocation(sellerLocation, $scope.isEditingLocation).then(function() {
                     $scope.getSellerLocations();
+                    $scope.getSellerItems();
                 });
             }
         }

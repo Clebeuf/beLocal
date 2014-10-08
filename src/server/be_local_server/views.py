@@ -135,7 +135,7 @@ class AddProductView(generics.CreateAPIView):
         vendor = Vendor.objects.get(user=request.user)
         request.DATA['vendor'] = vendor.id
         
-        serializer = serializers.ProductSerializer(data=request.DATA, partial=True)
+        serializer = serializers.AddProductSerializer(data=request.DATA, partial=True)
 
         if serializer.is_valid():
             current_product = serializer.save()

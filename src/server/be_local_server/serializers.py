@@ -60,6 +60,17 @@ class SellerProductAtLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = be_local_server.models.SellerProductAtLocation
         fields = ('id', 'sellerLocation', 'product', 'is_visible', 'stock')
+
+class AddProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = be_local_server.models.Product
+        fields = ('id', 
+                  'name',
+                  'description', 
+                  #'price',  
+                  'vendor',
+                  'photo',
+                 )
         
 class ProductSerializer(serializers.ModelSerializer):
     inventories = SellerProductAtLocationSerializer(many=True)

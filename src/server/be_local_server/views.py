@@ -139,14 +139,6 @@ class AddProductView(generics.CreateAPIView):
 
         if serializer.is_valid():
             current_product = serializer.save()
-            current_vendor = Vendor.objects.get(pk=vendor.id)
-
-            #Find all locations belonging to the current vendor
-            locations = SellerLocation.objects.filter(vendor=current_vendor)
-
-            for location in locations: 
-                spal = SellerProductAtLocation(product=current_product, sellerLocation=location, stock='OOS')
-                spal.save()
 
             return Response(status=status.HTTP_201_CREATED)
 
@@ -253,10 +245,6 @@ class VendorProductView(generics.ListAPIView):
     def get_queryset(self):
         vendor = Vendor.objects.get(user=self.request.user)
         products = Product.objects.filter(vendor=vendor)
-          
-        for product in products:
-            inventories = SellerProductAtLocation.objects.filter(product=product)
-            product.inventories = inventories 
 
         if products is not None:
             return products 
@@ -312,15 +300,6 @@ class AddSellerLocationView(generics.CreateAPIView):
 
         if serializer.is_valid(): 
             current_location = serializer.save()
-            current_vendor = Vendor.objects.filter(user=request.user)
-
-            #Go through every product of current user's list and add this new location
-            products = Product.objects.filter(vendor=current_vendor)
-
-            if products is not None:
-                for product in products:
-                    spal = SellerProductAtLocation(product=product, sellerLocation=current_location, stock='OOS')
-                    spal.save()
 
             return HttpResponse(status=status.HTTP_201_CREATED)
 

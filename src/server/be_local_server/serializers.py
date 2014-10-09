@@ -55,14 +55,6 @@ class AddSellerLocationSerializer(serializers.ModelSerializer):
         model = be_local_server.models.SellerLocation
         fields = ('id', 'address', 'name','start_time', 'end_time', 'vendor', 'email', 'phone', 'description')
 
-
-class SellerProductAtLocationSerializer(serializers.ModelSerializer): 
-    sellerLocation = AddSellerLocationSerializer()
-    #product = ProductSerializer()
-    class Meta:
-        model = be_local_server.models.SellerProductAtLocation
-        fields = ('id', 'sellerLocation', 'product', 'is_visible', 'stock')
-
 class AddProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = be_local_server.models.Product
@@ -75,7 +67,6 @@ class AddProductSerializer(serializers.ModelSerializer):
                  )
         
 class ProductSerializer(serializers.ModelSerializer):
-    inventories = SellerProductAtLocationSerializer(many=True)
     photo = PhotoPathSerializer()    
     class Meta:
         model = be_local_server.models.Product
@@ -85,7 +76,7 @@ class ProductSerializer(serializers.ModelSerializer):
                   #'price',  
                   'vendor',
                   'photo',
-                  'inventories'
+                  'stock'
                  )
 
 class ProductDisplaySerializer(serializers.ModelSerializer):
@@ -98,5 +89,6 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
                   'description', 
                   #'price', 
                   'vendor',
-                  'photo'
+                  'photo',
+                  'stock'
                  )           

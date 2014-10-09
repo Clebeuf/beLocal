@@ -135,22 +135,11 @@
         <!-- THIS IS THE NON-REPEATING PART -->
         <div class="row all-locations seller-item-stock">
             <div class="col-sm-4 ">
-                <b>ALL LOCATIONS</b>
+                <b>Stock</b>
             </div>
             <div class="col-sm-8 seller-item">
                 <input type="radio" name="all-stock-status" value="IS"> In Stock
                 <input type="radio" name="all-stock-status" value="OOS"> Out of Stock
-            </div>
-        </div>
-
-        <!-- repeat f each seller location -->
-        <div ng-repeat="inventory in product.inventories" class="row seller-item-stock">
-            <div class="col-sm-4">
-                {{inventory.sellerLocation.name}}
-            </div>
-            <div class="col-sm-8 seller-item">
-                <input type="radio" name="stock-status{{$index}}" value="IS"> In Stock
-                <input type="radio" name="stock-status{{$index}}" value="OOS"> Out of Stock
             </div>
         </div>
     </div>

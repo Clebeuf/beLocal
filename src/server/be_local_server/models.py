@@ -25,6 +25,17 @@ class ProductPhoto(models.Model):
     image_url = property(get_image_abs_path)
     
 class Product(models.Model):
+    IN_STOCK = 'IS'
+    LOW_STOCK = 'LS'
+    OUT_OF_STOCK = 'OOS'
+    STOCK_TYPES = (
+        (IN_STOCK, 'In Stock'),
+        (LOW_STOCK, 'Low Stock'),
+        (OUT_OF_STOCK, 'Out of Stock'),
+    )
+
+    stock = models.CharField(max_length=3, choices=STOCK_TYPES, default=IN_STOCK)
+
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=400)
     price = models.FloatField(null=True)
@@ -76,23 +87,3 @@ class SellerLocation(models.Model):
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=25)
     description = models.CharField(max_length=400)    
-
-    #SellerProductAtLocation
-    products = models.ManyToManyField(Product, through="SellerProductAtLocation")
-
-class SellerProductAtLocation(models.Model):
-    IN_STOCK = 'IS'
-    LOW_STOCK = 'LS'
-    OUT_OF_STOCK = 'OOS'
-    STOCK_TYPES = (
-        (IN_STOCK, 'In Stock'),
-        (LOW_STOCK, 'Low Stock'),
-        (OUT_OF_STOCK, 'Out of Stock'),
-    )
-
-    sellerLocation = models.ForeignKey(SellerLocation)
-    product = models.ForeignKey(Product)
-    is_visible = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    stock = models.CharField(max_length=3, choices=STOCK_TYPES, default=IN_STOCK)

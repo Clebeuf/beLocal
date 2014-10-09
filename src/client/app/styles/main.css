@@ -91,9 +91,9 @@
 }
 
 .beLocal-header {
-  background-image: url("/images/header.jpg");
+  background-image: url("/images/header-grass-fixed.jpg");
   background-position-x: center;
-  background-position-y: 37%;
+  background-position-y: 70%;
   background-size: 100%;
   height: 394px;
   margin-bottom: 0px;
@@ -125,7 +125,7 @@
   color:white;
   padding-left: 20px;
   font-size: 18pt;
-  font-family: 'Pacifico', cursive;  
+  font-family: 'Bitter', serif; 
 }
 
 .beLocal-btn {

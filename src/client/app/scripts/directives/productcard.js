@@ -5,8 +5,7 @@ angular.module('clientApp')
     return {
       templateUrl: 'scripts/directives/productCard.html',
       restrict: 'E',
-      link: function postLink(scope, element, attrs) {
-      	console.log(scope.item);	
+      link: function postLink(scope, element, attrs) {	
       }
     };
   });

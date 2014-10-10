@@ -138,8 +138,8 @@
                 <b>Stock</b>
             </div>
             <div class="col-sm-8 seller-item">
-                <input type="radio" name="all-stock-status" value="IS"> In Stock
-                <input type="radio" name="all-stock-status" value="OOS"> Out of Stock
+                <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="IS"> In Stock
+                <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="OOS"> Out of Stock
             </div>
         </div>
     </div>

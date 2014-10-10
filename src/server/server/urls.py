@@ -24,7 +24,8 @@ urlpatterns = patterns('',
     url(r'^vendor/products/photo/(?P<pk>[0-9-]+)/$', views.RWDProductPhotoView.as_view(), name='vendor-products-photo-details'),
     url(r'^vendor/products/(?P<product_id>[0-9-]+)/$', views.RWDProductView.as_view(), name='vendor-products-details'),
     url(r'^vendor/products/list/$', views.VendorProductView.as_view(), name='vendor-products-list'),
+    url(r'^vendor/products/stock/$', views.UpdateStockView.as_view(), name='vendors-stock-update'),    
     
     url(r'^products/trending/$', views.TrendingProductView.as_view(), name='product-trending-list'),
-    url(r'^vendors/$', views.VendorsView.as_view(), name='vendors-list'),
+    url(r'^vendors/$', views.VendorsView.as_view(), name='vendors-list'),    
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

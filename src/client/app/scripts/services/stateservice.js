@@ -45,6 +45,13 @@ angular.module('clientApp')
       }) 
     }
 
+    this.updateStockValue = function(product_id, value) {
+      return $http.post(this.getServerAddress() + 'vendor/products/stock/', {'product_id' : product_id, 'value' : value})
+      .error(function(data) {
+        console.log('Error updating product stock');
+      })
+    }
+
     this.getSellerItems = function() {
       return $http.get(this.getServerAddress() + 'vendor/products/list/')
       .error(function(data) {

@@ -65,6 +65,10 @@ angular.module('clientApp')
         $scope.submitItemButtonText = "Add Item";        
     }
 
+    $scope.stockValueChanged = function(product) {
+        StateService.updateStockValue(product.id, product.stock);
+    }
+
     $scope.fileNameChanged = function(file) {
         console.log(file);
         StateService.uploadFile(file[0])

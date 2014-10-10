@@ -251,6 +251,28 @@ class VendorProductView(generics.ListAPIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND) 
 
+class UpdateStockView(generics.CreateAPIView):
+    """
+    This view provides an endpoint for vendors to view their products.
+    """   
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.ProductSerializer
+
+    def post(self, request):
+        error = '{"error":"Required attributes not provided"}'
+        if "product_id" in request.DATA and "value" in request.DATA:
+            product = Product.objects.get(pk=request.DATA["product_id"])
+            error = '{"error":"Provided data is invalid"}'
+            if(product != None):
+                if(request.DATA["value"] == "IS"):
+                    product.stock = Product.IN_STOCK
+                elif(request.DATA["value"] == "OOS"):
+                    product.stock = Product.OUT_OF_STOCK
+                product.save()
+                return Response(status=status.HTTP_200_OK)            
+        return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
+
 #TODO: Currenty this view simply returns all products rather
 # than trending ones
 class TrendingProductView(generics.ListAPIView):

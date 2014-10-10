@@ -80,6 +80,7 @@ angular.module('clientApp')
 
         $scope.itemName = item.name;
         $scope.itemDescription = item.description;
+        $scope.itemID = item.id;
 
     }
 
@@ -127,7 +128,6 @@ angular.module('clientApp')
     $scope.fileNameChanged = function(file) {
 
         if (file && file[0]) {
-            console.log(file[0]);
             var reader = new FileReader();
             $scope.displayItemThumbnail = true;
             reader.onload = function(e) {
@@ -175,12 +175,13 @@ angular.module('clientApp')
             angular.element('#itemModal').modal('hide');
 
             var item = {
+                "id" : $scope.itemID,
                 "name" : $scope.itemName,
                 "description" : $scope.itemDescription,
                 "photo" : $scope.newImageID
             };
 
-            StateService.createItem(item).then(function() {
+            StateService.createItem(item, $scope.isEditingItem).then(function() {
                 $scope.getSellerItems();
             });
         }

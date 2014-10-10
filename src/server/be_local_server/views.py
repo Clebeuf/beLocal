@@ -177,7 +177,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         product = Product.objects.get(pk=product_id) 
    
         if product is not None:
-            serializer = serializers.ProductSerializer(product, data=request.DATA, partial=True)
+            serializer = serializers.AddProductSerializer(product, data=request.DATA, partial=True)
            
             if serializer.is_valid():
                 serializer.save()

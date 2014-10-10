@@ -89,11 +89,19 @@ angular.module('clientApp')
       })
     }
 
-    this.createItem = function(item) {
-      return $http.post(this.getServerAddress() + 'vendor/products/add/', item)
-      .success(function() {
-        console.log("Created a new item!");
-      })
+    this.createItem = function(item, isEditing) {
+      if(isEditing) {
+        var url = this.getServerAddress() + 'vendor/products/' + item.id + '/';        
+        return $http({method: 'PATCH', url: url, data: item})
+        .success(function() {
+          console.log("Edited item!");
+        });        
+      } else {
+        return $http.post(this.getServerAddress() + 'vendor/products/add/', item)
+        .success(function() {
+          console.log("Created a new item!");
+        });
+      }
     }
 
     this.getTrendingProductsList = function() {

@@ -225,7 +225,29 @@ class DeleteSellerLocationView(generics.CreateAPIView):
                 else:
                     return Response("Location not found for trashing", status=status.HTTP_400_BAD_REQUEST) 
         else:
-            return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)     
+            return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)
+
+class DeleteProductView(generics.CreateAPIView):
+    def post(self, request):
+        if("id" in request.DATA.keys() and "action" in request.DATA.keys()):
+            if(request.DATA["action"] == "restore"):
+                product = Product.trash.get(pk=request.DATA["id"])
+
+                if product is not None:
+                    product.restore()
+                    return Response("Restored product", status=status.HTTP_204_NO_CONTENT)
+                else:
+                    return Response("Product not found for restore", status=status.HTTP_400_BAD_REQUEST)                    
+            elif(request.DATA["action"] == "trash"):
+                product = Product.objects.get(pk=request.DATA["id"])
+
+                if product is not None:
+                    product.delete()
+                    return Response("Trashed product", status=status.HTTP_204_NO_CONTENT)
+                else:
+                    return Response("Product not found for trashing", status=status.HTTP_400_BAD_REQUEST) 
+        else:
+            return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)               
 
 class AddProductPhotoView(generics.CreateAPIView):
     """

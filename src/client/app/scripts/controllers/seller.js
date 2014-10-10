@@ -71,6 +71,15 @@ angular.module('clientApp')
         });  
     }
 
+    $scope.deleteProduct = function(product) {
+        $scope.deletedProduct = product;
+        $scope.warningHTML = product.name + ' has been deleted! <a class="alert-link" href="#" ng-click="restoreProduct(deletedProduct)">Undo?</a>';
+        $scope.showWarning = true;
+        StateService.trashOrRestoreProduct(product.id, 'trash').then(function() {
+            $scope.getSellerItems();            
+        });  
+    }    
+
     $scope.resetWarning = function() {
         $scope.warningHTML = '';
         $scope.showWarning = false;
@@ -82,6 +91,13 @@ angular.module('clientApp')
             $scope.getSellerLocations();
         })
     }
+
+    $scope.restoreProduct = function(product) {
+        $scope.resetWarning();
+        StateService.trashOrRestoreProduct(product.id, 'restore').then(function() {
+            $scope.getSellerItems();
+        })
+    }    
 
     $scope.resetItemModal = function() {
         $scope.submitItemButtonText = "Add Item";        

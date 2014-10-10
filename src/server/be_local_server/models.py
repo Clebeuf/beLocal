@@ -48,7 +48,7 @@ class ProductPhoto(models.Model):
         return os.path.join(settings.MEDIA_URL, self.image.name)        
     image_url = property(get_image_abs_path)
     
-class Product(models.Model):
+class Product(TrashableMixin, models.Model):
     IN_STOCK = 'IS'
     LOW_STOCK = 'LS'
     OUT_OF_STOCK = 'OOS'

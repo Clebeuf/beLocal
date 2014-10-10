@@ -74,7 +74,9 @@ angular.module('clientApp')
         $scope.isEditingItem = true;
         $scope.newItemSubmitted = false;
         $scope.submitItemButtonText = "Edit Item";
-        $scope.displayItemThumbnail = false;
+        $scope.displayItemThumbnail = true;
+
+        angular.element('#itemPreview').attr('src', item.photo.image_url).width(50).height(50);
 
         $scope.itemName = item.name;
         $scope.itemDescription = item.description;

@@ -60,7 +60,26 @@ angular.module('clientApp')
         $scope.emailAtLocation = location.email;
         $scope.phoneAtLocation = location.phone;
         $scope.locationDescription  = location.description;
-    }   
+    }
+
+    $scope.resetItemModal = function() {
+        $scope.submitItemButtonText = "Add Item"; 
+        $scope.itemName = undefined;
+        $scope.itemDescription = undefined;
+        $scope.newImageID = undefined; 
+        $scope.displayItemThumbnail = false;      
+    }
+
+    $scope.editItem = function(item) {
+        $scope.isEditingItem = true;
+        $scope.newItemSubmitted = false;
+        $scope.submitItemButtonText = "Edit Item";
+        $scope.displayItemThumbnail = false;
+
+        $scope.itemName = item.name;
+        $scope.itemDescription = item.description;
+
+    }
 
     $scope.deleteLocation = function(location) {
         $scope.deletedLocation = location;
@@ -97,10 +116,6 @@ angular.module('clientApp')
         StateService.trashOrRestoreProduct(product.id, 'restore').then(function() {
             $scope.getSellerItems();
         })
-    }    
-
-    $scope.resetItemModal = function() {
-        $scope.submitItemButtonText = "Add Item";        
     }
 
     $scope.stockValueChanged = function(product) {
@@ -108,7 +123,20 @@ angular.module('clientApp')
     }
 
     $scope.fileNameChanged = function(file) {
-        console.log(file);
+
+        if (file && file[0]) {
+            console.log(file[0]);
+            var reader = new FileReader();
+            $scope.displayItemThumbnail = true;
+            reader.onload = function(e) {
+                angular.element('#itemPreview')
+                .attr('src', e.target.result)
+                .width(50)
+                .height(50);             
+            };
+            reader.readAsDataURL(file[0]);
+        }
+
         StateService.uploadFile(file[0])
         .success(function(response) {
             $scope.newImageID = response.id;

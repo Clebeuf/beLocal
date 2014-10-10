@@ -1,5 +1,9 @@
 /* BELOCAL STYLES */
 
+#item-image {
+  display: inline;
+}
+
 .no-bottom-margin {
   margin-bottom: 0px;
 }

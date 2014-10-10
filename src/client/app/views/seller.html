@@ -128,7 +128,7 @@
                 <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
                 <div class="col-xs-3 edit-text-container">
                     <span data-toggle="tooltip" data-placement="bottom" title="Edit Item">
-                        <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#itemModal" ng-click="editItem(item)"></span>
+                        <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#itemModal" ng-click="editItem(product)"></span>
                     </span>
                     <span data-toggle="tooltip" data-placement="bottom" title="Delete Item">
                         <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteProduct(product)" data-toggle="modal" data-target="TBA"></span>
@@ -188,7 +188,8 @@
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
                                 <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.imageField.$invalid }">
-                                    <label for="item-image">Upload Image</label>
+                                    <label for="item-image">Upload Image</label><br />
+                                    <img ng-show="displayItemThumbnail" src="#" id="itemPreview" />                                    
                                     <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
                                 </div>
                             </div>

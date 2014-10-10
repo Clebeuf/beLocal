@@ -14,5 +14,3 @@ src/server/be_local_server/migrations/*
 src/server/media/*
 
 !src/client/*.jpg
-
-*.jpg

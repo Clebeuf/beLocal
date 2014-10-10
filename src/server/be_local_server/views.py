@@ -187,7 +187,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         else:
             return Response("Product not found", status=status.HTTP_404_NOT_FOUND) 
 
-class RWDSellerLocationView(generics.RetrieveUpdateDestroyAPIView):
+class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
     """
     This view provides an endpoint for deleting and modifying views         
     """
@@ -205,14 +205,27 @@ class RWDSellerLocationView(generics.RetrieveUpdateDestroyAPIView):
             raise Http404
         return location
 
-    def delete(self, request, location_id):
-        location = SellerLocation.objects.get(pk=location_id)
+class DeleteSellerLocationView(generics.CreateAPIView):
+    def post(self, request):
+        if("id" in request.DATA.keys() and "action" in request.DATA.keys()):
+            if(request.DATA["action"] == "restore"):
+                location = SellerLocation.trash.get(pk=request.DATA["id"])
 
-        if location is not None:
-            location.delete()
-            return Response("Sucessfully deleted location", status=status.HTTP_204_NO_CONTENT)
+                if location is not None:
+                    location.restore()
+                    return Response("Restored location", status=status.HTTP_204_NO_CONTENT)
+                else:
+                    return Response("Location not found for restore", status=status.HTTP_400_BAD_REQUEST)                    
+            elif(request.DATA["action"] == "trash"):
+                location = SellerLocation.objects.get(pk=request.DATA["id"])
+
+                if location is not None:
+                    location.delete()
+                    return Response("Trashed location", status=status.HTTP_204_NO_CONTENT)
+                else:
+                    return Response("Location not found for trashing", status=status.HTTP_400_BAD_REQUEST) 
         else:
-            return Response("location not found", status=status.HTTP_404_NOT_FOUND)
+            return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)     
 
 class AddProductPhotoView(generics.CreateAPIView):
     """

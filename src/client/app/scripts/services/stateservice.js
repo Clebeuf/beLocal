@@ -45,6 +45,13 @@ angular.module('clientApp')
       }) 
     }
 
+    this.trashOrRestoreLocation = function(id, action) {
+      return $http.post(this.getServerAddress() + 'vendor/products/delete/', {'id' : id, 'action' : action})
+      .error(function(data) {
+        console.log('Error deleting location');
+      })
+    }
+
     this.updateStockValue = function(product_id, value) {
       return $http.post(this.getServerAddress() + 'vendor/products/stock/', {'product_id' : product_id, 'value' : value})
       .error(function(data) {

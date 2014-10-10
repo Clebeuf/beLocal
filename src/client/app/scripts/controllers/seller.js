@@ -15,6 +15,7 @@ angular.module('clientApp')
     $scope.locationType = 'FAR';
     $scope.sellerLocations = [];
     $scope.emailAtLocation = StateService.getCurrentUser().email;
+    $scope.warningHTML = '';
 
     $scope.resetLocationModal = function() {
         $scope.newLocationSubmitted = false;
@@ -59,6 +60,27 @@ angular.module('clientApp')
         $scope.emailAtLocation = location.email;
         $scope.phoneAtLocation = location.phone;
         $scope.locationDescription  = location.description;
+    }   
+
+    $scope.deleteLocation = function(location) {
+        $scope.deletedLocation = location;
+        $scope.warningHTML = location.name + ' has been deleted! <a class="alert-link" href="#" ng-click="restoreLocation(deletedLocation)">Undo?</a>';
+        $scope.showWarning = true;
+        StateService.trashOrRestoreLocation(location.id, 'trash').then(function() {
+            $scope.getSellerLocations();            
+        });  
+    }
+
+    $scope.resetWarning = function() {
+        $scope.warningHTML = '';
+        $scope.showWarning = false;
+    }
+
+    $scope.restoreLocation = function(location) {
+        $scope.resetWarning();
+        StateService.trashOrRestoreLocation(location.id, 'restore').then(function() {
+            $scope.getSellerLocations();
+        })
     }
 
     $scope.resetItemModal = function() {
@@ -174,4 +196,15 @@ angular.module('clientApp')
 
     $scope.init();   
 
+  })
+  .directive('htmlComp', function($compile, $parse) {
+  return {
+    restrict: 'E',
+    link: function(scope, element, attr) {
+      scope.$watch(attr.content, function() {
+        element.html($parse(attr.content)(scope));
+        $compile(element.contents())(scope);
+      }, true);
+    }
+  }
   });

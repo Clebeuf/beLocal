@@ -1,3 +1,7 @@
+<div ng-show="showWarning" class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" ng-click="resetWarning()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <html-comp content="warningHTML"></html-comp>
+</div>
 <nav-bar></nav-bar>
 <div class="jumbotron beLocal-header-seller">
     <div class="container">
@@ -57,7 +61,7 @@
                         <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
                     </span>
                     <span data-toggle="tooltip" data-placement="bottom" title="Delete Location">
-                        <span class="edit-text glyphicon glyphicon-trash" data-toggle="modal" data-target="TBA"></span>
+                        <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
                     </span>
                 </div> 
 

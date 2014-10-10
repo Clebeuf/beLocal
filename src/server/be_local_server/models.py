@@ -6,6 +6,28 @@ import os
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
+class Address(models.Model):
+    MARKET = 'MAR'
+    FARM = 'FAR'
+    ADDR_TYPES = (
+        (MARKET, 'Market'),
+        (FARM, 'Farm'),
+    )
+
+    addr_type = models.CharField(max_length=3, choices=ADDR_TYPES, default=FARM)
+
+    addr_line1 = models.CharField(max_length=400)
+    city = models.CharField(max_length=200)
+    state = models.CharField(max_length=200)
+    country = models.CharField(max_length=200)
+    zipcode = models.CharField(max_length=10)
+
+    latitude = models.FloatField(null=True);
+    longitude = models.FloatField(null=True);
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class Vendor(models.Model):
     user = models.ForeignKey(User) 
     company_name = models.CharField(max_length=200)
@@ -16,6 +38,7 @@ class Vendor(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     photo = models.ImageField(upload_to='vendor', null=True)
+    address = models.ForeignKey(Address)
 
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)
@@ -51,28 +74,6 @@ class Tag(models.Model):
 class ProductTag(models.Model):
     product = models.ManyToManyField(Product)
     tag = models.ForeignKey(Tag)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-class Address(models.Model):
-    MARKET = 'MAR'
-    FARM = 'FAR'
-    ADDR_TYPES = (
-        (MARKET, 'Market'),
-        (FARM, 'Farm'),
-    )
-
-    addr_type = models.CharField(max_length=3, choices=ADDR_TYPES, default=FARM)
-
-    addr_line1 = models.CharField(max_length=400)
-    city = models.CharField(max_length=200)
-    state = models.CharField(max_length=200)
-    country = models.CharField(max_length=200)
-    zipcode = models.CharField(max_length=10)
-
-    latitude = models.FloatField();
-    longitude = models.FloatField();
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -17,7 +17,7 @@ class VendorSerializer(serializers.ModelSerializer):
   address = AddressSerializer()
   class Meta:
     model = be_local_server.models.Vendor
-    fields = ( 	'id',	
+    fields = ('id',	
           'user',
           'company_name',
           'webpage',

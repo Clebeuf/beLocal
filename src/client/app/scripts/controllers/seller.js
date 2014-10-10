@@ -81,6 +81,7 @@ angular.module('clientApp')
         $scope.itemName = item.name;
         $scope.itemDescription = item.description;
         $scope.itemID = item.id;
+        $scope.newImageID = item.photo.id;
 
     }
 

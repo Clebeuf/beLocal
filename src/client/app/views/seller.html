@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="seller-Name col-sm-9">
-        <h1>{{StateService.getCurrentUser().name}}</h1>
+        <h1>{{StateService.getCurrentUser().first_name}} {{StateService.getCurrentUser().last_name}}</h1>
     </div>
 </div>
 <div class="seller-tabs">
@@ -194,7 +194,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" ng-click="newItemSubmit()" class="btn btn-primary">{{submitItemButtonText}}</button>
+                <button type="submit" ng-click="newItemSubmit()" class="btn beLocal-btn-filled">{{submitItemButtonText}}</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -325,7 +325,7 @@
             </div>
             <div class="modal-footer no-top-margin">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" ng-click="newLocationSubmit()" class="btn btn-primary">{{submitLocationButtonText}}</button>
+                <button type="submit" ng-click="newLocationSubmit()" class="beLocal-btn-filled btn">{{submitLocationButtonText}}</button>
             </div>
         </div>
         <!-- /.modal-content -->

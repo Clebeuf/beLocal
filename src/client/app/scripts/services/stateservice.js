@@ -45,6 +45,27 @@ angular.module('clientApp')
       }) 
     }
 
+    this.trashOrRestoreLocation = function(id, action) {
+      return $http.post(this.getServerAddress() + 'vendor/location/delete/', {'id' : id, 'action' : action})
+      .error(function(data) {
+        console.log('Error deleting location');
+      })
+    }
+
+    this.trashOrRestoreProduct = function(id, action) {
+      return $http.post(this.getServerAddress() + 'vendor/products/delete/', {'id' : id, 'action' : action})
+      .error(function(data) {
+        console.log('Error deleting product');
+      })
+    }    
+
+    this.updateStockValue = function(product_id, value) {
+      return $http.post(this.getServerAddress() + 'vendor/products/stock/', {'product_id' : product_id, 'value' : value})
+      .error(function(data) {
+        console.log('Error updating product stock');
+      })
+    }
+
     this.getSellerItems = function() {
       return $http.get(this.getServerAddress() + 'vendor/products/list/')
       .error(function(data) {
@@ -68,11 +89,19 @@ angular.module('clientApp')
       })
     }
 
-    this.createItem = function(item) {
-      return $http.post(this.getServerAddress() + 'vendor/products/add/', item)
-      .success(function() {
-        console.log("Created a new item!");
-      })
+    this.createItem = function(item, isEditing) {
+      if(isEditing) {
+        var url = this.getServerAddress() + 'vendor/products/' + item.id + '/';        
+        return $http({method: 'PATCH', url: url, data: item})
+        .success(function() {
+          console.log("Edited item!");
+        });        
+      } else {
+        return $http.post(this.getServerAddress() + 'vendor/products/add/', item)
+        .success(function() {
+          console.log("Created a new item!");
+        });
+      }
     }
 
     this.getTrendingProductsList = function() {

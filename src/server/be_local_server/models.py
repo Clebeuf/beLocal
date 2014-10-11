@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
+from undelete.models import TrashableMixin
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -47,7 +48,7 @@ class ProductPhoto(models.Model):
         return os.path.join(settings.MEDIA_URL, self.image.name)        
     image_url = property(get_image_abs_path)
     
-class Product(models.Model):
+class Product(TrashableMixin, models.Model):
     IN_STOCK = 'IS'
     LOW_STOCK = 'LS'
     OUT_OF_STOCK = 'OOS'
@@ -77,7 +78,7 @@ class ProductTag(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class SellerLocation(models.Model):
+class SellerLocation(TrashableMixin, models.Model):
     vendor = models.ForeignKey(Vendor)
     address = models.ForeignKey(Address)
     start_time = models.DateTimeField()

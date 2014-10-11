@@ -1,3 +1,7 @@
+<div ng-show="showWarning" class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" ng-click="resetWarning()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <html-comp content="warningHTML"></html-comp>
+</div>
 <nav-bar></nav-bar>
 <div class="jumbotron beLocal-header-seller">
     <div class="container">
@@ -12,7 +16,7 @@
         </div>
     </div>
     <div class="seller-Name col-sm-9">
-        <h1>{{StateService.getCurrentUser().name}}</h1>
+        <h1>{{StateService.getCurrentUser().first_name}} {{StateService.getCurrentUser().last_name}}</h1>
     </div>
 </div>
 <div class="seller-tabs">
@@ -57,7 +61,7 @@
                         <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
                     </span>
                     <span data-toggle="tooltip" data-placement="bottom" title="Delete Location">
-                        <span class="edit-text glyphicon glyphicon-trash" data-toggle="modal" data-target="TBA"></span>
+                        <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
                     </span>
                 </div> 
 
@@ -105,7 +109,7 @@
 
 
 <!-- repeating for each item that seller has in the db -->
- <div ng-repeat="product in sellerItems">
+ <div ng-repeat="product in sellerItems | orderBy:'name'">
 
         <!-- Need this div to allow for space between each of the sellers items -->
         <div class="list-group-item" >
@@ -124,10 +128,10 @@
                 <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
                 <div class="col-xs-3 edit-text-container">
                     <span data-toggle="tooltip" data-placement="bottom" title="Edit Item">
-                        <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#itemModal" ng-click="editItem(item)"></span>
+                        <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#itemModal" ng-click="editItem(product)"></span>
                     </span>
                     <span data-toggle="tooltip" data-placement="bottom" title="Delete Item">
-                        <span class="edit-text glyphicon glyphicon-trash" data-toggle="modal" data-target="TBA"></span>
+                        <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteProduct(product)" data-toggle="modal" data-target="TBA"></span>
                     </span>
                 </div> 
             </div>
@@ -138,8 +142,8 @@
                 <b>Stock</b>
             </div>
             <div class="col-sm-8 seller-item">
-                <input type="radio" name="all-stock-status" value="IS"> In Stock
-                <input type="radio" name="all-stock-status" value="OOS"> Out of Stock
+                <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="IS"> In Stock
+                <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="OOS"> Out of Stock
             </div>
         </div>
     </div>
@@ -167,6 +171,15 @@
                     <form role="form" name="itemForm" novalidate>
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.imageField.$invalid }">
+                                    <label for="item-image">Upload Image</label><br />
+                                    <img ng-show="displayItemThumbnail" src="#" id="itemPreview" />                                    
+                                    <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
                                 <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.itemField.$invalid }">
                                     <label for="item-name">Item Name</label>
                                     <input required ng-model="itemName" type="text" name="itemField" class="form-control" id="item-name" placeholder="Item Name"/>
@@ -182,19 +195,22 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-12 col-md-12">
-                                <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.imageField.$invalid }">
-                                    <label for="item-image">Upload Image</label>
-                                    <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
+                            <div class="col-sm-12">
+                                <div class="form-group no-bottom-margin">
+                                    <label for="item-name">Item Stock<br></label>
+                                    <div>
+                                        <input type="radio" ng-model="newItemStock" name="newItemStock" value="IS"><span class="radio-padding-right"> In Stock</span>
+                                        <input type="radio" ng-model="newItemStock" name="newItemStock" value="OOS"> Out of Stock
+                                    </div>
                                 </div>
-                            </div>
+                            </div>                        
                         </div>
                     </form>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" ng-click="newItemSubmit()" class="btn btn-primary">{{submitItemButtonText}}</button>
+                <button type="submit" ng-click="newItemSubmit()" class="btn beLocal-btn-filled">{{submitItemButtonText}}</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -315,8 +331,8 @@
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
                                 <div class="form-group no-bottom-margin" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationDescriptionField.$invalid }">
-                                    <label for="item-name">Location Description</label>
-                                    <textarea required ng-model="locationDescription" type="text" name="locationDescriptionField" class="form-control" placeholder="Location Description"/>
+                                    <label for="item-name">Location Details</label>
+                                    <textarea required ng-model="locationDescription" type="text" name="locationDescriptionField" class="form-control" placeholder="Location Details"/>
                                 </div>
                             </div>                        
                         </div>                                                          
@@ -325,7 +341,7 @@
             </div>
             <div class="modal-footer no-top-margin">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" ng-click="newLocationSubmit()" class="btn btn-primary">{{submitLocationButtonText}}</button>
+                <button type="submit" ng-click="newLocationSubmit()" class="beLocal-btn-filled btn">{{submitLocationButtonText}}</button>
             </div>
         </div>
         <!-- /.modal-content -->

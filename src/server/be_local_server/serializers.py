@@ -42,7 +42,7 @@ class PhotoPathSerializer(serializers.ModelSerializer):
     image_url = serializers.Field(source="image_url")  
     class Meta:
         model = be_local_server.models.ProductPhoto
-        fields = ('image_url',)
+        fields = ('id', 'image_url',)
 
 class ProductPhotoSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -64,6 +64,7 @@ class AddProductSerializer(serializers.ModelSerializer):
                   #'price',  
                   'vendor',
                   'photo',
+                  'stock'
                  )
         
 class ProductSerializer(serializers.ModelSerializer):

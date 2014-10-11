@@ -39,9 +39,9 @@ class ObtainAuthToken(APIView):
                 response = {}
                 if user.is_staff:
                     vendor = Vendor.objects.get(user=user)
-                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'firstname': user.first_name, 'userType': 'VEN', 'vendor' : {'company_name' : vendor.company_name}, 'token': token.key}
+                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : {'company_name' : vendor.company_name}, 'token': token.key}
                 else:
-                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'firstname': user.first_name, 'userType': 'CUS', 'token': token.key}
+                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
                 return Response(response)
 
 @psa()
@@ -177,7 +177,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         product = Product.objects.get(pk=product_id) 
    
         if product is not None:
-            serializer = serializers.ProductSerializer(product, data=request.DATA, partial=True)
+            serializer = serializers.AddProductSerializer(product, data=request.DATA, partial=True)
            
             if serializer.is_valid():
                 serializer.save()
@@ -187,7 +187,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
         else:
             return Response("Product not found", status=status.HTTP_404_NOT_FOUND) 
 
-class RWDSellerLocationView(generics.RetrieveUpdateDestroyAPIView):
+class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
     """
     This view provides an endpoint for deleting and modifying views         
     """
@@ -205,14 +205,49 @@ class RWDSellerLocationView(generics.RetrieveUpdateDestroyAPIView):
             raise Http404
         return location
 
-    def delete(self, request, location_id):
-        location = SellerLocation.objects.get(pk=location_id)
+class DeleteSellerLocationView(generics.CreateAPIView):
+    def post(self, request):
+        if("id" in request.DATA.keys() and "action" in request.DATA.keys()):
+            if(request.DATA["action"] == "restore"):
+                location = SellerLocation.trash.get(pk=request.DATA["id"])
 
-        if location is not None:
-            location.delete()
-            return Response("Sucessfully deleted location", status=status.HTTP_204_NO_CONTENT)
+                if location is not None:
+                    location.restore()
+                    return Response("Restored location", status=status.HTTP_204_NO_CONTENT)
+                else:
+                    return Response("Location not found for restore", status=status.HTTP_400_BAD_REQUEST)                    
+            elif(request.DATA["action"] == "trash"):
+                location = SellerLocation.objects.get(pk=request.DATA["id"])
+
+                if location is not None:
+                    location.delete()
+                    return Response("Trashed location", status=status.HTTP_204_NO_CONTENT)
+                else:
+                    return Response("Location not found for trashing", status=status.HTTP_400_BAD_REQUEST) 
         else:
-            return Response("location not found", status=status.HTTP_404_NOT_FOUND)
+            return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)
+
+class DeleteProductView(generics.CreateAPIView):
+    def post(self, request):
+        if("id" in request.DATA.keys() and "action" in request.DATA.keys()):
+            if(request.DATA["action"] == "restore"):
+                product = Product.trash.get(pk=request.DATA["id"])
+
+                if product is not None:
+                    product.restore()
+                    return Response("Restored product", status=status.HTTP_204_NO_CONTENT)
+                else:
+                    return Response("Product not found for restore", status=status.HTTP_400_BAD_REQUEST)                    
+            elif(request.DATA["action"] == "trash"):
+                product = Product.objects.get(pk=request.DATA["id"])
+
+                if product is not None:
+                    product.delete()
+                    return Response("Trashed product", status=status.HTTP_204_NO_CONTENT)
+                else:
+                    return Response("Product not found for trashing", status=status.HTTP_400_BAD_REQUEST) 
+        else:
+            return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)               
 
 class AddProductPhotoView(generics.CreateAPIView):
     """
@@ -251,6 +286,28 @@ class VendorProductView(generics.ListAPIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND) 
 
+class UpdateStockView(generics.CreateAPIView):
+    """
+    This view provides an endpoint for vendors to view their products.
+    """   
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.ProductSerializer
+
+    def post(self, request):
+        error = '{"error":"Required attributes not provided"}'
+        if "product_id" in request.DATA and "value" in request.DATA:
+            product = Product.objects.get(pk=request.DATA["product_id"])
+            error = '{"error":"Provided data is invalid"}'
+            if(product != None):
+                if(request.DATA["value"] == "IS"):
+                    product.stock = Product.IN_STOCK
+                elif(request.DATA["value"] == "OOS"):
+                    product.stock = Product.OUT_OF_STOCK
+                product.save()
+                return Response(status=status.HTTP_200_OK)            
+        return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
+
 #TODO: Currenty this view simply returns all products rather
 # than trending ones
 class TrendingProductView(generics.ListAPIView):
@@ -263,7 +320,7 @@ class TrendingProductView(generics.ListAPIView):
     serializer_class = serializers.ProductDisplaySerializer
 
     def get_queryset(self):
-        return Product.objects.all()      
+        return Product.objects.filter(stock=Product.IN_STOCK)      
 
 class VendorsView(generics.ListAPIView):
     """

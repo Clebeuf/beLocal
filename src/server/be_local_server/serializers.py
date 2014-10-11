@@ -64,6 +64,7 @@ class AddProductSerializer(serializers.ModelSerializer):
                   #'price',  
                   'vendor',
                   'photo',
+                  'stock'
                  )
         
 class ProductSerializer(serializers.ModelSerializer):

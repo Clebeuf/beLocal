@@ -320,7 +320,7 @@ class TrendingProductView(generics.ListAPIView):
     serializer_class = serializers.ProductDisplaySerializer
 
     def get_queryset(self):
-        return Product.objects.all()      
+        return Product.objects.filter(stock=Product.IN_STOCK)      
 
 class VendorsView(generics.ListAPIView):
     """

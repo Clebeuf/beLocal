@@ -64,16 +64,23 @@ angular.module('clientApp')
 
     $scope.resetItemModal = function() {
         $scope.submitItemButtonText = "Add Item"; 
+        $scope.isEditingItem = false;
+        $scope.newItemSubmitted = false;
         $scope.itemName = undefined;
         $scope.itemDescription = undefined;
         $scope.newImageID = undefined; 
-        $scope.displayItemThumbnail = false;      
+        $scope.displayItemThumbnail = false;
+        $scope.newItemStock = "IS";
+
+        var e = angular.element('#item-image');
+        e.wrap('<form>').closest('form').get(0).reset();
+        e.unwrap();
     }
 
     $scope.editItem = function(item) {
         $scope.isEditingItem = true;
         $scope.newItemSubmitted = false;
-        $scope.submitItemButtonText = "Edit Item";
+        $scope.submitItemButtonText = "Save Changes";
         $scope.displayItemThumbnail = true;
 
         angular.element('#itemPreview').attr('src', item.photo.image_url).width(50).height(50);
@@ -179,7 +186,8 @@ angular.module('clientApp')
                 "id" : $scope.itemID,
                 "name" : $scope.itemName,
                 "description" : $scope.itemDescription,
-                "photo" : $scope.newImageID
+                "photo" : $scope.newImageID,
+                "stock" : $scope.newItemStock
             };
 
             StateService.createItem(item, $scope.isEditingItem).then(function() {

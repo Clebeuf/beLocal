@@ -109,7 +109,7 @@
 
 
 <!-- repeating for each item that seller has in the db -->
- <div ng-repeat="product in sellerItems">
+ <div ng-repeat="product in sellerItems | orderBy:'name'">
 
         <!-- Need this div to allow for space between each of the sellers items -->
         <div class="list-group-item" >
@@ -171,6 +171,15 @@
                     <form role="form" name="itemForm" novalidate>
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.imageField.$invalid }">
+                                    <label for="item-image">Upload Image</label><br />
+                                    <img ng-show="displayItemThumbnail" src="#" id="itemPreview" />                                    
+                                    <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
                                 <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.itemField.$invalid }">
                                     <label for="item-name">Item Name</label>
                                     <input required ng-model="itemName" type="text" name="itemField" class="form-control" id="item-name" placeholder="Item Name"/>
@@ -186,13 +195,15 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-12 col-md-12">
-                                <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.imageField.$invalid }">
-                                    <label for="item-image">Upload Image</label><br />
-                                    <img ng-show="displayItemThumbnail" src="#" id="itemPreview" />                                    
-                                    <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
+                            <div class="col-sm-12">
+                                <div class="form-group no-bottom-margin">
+                                    <label for="item-name">Item Stock<br></label>
+                                    <div>
+                                        <input type="radio" ng-model="newItemStock" name="newItemStock" value="IS"><span class="radio-padding-right"> In Stock</span>
+                                        <input type="radio" ng-model="newItemStock" name="newItemStock" value="OOS"> Out of Stock
+                                    </div>
                                 </div>
-                            </div>
+                            </div>                        
                         </div>
                     </form>
                 </div>
@@ -320,8 +331,8 @@
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
                                 <div class="form-group no-bottom-margin" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationDescriptionField.$invalid }">
-                                    <label for="item-name">Location Description</label>
-                                    <textarea required ng-model="locationDescription" type="text" name="locationDescriptionField" class="form-control" placeholder="Location Description"/>
+                                    <label for="item-name">Location Details</label>
+                                    <textarea required ng-model="locationDescription" type="text" name="locationDescriptionField" class="form-control" placeholder="Location Details"/>
                                 </div>
                             </div>                        
                         </div>                                                          

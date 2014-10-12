@@ -24,7 +24,14 @@ var app = angular.module('clientApp', [
       templateUrl: 'views/seller.html',
       controller: 'SellerCtrl',
       authenticate: true
+    })
+    .state('vendor/details', {
+      url: '/vendor/details',
+      templateUrl: 'views/details.html',
+      controller: 'DetailsCtrl',
+      authenticate: false
     });
+
 
     $httpProvider.defaults.headers.patch = {
         'Content-Type': 'application/json;charset=utf-8'

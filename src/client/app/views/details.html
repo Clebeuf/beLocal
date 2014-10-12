@@ -1,0 +1,102 @@
+<nav-bar></nav-bar>
+
+<div class="container container-home-page">
+<br>
+	<p>ADD BREADCRUMBS HERE</p>
+
+	<div class="row">
+		<div class="col-sm-4 col-md-3 col-lg-3 vendorAvatar">
+			<img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
+		</div>
+		<div class="col-sm-8 col-md-9 col-lg-9">
+			<h2>Name</h2>
+			<p>Contact Info</P>
+		</div>
+	</div>
+	
+
+	<h2>About The Vendor</h2>
+		about information here
+
+		<!-- <div ng-repeat="vendor in vendors">
+			Vendor Id: {{vendor.id}}
+			Display Id: <input ng-model="value" /><br />
+
+	  		<a id="link-1" href ng-click="value = 1">link 1</a> (link, don't reload)<br />
+	  		<a id="link-2" href="" ng-click="value = {{vendor.id}}">link 2</a> (link, don't reload)<br />
+		  	<a id="link-3" ng-href="/{{'123'}}">link 3</a> (link, reload!)<br />
+		  	<a id="link-4" href="" name="xx" ng-click="value = 4">anchor</a> (link, don't reload)<br />
+		  	<a id="link-5" name="xxx" ng-click="value = {{vendor.id}}">anchor</a> (no link)<br />
+		  	<a id="link-6" ng-href="{{value}}">link</a> (link, change location)
+      		
+      	</div> 
+
+       -->
+
+	<h2>Selling Locations</h2>
+		
+
+	<div class="panel-group" id="accordion">
+	  
+	  <!-- expandable pannels part that needs to repeat -->
+	  <div class="panel panel-default">
+	    <div class="panel-heading row">
+	    	<div class="col-sm-9">
+		      	<h4 class="panel-title">Location #1</h4>
+		      	Address <br>
+		      	Hours of Operation
+		    </div>
+		    <div class="col-sm-3 pull-right">
+		      	<span data-toggle="collapse" data-target="#demo1">
+	  				more information
+				</span>
+		    </div>
+	    </div>
+	    <div id="demo1" class="panel-collapse collapse">
+	      	<div class="panel-body">
+	      		More information related to the location 1
+	      	</div>
+	    </div>
+	  </div>
+
+
+	  <!-- expandable pannels part that needs to repeat -->
+	  <div class="panel panel-default">
+	    <div class="panel-heading row">
+	    	<div class="col-sm-6">
+		      <h4 class="panel-title">
+		          Location #2
+		      </h4>
+		    </div>
+		    <div class="col-sm-6">
+		      	<span data-toggle="collapse" data-target="#demo2">
+	  				more information
+				</span>
+		    </div>
+	    </div>
+	    <div id="demo2" class="panel-collapse collapse">
+	      	<div class="panel-body">
+	      		More information related to the location 1
+	      	</div>
+	    </div>
+	  </div>
+
+
+
+		<h2>Items</h2>
+		
+		<div ng-repeat="items in trendingProducts | groupBy:3" class="row container-trending">
+        	<div class="col-trending col-lg-4 col-md-4 col-sm-6" ng-repeat="item in items" >
+	          	<product-card data="item">
+	      		</product-card>
+        	</div>  
+       </div>
+
+
+
+
+	
+</div>
+<div class="footer">
+    <p>♥ from the beLocal team</p>
+</div>

@@ -29,5 +29,7 @@ urlpatterns = patterns('',
     url(r'^vendor/products/delete/$', views.DeleteProductView.as_view(), name='vendors-product-delete'),     
     
     url(r'^products/trending/$', views.TrendingProductView.as_view(), name='product-trending-list'),
+    url(r'^markets/$', views.ListMarketsView.as_view(), name='market-list'),
+    url(r'^markets/(?P<market_id>[0-9-]+)/$', views.MarketView.as_view(), name='market-details'),
     url(r'^vendors/$', views.VendorsView.as_view(), name='vendors-list'),    
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -322,6 +322,34 @@ class TrendingProductView(generics.ListAPIView):
     def get_queryset(self):
         return Product.objects.filter(stock=Product.IN_STOCK)      
 
+
+class ListMarketsView(generics.ListAPIView):
+    """
+    this view provides an endpoint for customers to 
+    view current markets
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.AddressSerializer
+
+    def get_queryset(self):
+        return Address.objects.filter(addr_type=Address.MARKET)
+
+
+class MarketView(generics.ListAPIView):
+    """
+    This view provides an endpoint for customers to check the available 
+    Seller locations for the given market id
+    """
+
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.AddSellerLocationSerializer
+
+    def get_queryset(self):
+        market_id = self.kwargs['market_id']
+        market_address = Address.objects.get(pk=market_id)
+
+        return SellerLocation.objects.filter(address = market_address)
+
 class VendorsView(generics.ListAPIView):
     """
     This view provides an endpoint for customers to view

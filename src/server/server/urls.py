@@ -27,4 +27,5 @@ urlpatterns = patterns('',
     
     url(r'^products/trending/$', views.TrendingProductView.as_view(), name='product-trending-list'),
     url(r'^vendors/$', views.VendorsView.as_view(), name='vendors-list'),
+    url(r'^vendor/photo/add/$',views.AddVendorPhotoView.as_view(), name='vendor-photo-add')
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

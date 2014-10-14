@@ -87,8 +87,8 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
     modify their information
     """
     
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    #authentication_classes = (TokenAuthentication,)
+    permission_classes = (AllowAny,)
     serializer_class = serializers.VendorSerializer
 
     def get(self, request):
@@ -96,6 +96,7 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
         
         if vendor is not None:
             serializer = serializers.VendorSerializer(vendor)
+            print "hi" + serializer.data
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -230,6 +231,15 @@ class AddProductPhotoView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,) 
     serializer_class = serializers.ProductPhotoSerializer
     model = ProductPhoto
+
+class AddVendorPhotoView(generics.CreateAPIView):
+    """
+    This view provides an endpoint to save vendor photo.
+    """
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+    serializer_class = serializers.VendorPhotoSerializer
+    model = VendorPhoto
     
 class RWDProductPhotoView(generics.RetrieveUpdateDestroyAPIView):
     """

@@ -11,5 +11,11 @@ angular.module('clientApp')
     	$scope.vendors = StateService.getVendorsList();
     })
 
+    StateService.getVendorInfo();
+    // StateService.getVendorToDisplay().then(function() {
+    // 	$scope.vendorToDisplay = StateService.getVendorToDisplay();
+    // })
+
+
   });
 

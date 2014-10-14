@@ -22,7 +22,14 @@
 </div>
 
 <div class="tab-content">
-  <div class="tab-pane" id="markets"></div>
+  <div class="tab-pane" id="markets">
+  </div>
+
+  <!-- Carly's code for sending vendor ID to stateservice -->
+
+
+  <!-- end of Carly's code for sending vendor ID to stateservice -->
+  
   <div class="tab-pane active" id="trending">
     <div class="container container-home-page">
       <div ng-repeat="items in trendingProducts | groupBy:3" class="row container-trending">
@@ -35,6 +42,7 @@
       </div>
     </div>
   </div>
+
   <div class="tab-pane" id="vendors">
     <div class="container container-home-page">
       <div ng-repeat="vendor in vendors">

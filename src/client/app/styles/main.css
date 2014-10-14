@@ -480,3 +480,46 @@ color: #000 !important;
 }
 
 /* SELLER UI ENDS*/
+
+
+
+
+/*VENDOR DETAILS UI*/
+
+.container-vendor-details{
+  padding: 20px 30px 0px 30px !important;
+}
+
+.breadcrumbs{
+  color: #89cc1d;
+}
+
+.panel-group {
+  padding: 0px 0px 0px 10px;
+}
+
+.panel-colours-vendor-details {
+  background-color: #E4F3D9 !important;
+}
+
+
+.panel-default {
+  border: 1px solid #8ed41d !important;
+}
+
+.panel-heading:hover {
+  cursor: pointer;
+  background-color: #E4F3DA;
+}
+
+.faded-box-edge {
+    border: 6px solid #E4F3DA !important;
+    padding: 0px 10px 10px 10px;
+    border-radius: 7px;
+}
+
+.vendorAvatar img{
+  padding:5px;
+  border: 1px solid #dddddd !important;
+}
+

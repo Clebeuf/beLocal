@@ -518,8 +518,13 @@ color: #000 !important;
     border-radius: 7px;
 }
 
+.vendorAvatar {
+  padding:5px !important;
+}
+
 .vendorAvatar img{
   padding:5px;
   border: 1px solid #dddddd !important;
+  border-radius: 5px;
 }
 

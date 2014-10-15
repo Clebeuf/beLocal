@@ -1,102 +1,129 @@
 <!-- NAVBAR -->
 <nav-bar></nav-bar>
 
+<div class="jumbotron seller-Details-Jumbotron">
+
+	<!-- BREADCRUMBS -->
+	<!-- <div class="breadcrumbs row">
+		<p>ADD BREADCRUMBS HERE > {{vendorDetails.vendor.company_name}}</p>
+	</div> -->
+
+	<!-- SELLER DETAILS -->
+	<div class="row">
+		<div class="col-sm-4 col-md-3 col-lg-2 vendorAvatar">
+			<img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
+		</div>
+		<div class="col-sm-8 col-md-9 col-lg-10">
+			<b><h3 class="seller-name-text">{{vendorDetails.vendor.company_name}}</h3></b>
+			<div class="HeaderText">
+				ADDRESS: {{vendorDetails.vendor.address.addr_line1}}, {{vendorDetails.vendor.address.city}}, {{vendorDetails.vendor.address.state}}, {{vendorDetails.vendor.address.zipcode}}<br>
+				WEBPAGE: {{vendorDetails.vendor.webpage}}<br>
+				PHONE: {{vendorDetails.vendor.phone}} Ext.{{vendorDetails.vendor.extension}}<br>
+			</div>
+		</div>
+	</div>
+</div>
+  
+
 
 <div class="container container-home-page container-vendor-details">
 
 
 	<!-- BREADCRUMBS -->
 	<div class="breadcrumbs row">
-		ADD BREADCRUMBS HERE > {{vendorDetails.vendor.company_name}}
+		ABOUT {{vendorDetails.vendor.company_name | uppercase}}
 	</div>
 
 
 	<!-- SELLER DETAILS -->
 	<div class="row faded-box-edge ">
-		<div class="col-sm-4 col-md-3 col-lg-3 vendorAvatar">
-			<img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
-		</div>
-		<div class="col-sm-8 col-md-9 col-lg-9">
-			<h2>{{vendorDetails.vendor.company_name}}</h2>
-			<p>
-				WEBPAGE: {{vendorDetails.vendor.webpage}}<br>
-				PHONE: {{vendorDetails.vendor.phone}} Ext.{{vendorDetails.vendor.extension}}<br>
-				ADDRESS: {{vendorDetails.vendor.address.addr_line1}}, {{vendorDetails.vendor.address.city}}, {{vendorDetails.vendor.address.state}}<br>
-				<br>
-				ABOUT: A local company that sells produce.
-
-
-			</P>
-		</div>
+		A local company that sells produce. This is where the about feild will need to be hooked up to. Lala... lets see what this div looks like when it has some text in it... la la la. Here is some more content...
 	</div>
 
 	<br>
-
-
 
 
 
 	<!-- SELLING LOCATIONS -->
-	<div class="faded-box-edge row">
+	<div class="breadcrumbs row">
+		{{vendorDetails.vendor.company_name | uppercase}}'S SELLING LOCATIONS
+	</div>
 
-		<h3>Selling Locations</h3>
+	<div class="faded-box-edge row"> 
 
-		<div class="panel-group" id="accordion">
-		  
-		  <!-- expandable pannels part that needs to repeat -->
-		  <div class="panel panel-default">
-		    <div class="panel-heading row panel-colours-vendor-details" data-toggle="collapse" data-target="#demo1">
-		    	<div class="col-sm-9">
-			      	<h4 class="panel-title">Location #1</h4>
-			      	ADDRESS HERE
+		<div ng-repeat="location in vendorDetails.locations | orderBy:'name'">
+			
+
+			<div class="panel-group" id="accordion">
+			  
+			  <!-- expandable pannels part that needs to repeat -->
+			  <div class="panel panel-default">
+			    <div class="panel-heading row" data-toggle="collapse" data-target="#demo{{$index}}">
+			    	<div class="col-sm-6">
+				      	<h4 class="panel-title">{{location.name}}</h4>
+				      	<span class="glyphicon glyphicon-map-marker"></span>
+				      	{{location.address.addr_line1}}, {{location.address.city}}, {{location.address.state}}, {{location.address.zipcode}}<br>
+				    </div>
+				    <div class="col-sm-6 text-align-right">
+				    	<span class="glyphicon glyphicon glyphicon-calendar"></span>
+				    	{{location.start_time | date:" EEEE',' MMMM d',' h:mma' - '"}}
+                    	{{location.end_time | date:" h:mma"}}
+                    	<br>
+                    	more information
+
+				      	<!-- <div id="togglebutton" data-toggle="collapse" data-target="#demo1" onclick='changeText()'>+ more information</div> -->
+				    </div>
 			    </div>
-			    <div class="col-sm-3">
-			    	HOURS OF OPERATION
-
-			      	<!-- <div id="togglebutton" data-toggle="collapse" data-target="#demo1" onclick='changeText()'>+ more information</div> -->
+			    <div id="demo{{$index}}" class="panel-collapse collapse">
+			      	<div class="panel-body">
+			      		{{location.description}}
+			      	</div>
 			    </div>
-		    </div>
-		    <div id="demo1" class="panel-collapse collapse">
-		      	<div class="panel-body">
-		      		More information related to the location 1
-		      	</div>
-		    </div>
-		  </div>
+			  </div>
+			</div>
+			<br>
 
-	<br>
-
-		  <!-- expandable pannels part that needs to repeat -->
-		  <div class="panel panel-default">
-		    <div class="panel-heading row ">
-		    	<div class="col-sm-6">
-			      <h4 class="panel-title">
-			          Location #2
-			      </h4>
-			    </div>
-			    <div class="col-sm-6">
-			      	<span data-toggle="collapse" data-target="#demo2">
-		  				more information
-					</span>
-			    </div>
-		    </div>
-		    <div id="demo2" class="panel-collapse collapse">
-		      	<div class="panel-body">
-		      		More information related to the location 1
-		      	</div>
-		    </div>
-		  </div>
 		</div>
 
 	</div>
 
+
 	<br>
 
-
 	<!-- PRODUCTS -->
-	<div class="faded-box-edge row">
+	<div class="breadcrumbs row">
+		SOME PRODUCTS BEING SOLD BY {{vendorDetails.vendor.company_name | uppercase}}
+	</div>
 
-		<h3>Some products currently being sold by Vendor Name:</h3>
-		
+	<div class="faded-box-edge row">
+		<div class="row">
+			<form class="navbar-form navbar-left beLocal-search col-sm-8" role="search">
+		        <div class="form-group">
+		          <div class="input-group">
+		            <input type="text"  placeholder="Search for vendors or products" class="form-control">
+		            <span class="input-group-btn">
+		              <button class="btn beLocal-btn-filled" type="button">Search</button>
+		            </span>
+		          </div>    
+		        </div>
+		      </form>
+
+		      <ul class="nav navbar-nav pull-right">
+		        <li class="dropdown">
+		          <a class="dropdown-toggle pointer" data-toggle="dropdown">Sort By: Name <span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+		            <li><a href="#">Fruits</a></li>
+		            <li><a href="#">Vegetables</a></li>            
+		            <li><a href="#">Preserves</a></li>
+		            <li class="divider"></li>
+		            <li><a href="#">Vendors</a></li>
+		          </ul>
+		        </li>
+		      </ul>
+		</div>
+
+		<hr>
+
 		<div ng-repeat="items in trendingProducts | groupBy:3" class="row container-trending">
 	    	<div class="col-trending col-lg-4 col-md-4 col-sm-6" ng-repeat="item in items" >
 	          	<product-card data="item">

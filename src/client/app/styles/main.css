@@ -536,9 +536,11 @@ color: #000 !important;
 
 }
 
-.specialHR {
+.hr {
   padding-top: 0px !important;
   padding-bottom: 0px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
 
 }
 
@@ -559,3 +561,13 @@ color: #000 !important;
   text-align: right;
 }
 
+.container-display-vendor-name{
+  color: #696969 !important;
+  padding-left: 15px;
+  font-size: 12px;
+}
+
+.container-display-vendor-name a{
+  color: #696969 !important;
+  font-size: 12px;
+}

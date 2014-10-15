@@ -71,7 +71,7 @@ class VendorDetailsView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         vendor = Vendor.objects.get(pk=request.DATA["id"])
         locations = SellerLocation.objects.filter(vendor=vendor)
-        products = Product.objects.filter(vendor=vendor)
+        products = Product.objects.filter(vendor=vendor, stock="IS")
 
         return Response({"vendor":serializers.VendorSerializer(vendor).data, "locations":serializers.AddSellerLocationSerializer(locations, many=True).data, "products":serializers.ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)  
 
@@ -294,7 +294,7 @@ class VendorProductView(generics.ListAPIView):
         products = Product.objects.filter(vendor=vendor)
 
         if products is not None:
-            return products 
+            return products
         else:
             return Response(status=status.HTTP_404_NOT_FOUND) 
 

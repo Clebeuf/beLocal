@@ -1,5 +1,21 @@
 /* BELOCAL STYLES */
 
+@media (max-width: 768px) {
+  .navbar-form {
+    width: auto;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-right: 0;
+    margin-left: 0;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+  .navbar-toggle {
+    margin-left: 15px;
+  }
+}
+
 .radio-padding-right {
   padding-right: 15px;
 }
@@ -244,6 +260,11 @@ body {
 
 /* Customize container */
 @media (max-width: 768px) {
+
+  .sign-in-form {
+    padding-left: 0px;
+  }
+
   .product-card {
     max-width: 335px;
     margin-right: auto;
@@ -271,11 +292,11 @@ body {
 
 /* NAVBAR COLLAPSE */
 @media (max-width: 970px) {
+    .sign-in-form {
+        float: none !important;      
+    }
     .navbar-header {
         float: none;
-    }
-    .navbar-left,.navbar-right {
-        float: none !important;
     }
     .navbar-toggle {
         display: block;

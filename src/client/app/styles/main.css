@@ -30,6 +30,12 @@
   margin-left: auto;
 }
 
+.market-card {
+  max-width: 485px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
   background-color: #8ed41e;
 }
@@ -219,6 +225,10 @@ body {
   .trending-caption {
     text-align: left !important;
   }  
+
+  .market-caption {
+    text-align: left !important;
+  }
 }
 .container-narrow > hr {
   margin: 30px 0;

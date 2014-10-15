@@ -5,6 +5,7 @@ angular.module('clientApp')
     var currentUser = undefined; // Currently authenticated user
     var trendingProducts = []; // Currently trending products
     var vendors = [];
+    var marketlist = [];
 
     this.setProfile = function(u) {
       currentUser = u;
@@ -29,12 +30,22 @@ angular.module('clientApp')
     }
 
     this.getVendors = function() {
-      return $http.get(this.getServerAddress() + 'vendors')
+      return $http.get(this.getServerAddress() + 'vendors/')
       .success(function(data) {
         vendors = data;
       })
       .error(function(data) {
         console.log('Error retrieving vendors');
+      });
+    }
+
+    this.getMarkets = function() {
+      return $http.get(this.getServerAddress() + 'markets/')
+      .success(function(data) {
+        marketlist = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving markets');
       });
     }
 
@@ -110,6 +121,10 @@ angular.module('clientApp')
 
     this.getVendorsList = function() {
       return vendors;
+    }
+
+    this.getMarketList = function() {
+      return marketlist;
     }
 
     this.setProfileFromCookie = function() {

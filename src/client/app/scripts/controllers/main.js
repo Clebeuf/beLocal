@@ -11,4 +11,8 @@ angular.module('clientApp')
     	$scope.vendors = StateService.getVendorsList();
     })
 
+    StateService.getMarkets().then(function() {
+    	$scope.marketlist = StateService.getMarketList();
+    })
+
   });

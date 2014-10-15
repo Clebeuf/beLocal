@@ -22,7 +22,18 @@
 </div>
 
 <div class="tab-content">
-  <div class="tab-pane" id="markets"></div>
+  <div class="tab-pane" id="markets">
+    <div class="container container-home-page">
+      <div ng-repeat="markets in marketlist | groupBy:3" class="row container-markets">
+        <div class="col-trending col-lg-4 col-md-4 col-sm-6" ng-repeat="market in markets">
+          <market-card data="market"></market-card>
+        </div>
+      </div>
+      <div class="footer">
+        <p>♥ from the beLocal team</p>
+      </div>
+    </div>
+  </div>
   <div class="tab-pane active" id="trending">
     <div class="container container-home-page">
       <div ng-repeat="items in trendingProducts | groupBy:3" class="row container-trending">

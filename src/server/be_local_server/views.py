@@ -294,7 +294,7 @@ class VendorsView(generics.ListAPIView):
     """
     permission_classes = (AllowAny,)
 
-    serializer_class = serializers.BusinessVendorSerializer
+    serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
         return Vendor.objects.all()

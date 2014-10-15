@@ -1,15 +1,19 @@
-<div class="thumbnail product-card">
+
       <!-- <img data-src="holder.js/350x300" alt="..." holder-fix> -->
-      <img ng-src="{{vendor.photo.image_url}}" />
-      <div class="caption trending-caption">
-        <div
-        <div class="row">
-          <div class="col-lg-7 col-md-7 col-sm-7">
-            <h5>{{vendor.company_name}}</small></h5>
+<!--       <img ng-src="{{vendor.photo.image_url}}" /> -->
+      <div class="row vendor-card">
+        <div class="col-md-4 vendor-card-info">
+          <h4>{{vendor.company_name}}</h4>
+          <h5>123 la la land, Victoria, B.C.</h5>
+          <h5>250-888-5555 | blah@blah.ca</h5>
+        </div>
+
+
+
+        <div class="col-md-2 vendor-card-product" ng-repeat="product in vendor.products | limitTo:3">
+          <img src="{{product.photo.image_url}}"/>
+        </div>
+        <div class="col-md-2 more-product">
+          <a href="#">...</a>
+        </div>
       </div>
-      <div class="container-md col-lg-5 col-md-5 col-sm-5">
-            <a href="#" class="btn btn-primary" role="button">More Details</a>
-          </div>
-      </div>
-    </div>
-</div>

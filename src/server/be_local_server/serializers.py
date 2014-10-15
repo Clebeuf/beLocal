@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class VendorPhotoPathSerializer(serializers.ModelSerializer):
     image_url = serializers.Field(source="image_url")  
-    class Meta:
+    class Meta: 
         model = be_local_server.models.VendorPhoto
         fields = ('image_url',)
 
@@ -77,17 +77,14 @@ class SellerProductAtLocationSerializer(serializers.ModelSerializer):
         fields = ('id', 'sellerLocation', 'product', 'is_visible', 'stock')
         
 class ProductSerializer(serializers.ModelSerializer):
-    inventories = SellerProductAtLocationSerializer(many=True)
     photo = PhotoPathSerializer()    
     class Meta:
         model = be_local_server.models.Product
         fields = ('id', 
                   'name',
-                  'description', 
-                  #'price',  
+                  'description',   
                   'vendor',
-                  'photo',
-                  'inventories'
+                  'photo'
                  )
 
 class ProductDisplaySerializer(serializers.ModelSerializer):
@@ -103,9 +100,18 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
                   'photo'
                  )           
 
-
-
-
+class CustomerVendorSerializer(serializers.ModelSerializer):
+  products = ProductSerializer()
+  class Meta:
+      model = be_local_server.models.Vendor
+      fields = (  'id',   
+                  'company_name',
+                  'webpage',
+                  'country_code',
+                  'phone',
+                  'extension',
+                  'products'
+      ) 
 
 
 

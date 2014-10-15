@@ -150,6 +150,42 @@
   color: white;
 }
 
+.vendor-card-info {
+  font-size: 11px;
+  padding: 3px;
+  float: left;
+  height:100px;
+}
+
+.vendor-card-product img{
+  width:100%;
+  border: 1px solid #EAEAEA;
+}
+
+.more-product {
+  text-align: center;
+  margin: 0 0;
+  font-size: 11px;
+  padding: 3px;
+  border: 1px solid #EAEAEA;
+  float: left;
+  background-color: #FFF;
+}
+
+.more-product a {
+  display: block;
+  font-size: 21px;
+  padding-top: 40px;
+  background-color: #F5F6F1;
+  color: #666;
+  height:110px;
+  width:100%;
+}
+
+.vendor-card {
+  margin: 5px 0px 5px 0px;
+}
+
 /*TWITCKER STYLES */
 
 #twitcker-bar {

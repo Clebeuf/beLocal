@@ -37,7 +37,7 @@ class Product(models.Model):
     price = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    vendor = models.ForeignKey(Vendor)
+    vendor = models.ForeignKey(Vendor, related_name='products')
     photo = models.ForeignKey(ProductPhoto, blank=True, null=True)
     #tag = models.ManyToManyField(Tag)
 

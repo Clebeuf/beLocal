@@ -62,6 +62,7 @@ var app = angular.module('clientApp', [
         if (toState.authenticate && !AuthService.isAuthenticated()){
           // User isn’t authenticated
           $state.transitionTo('main');
+          console.log("bad");
           event.preventDefault();
         }
       });

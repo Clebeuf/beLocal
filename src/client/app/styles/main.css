@@ -255,8 +255,7 @@ body {
 @media screen and (min-width: 768px) {
   /* Remove the padding we set earlier */
   .header,
-  .marketing,
-  .footer {
+  .marketing {
     padding-left: 0;
     padding-right: 0;
   }

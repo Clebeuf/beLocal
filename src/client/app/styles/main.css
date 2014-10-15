@@ -506,6 +506,10 @@ color: #000 !important;
 
 /*VENDOR DETAILS UI*/
 
+.panel-heading {
+  color: #F8F8F8;
+}
+
 .container-vendor-details{
   padding: 0px 30px 0px 30px !important;
 }
@@ -513,6 +517,7 @@ color: #000 !important;
 .breadcrumbs{
   color: #89cc1d;
   font-size: 15px !important;
+  font-family: "Guardian-EgypTT";
 }
 
 .panel-group {
@@ -522,7 +527,7 @@ color: #000 !important;
 
 .panel-heading:hover {
   cursor: pointer;
-  background-color: #F0f0f0;
+  background-color: #F3f3f3;
 }
 
 .faded-box-edge {
@@ -565,14 +570,17 @@ color: #000 !important;
 
 }
 
+.icon-map-styles {
+  font-size: 40px;
+  text-align: center;
+}
+
 .glyphicon {
   color: #dddddd !important;
 }
 
 .seller-Details-Jumbotron{
   background: #E4F3DA;
-/*  background: #8FD41e;
-  background: #E5F4F7;*/
   text-align: left;
   padding-bottom: 20px !important;
   border-bottom: 3px solid #89cc1d !important;
@@ -586,9 +594,22 @@ color: #000 !important;
   color: #696969 !important;
   padding-left: 15px;
   font-size: 12px;
+  padding-top: 0px;
 }
 
 .container-display-vendor-name a{
   color: #696969 !important;
   font-size: 12px;
+}
+
+.vendor-details-items img{
+  width: 100%;
+}
+
+.toggle-more-info {
+  color: #89cc1d;
+}
+
+.blah {
+  background-color: red;
 }

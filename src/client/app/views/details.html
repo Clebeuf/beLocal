@@ -3,11 +3,6 @@
 
 <div class="jumbotron seller-Details-Jumbotron">
 
-	<!-- BREADCRUMBS -->
-	<!-- <div class="breadcrumbs row">
-		<p>ADD BREADCRUMBS HERE > {{vendorDetails.vendor.company_name}}</p>
-	</div> -->
-
 	<!-- SELLER DETAILS -->
 	<div class="row">
 		<div class="col-sm-4 col-md-3 col-lg-2 vendorAvatar">
@@ -27,7 +22,6 @@
 
 
 <div class="container container-home-page container-vendor-details">
-
 
 	<!-- BREADCRUMBS -->
 	<div class="breadcrumbs row">
@@ -59,17 +53,22 @@
 			  <!-- expandable pannels part that needs to repeat -->
 			  <div class="panel panel-default">
 			    <div class="panel-heading row" data-toggle="collapse" data-target="#demo{{$index}}">
-			    	<div class="col-sm-6">
+			    	<div class="col-sm-1 icon-map-styles hidden-xs">
+			    		<span class="glyphicon glyphicon-map-marker"></span>
+			    	</div>
+			    	<div class="col-xs-6">
 				      	<h4 class="panel-title">{{location.name}}</h4>
-				      	<span class="glyphicon glyphicon-map-marker"></span>
-				      	{{location.address.addr_line1}}, {{location.address.city}}, {{location.address.state}}, {{location.address.zipcode}}<br>
+				      	{{location.address.addr_line1}}<br>
+				      	{{location.address.city}}, {{location.address.state}}, {{location.address.zipcode}}<br>
 				    </div>
-				    <div class="col-sm-6 text-align-right">
-				    	<span class="glyphicon glyphicon glyphicon-calendar"></span>
-				    	{{location.start_time | date:" EEEE',' MMMM d',' h:mma' - '"}}
+				    <div class="col-xs-6 col-sm-5 text-align-right">
+				    	{{location.start_time | date:" EEEE',' MMMM d"}}<br>
+				    	{{location.start_time | date:" h:mma' - '"}}
                     	{{location.end_time | date:" h:mma"}}
                     	<br>
-                    	more information
+                    	<div class="toggle-more-info">
+                    		more information
+                    	</div>
 
 				      	<!-- <div id="togglebutton" data-toggle="collapse" data-target="#demo1" onclick='changeText()'>+ more information</div> -->
 				    </div>
@@ -96,8 +95,8 @@
 	</div>
 
 	<div class="faded-box-edge row">
-		<div class="row">
-			<form class="navbar-form navbar-left beLocal-search col-sm-8" role="search">
+		<div class="row hidden-xs">
+			<form class="navbar-form navbar-left beLocal-search col-sm-7" role="search">
 		        <div class="form-group">
 		          <div class="input-group">
 		            <input type="text"  placeholder="Search for vendors or products" class="form-control">
@@ -122,19 +121,33 @@
 		      </ul>
 		</div>
 
-		<div class="specialHR"><hr></div>
+		<hr style="margin-top:0px; margin-bottom:10px" class="hidden-xs">
 
-		<div ng-repeat="items in vendorDetails.products | groupBy:4" class="row container-trending">
-	    	<div class="col-trending col-md-3 col-sm-6" ng-repeat="item in items" >
+<!-- 
+	      <div class="row" id="masonry-container">
+	        <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in vendorDetails.products" >
+	          <product-card data="item"></product-card>
+	        </div>
+	      </div>
+ -->
+<div class="row" id="masonry-container">
+        <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in vendorDetails.products" >
+          <product-card data="item"></product-card>
+        </div>
+      </div>
+
+
+<!-- 		<div ng-repeat="items in vendorDetails.products | groupBy:4" class="row container-trending">
+	    	<div class="col-trending col-md-3 col-sm-6 vendor-details-items" ng-repeat="item in items" >
 	          	<product-card data="item">
 	      		</product-card>
-	    	</div>  
+	    	</div>   -->
 	   </div>
 	</div>
 
 
 </div>
-
+<br>
 
 <!-- FOOTER -->
 <div class="footer">

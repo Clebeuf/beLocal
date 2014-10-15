@@ -8,8 +8,6 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="#">be<span class="beLocal-highlight">Local</span></a>
-    </div>
-    <div class="navbar-collapse collapse">   
       <form class="navbar-form navbar-left beLocal-search" role="search">
         <div class="form-group">
           <div class="input-group">
@@ -20,6 +18,8 @@
           </div>    
         </div>
       </form>
+    </div>
+    <div class="navbar-collapse collapse">   
 
       <ul class="nav navbar-nav">
         <li class="dropdown">
@@ -35,7 +35,7 @@
       </ul>    
 
       <div ng-hide="AuthService.isAuthenticated()">
-        <form name="loginForm" class="navbar-form navbar-right" role="form">      
+        <form name="loginForm" class="navbar-form navbar-right sign-in-form" role="form">      
           <button type="submit" ng-click="showLogin()" class="btn btn-primary beLocal-btn">Sign In</button>
         </form>
         <ul class="nav navbar-nav navbar-right">

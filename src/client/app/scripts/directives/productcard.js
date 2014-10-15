@@ -8,7 +8,7 @@ angular.module('clientApp')
       link: function postLink(scope, $state, element, attrs) {	
       	scope.displayVendor = function (id){
       		StateService.setVendorToDisplay(id);
-      		$location.path('vendor/details');
+      		$location.path('vendor/details').replace();
       	}
       }
     };

@@ -5,6 +5,33 @@ angular.module('clientApp')
     var currentUser = undefined; // Currently authenticated user
     var trendingProducts = []; // Currently trending products
     var vendors = [];
+    var vendorToDisplay = undefined;
+    var vendorDetails = undefined;
+
+    this.setVendorToDisplay = function(vendorID) {
+      vendorToDisplay = vendorID;
+    };
+
+    this.getVendorDetails = function(){
+      console.log(vendorDetails);
+      return vendorDetails;
+    };
+
+    this.getVendorInfo = function(){
+      return $http.post(this.getServerAddress() + 'vendor/details', {"id":vendorToDisplay})
+      .success(function(data) {
+        vendorDetails = data;
+        console.log(data);
+      })
+      .error(function(data) {
+        console.log('Error retrieving vendor info');
+      });
+    };
+
+    this.getVendorInfoToDisplay = function(){
+      return vendorToDisplayInfo;
+    }
+
 
     this.setProfile = function(u) {
       currentUser = u;
@@ -29,7 +56,7 @@ angular.module('clientApp')
     }
 
     this.getVendors = function() {
-      return $http.get(this.getServerAddress() + 'vendors')
+      return $http.get(this.getServerAddress() + 'vendors/')
       .success(function(data) {
         vendors = data;
       })

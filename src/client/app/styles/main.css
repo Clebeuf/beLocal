@@ -1,5 +1,9 @@
 /* BELOCAL STYLES */
 
+.btn-more-details {
+  margin-top: 5px;
+}
+
 .market-card-text {
   font-size: 12px;
 }
@@ -647,7 +651,6 @@ color: #000 !important;
 
 .container-display-vendor-name{
   color: #696969 !important;
-  padding-left: 15px;
   font-size: 12px;
   padding-top: 0px;
 }
@@ -682,10 +685,13 @@ color: #000 !important;
   padding-top: 5px;
 }
 
-.dropdown-productFilter, a:hover, a:focus{
+.dropdown-productFilter a:hover, a:focus{
   color: #696969;
   text-decoration: none;
-  background-color: transparent !important;
+}
+
+.dropdown-productFilter .open > a {
+   background-color: transparent !important;
 }
 
 @media (max-width: 768px) {

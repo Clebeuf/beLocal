@@ -3,15 +3,12 @@
       <div class="caption trending-caption">
       	<div class="row">
 	      	<div class="col-sm-6">
-		        <h4>{{item.name}}</h4>
+		        <h4 class="no-bottom-margin">{{item.name}}</h4>
+	    		<a class="pointer container-display-vendor-name" ng-click="displayVendor(item.vendor.id)">{{item.vendor.company_name}}</a>		        
 			</div>
 			<div class="container-md col-sm-6">
-		        <a href="#" class="btn beLocal-btn-filled" role="button">More Details</a>
+		        <a href="#" class="btn btn-more-details beLocal-btn-filled" role="button">More Details</a>
 	        </div>
-	    </div>
-	    <div class="row container-display-vendor-name">
-	    	<a class="pointer" ng-click="displayVendor(item.vendor.id)">{{item.vendor.company_name}}</a>
-	    </div>
-      
+	    </div>      
     </div>
 </div>

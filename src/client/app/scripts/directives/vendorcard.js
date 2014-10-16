@@ -5,7 +5,6 @@ angular.module('clientApp')
       templateUrl: 'scripts/directives/vendorCard.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-      	console.log(scope.vendor);	
       }
     };
   });

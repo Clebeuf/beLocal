@@ -11,40 +11,47 @@
   </div>
 </div> 
 
-<div id="twitter-feed"></div>
+<!-- <div id="twitter-feed"></div> -->
 
 <div class="full-width-tabs seller-tabs container-fluid">
   <ul class="nav nav-pills" role="tablist">
-    <li class="full-width"><a href="#markets" role="tab" data-toggle="tab">Markets</a></li>  
-    <li class="full-width active"><a href="#trending" role="tab" data-toggle="tab">Trending</a></li>
+    <li class="full-width"><a href="#markets" role="tab" ng-click="marketMasonry()" id="marketsTab" data-toggle="tab">Markets</a></li>  
+    <li class="full-width active"><a href="#trending" role="tab" id="trendingTab" data-toggle="tab">Trending</a></li>
     <li class="full-width"><a href="#vendors" role="tab" data-toggle="tab">Vendors</a></li>
   </ul>
 </div>
 
 <div class="tab-content">
-  <div class="tab-pane" id="markets"></div>
-  <div class="tab-pane active" id="trending">
+  <div class="tab-pane" id="markets">
     <div class="container container-home-page">
-      <div ng-repeat="items in trendingProducts | groupBy:3" class="row container-trending">
-        <div class="col-trending col-lg-4 col-md-4 col-sm-6" ng-repeat="item in items" >
-          <product-card data="item"></product-card>
-        </div>  
-       </div>
-      <div class="footer">
-        <p>♥ from the beLocal team</p>
+      <div class="row" id="masonry-market-container">
+        <div class="col-trending ms-market-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="market in marketList" >
+          <market-card data="item"></market-card>
+        </div>
       </div>
     </div>
   </div>
+  
+  <div class="tab-pane active" id="trending">
+    <div class="container container-home-page">
+      <div class="row" id="masonry-container">
+        <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts" >
+          <product-card data="item"></product-card>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="tab-pane" id="vendors">
     <div class="container container-home-page">
       <div ng-repeat="vendor in vendors">
-      	<vendor-card data="vendor"></vendor-card>
-      </div> 
-      <div class="footer">
-        <p>♥ from the beLocal team</p>
+      	   <vendor-card data="vendor"></vendor-card>
       </div>
-    </div>  	
-  </div>  
+    </div> 
+  </div>    
+</div> 	
+<div class="footer">
+  <p>♥ from the beLocal team</p>
 </div>
 
 <!-- Product Details Modal -->
@@ -62,7 +69,7 @@
 	                   <div class="row">
 	                       <div class="container-fluid col-lg-6 col-md-6 col-sm-6">
 	                           <h4>{{product.name}}</h4>
-	                           <button type="button" class="btn beLocal-btn-filled product-detail-vendor" data-dismiss="modal" ng-click="goToVendorDetails(product.vendor)">Vendor Info</button>
+	                           <button type="button" class="btn beLocal-btn-filled product-detail-vendor" data-dismiss="modal" ng-click="goToVendorDetails(product.vendor.id)">Vendor Info</button>
 	                       </div>
 	                   </div>
 	                </div>			             

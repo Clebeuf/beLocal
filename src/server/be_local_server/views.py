@@ -15,6 +15,7 @@ from social.apps.django_app.utils import psa
 from be_local_server import serializers
 from be_local_server.models import *
 
+
 class ObtainAuthToken(APIView):
     throttle_classes = ()
     permission_classes = ()
@@ -64,6 +65,17 @@ def register_by_access_token(request, backend):
 
     return user
 
+class VendorDetailsView(generics.CreateAPIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request, *args, **kwargs):
+        vendor = Vendor.objects.get(pk=request.DATA["id"])
+        locations = SellerLocation.objects.filter(vendor=vendor)
+        products = Product.objects.filter(vendor=vendor, stock="IS")
+
+        return Response({"vendor":serializers.VendorSerializer(vendor).data, "locations":serializers.AddSellerLocationSerializer(locations, many=True).data, "products":serializers.ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)  
+
+
 class AddVendorView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
 
@@ -87,8 +99,8 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
     modify their information
     """
     
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    #authentication_classes = (TokenAuthentication,)
+    permission_classes = (AllowAny,)
     serializer_class = serializers.VendorSerializer
 
     def get(self, request):
@@ -257,6 +269,15 @@ class AddProductPhotoView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,) 
     serializer_class = serializers.ProductPhotoSerializer
     model = ProductPhoto
+
+class AddVendorPhotoView(generics.CreateAPIView):
+    """
+    This view provides an endpoint to save vendor photo.
+    """
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+    serializer_class = serializers.VendorPhotoSerializer
+    model = VendorPhoto
     
 class RWDProductPhotoView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -282,7 +303,7 @@ class VendorProductView(generics.ListAPIView):
         products = Product.objects.filter(vendor=vendor)
 
         if products is not None:
-            return products 
+            return products
         else:
             return Response(status=status.HTTP_404_NOT_FOUND) 
 
@@ -322,6 +343,34 @@ class TrendingProductView(generics.ListAPIView):
     def get_queryset(self):
         return Product.objects.filter(stock=Product.IN_STOCK)      
 
+
+class ListMarketsView(generics.ListAPIView):
+    """
+    this view provides an endpoint for customers to 
+    view current markets
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.AddressSerializer
+
+    def get_queryset(self):
+        return Address.objects.filter(addr_type=Address.MARKET)
+
+
+class MarketView(generics.ListAPIView):
+    """
+    This view provides an endpoint for customers to check the available 
+    Seller locations for the given market id
+    """
+
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.AddSellerLocationSerializer
+
+    def get_queryset(self):
+        market_id = self.kwargs['market_id']
+        market_address = Address.objects.get(pk=market_id)
+
+        return SellerLocation.objects.filter(address = market_address)
+
 class VendorsView(generics.ListAPIView):
     """
     This view provides an endpoint for customers to view
@@ -329,7 +378,7 @@ class VendorsView(generics.ListAPIView):
     """
     permission_classes = (AllowAny,)
 
-    serializer_class = serializers.BusinessVendorSerializer
+    serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
         return Vendor.objects.all()

@@ -24,7 +24,14 @@ var app = angular.module('clientApp', [
       templateUrl: 'views/seller.html',
       controller: 'SellerCtrl',
       authenticate: true
+    })
+    .state('vendor/details', {
+      url: '/vendor/details/{vendorid:[0-9]{1,8}}',
+      templateUrl: 'views/details.html',
+      controller: 'DetailsCtrl',
+      authenticate: false
     });
+
 
     $httpProvider.defaults.headers.patch = {
         'Content-Type': 'application/json;charset=utf-8'
@@ -45,19 +52,11 @@ var app = angular.module('clientApp', [
           }
         }
 
-        if(toState.url === '/') {
-          // We are hitting the root of the page. If this is happeneing, we should check to see if the user has the cookie set to login.
-          if(AuthService.isAuthenticated() === true) {
-            if(StateService.getUserType() === 'VEN') {
-              $state.transitionTo('seller', null, {location: 'replace'});
-              event.preventDefault();
-            }
-          }
-        } else if(StateService.getCurrentUser() === undefined) {
-            $state.transitionTo('main');
-        } else if (toState.url === '/seller' && StateService.getUserType() !== 'VEN') {
+        if (toState.url === '/seller' && (StateService.getCurrentUser() == undefined || StateService.getUserType() !== 'VEN')) {
+          console.log('WHY');
           $state.transitionTo('main', null, {location: 'replace'});
           event.preventDefault();
+          return;
         }
 
         if (toState.authenticate && !AuthService.isAuthenticated()){
@@ -71,6 +70,7 @@ var app = angular.module('clientApp', [
 app.directive('holderFix', function () {
     return {
         link: function (scope, element, attrs) {
+            Holder.add_theme("big", {background: "#F5F6F1", foreground: "#666", size: 20 });
             Holder.run({ images: element[0], nocss: true });
         }
     };

@@ -7,6 +7,14 @@ from undelete.models import TrashableMixin
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
+
+class VendorPhoto(models.Model):
+    image = models.ImageField(storage = fs, upload_to='vendors', blank=True)
+    
+    def get_image_abs_path(self):
+        return os.path.join(settings.MEDIA_URL, self.image.name)        
+    image_url = property(get_image_abs_path)
+
 class Address(models.Model):
     MARKET = 'MAR'
     FARM = 'FAR'
@@ -29,6 +37,7 @@ class Address(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
 class Vendor(models.Model):
     user = models.ForeignKey(User) 
     company_name = models.CharField(max_length=200)
@@ -38,8 +47,9 @@ class Vendor(models.Model):
     extension = models.CharField(max_length=25)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    photo = models.ImageField(upload_to='vendor', null=True)
+    photo = models.ForeignKey(VendorPhoto, blank=True, null=True)
     address = models.ForeignKey(Address)
+
 
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)
@@ -65,7 +75,7 @@ class Product(TrashableMixin, models.Model):
     price = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    vendor = models.ForeignKey(Vendor)
+    vendor = models.ForeignKey(Vendor, related_name='products')
     photo = models.ForeignKey(ProductPhoto, blank=True, null=True)
     #tag = models.ManyToManyField(Tag)
 

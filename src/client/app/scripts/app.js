@@ -70,6 +70,7 @@ var app = angular.module('clientApp', [
 app.directive('holderFix', function () {
     return {
         link: function (scope, element, attrs) {
+            Holder.add_theme("big", {background: "#F5F6F1", foreground: "#666", size: 20 });
             Holder.run({ images: element[0], nocss: true });
         }
     };

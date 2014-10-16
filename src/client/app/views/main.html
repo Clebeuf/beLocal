@@ -15,8 +15,8 @@
 
 <div class="full-width-tabs seller-tabs container-fluid">
   <ul class="nav nav-pills" role="tablist">
-    <li class="full-width"><a href="#markets" role="tab" data-toggle="tab">Markets</a></li>  
-    <li class="full-width active"><a href="#trending" role="tab" data-toggle="tab">Trending</a></li>
+    <li class="full-width"><a href="#markets" role="tab" ng-click="marketMasonry()" id="marketsTab" data-toggle="tab">Markets</a></li>  
+    <li class="full-width active"><a href="#trending" role="tab" id="trendingTab" data-toggle="tab">Trending</a></li>
     <li class="full-width"><a href="#vendors" role="tab" data-toggle="tab">Vendors</a></li>
   </ul>
 </div>
@@ -24,9 +24,9 @@
 <div class="tab-content">
   <div class="tab-pane" id="markets">
     <div class="container container-home-page">
-      <div ng-repeat="markets in marketlist | groupBy:3" class="row container-markets">
-        <div class="col-trending col-lg-4 col-md-4 col-sm-6" ng-repeat="market in markets">
-          <market-card data="market"></market-card>
+      <div class="row" id="masonry-market-container">
+        <div class="col-trending ms-market-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="market in marketList" >
+          <market-card data="item"></market-card>
         </div>
       </div>
     </div>

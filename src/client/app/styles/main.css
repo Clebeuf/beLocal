@@ -1,5 +1,28 @@
 /* BELOCAL STYLES */
 
+.market-card-text {
+  font-size: 12px;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
 @media (max-width: 768px) {
   .navbar-form {
     width: auto;
@@ -107,8 +130,12 @@
   margin-right: 0px !important;
 }
 
+.beLocal-highlight-nobold {
+  color: #8ed41e !important;
+}
+
 .beLocal-highlight {
-  color: #8ed41e;
+  color: #8ed41e !important;
   font-weight: bold;
 }
 
@@ -230,6 +257,11 @@ body {
 
 /* Customize container */
 @media (min-width: 768px) {
+
+  .market-time-info {
+    text-align: right;
+  }
+
   .container {
     max-width: 730px;
   }

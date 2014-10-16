@@ -520,10 +520,6 @@ color: #000 !important;
   font-family: "Guardian-EgypTT";
 }
 
-.panel-group {
-  padding: 0px 0px 0px 10px;
-}
-
 
 .panel-heading:hover {
   cursor: pointer;
@@ -620,13 +616,15 @@ color: #000 !important;
 }
 
 
+.dropdown-productFilter{
+  padding-top: 5px;
+}
+
 .dropdown-productFilter, a:hover, a:focus{
   color: #696969;
   text-decoration: none;
   background-color: transparent !important;
-  padding-top: 5px;
 }
-
 
 @media (max-width: 768px) {
   .seller-Details-Jumbotron {

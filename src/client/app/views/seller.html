@@ -164,7 +164,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 ng-hide="isEditingItem" class="modal-title">Add New Item<br /><small>Please complete the following fields to add a new item</small></h4>
-                <h4 ng-show="isEditingItem" class="modal-title">Edit Location<br /><small>Please change any of the fields below to update an existing item</small></h4>                
+                <h4 ng-show="isEditingItem" class="modal-title">Edit Item<br /><small>Please change any of the fields below to update an existing item</small></h4>                
             </div>
             <div class="modal-body">  
                 <div class="container-fluid">                   
@@ -172,7 +172,8 @@
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
                                 <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.imageField.$invalid }">
-                                    <label for="item-image">Upload Image</label><br />
+                                    <label ng-hide="isEditingItem" for="item-image">Add Image</label>
+                                    <label ng-show="isEditingItem" for="item-image">Change Image</label><br />
                                     <img ng-show="displayItemThumbnail" src="#" id="itemPreview" />                                    
                                     <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
                                 </div>
@@ -196,7 +197,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="form-group no-bottom-margin">
+                                <div ng-hide="isEditingItem" class="form-group no-bottom-margin">
                                     <label for="item-name">Item Stock<br></label>
                                     <div>
                                         <input type="radio" ng-model="newItemStock" name="newItemStock" value="IS"><span class="radio-padding-right"> In Stock</span>

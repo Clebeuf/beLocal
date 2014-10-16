@@ -78,23 +78,29 @@ angular.module('clientApp')
     }
 
     $scope.editItem = function(item) {
+
+        var e = angular.element('#item-image');
+        e.wrap('<form>').closest('form').get(0).reset();
+        e.unwrap();
+
         $scope.isEditingItem = true;
         $scope.newItemSubmitted = false;
         $scope.submitItemButtonText = "Save Changes";
-        $scope.displayItemThumbnail = true;
+        $scope.displayItemThumbnail = item.photo ? true : false;
 
-        angular.element('#itemPreview').attr('src', item.photo.image_url).width(50).height(50);
+        if($scope.displayItemThumbnail)
+            angular.element('#itemPreview').attr('src', item.photo.image_url).width(50).height(50);
 
         $scope.itemName = item.name;
         $scope.itemDescription = item.description;
         $scope.itemID = item.id;
-        $scope.newImageID = item.photo.id;
+        $scope.newImageID = item.photo ? item.photo.id : undefined;
 
     }
 
     $scope.deleteLocation = function(location) {
         $scope.deletedLocation = location;
-        $scope.warningHTML = location.name + ' has been deleted! <a class="alert-link" href="#" ng-click="restoreLocation(deletedLocation)">Undo?</a>';
+        $scope.warningHTML = location.name + ' has been deleted! <a class="alert-link pointer" ng-click="restoreLocation(deletedLocation)">Undo?</a>';
         $scope.showWarning = true;
         StateService.trashOrRestoreLocation(location.id, 'trash').then(function() {
             $scope.getSellerLocations();            
@@ -103,7 +109,7 @@ angular.module('clientApp')
 
     $scope.deleteProduct = function(product) {
         $scope.deletedProduct = product;
-        $scope.warningHTML = product.name + ' has been deleted! <a class="alert-link" href="#" ng-click="restoreProduct(deletedProduct)">Undo?</a>';
+        $scope.warningHTML = product.name + ' has been deleted! <a class="alert-link pointer" ng-click="restoreProduct(deletedProduct)">Undo?</a>';
         $scope.showWarning = true;
         StateService.trashOrRestoreProduct(product.id, 'trash').then(function() {
             $scope.getSellerItems();            

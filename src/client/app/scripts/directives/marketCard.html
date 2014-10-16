@@ -1,13 +1,14 @@
 <div class="thumbnail market-card">
       <!-- <img data-src="holder.js/350x300" alt="..." holder-fix> -->
-      <img data-src="holder.js/250x220" alt="..." holder-fix>
+      <img data-src="holder.js/400x400" alt="..." holder-fix>
       <div class="caption market-caption">
 
         <div class="row">
-          <div class="col-lg-6 col-md-6 col-sm-6">
-            <h4>Market</h4>
-
+          <div class="col-sm-12">
+            <h4>{{market.name}}</h4>
           </div>
+
+
           <!--<div class="container-md col-lg-6 col-md-6 col-sm-6">
             <a href="#" class="btn beLocal-btn-filled" role="button">More Details</a>
           </div>
@@ -15,12 +16,21 @@
         </div>
 
         <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12">
-            <h5><small>
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <h4><small>
             <!--<button type="button" class="btn btn-default btn-sm">-->
             <span class="glyphicon glyphicon-map-marker"></span>
             <!--</button>-->
-            <strong>Address:</strong> {{market.addr_line1}} {{market.addr_line2}}, {{market.city}}, {{market.state}}</small></h5>
+            {{market.addr_line1}}, {{market.city}}, {{market.state}}</small></h4>
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <h4>
+            <small>{{market.running_info}}<br>
+              {{market.hours}}
+            </small>
+            </h4>
+
           </div>
         </div>
       </div>

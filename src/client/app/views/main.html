@@ -11,7 +11,7 @@
   </div>
 </div> 
 
-<div id="twitter-feed"></div>
+<!-- <div id="twitter-feed"></div> -->
 
 <div class="full-width-tabs seller-tabs container-fluid">
   <ul class="nav nav-pills" role="tablist">
@@ -29,31 +29,27 @@
           <market-card data="market"></market-card>
         </div>
       </div>
-      <div class="footer">
-        <p>♥ from the beLocal team</p>
-      </div>
     </div>
   </div>
+  
   <div class="tab-pane active" id="trending">
     <div class="container container-home-page">
-      <div ng-repeat="items in trendingProducts | groupBy:3" class="row container-trending">
-        <div class="col-trending col-lg-4 col-md-4 col-sm-6" ng-repeat="item in items" >
+      <div class="row" id="masonry-container">
+        <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts" >
           <product-card data="item"></product-card>
-        </div>  
-       </div>
-      <div class="footer">
-        <p>♥ from the beLocal team</p>
+        </div>
       </div>
     </div>
   </div>
+
   <div class="tab-pane" id="vendors">
     <div class="container container-home-page">
       <div ng-repeat="vendor in vendors">
       	<vendor-card data="vendor"></vendor-card>
       </div> 
-      <div class="footer">
-        <p>♥ from the beLocal team</p>
-      </div>
     </div>  	
-  </div>  
+  </div>    
+</div>
+<div class="footer">
+  <p>♥ from the beLocal team</p>
 </div>

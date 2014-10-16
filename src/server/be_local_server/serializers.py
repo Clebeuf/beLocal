@@ -93,3 +93,22 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
                   'photo',
                   'stock'
                  )           
+
+class MarketDisplaySerializer(serializers.ModelSerializer):
+    vendor = BusinessVendorSerializer()
+    address = AddressSerializer()
+    class Meta:
+        model = be_local_server.models.SellerLocation
+        fields = (  'vendor',
+                    'address',
+                    'start_time',
+                    'end_time',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                    'email',
+                    'phone',
+                    'description'
+                    )
+
+

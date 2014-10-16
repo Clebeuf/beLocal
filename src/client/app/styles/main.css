@@ -91,7 +91,7 @@
 .alert {
   width: 100%;
   position: fixed;
-  z-index: 2000;
+  z-index: 1030;
   top: 52px;
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;  
@@ -520,10 +520,6 @@ color: #000 !important;
   font-family: "Guardian-EgypTT";
 }
 
-.panel-group {
-  padding: 0px 0px 0px 10px;
-}
-
 
 .panel-heading:hover {
   cursor: pointer;
@@ -532,7 +528,7 @@ color: #000 !important;
 
 .faded-box-edge {
     border: 6px solid #E4F3DA !important;
-    padding: 10px 10px 10px 10px;
+    padding: 15px;
     border-radius: 7px;
 }
 
@@ -572,11 +568,8 @@ color: #000 !important;
 
 .icon-map-styles {
   font-size: 40px;
-  text-align: center;
-}
-
-.glyphicon {
   color: #dddddd !important;
+  text-align: center;
 }
 
 .seller-Details-Jumbotron{
@@ -612,4 +605,35 @@ color: #000 !important;
 
 .blah {
   background-color: red;
+}
+
+.beLocal-searchProducts{
+  width:100%;
+}
+
+.dropdown-productFilter{
+  color: #696969;
+}
+
+
+.dropdown-productFilter{
+  padding-top: 5px;
+}
+
+.dropdown-productFilter, a:hover, a:focus{
+  color: #696969;
+  text-decoration: none;
+  background-color: transparent !important;
+}
+
+@media (max-width: 768px) {
+  .seller-Details-Jumbotron {
+      text-align: center !important;
+      padding: 40px 0px 5px 0px!important;
+  }
+
+  .vendorAvatar img{
+    max-height: 150px;
+    max-width: 150px;
+  }
 }

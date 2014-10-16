@@ -18,7 +18,6 @@
 		</div>
 	</div>
 </div>
-  
 
 
 <div class="container container-home-page container-vendor-details">
@@ -28,15 +27,11 @@
 		ABOUT {{vendorDetails.vendor.company_name | uppercase}}
 	</div>
 
-
 	<!-- SELLER DETAILS -->
 	<div class="row faded-box-edge ">
 		A local company that sells produce. This is where the about feild will need to be hooked up to. Lala... lets see what this div looks like when it has some text in it... la la la. Here is some more content...
 	</div>
-
 	<br>
-
-
 
 	<!-- SELLING LOCATIONS -->
 	<div class="breadcrumbs row">
@@ -44,10 +39,7 @@
 	</div>
 
 	<div class="faded-box-edge row"> 
-
-		<div ng-repeat="location in vendorDetails.locations | orderBy:'name'">
-			
-
+		<div ng-repeat="location in vendorDetails.locations | orderBy:'name'">	
 			<div class="panel-group" id="accordion">
 			  
 			  <!-- expandable pannels part that needs to repeat -->
@@ -69,8 +61,6 @@
                     	<div class="toggle-more-info">
                     		more information
                     	</div>
-
-				      	<!-- <div id="togglebutton" data-toggle="collapse" data-target="#demo1" onclick='changeText()'>+ more information</div> -->
 				    </div>
 			    </div>
 			    <div id="demo{{$index}}" class="panel-collapse collapse">
@@ -79,11 +69,10 @@
 			      	</div>
 			    </div>
 			  </div>
+
 			</div>
 			<br>
-
 		</div>
-
 	</div>
 
 
@@ -123,30 +112,15 @@
 
 		<hr style="margin-top:0px; margin-bottom:10px" class="hidden-xs">
 
-<!-- 
-	      <div class="row" id="masonry-container">
+		<div class="row" id="masonry-container">
 	        <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in vendorDetails.products" >
 	          <product-card data="item"></product-card>
 	        </div>
-	      </div>
- -->
-<div class="row" id="masonry-container">
-        <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in vendorDetails.products" >
-          <product-card data="item"></product-card>
-        </div>
-      </div>
+	    </div>
 
-
-<!-- 		<div ng-repeat="items in vendorDetails.products | groupBy:4" class="row container-trending">
-	    	<div class="col-trending col-md-3 col-sm-6 vendor-details-items" ng-repeat="item in items" >
-	          	<product-card data="item">
-	      		</product-card>
-	    	</div>   -->
-	   </div>
 	</div>
-
-
 </div>
+
 <br>
 
 <!-- FOOTER -->

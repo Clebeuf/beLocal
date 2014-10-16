@@ -3,8 +3,10 @@ from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
+from undelete.models import TrashableMixin
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
+
 
 class VendorPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='vendors', blank=True)
@@ -12,6 +14,29 @@ class VendorPhoto(models.Model):
     def get_image_abs_path(self):
         return os.path.join(settings.MEDIA_URL, self.image.name)        
     image_url = property(get_image_abs_path)
+
+class Address(models.Model):
+    MARKET = 'MAR'
+    FARM = 'FAR'
+    ADDR_TYPES = (
+        (MARKET, 'Market'),
+        (FARM, 'Farm'),
+    )
+
+    addr_type = models.CharField(max_length=3, choices=ADDR_TYPES, default=FARM)
+
+    addr_line1 = models.CharField(max_length=400)
+    city = models.CharField(max_length=200)
+    state = models.CharField(max_length=200)
+    country = models.CharField(max_length=200)
+    zipcode = models.CharField(max_length=10)
+
+    latitude = models.FloatField(null=True, blank=True);
+    longitude = models.FloatField(null=True, blank=True);
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
 class Vendor(models.Model):
     user = models.ForeignKey(User) 
@@ -23,6 +48,8 @@ class Vendor(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     photo = models.ForeignKey(VendorPhoto, blank=True, null=True)
+    address = models.ForeignKey(Address)
+
 
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)
@@ -31,7 +58,18 @@ class ProductPhoto(models.Model):
         return os.path.join(settings.MEDIA_URL, self.image.name)        
     image_url = property(get_image_abs_path)
     
-class Product(models.Model):
+class Product(TrashableMixin, models.Model):
+    IN_STOCK = 'IS'
+    LOW_STOCK = 'LS'
+    OUT_OF_STOCK = 'OOS'
+    STOCK_TYPES = (
+        (IN_STOCK, 'In Stock'),
+        (LOW_STOCK, 'Low Stock'),
+        (OUT_OF_STOCK, 'Out of Stock'),
+    )
+
+    stock = models.CharField(max_length=3, choices=STOCK_TYPES, default=IN_STOCK)
+
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=400)
     price = models.FloatField(null=True)
@@ -50,29 +88,7 @@ class ProductTag(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class Address(models.Model):
-    MARKET = 'MAR'
-    FARM = 'FAR'
-    ADDR_TYPES = (
-        (MARKET, 'Market'),
-        (FARM, 'Farm'),
-    )
-
-    addr_type = models.CharField(max_length=3, choices=ADDR_TYPES, default=FARM)
-
-    addr_line1 = models.CharField(max_length=400)
-    city = models.CharField(max_length=200)
-    state = models.CharField(max_length=200)
-    country = models.CharField(max_length=200)
-    zipcode = models.CharField(max_length=10)
-
-    latitude = models.FloatField();
-    longitude = models.FloatField();
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-class SellerLocation(models.Model):
+class SellerLocation(TrashableMixin, models.Model):
     vendor = models.ForeignKey(Vendor)
     address = models.ForeignKey(Address)
     start_time = models.DateTimeField()
@@ -83,23 +99,3 @@ class SellerLocation(models.Model):
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=25)
     description = models.CharField(max_length=400)    
-
-    #SellerProductAtLocation
-    products = models.ManyToManyField(Product, through="SellerProductAtLocation")
-
-class SellerProductAtLocation(models.Model):
-    IN_STOCK = 'IS'
-    LOW_STOCK = 'LS'
-    OUT_OF_STOCK = 'OOS'
-    STOCK_TYPES = (
-        (IN_STOCK, 'In Stock'),
-        (LOW_STOCK, 'Low Stock'),
-        (OUT_OF_STOCK, 'Out of Stock'),
-    )
-
-    sellerLocation = models.ForeignKey(SellerLocation)
-    product = models.ForeignKey(Product)
-    is_visible = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    stock = models.CharField(max_length=3, choices=STOCK_TYPES, default=IN_STOCK)

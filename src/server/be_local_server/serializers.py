@@ -4,9 +4,14 @@ import be_local_server.models
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = User
-		fields = ('id', 'first_name')
+  class Meta:
+    model = User
+    fields = ('id', 'first_name')
+
+class AddressSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = be_local_server.models.Address
+    fields = ( 'id', 'addr_type', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude')
 
 class VendorPhotoPathSerializer(serializers.ModelSerializer):
     image_url = serializers.Field(source="image_url")  
@@ -21,6 +26,7 @@ class VendorPhotoSerializer(serializers.ModelSerializer):
 
 class VendorSerializer(serializers.ModelSerializer):
     photo = VendorPhotoPathSerializer()
+    address = AddressSerializer()
     class Meta:
     		model = be_local_server.models.Vendor
     		fields = ( 	'id',	
@@ -30,7 +36,8 @@ class VendorSerializer(serializers.ModelSerializer):
     					'country_code',
     					'phone',
     					'extension',
-              'photo'
+              'photo',
+              'address'
     		)
 
 class BusinessVendorSerializer(serializers.ModelSerializer):
@@ -50,17 +57,12 @@ class PhotoPathSerializer(serializers.ModelSerializer):
     image_url = serializers.Field(source="image_url")  
     class Meta:
         model = be_local_server.models.ProductPhoto
-        fields = ('image_url',)
+        fields = ('id', 'image_url',)
 
 class ProductPhotoSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = be_local_server.models.ProductPhoto
         fields = ('id', 'image')
-
-class AddressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = be_local_server.models.Address
-        fields = ( 'id', 'addr_type', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude')
 
 class AddSellerLocationSerializer(serializers.ModelSerializer):
     address = AddressSerializer()
@@ -68,13 +70,17 @@ class AddSellerLocationSerializer(serializers.ModelSerializer):
         model = be_local_server.models.SellerLocation
         fields = ('id', 'address', 'name','start_time', 'end_time', 'vendor', 'email', 'phone', 'description')
 
-
-class SellerProductAtLocationSerializer(serializers.ModelSerializer): 
-    sellerLocation = AddSellerLocationSerializer()
-    #product = ProductSerializer()
+class AddProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = be_local_server.models.SellerProductAtLocation
-        fields = ('id', 'sellerLocation', 'product', 'is_visible', 'stock')
+        model = be_local_server.models.Product
+        fields = ('id', 
+                  'name',
+                  'description', 
+                  #'price',  
+                  'vendor',
+                  'photo',
+                  'stock'
+                 )
         
 class ProductSerializer(serializers.ModelSerializer):
     photo = PhotoPathSerializer()    
@@ -84,7 +90,8 @@ class ProductSerializer(serializers.ModelSerializer):
                   'name',
                   'description',   
                   'vendor',
-                  'photo'
+                  'photo',
+                  'stock'
                  )
 
 class ProductDisplaySerializer(serializers.ModelSerializer):
@@ -97,7 +104,8 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
                   'description', 
                   #'price', 
                   'vendor',
-                  'photo'
+                  'photo',
+                  'stock'
                  )           
 
 class CustomerVendorSerializer(serializers.ModelSerializer):
@@ -130,5 +138,3 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
 # 	class Meta:
 # 		model = be_local_server.models.ProductTag
 # 		fields = ('id', 'product', 'tag') #'created_at', 'updated_at')
-
-

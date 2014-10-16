@@ -1,5 +1,13 @@
 /* BELOCAL STYLES */
 
+.radio-padding-right {
+  padding-right: 15px;
+}
+
+#item-image {
+  display: inline;
+}
+
 .no-bottom-margin {
   margin-bottom: 0px;
 }
@@ -91,11 +99,11 @@
 }
 
 .beLocal-header {
-  background-image: url("/images/header.jpg");
+  background-image: url("/images/header-grass-fixed.jpg");
   background-position-x: center;
-  background-position-y: 37%;
+  background-position-y: 70%;
   background-size: 100%;
-  height: 394px;
+  height: 325px;
   margin-bottom: 0px;
 }
 
@@ -125,7 +133,7 @@
   color:white;
   padding-left: 20px;
   font-size: 18pt;
-  font-family: 'Pacifico', cursive;  
+  font-family: 'Bitter', serif; 
 }
 
 .beLocal-btn {
@@ -154,7 +162,6 @@
   font-size: 11px;
   padding: 3px;
   float: left;
-  height:100px;
 }
 
 .vendor-card-product img{
@@ -178,12 +185,13 @@
   padding-top: 40px;
   background-color: #F5F6F1;
   color: #666;
-  height:110px;
   width:100%;
 }
 
 .vendor-card {
   margin: 5px 0px 5px 0px;
+  border: 1px solid #EAEAEA;
+  padding:10px;
 }
 
 /*TWITCKER STYLES */

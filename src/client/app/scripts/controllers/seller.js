@@ -15,6 +15,7 @@ angular.module('clientApp')
     $scope.locationType = 'FAR';
     $scope.sellerLocations = [];
     $scope.emailAtLocation = StateService.getCurrentUser().email;
+    $scope.warningHTML = '';
 
     $scope.resetLocationModal = function() {
         $scope.newLocationSubmitted = false;
@@ -33,7 +34,10 @@ angular.module('clientApp')
         $scope.locationCountry = undefined;
         $scope.locationPostalCode = undefined;
         $scope.locationType = 'FAR';
-        $scope.locationName = undefined;  
+        $scope.locationName = undefined;
+        $scope.emailAtLocation = StateService.getCurrentUser().email;
+        $scope.phoneAtLocation = undefined;
+        $scope.locationDescription = undefined;  
     }
 
     $scope.editLocation = function(location) {
@@ -53,14 +57,96 @@ angular.module('clientApp')
         $scope.locationName = location.name;
         $scope.locationPostalCode = location.address.zipcode;
         $scope.locationId = location.id;
+        $scope.emailAtLocation = location.email;
+        $scope.phoneAtLocation = location.phone;
+        $scope.locationDescription  = location.description;
     }
 
     $scope.resetItemModal = function() {
-        $scope.submitItemButtonText = "Add Item";        
+        $scope.submitItemButtonText = "Add Item"; 
+        $scope.isEditingItem = false;
+        $scope.newItemSubmitted = false;
+        $scope.itemName = undefined;
+        $scope.itemDescription = undefined;
+        $scope.newImageID = undefined; 
+        $scope.displayItemThumbnail = false;
+        $scope.newItemStock = "IS";
+
+        var e = angular.element('#item-image');
+        e.wrap('<form>').closest('form').get(0).reset();
+        e.unwrap();
+    }
+
+    $scope.editItem = function(item) {
+        $scope.isEditingItem = true;
+        $scope.newItemSubmitted = false;
+        $scope.submitItemButtonText = "Save Changes";
+        $scope.displayItemThumbnail = true;
+
+        angular.element('#itemPreview').attr('src', item.photo.image_url).width(50).height(50);
+
+        $scope.itemName = item.name;
+        $scope.itemDescription = item.description;
+        $scope.itemID = item.id;
+        $scope.newImageID = item.photo.id;
+
+    }
+
+    $scope.deleteLocation = function(location) {
+        $scope.deletedLocation = location;
+        $scope.warningHTML = location.name + ' has been deleted! <a class="alert-link" href="#" ng-click="restoreLocation(deletedLocation)">Undo?</a>';
+        $scope.showWarning = true;
+        StateService.trashOrRestoreLocation(location.id, 'trash').then(function() {
+            $scope.getSellerLocations();            
+        });  
+    }
+
+    $scope.deleteProduct = function(product) {
+        $scope.deletedProduct = product;
+        $scope.warningHTML = product.name + ' has been deleted! <a class="alert-link" href="#" ng-click="restoreProduct(deletedProduct)">Undo?</a>';
+        $scope.showWarning = true;
+        StateService.trashOrRestoreProduct(product.id, 'trash').then(function() {
+            $scope.getSellerItems();            
+        });  
+    }    
+
+    $scope.resetWarning = function() {
+        $scope.warningHTML = '';
+        $scope.showWarning = false;
+    }
+
+    $scope.restoreLocation = function(location) {
+        $scope.resetWarning();
+        StateService.trashOrRestoreLocation(location.id, 'restore').then(function() {
+            $scope.getSellerLocations();
+        })
+    }
+
+    $scope.restoreProduct = function(product) {
+        $scope.resetWarning();
+        StateService.trashOrRestoreProduct(product.id, 'restore').then(function() {
+            $scope.getSellerItems();
+        })
+    }
+
+    $scope.stockValueChanged = function(product) {
+        StateService.updateStockValue(product.id, product.stock);
     }
 
     $scope.fileNameChanged = function(file) {
-        console.log(file);
+
+        if (file && file[0]) {
+            var reader = new FileReader();
+            $scope.displayItemThumbnail = true;
+            reader.onload = function(e) {
+                angular.element('#itemPreview')
+                .attr('src', e.target.result)
+                .width(50)
+                .height(50);             
+            };
+            reader.readAsDataURL(file[0]);
+        }
+
         StateService.uploadFile(file[0])
         .success(function(response) {
             $scope.newImageID = response.id;
@@ -97,13 +183,15 @@ angular.module('clientApp')
             angular.element('#itemModal').modal('hide');
 
             var item = {
+                "id" : $scope.itemID,
                 "name" : $scope.itemName,
                 "description" : $scope.itemDescription,
-                "photo" : $scope.newImageID
+                "photo" : $scope.newImageID,
+                "stock" : $scope.newItemStock
             };
 
-            StateService.createItem(item).then(function() {
-                console.log('Whee');
+            StateService.createItem(item, $scope.isEditingItem).then(function() {
+                $scope.getSellerItems();
             });
         }
     }
@@ -145,6 +233,7 @@ angular.module('clientApp')
 
                 StateService.createSellerLocation(sellerLocation, $scope.isEditingLocation).then(function() {
                     $scope.getSellerLocations();
+                    $scope.getSellerItems();
                 });
             }
         }
@@ -163,4 +252,15 @@ angular.module('clientApp')
 
     $scope.init();   
 
+  })
+  .directive('htmlComp', function($compile, $parse) {
+  return {
+    restrict: 'E',
+    link: function(scope, element, attr) {
+      scope.$watch(attr.content, function() {
+        element.html($parse(attr.content)(scope));
+        $compile(element.contents())(scope);
+      }, true);
+    }
+  }
   });

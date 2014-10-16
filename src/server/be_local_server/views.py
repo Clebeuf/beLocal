@@ -99,8 +99,8 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
     modify their information
     """
     
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    #authentication_classes = (TokenAuthentication,)
+    permission_classes = (AllowAny,)
     serializer_class = serializers.VendorSerializer
 
     def get(self, request):
@@ -269,6 +269,15 @@ class AddProductPhotoView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,) 
     serializer_class = serializers.ProductPhotoSerializer
     model = ProductPhoto
+
+class AddVendorPhotoView(generics.CreateAPIView):
+    """
+    This view provides an endpoint to save vendor photo.
+    """
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+    serializer_class = serializers.VendorPhotoSerializer
+    model = VendorPhoto
     
 class RWDProductPhotoView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -369,7 +378,7 @@ class VendorsView(generics.ListAPIView):
     """
     permission_classes = (AllowAny,)
 
-    serializer_class = serializers.BusinessVendorSerializer
+    serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
         return Vendor.objects.all()

@@ -31,6 +31,8 @@ urlpatterns = patterns('',
 
     
     url(r'^products/trending/$', views.TrendingProductView.as_view(), name='product-trending-list'),
+    url(r'^vendors/$', views.VendorsView.as_view(), name='vendors-list'),
+    url(r'^vendor/photo/add/$',views.AddVendorPhotoView.as_view(), name='vendor-photo-add'),
     url(r'^markets/$', views.ListMarketsView.as_view(), name='market-list'),
     url(r'^markets/(?P<market_id>[0-9-]+)/$', views.MarketView.as_view(), name='market-details'),
     url(r'^vendors/$', views.VendorsView.as_view(), name='vendors-list'),    

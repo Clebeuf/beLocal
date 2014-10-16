@@ -13,21 +13,35 @@ class AddressSerializer(serializers.ModelSerializer):
     model = be_local_server.models.Address
     fields = ( 'id', 'addr_type', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude')
 
+class VendorPhotoPathSerializer(serializers.ModelSerializer):
+    image_url = serializers.Field(source="image_url")  
+    class Meta: 
+        model = be_local_server.models.VendorPhoto
+        fields = ('image_url',)
+
+class VendorPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = be_local_server.models.VendorPhoto
+        fields = ('id', 'image')
+
 class VendorSerializer(serializers.ModelSerializer):
-  address = AddressSerializer()
-  class Meta:
-    model = be_local_server.models.Vendor
-    fields = ('id',	
-          'user',
-          'company_name',
-          'webpage',
-          'country_code',
-          'phone',
-          'extension',
-          'address'
-    )
+    photo = VendorPhotoPathSerializer()
+    address = AddressSerializer()
+    class Meta:
+    		model = be_local_server.models.Vendor
+    		fields = ( 	'id',	
+    					'user',
+    					'company_name',
+    					'webpage',
+    					'country_code',
+    					'phone',
+    					'extension',
+              'photo',
+              'address'
+    		)
 
 class BusinessVendorSerializer(serializers.ModelSerializer):
+    photo = VendorPhotoPathSerializer()
     class Meta:
         model = be_local_server.models.Vendor
         fields = (  'id',   
@@ -35,7 +49,8 @@ class BusinessVendorSerializer(serializers.ModelSerializer):
                     'webpage',
                     'country_code',
                     'phone',
-                    'extension'
+                    'extension',
+                    'photo'
         ) 
 
 class PhotoPathSerializer(serializers.ModelSerializer):
@@ -73,8 +88,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = be_local_server.models.Product
         fields = ('id', 
                   'name',
-                  'description', 
-                  #'price',  
+                  'description',   
                   'vendor',
                   'photo',
                   'stock'
@@ -94,6 +108,19 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
                   'stock'
                  )           
 
+class CustomerVendorSerializer(serializers.ModelSerializer):
+  products = ProductSerializer()
+  class Meta:
+      model = be_local_server.models.Vendor
+      fields = (  'id',   
+                  'company_name',
+                  'webpage',
+                  'country_code',
+                  'phone',
+                  'extension',
+                  'products'
+      ) 
+
 class MarketDisplaySerializer(serializers.ModelSerializer):
     vendor = BusinessVendorSerializer()
     address = AddressSerializer()
@@ -110,5 +137,4 @@ class MarketDisplaySerializer(serializers.ModelSerializer):
                     'phone',
                     'description'
                     )
-
 

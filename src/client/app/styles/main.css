@@ -207,6 +207,26 @@ body {
   color: white;
 }
 
+/* VENDOR CARD STUFF */
+.vendor-card-info {
+  font-size: 11px;
+  padding: 5px;
+  float: left;
+}
+
+.vendor-card-product img{
+  width:100%;
+  border: 1px solid #EAEAEA;
+}
+
+.vendor-card {
+  margin: 5px 0px 5px 0px;
+  border: 1px solid #EAEAEA;
+  padding:10px;
+}
+
+/* END OF VENDOR CARD */
+
 /*TWITCKER STYLES */
 
 #twitcker-bar {

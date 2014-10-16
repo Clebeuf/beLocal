@@ -1,16 +1,17 @@
 <div class="thumbnail product-card">
-      <!-- <img data-src="holder.js/350x300" alt="..." holder-fix> -->
       <img ng-src="{{item.photo.image_url}}" />
       <div class="caption trending-caption">
-      	<div
       	<div class="row">
-	      	<div class="col-lg-6 col-md-6 col-sm-6">
+	      	<div class="col-sm-6">
 		        <h4>{{item.name}}</h4>
-		        <h5><small><strong>Sold by: </strong>{{item.vendor.company_name}}</small></h5>
 			</div>
-			<div class="container-md col-lg-6 col-md-6 col-sm-6">
+			<div class="container-md col-sm-6">
 		        <a href="#" class="btn beLocal-btn-filled" role="button">More Details</a>
 	        </div>
-      </div>
+	    </div>
+	    <div class="row container-display-vendor-name">
+	    	<a class="pointer" ng-click="displayVendor(item.vendor.id)">{{item.vendor.company_name}}</a>
+	    </div>
+      
     </div>
 </div>

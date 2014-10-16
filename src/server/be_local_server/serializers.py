@@ -121,20 +121,20 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
                   'products'
       ) 
 
+class MarketDisplaySerializer(serializers.ModelSerializer):
+    vendor = BusinessVendorSerializer()
+    address = AddressSerializer()
+    class Meta:
+        model = be_local_server.models.SellerLocation
+        fields = (  'vendor',
+                    'address',
+                    'start_time',
+                    'end_time',
+                    'name',
+                    'created_at',
+                    'updated_at',
+                    'email',
+                    'phone',
+                    'description'
+                    )
 
-
-
-
-
-# class TagSerializer(serializers.ModelSerializer):
-# 	class Meta:
-# 		model = be_local_server.models.Tag
-# 		fields = ('id', 'name')
-
-# class ProductTagSerializer(serializers.ModelSerializer):
-# 	product = ProductSerializer(many = True)
-# 	tag = TagSerializer()
-
-# 	class Meta:
-# 		model = be_local_server.models.ProductTag
-# 		fields = ('id', 'product', 'tag') #'created_at', 'updated_at')

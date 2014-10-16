@@ -1,0 +1,126 @@
+<!-- NAVBAR -->
+<nav-bar></nav-bar>
+
+<div class="jumbotron seller-Details-Jumbotron">
+
+	<!-- SELLER DETAILS -->
+	<div class="container-vendor-details">
+	<div class="row">
+		<div class="col-sm-4 col-md-3 col-lg-2 vendorAvatar">
+			<img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
+		</div>
+		<div class="col-sm-8 col-md-9 col-lg-10">
+			<b><h3 class="seller-name-text">{{vendorDetails.vendor.company_name}}</h3></b>
+			<div class="HeaderText">
+				ADDRESS: {{vendorDetails.vendor.address.addr_line1}}, {{vendorDetails.vendor.address.city}}, {{vendorDetails.vendor.address.state}}, {{vendorDetails.vendor.address.zipcode}}<br>
+				WEBPAGE: {{vendorDetails.vendor.webpage}}<br>
+				PHONE: {{vendorDetails.vendor.phone}} ext.{{vendorDetails.vendor.extension}}<br>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+
+<div class="container container-home-page container-vendor-details">
+
+	<!-- BREADCRUMBS -->
+	<div class="breadcrumbs row">
+		ABOUT {{vendorDetails.vendor.company_name | uppercase}}
+	</div>
+
+	<!-- SELLER DETAILS -->
+	<div class="row faded-box-edge ">
+		This is where the local vendors can write a bit about themselves.  They can talk about what they can specialize in, their history, etc.  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+	</div>
+	<br>
+
+	<!-- SELLING LOCATIONS -->
+	<div class="breadcrumbs row">
+		{{vendorDetails.vendor.company_name | uppercase}}'S SELLING LOCATIONS
+	</div>
+
+
+
+	<div class="faded-box-edge row"> 
+		<div ng-repeat="location in vendorDetails.locations | orderBy:'name'">	
+			<div class="panel-group" id="accordion">
+			  
+			  <!-- expandable pannels part that needs to repeat -->
+			  <div class="panel panel-default" id="accordion">
+			    <div class="panel-heading row" data-toggle="collapse" data-target="#demo{{$index}}">
+			    	<div class="col-sm-1 icon-map-styles hidden-xs">
+			    		<span class="glyphicon glyphicon-map-marker"></span>
+			    	</div>
+			    	<div class="col-sm-11 col-xs-12">
+				      	<h4 class="panel-title">{{location.name}}</h4>
+				      	{{location.address.addr_line1}}, {{location.address.city}}, {{location.address.state}}, {{location.address.zipcode}}
+				      	<br>{{location.start_time | date:" EEEE's:' "}}{{location.start_time | date:" h:mma' to '" | lowercase}}{{location.end_time | date:" h:mma" | lowercase}}
+				      	<span class="toggle-more-info pull-right">more details...</span>
+				    </div>
+			    </div>
+			    <div id="demo{{$index}}" class="panel-collapse collapse">
+			      	<div class="panel-body">
+			      		{{location.description}}
+			      	</div>
+			    </div>
+			  </div>
+
+			</div>
+			<br>
+		</div>
+	</div>
+
+
+	<br>
+
+	<!-- PRODUCTS -->
+	<div class="breadcrumbs row">
+		SOME PRODUCTS BEING SOLD BY {{vendorDetails.vendor.company_name | uppercase}}
+	</div>
+
+	<div class="faded-box-edge row">
+		<div class="row">
+			<div class=" col-md-7 col-sm-9 col-xs-7">
+				<form class="beLocal-searchProducts" role="search">
+			        <div class="form-group">
+			          <div class="input-group">
+			            <input type="text" placeholder="Search for a product" class="form-control">
+			            <span class="input-group-btn">
+			              <button class="btn beLocal-btn-filled" type="button">Search</button>
+			            </span>
+			          </div>    
+			        </div>
+			    </form>
+		  	</div>
+		  	<!-- NEED TO CHANGE THIS TO WORK AS AN ANGULAR FILTER -->
+		  	<div class="col-md-5 col-sm-3 col-xs-5">
+			    <ul class="nav pull-right">
+			        <li class="dropdown dropdown-productFilter">
+			          <span>Sort by: <a class="dropdown-toggle dropdown-productFilter" data-toggle="dropdown">Name <span class="caret"></span></a></span>
+			          <ul class="dropdown-menu" role="menu">
+			            <li><a href="#">Popular</a></li>
+			            <li><a href="#">New Items</a></li>
+			          </ul>
+			        </li>
+			    </ul>
+			</div>
+		</div>
+
+		<hr style="margin-top:0px; margin-bottom:10px">
+
+		<div class="row" id="masonry-container">
+	        <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in vendorDetails.products" >
+	          <product-card data="item"></product-card>
+	        </div>
+	    </div>
+
+	</div>
+</div>
+
+<br>
+
+<!-- FOOTER -->
+<div class="footer">
+    <p>♥ from the beLocal team</p>
+</div>

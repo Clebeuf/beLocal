@@ -13,7 +13,8 @@ urlpatterns = patterns('',
     url(r'^login/(?P<backend>.+)/$', views.ObtainAuthToken.as_view(), name='login'),
     
     url(r'^vendor/add/$', views.AddVendorView.as_view(), name='vendor-add'),    
-    url(r'^vendor/?$', views.RWDVendorView.as_view(), name='vendor-details'),    
+    url(r'^vendor/?$', views.RWDVendorView.as_view(), name='vendor'), 
+    url(r'^vendor/details/?$', views.VendorDetailsView.as_view(), name='vendor-details'),    
 
     url(r'^vendor/location/add/$', views.AddSellerLocationView.as_view(), name='vendor-location-add'),
     url(r'^vendor/location/list/$', views.ListVendorLocations.as_view(), name='vendor-location-list'), 
@@ -26,10 +27,13 @@ urlpatterns = patterns('',
     url(r'^vendor/products/(?P<product_id>[0-9-]+)/$', views.RWDProductView.as_view(), name='vendor-products-details'),
     url(r'^vendor/products/list/$', views.VendorProductView.as_view(), name='vendor-products-list'),
     url(r'^vendor/products/stock/$', views.UpdateStockView.as_view(), name='vendors-products-stock'),
-    url(r'^vendor/products/delete/$', views.DeleteProductView.as_view(), name='vendors-product-delete'),     
+    url(r'^vendor/products/delete/$', views.DeleteProductView.as_view(), name='vendors-product-delete'),
+
     
     url(r'^products/trending/$', views.TrendingProductView.as_view(), name='product-trending-list'),
     url(r'^vendors/$', views.VendorsView.as_view(), name='vendors-list'),
     url(r'^vendor/photo/add/$',views.AddVendorPhotoView.as_view(), name='vendor-photo-add'),
+    url(r'^markets/$', views.ListMarketsView.as_view(), name='market-list'),
+    url(r'^markets/(?P<market_id>[0-9-]+)/$', views.MarketView.as_view(), name='market-details'),
     url(r'^vendors/$', views.VendorsView.as_view(), name='vendors-list'),    
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

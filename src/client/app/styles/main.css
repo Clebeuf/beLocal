@@ -480,3 +480,24 @@ color: #000 !important;
 }
 
 /* SELLER UI ENDS*/
+
+/* PRODUCT DETAILS UI STARTS */
+.product-detail-image {
+	float: left; 
+	margin-left: 10px;
+}
+
+.product-detail-basic {
+	float: left; 
+	margin-left: 20px;
+}
+
+.product-detail-vendor {
+	margin-top: 20px;
+}
+
+.product-detail-description {
+	margin-top: 30px; 
+	margin-left: 10px;
+}
+/* PRODUCT DETAILS UI ENDS */

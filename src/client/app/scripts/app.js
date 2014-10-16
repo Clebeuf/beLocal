@@ -26,7 +26,7 @@ var app = angular.module('clientApp', [
       authenticate: true
     })
     .state('vendor/details', {
-      url: '/vendor/details',
+      url: '/vendor/details/{vendorid:[0-9]{1,8}}',
       templateUrl: 'views/details.html',
       controller: 'DetailsCtrl',
       authenticate: false
@@ -62,7 +62,6 @@ var app = angular.module('clientApp', [
         if (toState.authenticate && !AuthService.isAuthenticated()){
           // User isn’t authenticated
           $state.transitionTo('main');
-          console.log("bad");
           event.preventDefault();
         }
       });

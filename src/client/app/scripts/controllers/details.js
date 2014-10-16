@@ -1,15 +1,9 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('DetailsCtrl', function ($scope, $timeout, StateService) {
+  .controller('DetailsCtrl', function ($scope, $timeout, $stateParams, StateService) {
 
-    StateService.getTrendingProducts().then(function() {
-      $scope.trendingProducts = StateService.getTrendingProductsList();
-    });
-
-    StateService.getVendors().then(function() {
-    	$scope.vendors = StateService.getVendorsList();
-    });
+  	StateService.setVendorToDisplay($stateParams.vendorid);
 
     StateService.getVendorInfo().then(function() {
     	$scope.vendorDetails = StateService.getVendorDetails();

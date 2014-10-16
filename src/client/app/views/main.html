@@ -46,3 +46,42 @@
     </div>  	
   </div>  
 </div>
+
+<!-- Product Details Modal -->
+<div class="modal fade product-details-model" tabindex="-1" role="dialog" aria-labelledby="productDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Product Details</h3>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid row">
+	                <div style="float:left; margin-left:10px;"> 
+	                <!-- <img data-src="holder.js/350x300" alt="..." holder-fix> -->
+	                   <img class="img-rounded img-thumbnail" src="{{product.photo.image_url}}" />
+	                </div>
+	                <div  style="float:left; margin-left:20px;">
+	                   <div class="row">
+	                       <div class="container-md col-lg-5 col-md-5 col-sm-5" style="float:left;">
+	                           <h4>{{product.name}}</h4>
+	                           <button style="margin-top: 20px;" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="hideProductDetailsModal()">Vendor Info</button>
+	                       </div>
+	                   </div>
+	                </div>
+				             
+	            </div>
+	              
+                <div class="row" style="margin-top: 30px; margin-left:10px;"> 
+                     <h4><strong>Description:</strong></h4> 
+                     <b>{{ product.description }}</b>
+                </div>
+               
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="hideProductDetailsModal()">Close</button>
+            </div>
+        <!-- /.modal-content -->
+        </div>
+    <!-- /.modal-dialog -->
+    </div>
+</div>

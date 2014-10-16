@@ -9,9 +9,11 @@
 		        <h5><small><strong>Sold by: </strong>{{item.vendor.company_name}}</small></h5>
 			</div>
 			<div class="container-md col-lg-6 col-md-6 col-sm-6">
-		        <button class="btn beLocal-btn-filled" role="button" data-toggle="modal" data-target="#productDetails" ng-click="showProductDetailsModal()">More Details</button>
-	            <div product-details-modal modal-id="productDetails" modal-title="Product Modal" modal-src="scripts/directives/productDetails.js"></div>
+		        <button class="btn beLocal-btn-filled" role="button" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(item)">More Details</button>
 	        </div>
       </div>
     </div>
 </div>
+
+
+

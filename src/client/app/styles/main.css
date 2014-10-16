@@ -91,7 +91,7 @@
 .alert {
   width: 100%;
   position: fixed;
-  z-index: 2000;
+  z-index: 1030;
   top: 52px;
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;  

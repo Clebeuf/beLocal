@@ -1,17 +1,58 @@
 
       <!-- <img data-src="holder.js/350x300" alt="..." holder-fix> -->
 <!--       <img ng-src="{{vendor.photo.image_url}}" /> -->
-      <div class="row vendor-card">
-        <div class="col-md-4 vendor-card-info">
-          <h4>{{vendor.company_name}}</h4>
-          <h5>123 la la land, Victoria, B.C.</h5>
-          <h5>250-888-5555 | blah@blah.ca</h5>
-        </div>
 
-        <div class="col-md-2 vendor-card-product" ng-repeat="product in vendor.products | limitTo:3">
-          <img src="{{product.photo.image_url}}"/>
-        </div>
-        <div class="col-md-2 vendor-card-product">
-          <a href="#"><img src="holder.js/154x116/big/text:..." holder-fix/></a>
-        </div>
-      </div>
+
+  <div class="row vendor-card vendor-tab-styles hidden-sm hidden-xs">
+    <div class="col-sm-1 vendor-card-product vendor-images">
+      <img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
+    </div>
+    <div class="col-sm-5">
+      <h4>{{vendor.company_name}}</h4>
+        <span class="glyphicon glyphicon-map-marker"></span> 404 Farm Street, Victoria, BC
+        <!-- <br><span class="glyphicon glyphicon-envelope"></span> belocalVendor@beLocal.ca -->
+        <br><span class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}
+        <!-- <br><span class="glyphicon glyphicon-phone-alt"></span> {{vendor.phone}} -->
+    </div>
+
+    <div class="col-sm-1 vendor-card-product vendor-images" ng-repeat="product in vendor.products | limitTo:5">
+      <img src="{{product.photo.image_url}}"/>
+    </div>
+    <div class="col-sm-1 vendor-card-product vendor-images">
+      <img alt="" src="../images/placeholder.png" />
+    </div>
+  </div>
+
+
+  <div class="row vendor-card vendor-tab-styles hidden-md hidden-lg hidden-xs">
+    <div class="col-xs-2 vendor-card-product vendor-images">
+      <img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
+    </div>
+    <div class="col-xs-4">
+      <h4>{{vendor.company_name}}</h4>
+        <span class="glyphicon glyphicon-map-marker"></span> 404 Farm Street, Victoria, BC
+        <!-- <br><span class="glyphicon glyphicon-envelope"></span> belocalVendor@beLocal.ca -->
+        <br><span class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}
+        <!-- <br><span class="glyphicon glyphicon-phone-alt"></span> {{vendor.phone}} -->
+    </div>
+
+    <div class="col-xs-2 vendor-card-product vendor-images" ng-repeat="product in vendor.products | limitTo:2">
+      <img src="{{product.photo.image_url}}"/>
+    </div>
+    <div class="col-xs-2 vendor-card-product vendor-images">
+      <img alt="" src="../images/placeholder.png" />
+    </div>
+  </div>
+
+  <div class="row vendor-card vendor-tab-styles hidden-md hidden-lg hidden-sm">
+    <div class="col-xs-3 vendor-card-product vendor-images">
+      <img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
+    </div>
+    <div class="col-xs-9">
+      <h4>{{vendor.company_name}}</h4>
+        <span class="glyphicon glyphicon-map-marker"></span> 404 Farm Street, Victoria, BC
+        <!-- <br><span class="glyphicon glyphicon-envelope"></span> belocalVendor@beLocal.ca -->
+        <br><span class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}
+        <!-- <br><span class="glyphicon glyphicon-phone-alt"></span> {{vendor.phone}} -->
+    </div>
+  </div>

@@ -705,3 +705,20 @@ color: #000 !important;
     max-width: 150px;
   }
 }
+
+/*CUSTOMER VENDOR TAB STYLES*/
+
+.vendor-tab-styles{
+  border-radius: 5px !important;
+}
+
+.vendor-images{
+  padding-left:5px;
+  padding-right: 5px;
+}
+
+.vendor-images img{
+  padding: 5px;
+  /*width:90% !important;*/
+  border-radius: 5px !important;
+}

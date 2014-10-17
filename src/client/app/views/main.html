@@ -55,34 +55,32 @@
 </div>
 
 <!-- Product Details Modal -->
-<div class="modal fade product-details-model" tabindex="-1" role="dialog" aria-labelledby="productDetailsLabel" aria-hidden="true">
+<div class="modal fade product-details-model" tabindex="-1" id="productDetailsModal" role="dialog" aria-labelledby="productDetailsLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-body">
-                <div class="container-fluid row">
-	                <div class="product-detail-image"> 
-	                <!-- <img data-src="holder.js/350x300" alt="..." holder-fix> -->
-	                   <img class="img-rounded img-thumbnail" src="{{product.photo.image_url}}" />
-	                </div>
-	                
-	                <div  class="product-details-basic">
-	                   <div class="row">
-	                       <div class="container-fluid col-lg-6 col-md-6 col-sm-6">
-	                           <h4>{{product.name}}</h4>
-	                           <a class="pointer product-detail-vendor" data-dismiss="modal" ng-click="goToVendorDetails(product.vendor.id)">Vendor Info</a>
-	                       </div>
-	                   </div>
-	                </div>			             
-	            </div>
-	              
-                <div class="row product-detail-description"> 
-                     <h4><strong>Description:</strong></h4> 
-                     <p>{{ product.description }}</p>
-                </div>              
+              <div class="row">
+                <div class="col-sm-5 responsive-center">
+                  <div class="thumbnail vendor-card-photo">
+                     <img class="" ng-src="{{product.photo.image_url}}" />
+                  </div>
+                </div>
+                <div class="col-sm-7">
+                  <div class="responsive-center">
+                    <h2 class="product-details-header">{{product.name}}</h2>
+                    <p class="product-details-text no-bottom-margin">
+                      <a class="pointer product-detail-vendor" ng-click="goToVendorDetails(product.vendor.id)">{{product.vendor.company_name}}</a>         
+                    </p>
+                  </div>
+                  <p>
+                    {{product.description}}
+                  </p>
+                </div>
+              </div>            
             </div>
             
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="hideProductDetailsModal()">Close</button>
+            <div class="modal-footer no-top-margin">
+                <button type="button" class="btn beLocal-btn-filled" data-dismiss="modal" ng-click="hideProductDetailsModal()">Close</button>
             </div>
         <!-- /.modal-content -->
         </div>

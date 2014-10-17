@@ -14,7 +14,6 @@ angular.module('clientApp')
     };
 
     this.getVendorDetails = function(){
-      console.log(vendorDetails);
       return vendorDetails;
     };
 
@@ -22,7 +21,6 @@ angular.module('clientApp')
       return $http.post(this.getServerAddress() + 'vendor/details', {"id":vendorToDisplay})
       .success(function(data) {
         vendorDetails = data;
-        console.log(data);
       })
       .error(function(data) {
         console.log('Error retrieving vendor info');

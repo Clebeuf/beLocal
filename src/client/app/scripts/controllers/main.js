@@ -7,13 +7,20 @@ angular.module('clientApp')
     	$scope.product = item;   	
     }
 	    
-    $scope.hideProductDetailsModal = function() {
+    $scope.hideProductDetailsModal = function() {   
     	$scope.product = {};    		
     }
     
     $scope.goToVendorDetails = function(vendorID){
     	$scope.hideProductDetailsModal();
-    	$location.path('vendor/details/'+ vendorID).replace();
+
+
+      angular.element('#productDetailsModal').on('hidden.bs.modal', function(e) {
+        $timeout(function() {
+      	 $location.path('vendor/details/'+ vendorID).replace();
+        });
+      });
+      angular.element('#productDetailsModal').modal('hide');      
     }
     
     StateService.getTrendingProducts().then(function() {

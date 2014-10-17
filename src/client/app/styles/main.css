@@ -569,26 +569,25 @@ color: #000 !important;
 
 
 /* PRODUCT DETAILS UI STARTS */
-.product-detail-image {
-	float: left; 
-	margin-left: 10px;
+.product-details-header {
+  margin-bottom: 2px;
 }
 
-.product-detail-basic {
-	float: left; 
-	margin-left: 20px;
+.vendor-card-photo {
+  width: 100%;
+  margin-bottom: 0px;
+  max-width: 350px;
 }
 
-.product-detail-vendor {
-	margin-top: 20px;
+.product-details-text a {
+  color: #696969 !important;
+  font-size: 16px;
 }
 
-.product-detail-description {
-	margin-top: 30px; 
-	margin-left: 10px;
+.product-details-text {
+  padding-bottom: 12px;  
 }
 /* PRODUCT DETAILS UI ENDS */
-
 
 /*VENDOR DETAILS UI*/
 
@@ -718,6 +717,10 @@ color: #000 !important;
   .seller-Details-Jumbotron {
       text-align: center !important;
       padding: 40px 0px 5px 0px!important;
+  }
+
+  .responsive-center {
+    text-align: center;
   }
 
   .vendorAvatar img{

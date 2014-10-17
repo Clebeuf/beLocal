@@ -1,8 +1,28 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('MainCtrl', function ($scope, $timeout, StateService) {
+  .controller('MainCtrl', function ($scope, $location, $timeout, StateService) {
 
+    $scope.showProductDetailsModal = function(item) {
+    	$scope.product = item;   	
+    }
+	    
+    $scope.hideProductDetailsModal = function() {   
+    	$scope.product = {};    		
+    }
+    
+    $scope.goToVendorDetails = function(vendorID){
+    	$scope.hideProductDetailsModal();
+
+
+      angular.element('#productDetailsModal').on('hidden.bs.modal', function(e) {
+        $timeout(function() {
+      	 $location.path('vendor/details/'+ vendorID).replace();
+        });
+      });
+      angular.element('#productDetailsModal').modal('hide');      
+    }
+    
     StateService.getTrendingProducts().then(function() {
       $scope.trendingProducts = StateService.getTrendingProductsList();
     })
@@ -77,3 +97,5 @@ angular.module('clientApp')
     $scope.marketMasonry();
 
   });
+
+

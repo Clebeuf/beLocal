@@ -568,7 +568,26 @@ color: #000 !important;
 /* SELLER UI ENDS*/
 
 
+/* PRODUCT DETAILS UI STARTS */
+.product-details-header {
+  margin-bottom: 2px;
+}
 
+.vendor-card-photo {
+  width: 100%;
+  margin-bottom: 0px;
+  max-width: 350px;
+}
+
+.product-details-text a {
+  color: #696969 !important;
+  font-size: 16px;
+}
+
+.product-details-text {
+  padding-bottom: 12px;  
+}
+/* PRODUCT DETAILS UI ENDS */
 
 /*VENDOR DETAILS UI*/
 
@@ -700,8 +719,13 @@ color: #000 !important;
       padding: 40px 0px 5px 0px!important;
   }
 
+  .responsive-center {
+    text-align: center;
+  }
+
   .vendorAvatar img{
     max-height: 150px;
     max-width: 150px;
   }
 }
+

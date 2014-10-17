@@ -11,9 +11,9 @@ angular.module('clientApp')
     	$scope.product = {};    		
     }
     
-    $scope.gotToVendorDetails = function(vendorId){
+    $scope.goToVendorDetails = function(vendorID){
     	$scope.hideProductDetailsModal();
-    	$location.path('/vendor/details/' + vendorId); 
+    	$location.path('vendor/details/'+ vendorID).replace();
     }
     
     StateService.getTrendingProducts().then(function() {

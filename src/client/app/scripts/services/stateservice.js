@@ -31,7 +31,7 @@ angular.module('clientApp')
 
     this.getVendorInfoToDisplay = function(){
       return vendorToDisplayInfo;
-    }
+    };
 
     this.setProfile = function(u) {
       currentUser = u;
@@ -43,7 +43,7 @@ angular.module('clientApp')
 
     this.getCurrentUser = function() {
       return currentUser;
-    }
+    };
 
     this.getTrendingProducts = function() {
       return $http.get(this.getServerAddress() + 'products/trending/')
@@ -53,7 +53,7 @@ angular.module('clientApp')
       .error(function(data) {
         console.log('Error retrieving trending products');
       });
-    }
+    };
 
     this.getVendors = function() {
       return $http.get(this.getServerAddress() + 'vendors/')
@@ -63,7 +63,7 @@ angular.module('clientApp')
       .error(function(data) {
         console.log('Error retrieving vendors');
       });
-    }
+    };
 
     this.getMarkets = function() {
       return $http.get(this.getServerAddress() + 'markets/')
@@ -73,46 +73,46 @@ angular.module('clientApp')
       .error(function(data) {
         console.log('Error retrieving markets');
       });
-    }
+    };
 
     this.getSellerLocations = function() {
       return $http.get(this.getServerAddress() + 'vendor/location/list/')
       .error(function(data) {
         console.log('Error retrieving seller locations');
       }) 
-    }
+    };
 
     this.trashOrRestoreLocation = function(id, action) {
       return $http.post(this.getServerAddress() + 'vendor/location/delete/', {'id' : id, 'action' : action})
       .error(function(data) {
         console.log('Error deleting location');
       })
-    }
+    };
 
     this.trashOrRestoreProduct = function(id, action) {
       return $http.post(this.getServerAddress() + 'vendor/products/delete/', {'id' : id, 'action' : action})
       .error(function(data) {
         console.log('Error deleting product');
       })
-    }    
+    };    
 
     this.updateStockValue = function(product_id, value) {
       return $http.post(this.getServerAddress() + 'vendor/products/stock/', {'product_id' : product_id, 'value' : value})
       .error(function(data) {
         console.log('Error updating product stock');
       })
-    }
+    };
 
     this.getSellerItems = function() {
       return $http.get(this.getServerAddress() + 'vendor/products/list/')
       .error(function(data) {
         console.log('Error retrieving seller products');
       }) 
-    }
+    };
 
     this.getServerAddress = function() {
       return 'http://localhost:8000/';
-    }
+    };
 
     this.uploadFile = function(file) {
       var fd = new FormData();
@@ -124,7 +124,7 @@ angular.module('clientApp')
       .error(function(data) {
         console.log('Error uploading image.');
       })
-    }
+    };
 
     this.createItem = function(item, isEditing) {
       if(isEditing) {
@@ -139,23 +139,23 @@ angular.module('clientApp')
           console.log("Created a new item!");
         });
       }
-    }
+    };
 
     this.getTrendingProductsList = function() {
       return trendingProducts;
-    }
+    };
 
     this.getVendorsList = function() {
       return vendors;
-    }
+    };
 
     this.getMarketList = function() {
       return marketlist;
-    }
+    };
 
     this.setProfileFromCookie = function() {
       this.setProfile(ipCookie('beLocalUser'));
-    }
+    };
 
     this.createSellerLocation = function(sellerLocation, isEditing) {
       if(isEditing) {
@@ -176,5 +176,5 @@ angular.module('clientApp')
           console.log("Error creating a new location!");
         })        
       }
-    }
+    };
   });

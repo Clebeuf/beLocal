@@ -28,6 +28,10 @@ body {
 }
 
 @media (max-width: 768px) {
+  .beLocal-header {
+    height: 215px !important;
+  }
+
   .navbar-form {
     width: auto;
     padding-top: 0;

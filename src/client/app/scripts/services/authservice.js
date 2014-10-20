@@ -7,7 +7,7 @@ angular.module('clientApp')
   	var loggedIn = false;
   	var backend = 'facebook';
 		var token = "Token " + result.access_token;
-		var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/login/' + backend + '/', headers: {'Authorization': token}});
+		var loginPromise = $http({method:'POST', url: 'http://54.69.172.241:8000/login/' + backend + '/', headers: {'Authorization': token}});
 
 		// loginService.loginUser(loginPromise);
 		loginPromise.then(function (result) {

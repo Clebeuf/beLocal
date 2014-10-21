@@ -1,4 +1,4 @@
-Startup Programming - beLocal
+Startup Programming - [beLocal](http://belocalvictoria.me)
 =======
 
 (Scott Low, Samuel Navarrete, Riz Panjwani, Carly Lebeuf, Jyoti Sheoran)

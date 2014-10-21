@@ -276,44 +276,12 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="well">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-12" ng-class="{'has-error': newLocationSubmitted && locationForm.addressField.$invalid}">
-                                        <div class="form-group">
-                                            <label for="item-name">Street Address</label>
-                                            <input required ng-model="locationAddress" type="text" class="form-control" id="item-name" name="addressField" placeholder="Address"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-6 col-md-6">
-                                        <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.cityField.$invalid}">
-                                            <label for="item-name">City</label>
-                                            <input required ng-model="locationCity" type="text" class="form-control" id="item-name" name="cityField" placeholder="City"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6 col-md-6" ng-class="{'has-error': newLocationSubmitted && locationForm.provinceField.$invalid}">
-                                        <div class="form-group">
-                                            <label for="item-name">Province</label>
-                                            <input required ng-model="locationProvince" type="text" class="form-control" id="item-name" name="provinceField" placeholder="Province"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-6 col-md-6">
-                                        <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.postalCodeField.$invalid}">
-                                            <label for="item-name">Postal Code</label>
-                                            <input required type="text" ng-model="locationPostalCode" class="form-control" id="item-name" name="postalCodeField" placeholder="Postal Code"/>
-                                        </div>
-                                    </div>                                                                  
-                                    <div class="col-xs-6 col-md-6" ng-class="{'has-error': newLocationSubmitted && locationForm.countryField.$invalid}">
-                                        <div class="form-group">
-                                            <label for="item-name">Country</label>
-                                            <input required ng-model="locationCountry" type="text" class="form-control" id="item-name" name="countryField" placeholder="Country"/>
-                                        </div>
-                                    </div>                                  
-                                </div>                                                                                                 
-                            </div>
+                            <div class="col-xs-12 col-md-12">
+                                  <div class="form-group" ng-class="{ 'has-error' : (locationForm.addressSearchText.$invalid ) && newLocationSubmitted }">
+                                    <label class="control-label">Address</label>
+                                    <input type="text" autocomplete="off" name="addressText" typeahead="result.formatted_address for result in locationResults" class="form-control" ng-model="addressSearchText" placeholder="Search for an Address" required>
+                                  </div>
+                            </div>                                                                                               
                         </div>                                            
                         <div class="row">
                             <div class="col-xs-6 col-md-6" ng-class="{'has-error': newLocationSubmitted && locationForm.phoneField.$invalid}">

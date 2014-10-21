@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
   class Meta:
     model = be_local_server.models.Address
-    fields = ( 'id', 'addr_type', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude')
+    fields = ( 'id', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude')
 
 class VendorPhotoPathSerializer(serializers.ModelSerializer):
     image_url = serializers.Field(source="image_url")  
@@ -68,7 +68,7 @@ class AddSellerLocationSerializer(serializers.ModelSerializer):
     address = AddressSerializer()
     class Meta:
         model = be_local_server.models.SellerLocation
-        fields = ('id', 'address', 'name','start_time', 'end_time', 'vendor', 'email', 'phone', 'description')
+        fields = ('id', 'address', 'name', 'date', 'vendor', 'email', 'phone', 'description')
 
 class AddProductSerializer(serializers.ModelSerializer):
     class Meta:

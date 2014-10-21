@@ -12,10 +12,12 @@ angular.module('clientApp')
     $scope.StateService = StateService;
     $scope.opened = false;
     $scope.minDate = new Date();
-    $scope.locationType = 'FAR';
     $scope.sellerLocations = [];
     $scope.emailAtLocation = StateService.getCurrentUser().email;
     $scope.warningHTML = '';
+    $scope.locationResults = {};
+
+    var geocoder = new google.maps.Geocoder();    
 
     $scope.resetLocationModal = function() {
         $scope.newLocationSubmitted = false;
@@ -33,7 +35,6 @@ angular.module('clientApp')
         $scope.locationProvince = undefined;
         $scope.locationCountry = undefined;
         $scope.locationPostalCode = undefined;
-        $scope.locationType = 'FAR';
         $scope.locationName = undefined;
         $scope.emailAtLocation = StateService.getCurrentUser().email;
         $scope.phoneAtLocation = undefined;
@@ -53,7 +54,6 @@ angular.module('clientApp')
         $scope.locationCity = location.address.city;
         $scope.locationProvince = location.address.state;
         $scope.locationCountry = location.address.country;
-        $scope.locationType = location.address.addr_type;
         $scope.locationName = location.name;
         $scope.locationPostalCode = location.address.zipcode;
         $scope.locationId = location.id;
@@ -204,47 +204,70 @@ angular.module('clientApp')
 
     $scope.newLocationSubmit = function() {
         $scope.newLocationSubmitted = true;
-            if($scope.locationForm.$valid) {
-                angular.element('#locationModal').modal('hide');
+        if($scope.locationForm.$valid) {
+            angular.element('#locationModal').modal('hide');                  
 
-                $scope.startTime.setDate($scope.locationDate.getDate());
-                $scope.startTime.setMonth($scope.locationDate.getMonth());
-                $scope.startTime.setFullYear($scope.locationDate.getFullYear());
+            var address = {
+                "addr_line1" : $scope.locationAddress,
+                "city" : $scope.locationCity,
+                "state" : $scope.locationProvince,
+                "date" : $scope.locationDate,
+                "country" : $scope.locationCountry,
+                "zipcode" : $scope.locationPostalCode,
+                "latitude" : $scope.latitude,
+                "longitude" : $scope.longitude
+            };
 
-                $scope.endTime.setDate($scope.locationDate.getDate());
-                $scope.endTime.setMonth($scope.locationDate.getMonth());
-                $scope.endTime.setFullYear($scope.locationDate.getFullYear());                    
+            var sellerLocation = {
+                "id" : $scope.locationId,
+                "address" : address,
+                "start_time" : $scope.startTime,
+                "end_time" : $scope.endTime,
+                "name" : $scope.locationName,
+                'email' : $scope.emailAtLocation,
+                'phone' : $scope.phoneAtLocation,
+                'description' : $scope.locationDescription,
+            };
 
-                var address = {
-                    "addr_line1" : $scope.locationAddress,
-                    "city" : $scope.locationCity,
-                    "state" : $scope.locationProvince,
-                    "country" : $scope.locationCountry,
-                    "zipcode" : $scope.locationPostalCode,
-                    "latitude" : "0",
-                    "longitude" : "0",
-                    "addr_type" : $scope.locationType,
-                };
-
-                var sellerLocation = {
-                    "id" : $scope.locationId,
-                    "address" : address,
-                    "start_time" : $scope.startTime,
-                    "end_time" : $scope.endTime,
-                    "name" : $scope.locationName,
-                    'email' : $scope.emailAtLocation,
-                    'phone' : $scope.phoneAtLocation,
-                    'description' : $scope.locationDescription,
-                };
-
-                StateService.createSellerLocation(sellerLocation, $scope.isEditingLocation).then(function() {
-                    $scope.getSellerLocations();
-                    $scope.getSellerItems();
-                });
-            }
+            StateService.createSellerLocation(sellerLocation, $scope.isEditingLocation).then(function() {
+                $scope.getSellerLocations();
+                $scope.getSellerItems();
+            });
         }
+    }
 
+    $scope.formatAddress = function(address) {
+      return address.replace(' ', '+');
+    }
 
+    // Put a delay on address searching
+    var tempSearchText = '', searchTextTimeout;
+    $scope.$watch('addressSearchText', function (newVal, oldVal) {
+        if(newVal === oldVal) return;
+        if (searchTextTimeout) $timeout.cancel(searchTextTimeout);
+
+        tempSearchText = newVal;
+        searchTextTimeout = $timeout(function() {
+          $scope.addressSearchText = tempSearchText;
+          if($scope.addressSearchText !== undefined) {
+            geocoder.geocode( { 'address': $scope.formatAddress($scope.addressSearchText)}, function(results, status) {
+              if (status == google.maps.GeocoderStatus.OK) {
+                $timeout(function() {
+                    $scope.locationResults = results;
+                    $scope.selectedLocation = results[0].address_components;
+                    $scope.locationAddress = $scope.selectedLocation[0].short_name + ' ' + $scope.selectedLocation[1].long_name;
+                    $scope.locationCity = $scope.selectedLocation[3].long_name;
+                    $scope.locationProvince = $scope.selectedLocation[5].long_name;
+                    $scope.locationCountry = $scope.selectedLocation[6].long_name;
+                    $scope.locationPostalCode = $scope.selectedLocation[7].long_name;
+                    $scope.latitude = results[0].geometry.location.k;
+                    $scope.longitude = results[0].geometry.location.B;
+                });
+              }
+            });
+          }
+        }, 500);
+    });        
 
     $scope.init = function() {
         $scope.getSellerLocations();

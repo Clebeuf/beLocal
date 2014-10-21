@@ -46,7 +46,8 @@ INSTALLED_APPS = (
     #'sortedm2m',
     #'south',   # Only if you're relying on South for migrations.
     'be_local_server',
-    'undelete'
+    'undelete',
+    'taggit'
 )
 
 MIDDLEWARE_CLASSES = (

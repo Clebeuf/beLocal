@@ -69,9 +69,10 @@
 
             <div class="well">
 
-                <p><b>DATE:</b>
-                    {{location.date | date:" EEEE',' MMMM d'"}}
-                    {{location.end_time | date:" h:mma"}}
+                <p ng-show="location.date"><b>DATE:</b>
+                    {{location.date | date:" EEEE',' MMMM d'"}},
+                    {{location.address.hours[0].from_hour}} - 
+                    {{location.address.hours[0].to_hour}}
                 </p>
                 <p><b>LOCATION:</b>
                     {{location.address.addr_line1}},

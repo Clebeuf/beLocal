@@ -408,21 +408,19 @@ class AddSellerLocationView(generics.CreateAPIView):
             current_location = serializer.save()
             address = current_location.address.id;
 
-            for entry in request.DATA["address"]["hours"]:
-                entry["address"] = address
+            if(request.DATA["address"]["hours"] != ""):
+                for entry in request.DATA["address"]["hours"]:
+                    entry["address"] = address
 
-            print request.DATA["address"]["hours"]
+                hours_serializer = serializers.OpeningHoursSerializer(data=request.DATA["address"]["hours"])
 
-            hours_serializer = serializers.OpeningHoursSerializer(data=request.DATA["address"]["hours"])
+                if hours_serializer.is_valid():
+                    hours_serializer.save()
+                else:
+                    return Response(hours_serializer.errors,
+                                    status=status.HTTP_400_BAD_REQUEST)                
 
-            print hours_serializer.is_valid()
-            if hours_serializer.is_valid():
-                hours_serializer.save()
-            else:
-                return Response(hours_serializer.errors,
-                                status=status.HTTP_400_BAD_REQUEST)                
-
-            return HttpResponse(status=status.HTTP_201_CREATED)
+                return HttpResponse(status=status.HTTP_201_CREATED)
 
         else:
             return Response(serializer.errors,

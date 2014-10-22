@@ -97,7 +97,7 @@ class Markets(models.Model):
     vendors = models.ManyToManyField(Vendor)
 
 class OpeningHours(models.Model):
-    address = models.ForeignKey(Address, related_name="hours")
+    address = models.ForeignKey(Address, related_name="hours", null=True)
     weekday = models.IntegerField(
         choices=WEEKDAYS
     )

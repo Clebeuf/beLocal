@@ -249,7 +249,7 @@ angular.module('clientApp')
 
             var sellerLocation = {
                 "id" : $scope.locationId,
-                "date" : !$scope.locationDate instanceof Date ? $scope.locationDate.getFullYear() + '-' + ($scope.locationDate.getMonth() + 1) + '-' + $scope.locationDate.getDate() : $scope.locationDate,
+                "date" : $scope.locationDate instanceof Date ? $scope.locationDate.getFullYear() + '-' + ($scope.locationDate.getMonth() + 1) + '-' + $scope.locationDate.getDate() : $scope.locationDate,
                 "address" : address,
                 "name" : $scope.locationName,
                 'email' : $scope.emailAtLocation,

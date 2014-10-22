@@ -21,6 +21,7 @@ angular.module('clientApp')
     var geocoder = new google.maps.Geocoder();    
 
     $scope.resetLocationModal = function() {
+        $scope.addressSearchText = undefined;
         $scope.newLocationSubmitted = false;
         $scope.isEditingLocation = false;       
         $scope.submitLocationButtonText = "Add Location";
@@ -61,7 +62,9 @@ angular.module('clientApp')
         $scope.newLocationSubmitted = false;
         $scope.submitLocationButtonText = "Save Changes";
 
-        $scope.locationDate = new Date(Date.UTC(parseInt(location.date.substr(0,4)), parseInt(location.date.substr(5,2)) - 1, parseInt(location.date.substr(8,2)) + 1));
+        var date = new Date(location.date);
+        $scope.locationDate = date;
+
         console.log($scope.locationDate);
 
         $scope.startTime = $scope.setTime(location.address.hours[0].from_hour);
@@ -250,7 +253,7 @@ angular.module('clientApp')
 
             var sellerLocation = {
                 "id" : $scope.locationId,
-                "date" : $scope.locationDate.getFullYear() + '-' + $scope.locationDate.getMonth() + '-' + $scope.locationDate.getDate(),
+                "date" : $scope.locationDate.getFullYear() + '-' + ($scope.locationDate.getMonth() + 1) + '-' + $scope.locationDate.getDate(),
                 "address" : address,
                 "name" : $scope.locationName,
                 'email' : $scope.emailAtLocation,

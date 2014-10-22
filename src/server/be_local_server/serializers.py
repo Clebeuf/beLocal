@@ -8,10 +8,34 @@ class UserSerializer(serializers.ModelSerializer):
     model = User
     fields = ('id', 'first_name')
 
+class OpeningHoursSerializer(serializers.ModelSerializer):
+  class Meta:
+      model = be_local_server.models.OpeningHours
+      fields = (  'address',
+                  'weekday',
+                  'from_hour',
+                  'to_hour',
+      )
+
+class DisplayOpeningHoursSerializer(serializers.ModelSerializer):
+  weekday = serializers.CharField(source='get_day_display')  
+  class Meta:
+      model = be_local_server.models.OpeningHours
+      fields = (  'weekday',
+                  'from_hour',
+                  'to_hour',
+      )          
+
 class AddressSerializer(serializers.ModelSerializer):
+  hours = DisplayOpeningHoursSerializer(many=True)
   class Meta:
     model = be_local_server.models.Address
-    fields = ( 'id', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude')
+    fields = ( 'id', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude', 'hours')
+
+class AddAddressSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = be_local_server.models.Address
+    fields = ( 'id', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude')    
 
 class VendorPhotoPathSerializer(serializers.ModelSerializer):
     image_url = serializers.Field(source="image_url")  
@@ -62,13 +86,19 @@ class PhotoPathSerializer(serializers.ModelSerializer):
 class ProductPhotoSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = be_local_server.models.ProductPhoto
-        fields = ('id', 'image')
+        fields = ('id', 'image')      
 
 class AddSellerLocationSerializer(serializers.ModelSerializer):
-    address = AddressSerializer()
+    address = AddAddressSerializer() 
     class Meta:
         model = be_local_server.models.SellerLocation
         fields = ('id', 'address', 'name', 'date', 'vendor', 'email', 'phone', 'description')
+
+class SellerLocationSerializer(serializers.ModelSerializer):
+    address = AddressSerializer() 
+    class Meta:
+        model = be_local_server.models.SellerLocation
+        fields = ('id', 'address', 'name', 'date', 'vendor', 'email', 'phone', 'description')        
 
 class AddProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -119,7 +149,7 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
                   'phone',
                   'extension',
                   'products'
-      ) 
+      )      
 
 class MarketDisplaySerializer(serializers.ModelSerializer):
     vendor = BusinessVendorSerializer()
@@ -135,6 +165,6 @@ class MarketDisplaySerializer(serializers.ModelSerializer):
                     'updated_at',
                     'email',
                     'phone',
-                    'description'
+                    'description',
                     )
 

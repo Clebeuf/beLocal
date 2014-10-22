@@ -97,12 +97,16 @@ class Markets(models.Model):
     vendors = models.ManyToManyField(Vendor)
 
 class OpeningHours(models.Model):
-    address = models.ForeignKey(Address)
+    address = models.ForeignKey(Address, related_name="hours")
     weekday = models.IntegerField(
-        choices=WEEKDAYS,
-        unique=True
+        choices=WEEKDAYS
     )
     from_hour = models.TimeField()
     to_hour = models.TimeField()
     unique_together=(weekday, address)
+
+    def get_day_display(self):
+        for day in WEEKDAYS:
+            if day[0] == self.weekday:
+                return day[1]    
 

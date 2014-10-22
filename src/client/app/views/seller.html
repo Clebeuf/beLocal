@@ -70,7 +70,7 @@
             <div class="well">
 
                 <p><b>DATE:</b>
-                    {{location.start_time | date:" EEEE',' MMMM d',' h:mma' - '"}}
+                    {{location.date | date:" EEEE',' MMMM d'"}}
                     {{location.end_time | date:" h:mma"}}
                 </p>
                 <p><b>LOCATION:</b>
@@ -233,27 +233,27 @@
                     <form role="form" name="locationForm" novalidate>
                         <div class="row">
                             <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="item-name">Location Type</label><br />
+                                    <label class="radio-inline">
+                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="farmRadio" value="true"><p>One Time</p>
+                                    </label>
+                                    <label class="radio-inline">
+                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="marketRadio" value="false"><p>Regular Hours</p>
+                                    </label>                            
+                                </div>
+                            </div>                        
+                            <div class="col-xs-6 col-md-6">
                                 <div class="form-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationField.$invalid }">
                                     <label for="item-name">Location Name</label>
                                     <input required ng-model="locationName" type="text" name="locationField" class="form-control" id="item-name" placeholder="Location Name"/>
                                 </div>
                             </div>
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label for="item-name">Location Type</label><br />
-                                    <label class="radio-inline">
-                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="farmRadio" value="FAR"><p>Farm</p>
-                                    </label>
-                                    <label class="radio-inline">
-                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="marketRadio" value="MAR"><p>Market</p>
-                                    </label>                            
-                                </div>
-                            </div>
                         </div>
-                        <div class="row">
+                        <div ng-show="locationType" class="row">
                             <div class="col-xs-6 col-md-6">
                                 <div class="form-group">
-                                  <label>Start date:</label>                      
+                                  <label>Date:</label>                      
                                   <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.dateField.$invalid }">
                                     <input required type="text" name="dateField" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="locationDate" is-open="opened" min="minDate" max="'2015-06-22'" close-text="Close" />
                                     <span class="input-group-btn">

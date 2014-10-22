@@ -16,6 +16,7 @@ angular.module('clientApp')
     $scope.emailAtLocation = StateService.getCurrentUser().email;
     $scope.warningHTML = '';
     $scope.locationResults = {};
+    $scope.locationType = 'true';
 
     var geocoder = new google.maps.Geocoder();    
 
@@ -205,24 +206,34 @@ angular.module('clientApp')
     $scope.newLocationSubmit = function() {
         $scope.newLocationSubmitted = true;
         if($scope.locationForm.$valid) {
-            angular.element('#locationModal').modal('hide');                  
+            angular.element('#locationModal').modal('hide');
+            var hours = {};                  
 
             var address = {
                 "addr_line1" : $scope.locationAddress,
                 "city" : $scope.locationCity,
                 "state" : $scope.locationProvince,
-                "date" : $scope.locationDate,
                 "country" : $scope.locationCountry,
                 "zipcode" : $scope.locationPostalCode,
                 "latitude" : $scope.latitude,
                 "longitude" : $scope.longitude
             };
 
+            // If we are a one time location...
+            if($scope.locationType == 'true') {
+                hours = [{
+                    "weekday" : 8,
+                    "from_hour" : $scope.startTime.getHours() + ':' + $scope.startTime.getMinutes(),
+                    "to_hour" : $scope.endTime.getHours() + ':' + $scope.endTime.getMinutes()
+                }];
+            }
+
+            address.hours = hours;
+
             var sellerLocation = {
                 "id" : $scope.locationId,
+                "date" : $scope.locationDate.getFullYear() + '-' + $scope.locationDate.getMonth() + '-' + $scope.locationDate.getDate(),
                 "address" : address,
-                "start_time" : $scope.startTime,
-                "end_time" : $scope.endTime,
                 "name" : $scope.locationName,
                 'email' : $scope.emailAtLocation,
                 'phone' : $scope.phoneAtLocation,

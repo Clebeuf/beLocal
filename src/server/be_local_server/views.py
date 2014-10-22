@@ -387,7 +387,7 @@ class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    serializer_class = serializers.AddSellerLocationSerializer
+    serializer_class = serializers.SellerLocationSerializer
 
     def get_queryset(self):
         vendor = Vendor.objects.get(user=self.request.user)
@@ -406,6 +406,21 @@ class AddSellerLocationView(generics.CreateAPIView):
 
         if serializer.is_valid(): 
             current_location = serializer.save()
+            address = current_location.address.id;
+
+            for entry in request.DATA["address"]["hours"]:
+                entry["address"] = address
+
+            print request.DATA["address"]["hours"]
+
+            hours_serializer = serializers.OpeningHoursSerializer(data=request.DATA["address"]["hours"])
+
+            print hours_serializer.is_valid()
+            if hours_serializer.is_valid():
+                hours_serializer.save()
+            else:
+                return Response(hours_serializer.errors,
+                                status=status.HTTP_400_BAD_REQUEST)                
 
             return HttpResponse(status=status.HTTP_201_CREATED)
 

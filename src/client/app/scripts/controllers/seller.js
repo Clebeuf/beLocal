@@ -282,13 +282,47 @@ angular.module('clientApp')
         return d.promise;
     }
 
+    $scope.parseGeocoderResult = function(result) {
+        var location = {}
+        for(var i = 0; i < result.address_components.length; i++) {
+            var component = result.address_components[i];
+
+            // Get Street Number
+            if($scope.compareGeocoderType(component.types, 'street_number')) 
+                location.street_number = component.short_name;
+            else if($scope.compareGeocoderType(component.types, 'route'))
+                location.route = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'sublocality'))
+                location.city = component.long_name;      
+            else if($scope.compareGeocoderType(component.types, 'locality'))
+                location.city = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'administrative_area_level_1'))
+                location.state = component.short_name;
+            else if($scope.compareGeocoderType(component.types, 'country'))
+                location.country = component.long_name;            
+            else if($scope.compareGeocoderType(component.types, 'postal_code'))
+                location.postal_code = component.long_name;              
+        }
+        return location;
+    }
+
+    $scope.compareGeocoderType = function(types, compareTo) {
+        for(var i = 0; i < types.length; i++) {
+            if(types[i] === compareTo) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     $scope.makeSelection = function(item) {
-        $scope.selectedLocation = item.address_components;
-        $scope.locationAddress = $scope.selectedLocation[0].short_name + ' ' + $scope.selectedLocation[1].long_name;
-        $scope.locationCity = $scope.selectedLocation[3].long_name;
-        $scope.locationProvince = $scope.selectedLocation[5].short_name;
-        $scope.locationCountry = $scope.selectedLocation[6].long_name;
-        $scope.locationPostalCode = $scope.selectedLocation[7].long_name;
+        var parsedLocation = $scope.parseGeocoderResult(item);
+
+        $scope.locationAddress = parsedLocation.street_number + ' ' + parsedLocation.route;
+        $scope.locationCity = parsedLocation.city;
+        $scope.locationProvince = parsedLocation.state;
+        $scope.locationCountry = parsedLocation.country;
+        $scope.locationPostalCode = parsedLocation.postal_code;
         $scope.latitude = item.geometry.location.k;
         $scope.longitude = item.geometry.location.B;   
     }

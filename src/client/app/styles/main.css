@@ -1,5 +1,16 @@
 /* BELOCAL STYLES */
 
+.closed-string {
+  margin: 0px;
+  font-weight: bold;
+  padding-top:10px;
+  padding-bottom:10px;
+}
+
+.closed-container {
+  text-align: center;
+}
+
 .btn-more-details {
   margin-top: 5px;
 }

@@ -20,6 +20,39 @@ angular.module('clientApp')
 
     var geocoder = new google.maps.Geocoder();    
 
+    $scope.buildHoursObject = function() {
+        var openHours = [];
+        var weekdays = [
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday'
+        ];
+
+        var start = new Date();
+        var end = new Date();
+
+        start.setHours(8);
+        start.setMinutes(0);
+        end.setHours(16);
+        end.setMinutes(0);
+
+        for(var i = 1; i < 8; i++) {
+            openHours.push({
+                weekday : i, 
+                day : weekdays[i - 1], 
+                from_hour : start, 
+                to_hour: end,
+                checked: i == 6 || i == 7 ? false : true
+            });
+        }
+
+        return openHours;
+    } 
+
     $scope.resetLocationModal = function() {
         $scope.addressSearchText = undefined;
         $scope.newLocationSubmitted = false;
@@ -30,7 +63,8 @@ angular.module('clientApp')
         tempDate.setHours(tempDate.getHours() + 1);
         $scope.startTime = $scope.roundTimeToNearestFive(new Date());
         $scope.endTime = $scope.roundTimeToNearestFive(tempDate);
-        $scope.locationDate = new Date();        
+        $scope.locationDate = new Date();
+        $scope.locationHours = $scope.buildHoursObject();
 
         $scope.locationAddress = undefined;
         $scope.locationCity = undefined;

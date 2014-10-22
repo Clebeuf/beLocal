@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('SellerCtrl', function ($scope, StateService, $timeout) {
+  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q) {
     $scope.StateService = StateService;
     $scope.opened = false;
     $scope.minDate = new Date();
@@ -249,36 +249,32 @@ angular.module('clientApp')
 
     $scope.formatAddress = function(address) {
       return address.replace(' ', '+');
-    }
+    }      
 
-    // Put a delay on address searching
-    var tempSearchText = '', searchTextTimeout;
-    $scope.$watch('addressSearchText', function (newVal, oldVal) {
-        if(newVal === oldVal) return;
-        if (searchTextTimeout) $timeout.cancel(searchTextTimeout);
-
-        tempSearchText = newVal;
-        searchTextTimeout = $timeout(function() {
-          $scope.addressSearchText = tempSearchText;
-          if($scope.addressSearchText !== undefined) {
-            geocoder.geocode( { 'address': $scope.formatAddress($scope.addressSearchText)}, function(results, status) {
+    $scope.getLocation = function(value) {
+        var d = $q.defer();
+          if(value !== undefined) {
+            geocoder.geocode( { 'address': $scope.formatAddress(value)}, function(results, status) {
               if (status == google.maps.GeocoderStatus.OK) {
                 $timeout(function() {
-                    $scope.locationResults = results;
-                    $scope.selectedLocation = results[0].address_components;
-                    $scope.locationAddress = $scope.selectedLocation[0].short_name + ' ' + $scope.selectedLocation[1].long_name;
-                    $scope.locationCity = $scope.selectedLocation[3].long_name;
-                    $scope.locationProvince = $scope.selectedLocation[5].long_name;
-                    $scope.locationCountry = $scope.selectedLocation[6].long_name;
-                    $scope.locationPostalCode = $scope.selectedLocation[7].long_name;
-                    $scope.latitude = results[0].geometry.location.k;
-                    $scope.longitude = results[0].geometry.location.B;
+                    d.resolve(results)              
                 });
               }
             });
-          }
-        }, 500);
-    });        
+        }
+        return d.promise;
+    }
+
+    $scope.makeSelection = function(item) {
+        $scope.selectedLocation = item.address_components;
+        $scope.locationAddress = $scope.selectedLocation[0].short_name + ' ' + $scope.selectedLocation[1].long_name;
+        $scope.locationCity = $scope.selectedLocation[3].long_name;
+        $scope.locationProvince = $scope.selectedLocation[5].long_name;
+        $scope.locationCountry = $scope.selectedLocation[6].long_name;
+        $scope.locationPostalCode = $scope.selectedLocation[7].long_name;
+        $scope.latitude = item.geometry.location.k;
+        $scope.longitude = item.geometry.location.B;   
+    }
 
     $scope.init = function() {
         $scope.getSellerLocations();

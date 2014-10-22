@@ -24,7 +24,15 @@ class DisplayOpeningHoursSerializer(serializers.ModelSerializer):
       fields = (  'weekday',
                   'from_hour',
                   'to_hour',
-      )          
+      ) 
+
+class AddOpeningHoursSerializer(serializers.ModelSerializer): 
+  class Meta:
+      model = be_local_server.models.OpeningHours
+      fields = (  'weekday',
+                  'from_hour',
+                  'to_hour',
+      )               
 
 class AddressSerializer(serializers.ModelSerializer):
   hours = DisplayOpeningHoursSerializer(many=True)
@@ -33,9 +41,10 @@ class AddressSerializer(serializers.ModelSerializer):
     fields = ( 'id', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude', 'hours')
 
 class AddAddressSerializer(serializers.ModelSerializer):
+  hours = AddOpeningHoursSerializer(many=True)  
   class Meta:
     model = be_local_server.models.Address
-    fields = ( 'id', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude')    
+    fields = ( 'id', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude', 'hours')    
 
 class VendorPhotoPathSerializer(serializers.ModelSerializer):
     image_url = serializers.Field(source="image_url")  
@@ -89,13 +98,13 @@ class ProductPhotoSerializer(serializers.ModelSerializer):
         fields = ('id', 'image')      
 
 class AddSellerLocationSerializer(serializers.ModelSerializer):
-    address = AddAddressSerializer() 
+    address = OpeningHoursSerializer() 
     class Meta:
         model = be_local_server.models.SellerLocation
         fields = ('id', 'address', 'name', 'date', 'vendor', 'email', 'phone', 'description')
 
 class SellerLocationSerializer(serializers.ModelSerializer):
-    address = AddressSerializer() 
+    address = AddAddressSerializer() 
     class Meta:
         model = be_local_server.models.SellerLocation
         fields = ('id', 'address', 'name', 'date', 'vendor', 'email', 'phone', 'description')        

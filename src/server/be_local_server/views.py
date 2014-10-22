@@ -204,7 +204,7 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
     This view provides an endpoint for deleting and modifying views         
     """
     permission_classes = (AllowAny,)
-    serializer_class = serializers.AddSellerLocationSerializer
+    serializer_class = serializers.SellerLocationSerializer
 
     def patch(self, request, location_id):
         self.id = location_id
@@ -402,25 +402,13 @@ class AddSellerLocationView(generics.CreateAPIView):
         vendor = Vendor.objects.get(user=request.user)
         request.DATA['vendor'] = vendor.id       
 
-        serializer = serializers.AddSellerLocationSerializer(data=request.DATA, many=False)
+        serializer = serializers.SellerLocationSerializer(data=request.DATA, many=False)
 
         if serializer.is_valid(): 
             current_location = serializer.save()
-            address = current_location.address.id;
+            address = current_location.address.id;             
 
-            if(request.DATA["address"]["hours"] != ""):
-                for entry in request.DATA["address"]["hours"]:
-                    entry["address"] = address
-
-                hours_serializer = serializers.OpeningHoursSerializer(data=request.DATA["address"]["hours"])
-
-                if hours_serializer.is_valid():
-                    hours_serializer.save()
-                else:
-                    return Response(hours_serializer.errors,
-                                    status=status.HTTP_400_BAD_REQUEST)                
-
-                return HttpResponse(status=status.HTTP_201_CREATED)
+            return HttpResponse(status=status.HTTP_201_CREATED)
 
         else:
             return Response(serializer.errors,

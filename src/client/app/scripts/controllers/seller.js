@@ -42,14 +42,32 @@ angular.module('clientApp')
         $scope.locationDescription = undefined;  
     }
 
+    $scope.setTime = function(time) {
+        var hour = parseInt(time.substr(0,2));
+        var minute = parseInt(time.substr(3,2));
+        var isPM = time.substr(5,2) === "PM"
+        if (isPM) hour += 12;
+        else if(!isPM && hour === 12) hour = 0;
+        var date = new Date();
+        date.setHours(hour);
+        date.setMinutes(minute);
+
+        return date;
+    }
+
     $scope.editLocation = function(location) {
+        console.log(location);
         $scope.isEditingLocation = true;
         $scope.newLocationSubmitted = false;
         $scope.submitLocationButtonText = "Save Changes";
 
-        $scope.startTime = new Date(location.start_time);
-        $scope.endTime = new Date(location.end_time);
-        $scope.locationDate = new Date(location.start_time);
+        $scope.locationDate = new Date(Date.UTC(parseInt(location.date.substr(0,4)), parseInt(location.date.substr(5,2)) - 1, parseInt(location.date.substr(8,2)) + 1));
+        console.log($scope.locationDate);
+
+        $scope.startTime = $scope.setTime(location.address.hours[0].from_hour);
+        $scope.endTime = $scope.setTime(location.address.hours[0].to_hour);
+
+        $scope.addressSearchText = location.address.addr_line1 + ', ' + location.address.city + ', ' + location.address.state + ' ' + location.address.zipcode + ', ' + location.address.country;
 
         $scope.locationAddress = location.address.addr_line1;
         $scope.locationCity = location.address.city;
@@ -269,7 +287,7 @@ angular.module('clientApp')
         $scope.selectedLocation = item.address_components;
         $scope.locationAddress = $scope.selectedLocation[0].short_name + ' ' + $scope.selectedLocation[1].long_name;
         $scope.locationCity = $scope.selectedLocation[3].long_name;
-        $scope.locationProvince = $scope.selectedLocation[5].long_name;
+        $scope.locationProvince = $scope.selectedLocation[5].short_name;
         $scope.locationCountry = $scope.selectedLocation[6].long_name;
         $scope.locationPostalCode = $scope.selectedLocation[7].long_name;
         $scope.latitude = item.geometry.location.k;

@@ -57,15 +57,11 @@ angular.module('clientApp')
     }
 
     $scope.editLocation = function(location) {
-        console.log(location);
         $scope.isEditingLocation = true;
         $scope.newLocationSubmitted = false;
         $scope.submitLocationButtonText = "Save Changes";
 
-        var date = new Date(location.date);
-        $scope.locationDate = date;
-
-        console.log($scope.locationDate);
+        $scope.locationDate = location.date;
 
         $scope.startTime = $scope.setTime(location.address.hours[0].from_hour);
         $scope.endTime = $scope.setTime(location.address.hours[0].to_hour);
@@ -253,7 +249,7 @@ angular.module('clientApp')
 
             var sellerLocation = {
                 "id" : $scope.locationId,
-                "date" : $scope.locationDate.getFullYear() + '-' + ($scope.locationDate.getMonth() + 1) + '-' + $scope.locationDate.getDate(),
+                "date" : !$scope.locationDate instanceof Date ? $scope.locationDate.getFullYear() + '-' + ($scope.locationDate.getMonth() + 1) + '-' + $scope.locationDate.getDate() : $scope.locationDate,
                 "address" : address,
                 "name" : $scope.locationName,
                 'email' : $scope.emailAtLocation,

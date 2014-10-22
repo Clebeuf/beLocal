@@ -73,7 +73,7 @@ class VendorDetailsView(generics.CreateAPIView):
         locations = SellerLocation.objects.filter(vendor=vendor)
         products = Product.objects.filter(vendor=vendor, stock="IS")
 
-        return Response({"vendor":serializers.VendorSerializer(vendor).data, "locations":serializers.AddSellerLocationSerializer(locations, many=True).data, "products":serializers.ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)  
+        return Response({"vendor":serializers.VendorSerializer(vendor).data, "locations":serializers.SellerLocationSerializer(locations, many=True).data, "products":serializers.ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)  
 
 
 class AddVendorView(generics.CreateAPIView):
@@ -350,10 +350,10 @@ class ListMarketsView(generics.ListAPIView):
     view current markets
     """
     permission_classes = (AllowAny,)
-    serializer_class = serializers.AddressSerializer
+    serializer_class = serializers.MarketDisplaySerializer
 
     def get_queryset(self):
-        return Address.objects.filter(addr_type=Address.MARKET)
+        return Market.objects.all()
 
 
 class MarketView(generics.ListAPIView):

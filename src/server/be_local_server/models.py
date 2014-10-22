@@ -90,7 +90,7 @@ class SellerLocation(TrashableMixin, models.Model):
     phone = models.CharField(max_length=25)
     description = models.CharField(max_length=400)
 
-class Markets(models.Model):
+class Market(models.Model):
     name = models.CharField(max_length=100)
     address = models.ForeignKey(Address)
     description = models.CharField(max_length=400)

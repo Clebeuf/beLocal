@@ -161,19 +161,13 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
       )      
 
 class MarketDisplaySerializer(serializers.ModelSerializer):
-    vendor = BusinessVendorSerializer()
+    vendors = BusinessVendorSerializer(many=True)
     address = AddressSerializer()
     class Meta:
-        model = be_local_server.models.SellerLocation
-        fields = (  'vendor',
+        model = be_local_server.models.Market
+        fields = (  'vendors',
                     'address',
-                    'start_time',
-                    'end_time',
                     'name',
-                    'created_at',
-                    'updated_at',
-                    'email',
-                    'phone',
                     'description',
                     )
 

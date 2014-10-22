@@ -73,6 +73,14 @@
                     {{location.address.hours[0].from_hour}} - 
                     {{location.address.hours[0].to_hour}}
                 </p>
+                <div ng-show="location.date == null">
+                <p><b>HOURS:</b></p>
+                        <span ng-repeat="day in location.address.hours">
+                            <p>
+                                {{weekdays[day.weekday - 1]}}: {{day.from_hour}} - {{day.to_hour}}
+                            </p>
+                        </span>
+                </div>
                 <p><b>LOCATION:</b>
                     {{location.address.addr_line1}},
                     {{location.address.city}}, 

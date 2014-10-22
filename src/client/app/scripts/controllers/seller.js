@@ -20,17 +20,18 @@ angular.module('clientApp')
 
     var geocoder = new google.maps.Geocoder();    
 
+    $scope.weekdays = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+    ];
+
     $scope.buildHoursObject = function() {
         var openHours = [];
-        var weekdays = [
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday',
-            'Sunday'
-        ];
 
         var start = new Date();
         var end = new Date();
@@ -43,7 +44,7 @@ angular.module('clientApp')
         for(var i = 1; i < 8; i++) {
             openHours.push({
                 weekday : i, 
-                day : weekdays[i - 1], 
+                day : $scope.weekdays[i - 1], 
                 from_hour : start, 
                 to_hour: end,
                 checked: i == 6 || i == 7 ? false : true
@@ -258,7 +259,7 @@ angular.module('clientApp')
         $scope.newLocationSubmitted = true;
         if($scope.locationForm.$valid) {
             angular.element('#locationModal').modal('hide');
-            var hours = {};                  
+            var hours = [];                  
 
             var address = {
                 "addr_line1" : $scope.locationAddress,
@@ -277,6 +278,17 @@ angular.module('clientApp')
                     "from_hour" : $scope.startTime.getHours() + ':' + $scope.startTime.getMinutes(),
                     "to_hour" : $scope.endTime.getHours() + ':' + $scope.endTime.getMinutes()
                 }];
+            } else {
+                $scope.locationDate = undefined;
+                for(var i = 0; i < $scope.locationHours.length; i++) {
+                    if($scope.locationHours[i].checked) {
+                        hours.push({
+                            "weekday" : $scope.locationHours[i].weekday,
+                            "from_hour" : $scope.locationHours[i].from_hour.getHours() + ':' + $scope.locationHours[i].from_hour.getMinutes(),
+                            "to_hour" : $scope.locationHours[i].to_hour.getHours() + ':' + $scope.locationHours[i].to_hour.getMinutes()
+                        });
+                    }
+                }
             }
 
             address.hours = hours;

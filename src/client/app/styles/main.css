@@ -773,6 +773,14 @@ color: #000 !important;
   padding-top: 7px;
 }
 
+.new-hr-heading-style a {
+  color: #9C9795;
+}
+
+.new-hr-heading-style a:hover {
+  color: #7d7978;
+}
+
 .new-vendor-name-style {
   margin-top: 15px;
   font-family: 'Libre Baskerville', serif;

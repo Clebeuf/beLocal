@@ -252,7 +252,7 @@
                                     <label class="radio-inline">
                                       <input type="radio" ng-model="locationType" name="locationTypeOptions" id="farmRadio" value="true"><p>One Time Event</p>
                                     </label>
-                                    <label class="radio-inline">
+                                    <label class="radio-inline radio-inline-responsive">
                                       <input type="radio" ng-model="locationType" name="locationTypeOptions" id="marketRadio" value="false"><p>Recurring Event</p>
                                     </label>                            
                                 </div>
@@ -309,12 +309,12 @@
                                             </div>
                                         </div>
                                         <div ng-show="day.checked" class="col-xs-3 col-md-3">
-                                            <div class="form-group" ng-class="{'has-error': newLocationSubmitted && hoursForm.openHours.$invalid}">
+                                            <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.openHours.$invalid}">
                                                 <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.from_hour" name="openHours" bs-timepicker>
                                             </div>
                                         </div>
                                         <div ng-show="day.checked" class="col-xs-3 col-md-3">
-                                            <div class="form-group" ng-class="{'has-error': newLocationSubmitted && hoursForm.closeHours.$invalid}">
+                                            <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.closeHours.$invalid}">
                                                 <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.to_hour" name="closeHours" bs-timepicker>
                                             </div>
                                         </div> 

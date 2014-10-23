@@ -291,6 +291,7 @@ angular.module('clientApp')
         $scope.newLocationSubmitted = true;
         if($scope.locationForm.$valid) {
             angular.element('#locationModal').modal('hide');                 
+            var hours = [];
 
             var address = {
                 "addr_line1" : $scope.locationAddress,
@@ -304,12 +305,11 @@ angular.module('clientApp')
 
             // If we are a one time location...
             if($scope.locationType == 'true') {
-                var single_hours = [{
+                hours = [{
                     "weekday" : 8,
                     "from_hour" : $scope.startTime.getHours() + ':' + $scope.startTime.getMinutes(),
                     "to_hour" : $scope.endTime.getHours() + ':' + $scope.endTime.getMinutes()
                 }];
-                address.hours = single_hours;
             } else {
                 var hours = [];
                 $scope.locationDate = null;
@@ -321,9 +321,10 @@ angular.module('clientApp')
                             "to_hour" : $scope.locationHours[i].to_hour.getHours() + ':' + $scope.locationHours[i].to_hour.getMinutes()
                         });
                     }
-                } 
-                address.hours = hours;             
+                }             
             }
+
+            address.hours = hours;             
 
             var sellerLocation = {
                 "id" : $scope.locationId,

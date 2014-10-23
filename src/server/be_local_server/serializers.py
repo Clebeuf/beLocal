@@ -70,7 +70,8 @@ class VendorSerializer(serializers.ModelSerializer):
     					'phone',
     					'extension',
               'photo',
-              'address'
+              'address',
+              'description'
     		)
 
 class BusinessVendorSerializer(serializers.ModelSerializer):
@@ -83,7 +84,7 @@ class BusinessVendorSerializer(serializers.ModelSerializer):
                     'country_code',
                     'phone',
                     'extension',
-                    'photo'
+                    'photo',
         ) 
 
 class PhotoPathSerializer(serializers.ModelSerializer):

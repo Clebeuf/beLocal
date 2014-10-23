@@ -9,6 +9,7 @@ angular.module('clientApp')
     	$scope.vendorDetails = StateService.getVendorDetails();
     });
 
+
     $timeout(function() {
 		var container = document.querySelector('#masonry-container');
 		var msnry = new Masonry(container, {

@@ -4,9 +4,20 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
 from undelete.models import TrashableMixin
+from taggit.managers import TaggableManager
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
+WEEKDAYS = [
+  (1, ("Monday")),
+  (2, ("Tuesday")),
+  (3, ("Wednesday")),
+  (4, ("Thursday")),
+  (5, ("Friday")),
+  (6, ("Saturday")),
+  (7, ("Sunday")),
+  (8, ("One Time Event")),
+]
 
 class VendorPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='vendors', blank=True)
@@ -16,15 +27,6 @@ class VendorPhoto(models.Model):
     image_url = property(get_image_abs_path)
 
 class Address(models.Model):
-    MARKET = 'MAR'
-    FARM = 'FAR'
-    ADDR_TYPES = (
-        (MARKET, 'Market'),
-        (FARM, 'Farm'),
-    )
-
-    addr_type = models.CharField(max_length=3, choices=ADDR_TYPES, default=FARM)
-
     addr_line1 = models.CharField(max_length=400)
     city = models.CharField(max_length=200)
     state = models.CharField(max_length=200)
@@ -56,15 +58,13 @@ class ProductPhoto(models.Model):
     
     def get_image_abs_path(self):
         return os.path.join(settings.MEDIA_URL, self.image.name)        
-    image_url = property(get_image_abs_path)
+    image_url = property(get_image_abs_path)   
     
 class Product(TrashableMixin, models.Model):
     IN_STOCK = 'IS'
-    LOW_STOCK = 'LS'
     OUT_OF_STOCK = 'OOS'
     STOCK_TYPES = (
         (IN_STOCK, 'In Stock'),
-        (LOW_STOCK, 'Low Stock'),
         (OUT_OF_STOCK, 'Out of Stock'),
     )
 
@@ -77,25 +77,36 @@ class Product(TrashableMixin, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     vendor = models.ForeignKey(Vendor, related_name='products')
     photo = models.ForeignKey(ProductPhoto, blank=True, null=True)
-    #tag = models.ManyToManyField(Tag)
-
-class Tag(models.Model):
-    name = models.CharField(max_length=100)
-
-class ProductTag(models.Model):
-    product = models.ManyToManyField(Product)
-    tag = models.ForeignKey(Tag)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    tags = TaggableManager()
 
 class SellerLocation(TrashableMixin, models.Model):
     vendor = models.ForeignKey(Vendor)
     address = models.ForeignKey(Address)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    date = models.DateField(null=True, blank=True)
     name = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=25)
-    description = models.CharField(max_length=400)    
+    description = models.CharField(max_length=400)
+
+class Market(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.ForeignKey(Address)
+    description = models.CharField(max_length=400)
+    vendors = models.ManyToManyField(Vendor)
+
+class OpeningHours(models.Model):
+    address = models.ForeignKey(Address, related_name="hours", null=True)
+    weekday = models.IntegerField(
+        choices=WEEKDAYS
+    )
+    from_hour = models.TimeField()
+    to_hour = models.TimeField()
+    unique_together=(weekday, address)
+
+    def get_day_display(self):
+        for day in WEEKDAYS:
+            if day[0] == self.weekday:
+                return day[1]    
+

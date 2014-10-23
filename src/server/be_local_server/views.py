@@ -73,7 +73,7 @@ class VendorDetailsView(generics.CreateAPIView):
         locations = SellerLocation.objects.filter(vendor=vendor)
         products = Product.objects.filter(vendor=vendor, stock="IS")
 
-        return Response({"vendor":serializers.VendorSerializer(vendor).data, "locations":serializers.AddSellerLocationSerializer(locations, many=True).data, "products":serializers.ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)  
+        return Response({"vendor":serializers.VendorSerializer(vendor).data, "locations":serializers.SellerLocationSerializer(locations, many=True).data, "products":serializers.ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)  
 
 
 class AddVendorView(generics.CreateAPIView):
@@ -204,7 +204,7 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
     This view provides an endpoint for deleting and modifying views         
     """
     permission_classes = (AllowAny,)
-    serializer_class = serializers.AddSellerLocationSerializer
+    serializer_class = serializers.SellerLocationSerializer
 
     def patch(self, request, location_id):
         self.id = location_id
@@ -350,10 +350,10 @@ class ListMarketsView(generics.ListAPIView):
     view current markets
     """
     permission_classes = (AllowAny,)
-    serializer_class = serializers.AddressSerializer
+    serializer_class = serializers.MarketDisplaySerializer
 
     def get_queryset(self):
-        return Address.objects.filter(addr_type=Address.MARKET)
+        return Market.objects.all()
 
 
 class MarketView(generics.ListAPIView):
@@ -387,7 +387,7 @@ class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    serializer_class = serializers.AddSellerLocationSerializer
+    serializer_class = serializers.SellerLocationSerializer
 
     def get_queryset(self):
         vendor = Vendor.objects.get(user=self.request.user)
@@ -402,10 +402,11 @@ class AddSellerLocationView(generics.CreateAPIView):
         vendor = Vendor.objects.get(user=request.user)
         request.DATA['vendor'] = vendor.id       
 
-        serializer = serializers.AddSellerLocationSerializer(data=request.DATA, many=False)
+        serializer = serializers.SellerLocationSerializer(data=request.DATA, many=False)
 
         if serializer.is_valid(): 
             current_location = serializer.save()
+            address = current_location.address.id;             
 
             return HttpResponse(status=status.HTTP_201_CREATED)
 

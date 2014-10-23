@@ -157,7 +157,7 @@ angular.module('clientApp')
 
     this.createSellerLocation = function(sellerLocation, isEditing) {
       if(isEditing) {
-        var url = this.getServerAddress() + 'vendor/location/' + sellerLocation.id + '/';
+        var url = this.getServerAddress() + 'vendor/location/' + sellerLocation.id + '/';       
         return $http({method: 'PATCH', url: url, data: sellerLocation})
         .success(function() {
           console.log("Edited a location!");

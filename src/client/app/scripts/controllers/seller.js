@@ -37,9 +37,9 @@ angular.module('clientApp')
         var end = new Date();
 
         start.setHours(8);
-        start.setMinutes(0);
+        start.setMinutes(0,0);
         end.setHours(16);
-        end.setMinutes(0);
+        end.setMinutes(0,0);
 
         for(var i = 1; i < 8; i++) {
             openHours.push({
@@ -92,14 +92,46 @@ angular.module('clientApp')
     }
 
     $scope.editLocation = function(location) {
+
+        if(location.date == null) {
+            var hours = $scope.buildHoursObject();
+            var currentHour = 0;
+
+            var start = new Date();
+            var end = new Date();
+
+            start.setHours(8);
+            start.setMinutes(0,0);
+            end.setHours(16);
+            end.setMinutes(0,0);        
+
+            for(var i = 0; i < hours.length; i++) {
+                if(currentHour < location.address.hours.length && hours[i].weekday === location.address.hours[currentHour].weekday) {
+                    hours[i].checked = true;
+                    hours[i].day = $scope.weekdays[i];
+                    hours[i].from_hour = $scope.setTime(location.address.hours[currentHour].from_hour);
+                    hours[i].to_hour = $scope.setTime(location.address.hours[currentHour].to_hour);
+                    currentHour += 1;                    
+                } else {
+                    hours[i].checked = false;
+                    hours[i].from_hour = start;
+                    hours[i].to_hour = end;
+                }
+            }
+            $scope.locationDate = new Date(); // This shouldn't be necessary, but it is.
+            $scope.locationHours = hours;  
+            $scope.locationType = 'false';        
+        } else {
+            $scope.locationType = 'true';
+            $scope.locationDate = location.date;
+
+            $scope.startTime = $scope.setTime(location.address.hours[0].from_hour);
+            $scope.endTime = $scope.setTime(location.address.hours[0].to_hour);
+        }
+
         $scope.isEditingLocation = true;
         $scope.newLocationSubmitted = false;
         $scope.submitLocationButtonText = "Save Changes";
-
-        $scope.locationDate = location.date;
-
-        $scope.startTime = $scope.setTime(location.address.hours[0].from_hour);
-        $scope.endTime = $scope.setTime(location.address.hours[0].to_hour);
 
         $scope.addressSearchText = location.address.addr_line1 + ', ' + location.address.city + ', ' + location.address.state + ' ' + location.address.zipcode + ', ' + location.address.country;
 
@@ -255,11 +287,10 @@ angular.module('clientApp')
         }
     }
 
-    $scope.newLocationSubmit = function() {
+    $scope.newLocationSubmit = function() {       
         $scope.newLocationSubmitted = true;
         if($scope.locationForm.$valid) {
-            angular.element('#locationModal').modal('hide');
-            var hours = [];                  
+            angular.element('#locationModal').modal('hide');                 
 
             var address = {
                 "addr_line1" : $scope.locationAddress,
@@ -269,17 +300,19 @@ angular.module('clientApp')
                 "zipcode" : $scope.locationPostalCode,
                 "latitude" : $scope.latitude,
                 "longitude" : $scope.longitude
-            };
+            }
 
             // If we are a one time location...
             if($scope.locationType == 'true') {
-                hours = [{
+                var single_hours = [{
                     "weekday" : 8,
                     "from_hour" : $scope.startTime.getHours() + ':' + $scope.startTime.getMinutes(),
                     "to_hour" : $scope.endTime.getHours() + ':' + $scope.endTime.getMinutes()
                 }];
+                address.hours = single_hours;
             } else {
-                $scope.locationDate = undefined;
+                var hours = [];
+                $scope.locationDate = null;
                 for(var i = 0; i < $scope.locationHours.length; i++) {
                     if($scope.locationHours[i].checked) {
                         hours.push({
@@ -288,10 +321,9 @@ angular.module('clientApp')
                             "to_hour" : $scope.locationHours[i].to_hour.getHours() + ':' + $scope.locationHours[i].to_hour.getMinutes()
                         });
                     }
-                }
+                } 
+                address.hours = hours;             
             }
-
-            address.hours = hours;
 
             var sellerLocation = {
                 "id" : $scope.locationId,

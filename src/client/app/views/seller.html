@@ -69,9 +69,10 @@
 
             <div class="well">
 
-                <p><b>DATE:</b>
-                    {{location.start_time | date:" EEEE',' MMMM d',' h:mma' - '"}}
-                    {{location.end_time | date:" h:mma"}}
+                <p ng-show="location.date"><b>DATE:</b>
+                    {{location.date | date:" EEEE',' MMMM d'"}},
+                    {{location.address.hours[0].from_hour}} - 
+                    {{location.address.hours[0].to_hour}}
                 </p>
                 <p><b>LOCATION:</b>
                     {{location.address.addr_line1}},
@@ -233,27 +234,27 @@
                     <form role="form" name="locationForm" novalidate>
                         <div class="row">
                             <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Location Type</label><br />
+                                    <label class="radio-inline">
+                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="farmRadio" value="true"><p>One Time</p>
+                                    </label>
+                                    <label class="radio-inline">
+                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="marketRadio" value="false"><p>Regular Hours</p>
+                                    </label>                            
+                                </div>
+                            </div>                        
+                            <div class="col-xs-6 col-md-6">
                                 <div class="form-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationField.$invalid }">
-                                    <label for="item-name">Location Name</label>
+                                    <label class="control-label">Location Name</label>
                                     <input required ng-model="locationName" type="text" name="locationField" class="form-control" id="item-name" placeholder="Location Name"/>
                                 </div>
                             </div>
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label for="item-name">Location Type</label><br />
-                                    <label class="radio-inline">
-                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="farmRadio" value="FAR"><p>Farm</p>
-                                    </label>
-                                    <label class="radio-inline">
-                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="marketRadio" value="MAR"><p>Market</p>
-                                    </label>                            
-                                </div>
-                            </div>
                         </div>
-                        <div class="row">
+                        <div ng-show="locationType" class="row">
                             <div class="col-xs-6 col-md-6">
                                 <div class="form-group">
-                                  <label>Start date:</label>                      
+                                  <label>Date:</label>                      
                                   <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.dateField.$invalid }">
                                     <input required type="text" name="dateField" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="locationDate" is-open="opened" min="minDate" max="'2015-06-22'" close-text="Close" />
                                     <span class="input-group-btn">
@@ -276,55 +277,23 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="well">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-12" ng-class="{'has-error': newLocationSubmitted && locationForm.addressField.$invalid}">
-                                        <div class="form-group">
-                                            <label for="item-name">Street Address</label>
-                                            <input required ng-model="locationAddress" type="text" class="form-control" id="item-name" name="addressField" placeholder="Address"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-6 col-md-6">
-                                        <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.cityField.$invalid}">
-                                            <label for="item-name">City</label>
-                                            <input required ng-model="locationCity" type="text" class="form-control" id="item-name" name="cityField" placeholder="City"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6 col-md-6" ng-class="{'has-error': newLocationSubmitted && locationForm.provinceField.$invalid}">
-                                        <div class="form-group">
-                                            <label for="item-name">Province</label>
-                                            <input required ng-model="locationProvince" type="text" class="form-control" id="item-name" name="provinceField" placeholder="Province"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-6 col-md-6">
-                                        <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.postalCodeField.$invalid}">
-                                            <label for="item-name">Postal Code</label>
-                                            <input required type="text" ng-model="locationPostalCode" class="form-control" id="item-name" name="postalCodeField" placeholder="Postal Code"/>
-                                        </div>
-                                    </div>                                                                  
-                                    <div class="col-xs-6 col-md-6" ng-class="{'has-error': newLocationSubmitted && locationForm.countryField.$invalid}">
-                                        <div class="form-group">
-                                            <label for="item-name">Country</label>
-                                            <input required ng-model="locationCountry" type="text" class="form-control" id="item-name" name="countryField" placeholder="Country"/>
-                                        </div>
-                                    </div>                                  
-                                </div>                                                                                                 
-                            </div>
+                            <div class="col-xs-12 col-md-12">
+                                  <div class="form-group" ng-class="{ 'has-error' : (locationForm.addressText.$invalid ) && newLocationSubmitted }">
+                                    <label class="control-label">Address</label>
+                                    <input type="text" autocomplete="off" name="addressText" typeahead="result.formatted_address for result in getLocation($viewValue)" typeahead-on-select="makeSelection($item)" class="form-control" ng-model="addressSearchText" placeholder="Search for an Address" required>
+                                  </div>
+                            </div>                                                                                               
                         </div>                                            
                         <div class="row">
                             <div class="col-xs-6 col-md-6" ng-class="{'has-error': newLocationSubmitted && locationForm.phoneField.$invalid}">
                                 <div class="form-group">
-                                    <label for="item-name">Phone Number</label>
+                                    <label class="control-label">Phone Number</label>
                                     <input required ng-model="phoneAtLocation" type="text" class="form-control" id="item-name" name="phoneField" placeholder="Phone Number"/>
                                 </div>
                             </div>
                             <div class="col-xs-6 col-md-6">
                                 <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.emailField.$invalid}">
-                                    <label for="item-name">Email</label>
+                                    <label class="control-label">Email</label>
                                     <input required type="text" ng-model="emailAtLocation" class="form-control" id="item-name" name="emailField" placeholder="Email"/>
                                 </div>
                             </div>                                                                   
@@ -332,7 +301,7 @@
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
                                 <div class="form-group no-bottom-margin" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationDescriptionField.$invalid }">
-                                    <label for="item-name">Location Details</label>
+                                    <label class="control-label">Location Details</label>
                                     <textarea required ng-model="locationDescription" type="text" name="locationDescriptionField" class="form-control" placeholder="Location Details"/>
                                 </div>
                             </div>                        

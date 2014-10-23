@@ -46,7 +46,8 @@ INSTALLED_APPS = (
     #'sortedm2m',
     #'south',   # Only if you're relying on South for migrations.
     'be_local_server',
-    'undelete'
+    'undelete',
+    'taggit'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -87,7 +88,8 @@ REST_FRAMEWORK = {
 #     'DEFAULT_PERMISSION_CLASSES': [
 #         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
 #     ]
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'TIME_FORMAT' : '%I:%M%p'    
  }
 
 # Database
@@ -135,7 +137,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
+    
 USE_L10N = True
 
 USE_TZ = True

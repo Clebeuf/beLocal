@@ -8,16 +8,20 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('SellerCtrl', function ($scope, StateService, $timeout) {
+  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q) {
     $scope.StateService = StateService;
     $scope.opened = false;
     $scope.minDate = new Date();
-    $scope.locationType = 'FAR';
     $scope.sellerLocations = [];
     $scope.emailAtLocation = StateService.getCurrentUser().email;
     $scope.warningHTML = '';
+    $scope.locationResults = {};
+    $scope.locationType = 'true';
+
+    var geocoder = new google.maps.Geocoder();    
 
     $scope.resetLocationModal = function() {
+        $scope.addressSearchText = undefined;
         $scope.newLocationSubmitted = false;
         $scope.isEditingLocation = false;       
         $scope.submitLocationButtonText = "Add Location";
@@ -33,11 +37,23 @@ angular.module('clientApp')
         $scope.locationProvince = undefined;
         $scope.locationCountry = undefined;
         $scope.locationPostalCode = undefined;
-        $scope.locationType = 'FAR';
         $scope.locationName = undefined;
         $scope.emailAtLocation = StateService.getCurrentUser().email;
         $scope.phoneAtLocation = undefined;
         $scope.locationDescription = undefined;  
+    }
+
+    $scope.setTime = function(time) {
+        var hour = parseInt(time.substr(0,2));
+        var minute = parseInt(time.substr(3,2));
+        var isPM = time.substr(5,2) === "PM"
+        if (isPM) hour += 12;
+        else if(!isPM && hour === 12) hour = 0;
+        var date = new Date();
+        date.setHours(hour);
+        date.setMinutes(minute);
+
+        return date;
     }
 
     $scope.editLocation = function(location) {
@@ -45,15 +61,17 @@ angular.module('clientApp')
         $scope.newLocationSubmitted = false;
         $scope.submitLocationButtonText = "Save Changes";
 
-        $scope.startTime = new Date(location.start_time);
-        $scope.endTime = new Date(location.end_time);
-        $scope.locationDate = new Date(location.start_time);
+        $scope.locationDate = location.date;
+
+        $scope.startTime = $scope.setTime(location.address.hours[0].from_hour);
+        $scope.endTime = $scope.setTime(location.address.hours[0].to_hour);
+
+        $scope.addressSearchText = location.address.addr_line1 + ', ' + location.address.city + ', ' + location.address.state + ' ' + location.address.zipcode + ', ' + location.address.country;
 
         $scope.locationAddress = location.address.addr_line1;
         $scope.locationCity = location.address.city;
         $scope.locationProvince = location.address.state;
         $scope.locationCountry = location.address.country;
-        $scope.locationType = location.address.addr_type;
         $scope.locationName = location.name;
         $scope.locationPostalCode = location.address.zipcode;
         $scope.locationId = location.id;
@@ -204,47 +222,110 @@ angular.module('clientApp')
 
     $scope.newLocationSubmit = function() {
         $scope.newLocationSubmitted = true;
-            if($scope.locationForm.$valid) {
-                angular.element('#locationModal').modal('hide');
+        if($scope.locationForm.$valid) {
+            angular.element('#locationModal').modal('hide');
+            var hours = {};                  
 
-                $scope.startTime.setDate($scope.locationDate.getDate());
-                $scope.startTime.setMonth($scope.locationDate.getMonth());
-                $scope.startTime.setFullYear($scope.locationDate.getFullYear());
+            var address = {
+                "addr_line1" : $scope.locationAddress,
+                "city" : $scope.locationCity,
+                "state" : $scope.locationProvince,
+                "country" : $scope.locationCountry,
+                "zipcode" : $scope.locationPostalCode,
+                "latitude" : $scope.latitude,
+                "longitude" : $scope.longitude
+            };
 
-                $scope.endTime.setDate($scope.locationDate.getDate());
-                $scope.endTime.setMonth($scope.locationDate.getMonth());
-                $scope.endTime.setFullYear($scope.locationDate.getFullYear());                    
+            // If we are a one time location...
+            if($scope.locationType == 'true') {
+                hours = [{
+                    "weekday" : 8,
+                    "from_hour" : $scope.startTime.getHours() + ':' + $scope.startTime.getMinutes(),
+                    "to_hour" : $scope.endTime.getHours() + ':' + $scope.endTime.getMinutes()
+                }];
+            }
 
-                var address = {
-                    "addr_line1" : $scope.locationAddress,
-                    "city" : $scope.locationCity,
-                    "state" : $scope.locationProvince,
-                    "country" : $scope.locationCountry,
-                    "zipcode" : $scope.locationPostalCode,
-                    "latitude" : "0",
-                    "longitude" : "0",
-                    "addr_type" : $scope.locationType,
-                };
+            address.hours = hours;
 
-                var sellerLocation = {
-                    "id" : $scope.locationId,
-                    "address" : address,
-                    "start_time" : $scope.startTime,
-                    "end_time" : $scope.endTime,
-                    "name" : $scope.locationName,
-                    'email' : $scope.emailAtLocation,
-                    'phone' : $scope.phoneAtLocation,
-                    'description' : $scope.locationDescription,
-                };
+            var sellerLocation = {
+                "id" : $scope.locationId,
+                "date" : $scope.locationDate instanceof Date ? $scope.locationDate.getFullYear() + '-' + ($scope.locationDate.getMonth() + 1) + '-' + $scope.locationDate.getDate() : $scope.locationDate,
+                "address" : address,
+                "name" : $scope.locationName,
+                'email' : $scope.emailAtLocation,
+                'phone' : $scope.phoneAtLocation,
+                'description' : $scope.locationDescription,
+            };
 
-                StateService.createSellerLocation(sellerLocation, $scope.isEditingLocation).then(function() {
-                    $scope.getSellerLocations();
-                    $scope.getSellerItems();
+            StateService.createSellerLocation(sellerLocation, $scope.isEditingLocation).then(function() {
+                $scope.getSellerLocations();
+                $scope.getSellerItems();
+            });
+        }
+    }
+
+    $scope.formatAddress = function(address) {
+      return address.replace(' ', '+');
+    }      
+
+    $scope.getLocation = function(value) {
+        var d = $q.defer();
+          if(value !== undefined) {
+            geocoder.geocode( { 'address': $scope.formatAddress(value)}, function(results, status) {
+              if (status == google.maps.GeocoderStatus.OK) {
+                $timeout(function() {
+                    d.resolve(results)              
                 });
+              }
+            });
+        }
+        return d.promise;
+    }
+
+    $scope.parseGeocoderResult = function(result) {
+        var location = {}
+        for(var i = 0; i < result.address_components.length; i++) {
+            var component = result.address_components[i];
+
+            // Get Street Number
+            if($scope.compareGeocoderType(component.types, 'street_number')) 
+                location.street_number = component.short_name;
+            else if($scope.compareGeocoderType(component.types, 'route'))
+                location.route = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'sublocality'))
+                location.city = component.long_name;      
+            else if($scope.compareGeocoderType(component.types, 'locality'))
+                location.city = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'administrative_area_level_1'))
+                location.state = component.short_name;
+            else if($scope.compareGeocoderType(component.types, 'country'))
+                location.country = component.long_name;            
+            else if($scope.compareGeocoderType(component.types, 'postal_code'))
+                location.postal_code = component.long_name;              
+        }
+        return location;
+    }
+
+    $scope.compareGeocoderType = function(types, compareTo) {
+        for(var i = 0; i < types.length; i++) {
+            if(types[i] === compareTo) {
+                return true;
             }
         }
+        return false;
+    }
 
+    $scope.makeSelection = function(item) {
+        var parsedLocation = $scope.parseGeocoderResult(item);
 
+        $scope.locationAddress = parsedLocation.street_number + ' ' + parsedLocation.route;
+        $scope.locationCity = parsedLocation.city;
+        $scope.locationProvince = parsedLocation.state;
+        $scope.locationCountry = parsedLocation.country;
+        $scope.locationPostalCode = parsedLocation.postal_code;
+        $scope.latitude = item.geometry.location.k;
+        $scope.longitude = item.geometry.location.B;   
+    }
 
     $scope.init = function() {
         $scope.getSellerLocations();

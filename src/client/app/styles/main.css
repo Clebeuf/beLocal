@@ -15,7 +15,7 @@ html {
 
 body {
   /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 
 .footer {
@@ -793,6 +793,7 @@ color: #000 !important;
 .container-for-cards{
   padding-left: 25px;
   padding-right: 25px;
+  padding-top: 5px; /* Adding this for now since I think we're just alphabetizing cards rather than displaying them with headings */
 }
 
 hr{
@@ -831,6 +832,7 @@ hr{
 
 .edit-delete-buttons{
   text-align: right;
+  padding-right: 25px;
 }
 
 .vendor-product-image img{
@@ -842,6 +844,11 @@ hr{
 .seller-stock-formatting input[type="radio"]{
   margin-left:25px;
   text-align: right !important;
+}
+
+.availability-hr {
+  margin-top: 10px;
+  padding-bottom: 5px;
 }
 
 @media (max-width: 992px) {

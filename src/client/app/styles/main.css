@@ -862,7 +862,7 @@ hr{
 @media (max-width: 768px) {
   .new-vendor-avatar { 
     max-width: 90%; 
-    height: 90%; 
+    height: 100%; 
     overflow: hidden; 
     vertical-align: middle;
   }

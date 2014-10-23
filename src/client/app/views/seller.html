@@ -46,50 +46,6 @@
     </div>
     <!-- repeating for each location that seller has in the db -->
     <div ng-repeat="location in sellerLocations" class="container-for-cards">
-        <div class="card-formatting">
-            <div class="row">
-
-                <!-- Display the locations name -->
-                <div class="col-xs-9">
-                    <h4>{{location.name}}</h4> 
-                </div>
-
-                <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
-                <div class="col-xs-3 edit-delete-buttons">
-                    <span data-toggle="tooltip" data-placement="bottom" title="Edit Location">
-                        <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
-                    </span>
-                    <span data-toggle="tooltip" data-placement="bottom" title="Delete Location">
-                        <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
-                    </span>
-                </div> 
-
-            </div>
-
-            <div class="">
-
-                <p ng-show="location.date"><b>DATE:</b>
-                    {{location.date | date:" EEEE',' MMMM d'"}},
-                    {{location.address.hours[0].from_hour}} - 
-                    {{location.address.hours[0].to_hour}}
-                </p>
-                <p><b>LOCATION:</b>
-                    {{location.address.addr_line1}},
-                    {{location.address.city}}, 
-                    {{location.address.state}}, 
-                    {{location.address.zipcode}}
-                </p>
-
-                <p><b>CONTACT INFORMATION:</b>
-                    {{location.phone}} | {{location.email}}
-                </p>
-
-                <p><b>DETAILS:</b>
-                    {{location.description}}
-                </p>
-                </div>
-        </div>
-
     </div>
     <!-- end of repeating for each market that seller has in the db -->
 
@@ -120,12 +76,20 @@
 
             </div>
 
-            <div class="something">
-
-                <p><b>DATE:</b>
-                    {{location.start_time | date:" EEEE',' MMMM d',' h:mma' - '"}}
-                    {{location.end_time | date:" h:mma"}}
+            <div>
+                <p ng-show="location.date"><b>DATE:</b>
+                    {{location.date | date:" EEEE',' MMMM d'"}},
+                    {{location.address.hours[0].from_hour}} - 
+                    {{location.address.hours[0].to_hour}}
                 </p>
+                <div ng-show="location.date == null">
+                <p><b>HOURS:</b></p>
+                        <span ng-repeat="day in location.address.hours">
+                            <p>
+                                {{weekdays[day.weekday - 1]}}: {{day.from_hour}} - {{day.to_hour}}
+                            </p>
+                        </span>
+                </div>
                 <p><b>LOCATION:</b>
                     {{location.address.addr_line1}},
                     {{location.address.city}}, 
@@ -140,13 +104,13 @@
                 <p><b>DETAILS:</b>
                     {{location.description}}
                 </p>
-                </div>
+            </div>
         </div>
     </div>
 <!-- end of repeating for each custom location that seller has in the db -->
 
 
-<br><br>
+<br>
 <!--Display Seller's Inventory-->
     <hr>
     <div class="row">
@@ -291,23 +255,24 @@
                     <form role="form" name="locationForm" novalidate>
                         <div class="row">
                             <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Location Type</label><br />
-                                    <label class="radio-inline">
-                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="farmRadio" value="true"><p>One Time</p>
-                                    </label>
-                                    <label class="radio-inline">
-                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="marketRadio" value="false"><p>Regular Hours</p>
-                                    </label>                            
-                                </div>
-                            </div>                        
-                            <div class="col-xs-6 col-md-6">
                                 <div class="form-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationField.$invalid }">
                                     <label class="control-label">Location Name</label>
                                     <input required ng-model="locationName" type="text" name="locationField" class="form-control" id="item-name" placeholder="Location Name"/>
                                 </div>
-                            </div>
+                            </div>                        
+                            <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Location Type</label><br />
+                                    <label class="radio-inline">
+                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="farmRadio" value="true"><p>One Time Event</p>
+                                    </label>
+                                    <label class="radio-inline radio-inline-responsive">
+                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="marketRadio" value="false"><p>Recurring Event</p>
+                                    </label>                            
+                                </div>
+                            </div>                        
                         </div>
+                        <!-- One Time Date Options -->
                         <div ng-show="locationType" class="row">
                             <div class="col-xs-6 col-md-6">
                                 <div class="form-group">
@@ -333,6 +298,47 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Regular Hour Options -->
+                        <div ng-hide="locationType">
+                            <label>Hours:</label>
+                            <div class="well">
+                                <div class="row">
+                                    <div class="col-xs-6"> 
+                                        <label>Days You are Open:</label>
+                                    </div>
+                                    <div class="col-xs-3"> 
+                                        <label>Opening Time:</label>
+                                    </div>  
+                                    <div class="col-xs-3"> 
+                                        <label>Closing Time:</label>
+                                    </div>                                                              
+                                </div>
+                                <div ng-repeat="day in locationHours" class="row">
+                                    <ng-form name="hoursForm">                                
+                                        <div class="col-xs-6">                              
+                                            <div class="checkbox">
+                                              <label>
+                                                <input name="day{{$index}}Check" ng-model="day.checked" type="checkbox">{{day.day}}
+                                              </label>
+                                            </div>
+                                        </div>
+                                        <div ng-show="day.checked" class="col-xs-3 col-md-3">
+                                            <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.openHours.$invalid}">
+                                                <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.from_hour" name="openHours" bs-timepicker>
+                                            </div>
+                                        </div>
+                                        <div ng-show="day.checked" class="col-xs-3 col-md-3">
+                                            <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.closeHours.$invalid}">
+                                                <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.to_hour" name="closeHours" bs-timepicker>
+                                            </div>
+                                        </div> 
+                                        <div ng-hide="day.checked" class="col-xs-6 col-md-6 closed-container">
+                                            <p class="closed-string">Closed</p>
+                                        </div>
+                                    </ng-form>                                        
+                                </div>
+                            </div>
+                        </div>                       
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
                                   <div class="form-group" ng-class="{ 'has-error' : (locationForm.addressText.$invalid ) && newLocationSubmitted }">

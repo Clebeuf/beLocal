@@ -20,6 +20,40 @@ angular.module('clientApp')
 
     var geocoder = new google.maps.Geocoder();    
 
+    $scope.weekdays = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+    ];
+
+    $scope.buildHoursObject = function() {
+        var openHours = [];
+
+        var start = new Date();
+        var end = new Date();
+
+        start.setHours(8);
+        start.setMinutes(0,0);
+        end.setHours(16);
+        end.setMinutes(0,0);
+
+        for(var i = 1; i < 8; i++) {
+            openHours.push({
+                weekday : i, 
+                day : $scope.weekdays[i - 1], 
+                from_hour : start, 
+                to_hour: end,
+                checked: i == 6 || i == 7 ? false : true
+            });
+        }
+
+        return openHours;
+    } 
+
     $scope.resetLocationModal = function() {
         $scope.addressSearchText = undefined;
         $scope.newLocationSubmitted = false;
@@ -30,7 +64,8 @@ angular.module('clientApp')
         tempDate.setHours(tempDate.getHours() + 1);
         $scope.startTime = $scope.roundTimeToNearestFive(new Date());
         $scope.endTime = $scope.roundTimeToNearestFive(tempDate);
-        $scope.locationDate = new Date();        
+        $scope.locationDate = new Date();
+        $scope.locationHours = $scope.buildHoursObject();
 
         $scope.locationAddress = undefined;
         $scope.locationCity = undefined;
@@ -57,14 +92,46 @@ angular.module('clientApp')
     }
 
     $scope.editLocation = function(location) {
+
+        if(location.date == null) {
+            var hours = $scope.buildHoursObject();
+            var currentHour = 0;
+
+            var start = new Date();
+            var end = new Date();
+
+            start.setHours(8);
+            start.setMinutes(0,0);
+            end.setHours(16);
+            end.setMinutes(0,0);        
+
+            for(var i = 0; i < hours.length; i++) {
+                if(currentHour < location.address.hours.length && hours[i].weekday === location.address.hours[currentHour].weekday) {
+                    hours[i].checked = true;
+                    hours[i].day = $scope.weekdays[i];
+                    hours[i].from_hour = $scope.setTime(location.address.hours[currentHour].from_hour);
+                    hours[i].to_hour = $scope.setTime(location.address.hours[currentHour].to_hour);
+                    currentHour += 1;                    
+                } else {
+                    hours[i].checked = false;
+                    hours[i].from_hour = start;
+                    hours[i].to_hour = end;
+                }
+            }
+            $scope.locationDate = new Date(); // This shouldn't be necessary, but it is.
+            $scope.locationHours = hours;  
+            $scope.locationType = 'false';        
+        } else {
+            $scope.locationType = 'true';
+            $scope.locationDate = location.date;
+
+            $scope.startTime = $scope.setTime(location.address.hours[0].from_hour);
+            $scope.endTime = $scope.setTime(location.address.hours[0].to_hour);
+        }
+
         $scope.isEditingLocation = true;
         $scope.newLocationSubmitted = false;
         $scope.submitLocationButtonText = "Save Changes";
-
-        $scope.locationDate = location.date;
-
-        $scope.startTime = $scope.setTime(location.address.hours[0].from_hour);
-        $scope.endTime = $scope.setTime(location.address.hours[0].to_hour);
 
         $scope.addressSearchText = location.address.addr_line1 + ', ' + location.address.city + ', ' + location.address.state + ' ' + location.address.zipcode + ', ' + location.address.country;
 
@@ -220,11 +287,11 @@ angular.module('clientApp')
         }
     }
 
-    $scope.newLocationSubmit = function() {
+    $scope.newLocationSubmit = function() {       
         $scope.newLocationSubmitted = true;
         if($scope.locationForm.$valid) {
-            angular.element('#locationModal').modal('hide');
-            var hours = {};                  
+            angular.element('#locationModal').modal('hide');                 
+            var hours = [];
 
             var address = {
                 "addr_line1" : $scope.locationAddress,
@@ -234,7 +301,7 @@ angular.module('clientApp')
                 "zipcode" : $scope.locationPostalCode,
                 "latitude" : $scope.latitude,
                 "longitude" : $scope.longitude
-            };
+            }
 
             // If we are a one time location...
             if($scope.locationType == 'true') {
@@ -243,9 +310,21 @@ angular.module('clientApp')
                     "from_hour" : $scope.startTime.getHours() + ':' + $scope.startTime.getMinutes(),
                     "to_hour" : $scope.endTime.getHours() + ':' + $scope.endTime.getMinutes()
                 }];
+            } else {
+                var hours = [];
+                $scope.locationDate = null;
+                for(var i = 0; i < $scope.locationHours.length; i++) {
+                    if($scope.locationHours[i].checked) {
+                        hours.push({
+                            "weekday" : $scope.locationHours[i].weekday,
+                            "from_hour" : $scope.locationHours[i].from_hour.getHours() + ':' + $scope.locationHours[i].from_hour.getMinutes(),
+                            "to_hour" : $scope.locationHours[i].to_hour.getHours() + ':' + $scope.locationHours[i].to_hour.getMinutes()
+                        });
+                    }
+                }             
             }
 
-            address.hours = hours;
+            address.hours = hours;             
 
             var sellerLocation = {
                 "id" : $scope.locationId,

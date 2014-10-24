@@ -2,6 +2,15 @@
  * Globals
  */
 
+ .how-it-works {
+  text-transform: uppercase;
+ }
+
+.beLocal-highlight {
+  color: #8ed41e !important;
+  font-weight: bold;
+}
+
 .main-view {
   height: 100%;
 }
@@ -31,6 +40,8 @@ html,
 body {
   height: 100%;
   background-color: #333;
+  padding: 0px !important;
+  margin: 0px !important;
 }
 body {
   color: #fff;
@@ -85,9 +96,9 @@ body {
   color: rgba(255,255,255,.75);
   border-bottom: 2px solid transparent;
 }
-.masthead-brand-nav > li > a:hover,
+.masthead-nav > li > a:hover,
 .masthead-nav > li > a:focus {
-  background-color: transparent;
+  background-color: transparent !important;
   border-bottom-color: #a9a9a9;
   border-bottom-color: rgba(255,255,255,.25);
 }
@@ -161,6 +172,6 @@ body {
   .masthead,
   .mastfoot,
   .cover-container {
-    width: 700px;
+    width: 992px;
   }
 }

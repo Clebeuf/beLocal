@@ -42,15 +42,15 @@ class Address(models.Model):
 
 class Vendor(models.Model):
     user = models.ForeignKey(User) 
-    company_name = models.CharField(max_length=200)
-    webpage = models.CharField(max_length=400)
-    country_code = models.CharField(max_length=50)
-    phone = models.CharField(max_length=25)
-    extension = models.CharField(max_length=25)
+    company_name = models.CharField(max_length=200, null=True, blank=True)
+    webpage = models.CharField(max_length=400, null=True, blank=True)
+    country_code = models.CharField(max_length=50, null=True, blank=True)
+    phone = models.CharField(max_length=25, null=True, blank=True)
+    extension = models.CharField(max_length=25, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     photo = models.ForeignKey(VendorPhoto, blank=True, null=True)
-    address = models.ForeignKey(Address)
+    address = models.ForeignKey(Address, null=True, blank=True)
     description = models.CharField(max_length=800)
 
 

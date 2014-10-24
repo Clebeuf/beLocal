@@ -39,7 +39,7 @@
           <button type="submit" ng-click="showLogin()" class="btn btn-primary beLocal-btn">Sign In</button>
         </form>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#">Register</a></li>
+          <li><a ng-click="createCustomer()">Register</a></li>
         </ul> 
       </div> 
       <div ng-show="AuthService.isAuthenticated()">

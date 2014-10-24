@@ -16,7 +16,7 @@ from be_local_server import serializers
 from be_local_server.models import *
 
 
-class ObtainAuthToken(APIView):
+class LoginView(APIView):
     throttle_classes = ()
     permission_classes = ()
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
@@ -26,24 +26,71 @@ class ObtainAuthToken(APIView):
  
     def post(self, request, backend):
         serializer = self.serializer_class(data=request.DATA)
-        if backend == 'auth':
-            if serializer.is_valid():
-                token, created = Token.objects.get_or_create(user=serializer.object['user'])
-                return Response({'token': token.key})
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
- 
+        user = register_by_access_token(request, backend)
+
+        if user:
+            token = Token.objects.get(user=user)
+            response = {}
+            if user.is_staff:
+                vendor = Vendor.objects.get(user=user)
+                response = {'id': user.id, 'is_active' : user.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+            else:
+                response = {'id': user.id, 'is_active' : user.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
+            return Response(response)
         else:
-            user = register_by_access_token(request, backend)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)             
+
+class CreateVendorView(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AuthTokenSerializer
+    model = Token
  
-            if user and user.is_active:
-                token, created = Token.objects.get_or_create(user=user)
-                response = {}
-                if user.is_staff:
-                    vendor = Vendor.objects.get(user=user)
-                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
-                else:
-                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
-                return Response(response)
+    def post(self, request, backend):
+        serializer = self.serializer_class(data=request.DATA)
+        user = register_by_access_token(request, backend)
+
+        if user:
+            token, created_token = Token.objects.get_or_create(user=user)
+            vendor, created_vendor = Vendor.objects.get_or_create(user=user)
+            
+            # If the user is a newly created vendor, make them inactive.
+            if(created_vendor):
+                user.is_staff = 1 # make the user a vendor
+                user.is_active = 0 # make the user inactive
+                user.save()
+
+            response = {}
+            response = {'id': user.id, 'is_active' : user.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN','vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+            
+            return Response(response)    
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CreateCustomerView(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AuthTokenSerializer
+    model = Token
+ 
+    def post(self, request, backend):
+        serializer = self.serializer_class(data=request.DATA)
+        user = register_by_access_token(request, backend)
+
+        if user:
+            token, created_token = Token.objects.get_or_create(user=user)
+            vendor, created_vendor = Vendor.objects.get_or_create(user=user)
+
+            response = {}
+            response = {'id': user.id, 'is_active' : user.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
+            
+            return Response(response)    
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                               
 
 @psa()
 def register_by_access_token(request, backend):

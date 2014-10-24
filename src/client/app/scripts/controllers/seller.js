@@ -17,6 +17,7 @@ angular.module('clientApp')
     $scope.warningHTML = '';
     $scope.locationResults = {};
     $scope.locationType = 'true';
+    $scope.currentUser = StateService.getCurrentUser();
 
     var geocoder = new google.maps.Geocoder();    
 
@@ -29,6 +30,30 @@ angular.module('clientApp')
         'Saturday',
         'Sunday'
     ];
+
+// CARLY!!!!!!!!!
+    $scope.editProfile = function() {
+
+        var e = angular.element('#item-image');
+        e.wrap('<form>').closest('form').get(0).reset();
+        e.unwrap();
+
+        $scope.isEditingItem = true;
+        $scope.newItemSubmitted = false;
+        $scope.submitItemButtonText = "Save Changes";
+        $scope.displayItemThumbnail = item.photo ? true : false;
+
+        if($scope.displayItemThumbnail)
+            angular.element('#itemPreview').attr('src', item.photo.image_url).width(50).height(50);
+
+        $scope.
+        $scope.itemName = item.name;
+        $scope.itemDescription = item.description;
+        $scope.itemID = item.id;
+        $scope.newImageID = item.photo ? item.photo.id : undefined;
+
+    }
+// CARLY!!!!!!!!!
 
     $scope.buildHoursObject = function() {
         var openHours = [];

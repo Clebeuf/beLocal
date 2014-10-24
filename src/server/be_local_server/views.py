@@ -7,6 +7,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseServerError, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -14,6 +15,13 @@ from django.template import RequestContext
 from social.apps.django_app.utils import psa
 from be_local_server import serializers
 from be_local_server.models import *
+from geopy.distance import vincenty
+from operator import itemgetter, attrgetter, methodcaller
+
+import datetime
+from django.forms.models import model_to_dict
+
+import json
 
 
 class ObtainAuthToken(APIView):
@@ -23,6 +31,7 @@ class ObtainAuthToken(APIView):
     renderer_classes = (renderers.JSONRenderer,)
     serializer_class = AuthTokenSerializer
     model = Token
+    vendors_per_page = 20; 
  
     def post(self, request, backend):
         serializer = self.serializer_class(data=request.DATA)
@@ -371,17 +380,76 @@ class MarketView(generics.ListAPIView):
 
         return SellerLocation.objects.filter(address = market_address)
 
+def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
+    user = (user_lat, user_lng)
+    item = (item_lat, item_lng)
+
+    return vincenty(user, item).miles
+
 class VendorsView(generics.ListAPIView):
     """
     This view provides an endpoint for customers to view
     vendors.
     """
     permission_classes = (AllowAny,)
-
     serializer_class = serializers.CustomerVendorSerializer
 
-    def get_queryset(self):
-        return Vendor.objects.all()
+    def post(self, request):
+        lat, lng = map(float, request.DATA['test'].strip('()').split(','))
+        print "user logged in from coordinates ("+str(lat)+","+str(lng)+")"
+
+        locations = SellerLocation.objects.all()
+
+        #Sort locations based on proximity to current user
+        for location in locations: 
+            location.sortkey = getDistanceFromUser(lat, lng, location.address.latitude, location.address.longitude)
+            #print "distance from user: " + str(location.sortkey); 
+
+        locations = sorted(locations, key=attrgetter('sortkey'))
+
+        vendors = [];
+
+        #Fill vendor queryset with order based on their closest locations
+        for location in locations: 
+            if(location.vendor not in vendors):
+                vendors.append(location.vendor)
+
+        serializer = serializers.VendorSerializer(vendors, many=True)
+        return Response(serializer.data)
+
+# class VendorsView(generics.ListAPIView):
+#     """
+#     This view provides an endpoint for customers to view
+#     vendors.
+#     """
+#     permission_classes = (AllowAny,)
+
+#     serializer_class = serializers.CustomerVendorSerializer
+
+#     def date_handler(obj):
+#         return obj.isoforma() if hasattrb(obj, 'isoformat') else obj
+
+#     def post(self, request):
+
+#         #Testing
+#         print request.DATA['test']
+
+#         data = Vendor.objects.all()
+
+#         dictionaries = [obj.as_dict() for obj in data]
+
+#         for item in dictionaries:
+#             item['user'] = model_to_dict(item['user'])
+#             item['photo'] = model_to_dict(item['photo'])
+#             item['address'] = model_to_dict(item['address'])
+
+#         dthandler = lambda obj: (
+#             obj.isoformat()
+#             if isinstance(obj, datetime.datetime)
+#             or isinstance(obj, datetime.date)
+#             else None)
+
+#         return HttpResponse(json.dumps(dictionaries, default=dthandler), content_type='application/json')
 
 class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)

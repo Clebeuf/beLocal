@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('MainCtrl', function ($scope, $location, $timeout, StateService) {
+  .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q) {
+
+    StateService.getUserPosition();
 
     $scope.showProductDetailsModal = function(item) {
     	$scope.product = item;   	
@@ -22,14 +24,17 @@ angular.module('clientApp')
       });
       angular.element('#productDetailsModal').modal('hide');      
     }
-    
-    StateService.getTrendingProducts().then(function() {
-      $scope.trendingProducts = StateService.getTrendingProductsList();
-    })
+   
+    StateService.getUserPosition().then(function(){
+        StateService.getTrendingProducts().then(function() {
+          $scope.trendingProducts = StateService.getTrendingProductsList();
+        });
 
-    StateService.getVendors().then(function() {
-    	$scope.vendors = StateService.getVendorsList();
+        StateService.getVendors().then(function() {
+          $scope.vendors = StateService.getVendorsList();
+        });
     });
+
 
     $scope.trendingMasonry = function() {
 	    $timeout(function() {

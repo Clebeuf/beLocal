@@ -157,7 +157,8 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
                   'country_code',
                   'phone',
                   'extension',
-                  'products'
+                  'products',
+                  'address'
       )      
 
 class MarketDisplaySerializer(serializers.ModelSerializer):

@@ -1,17 +1,33 @@
 'use strict';
 
 angular.module('clientApp')
-  .service('StateService', function StateService($http, ipCookie) {
+  .service('StateService', function StateService($http, ipCookie, $q, $timeout) {
     var currentUser = undefined; // Currently authenticated user
     var trendingProducts = []; // Currently trending products
     var vendors = [];
     var marketlist = [];
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
+    var currentLocation = undefined;
+
+    this.getUserPosition = function() {
+      var d = $q.defer();
+      var position; 
+        navigator.geolocation.getCurrentPosition(function(pos){
+          position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude).toString();
+          $timeout(function(){
+            currentLocation = position;
+            d.resolve(position);
+          });
+        });
+      
+      return d.promise; 
+    }    
 
     this.setVendorToDisplay = function(vendorID) {
       vendorToDisplay = vendorID;
     };
+
 
     this.getVendorDetails = function(){
       return vendorDetails;
@@ -54,12 +70,12 @@ angular.module('clientApp')
     };
 
     this.getVendors = function() {
-      return $http.get(this.getServerAddress() + 'vendors/')
+      return $http.post(this.getServerAddress() + 'vendors/', {'test':currentLocation})
       .success(function(data) {
         vendors = data;
       })
       .error(function(data) {
-        console.log('Error retrieving vendors');
+        console.log('error retrieving vendors');
       });
     };
 

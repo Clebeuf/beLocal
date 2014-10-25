@@ -126,7 +126,7 @@ angular.module('clientApp')
                 d.resolve(response);
               } else {
                 if(StateService.getUserType() === 'VEN') {
-                    $location.path('/seller');
+                    $location.path('/vendor');
                 }
               }         
             });             
@@ -149,7 +149,7 @@ angular.module('clientApp')
                     $location.path('/');                    
                   // $location.path('/customer');
                 } else if(StateService.getUserType() === 'VEN') {
-                    $location.path('/seller');
+                    $location.path('/vendor');
                 }
               }         
             });             

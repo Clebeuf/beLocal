@@ -27,8 +27,8 @@ var app = angular.module('clientApp', [
       authenticate: false,
       css: 'styles/main.css'      
     })
-    .state('seller', {
-      url: '/seller',
+    .state('vendor', {
+      url: '/vendor',
       templateUrl: 'views/seller.html',
       controller: 'SellerCtrl',
       authenticate: true,

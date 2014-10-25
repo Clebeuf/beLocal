@@ -1,3 +1,4 @@
+import simplejson as json
 from rest_framework import generics, status, viewsets, mixins, parsers, renderers, status, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -14,7 +15,7 @@ from django.template import RequestContext
 from social.apps.django_app.utils import psa
 from be_local_server import serializers
 from be_local_server.models import *
-
+from haystack.query import SearchQuerySet
 
 class ObtainAuthToken(APIView):
     throttle_classes = ()
@@ -414,3 +415,10 @@ class AddSellerLocationView(generics.CreateAPIView):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)  
 
+def autocomplete(request):
+    prodSqs = SearchQuerySet().autocomplete(name_auto=request.GET.get('q', ''))[:5]
+    products = [result.name for result in prodSqs]
+    the_data = json.dumps({
+        'products': products
+    })
+    return HttpResponse(the_data, content_type='application/json')

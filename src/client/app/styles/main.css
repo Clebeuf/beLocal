@@ -1,5 +1,9 @@
 /* BELOCAL STYLES */
 
+textarea {
+    resize: vertical;
+}
+
 .hours-picker {
   margin-bottom: 5px;
 }

@@ -55,6 +55,9 @@ class CreateVendorView(APIView):
         if user:
             token, created_token = Token.objects.get_or_create(user=user)
             vendor, created_vendor = Vendor.objects.get_or_create(user=user)
+
+            if(not created_token):
+                return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)
             
             # If the user is a newly created vendor, make them inactive.
             if(created_vendor):
@@ -84,6 +87,9 @@ class CreateCustomerView(APIView):
         if user:
             token, created_token = Token.objects.get_or_create(user=user)
             vendor, created_vendor = Vendor.objects.get_or_create(user=user)
+
+            if(not created_token):
+                return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)            
 
             response = {}
             response = {'id': user.id, 'is_active' : user.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}

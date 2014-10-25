@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('clientApp')
-  .service('AuthService', function AuthService($http, $location, ipCookie, StateService) {
+  .service('AuthService', function AuthService($http, $location, ipCookie, StateService, $q) {
+    var self = this;    
 
     this.processLogin = function(result) {
     	var loggedIn = false;
@@ -23,7 +24,7 @@ angular.module('clientApp')
   		return loginPromise;
   	}
 
-    this.createVendor = function(result) {
+    this.createVendorRequest = function(result) {
       var loggedIn = false;
       var backend = 'facebook';
       var token = "Token " + result.access_token;
@@ -43,14 +44,14 @@ angular.module('clientApp')
       return loginPromise;
     }
 
-    this.createCustomer = function(result) {
+    this.createCustomerRequest = function(result) {
       var loggedIn = false;
       var backend = 'facebook';
       var token = "Token " + result.access_token;
       var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/customer/' + backend + '/create/', headers: {'Authorization': token}});
 
       // loginService.loginUser(loginPromise);
-      loginPromise.then(function (result) {
+      loginPromise.then(function (result) {        
         loggedIn = true;
         if(result.data.token) {
           ipCookie('beLocalToken', result.data.token, {expires: 14});
@@ -78,7 +79,79 @@ angular.module('clientApp')
       ipCookie.remove('beLocalToken');
       ipCookie.remove('beLocalUser');
       delete $http.defaults.headers.common.Authorization;
-      OAuth.clearCache('facebook');
       $location.path('/');
     }
+
+    this.createCustomer = function() {
+        var d = $q.defer();
+
+        OAuth.popup('facebook', {cache : true, authorize: {'scope':'email'}})
+        .done(function (result) {
+            var promise = self.createCustomerRequest(result);
+            promise.error(function(response, status) {
+              d.resolve(status)
+            });
+            promise.then(function(response, status) {
+              if(status !== 200) {                
+              } else {
+                if(StateService.getUserType() === 'CUS') {
+                    console.log("You're a customer!");
+                    $location.path('/');                    
+                }
+              }         
+            });             
+        })
+        .fail(function (error) {
+            console.log(error);
+        });
+
+        return d.promise;
+    }    
+
+    this.createVendor = function() {
+        var d = $q.defer();
+
+        OAuth.popup('facebook', {cache : true, authorize: {'scope':'email'}})
+        .done(function (result) {
+            var promise = self.createVendorRequest(result);
+            promise.error(function(result, status) {
+              d.resolve(status)
+            })
+            promise.then(function(response, status) {
+              if(status !== 200) {
+                d.resolve(response);
+              } else {
+                if(StateService.getUserType() === 'VEN') {
+                    $location.path('/seller');
+                }
+              }         
+            });             
+        })
+        .fail(function (error) {
+            console.log(error);
+        });
+
+        return d.promise;
+    }    
+
+    this.showLogin = function() {
+        OAuth.popup('facebook', {cache : true, authorize: {'scope':'email'}})
+        .done(function (result) {
+            self.processLogin(result).then(function(response) {
+              if(response.status !== 200) {
+              } else {
+                if(StateService.getUserType() === 'CUS') {
+                    console.log("You're a customer!");
+                    $location.path('/');                    
+                  // $location.path('/customer');
+                } else if(StateService.getUserType() === 'VEN') {
+                    $location.path('/seller');
+                }
+              }         
+            });             
+        })
+        .fail(function (error) {
+            console.log(error);
+        });
+    }    
   });

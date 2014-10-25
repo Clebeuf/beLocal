@@ -23,9 +23,9 @@ a:hover {
 }
 
 /* Custom default button */
-.btn-default,
-.btn-default:hover,
-.btn-default:focus {
+.btn-default-welcome,
+.btn-default-welcome:hover,
+.btn-default-welcome:focus {
   color: #333;
   text-shadow: none; /* Prevent inheritence from `body` */
   background-color: #fff;
@@ -35,6 +35,18 @@ a:hover {
 /*
  * Base structure
  */
+
+.modal-title {
+  color: #333;
+  text-align: left;
+  text-shadow: none;
+ }
+
+.modal-body {
+  color: #333;
+  text-align: left;
+  text-shadow: none;
+ }
 
 html,
 body {
@@ -117,7 +129,6 @@ body {
     float: right;
   }
 }
-
 
 /*
  * Cover

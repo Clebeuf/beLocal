@@ -41,7 +41,7 @@ class AddressSerializer(serializers.ModelSerializer):
     fields = ( 'id', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude', 'hours')
 
 class AddAddressSerializer(serializers.ModelSerializer):
-  hours = AddOpeningHoursSerializer(many=True)  
+  hours = AddOpeningHoursSerializer(many=True, allow_add_remove=True, read_only=False)  
   class Meta:
     model = be_local_server.models.Address
     fields = ( 'id', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude', 'hours')    
@@ -70,7 +70,8 @@ class VendorSerializer(serializers.ModelSerializer):
     					'phone',
     					'extension',
               'photo',
-              'address'
+              'address',
+              'description'
     		)
 
 class BusinessVendorSerializer(serializers.ModelSerializer):
@@ -83,7 +84,7 @@ class BusinessVendorSerializer(serializers.ModelSerializer):
                     'country_code',
                     'phone',
                     'extension',
-                    'photo'
+                    'photo',
         ) 
 
 class PhotoPathSerializer(serializers.ModelSerializer):

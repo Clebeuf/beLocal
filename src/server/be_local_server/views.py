@@ -49,7 +49,7 @@ class ObtainAuthToken(APIView):
                 response = {}
                 if user.is_staff:
                     vendor = Vendor.objects.get(user=user)
-                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : {'company_name' : vendor.company_name}, 'token': token.key}
+                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
                 else:
                     response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
                 return Response(response)
@@ -216,6 +216,18 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.SellerLocationSerializer
 
     def patch(self, request, location_id):
+
+        # Workaround for a Django bug that doesn't allow for multiple nested objects to be deserialized properly
+        # As a result, we need to clear out the hours for recurring events and re-add them each time
+        if(request.method == 'PATCH'):
+            location = SellerLocation.objects.get(pk=location_id)
+            address = location.address
+            address.date = None
+            address.save()
+            hours = OpeningHours.objects.filter(address=address)
+            for hour in hours:
+                hour.delete()
+
         self.id = location_id
         return self.partial_update(request)
 

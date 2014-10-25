@@ -51,6 +51,7 @@ class Vendor(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     photo = models.ForeignKey(VendorPhoto, blank=True, null=True)
     address = models.ForeignKey(Address)
+    description = models.CharField(max_length=800)
 
     def as_dict(self):
         return {

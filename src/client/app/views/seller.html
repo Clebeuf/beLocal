@@ -3,51 +3,60 @@
   <html-comp content="warningHTML"></html-comp>
 </div>
 <nav-bar></nav-bar>
-<div class="jumbotron beLocal-header-seller">
-    <div class="container">
-    </div>
-</div>
 
-<!--Seller-Navigation-->
-<div class="seller-banner">
-    <div class="seller-Avatar col-sm-3">
-        <div class="AvatarContainer">
-            <img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
+<div class="container-fluid new-formatting-container">  
+    <br><br>
+    <div class="row vendor-profile-header">
+        <div class="col-md-5 new-vendor-avatar">
+            <img src="http://www.sexyli.com/wp-content/uploads/2013/05/Green-Snake-Image-Wallpaper.jpg">
+        </div>
+        <div class="vendor-header-content">
+
+            <span class="new-vendor-name-style">
+                {{StateService.getCurrentUser().first_name}} {{StateService.getCurrentUser().last_name}}
+            </span>
+            <br>
+            <span class="new-hr-heading-style">
+                <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
+                | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
+            </span>
+            <hr>
+            <div class="description-container">
+                {{StateService.getCurrentUser().vendor.description}}
+            </div>
         </div>
     </div>
-    <div class="seller-Name col-sm-9">
-        <h1>{{StateService.getCurrentUser().first_name}} {{StateService.getCurrentUser().last_name}}</h1>
-    </div>
-</div>
-<div class="seller-tabs">
-    <div class="seller-tabs col-md-offset-3">
-        <ul class="nav nav-pills nav-justified">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a class="inactive" href="#">Profile</a></li>
-            <li><a class="inactive" href="#">Messages</a></li>
-        </ul>
-    </div>
-</div>
-<!--Seller-Navigation End-->
 
-
-<div class="container container-seller">
-<br>    
 
 <!--Display Seller's Locations-->
+    <hr>
     <div class="row">
-        <div class="col-xs-9 seller-title-bar">
-            <h3>Your Locations</h3>
+        <div class="col-xs-9 new-hr-heading-style">
+            YOUR SELLING LOCATIONS
         </div>
-        <div class="col-xs-3 add-new-button-container">
-            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" ng-click="resetLocationModal()" data-target="#locationModal">Create New Location</button>
-
+        <div class="col-xs-3">
+            <button class="btn beLocal-btn-filled pull-right" data-toggle="modal" ng-click="resetLocationModal()" data-target="#locationModal">Create New Location</button>
         </div>
     </div>
+    <hr>
 
+<!-- NG-REPEAT FOR MARKETS -->
+    <div class="new-heading-style">
+            Market Locations
+    </div>
     <!-- repeating for each location that seller has in the db -->
-    <div ng-repeat="location in sellerLocations">
-        <div class="list-group-item">
+    <div ng-repeat="location in sellerLocations" class="container-for-cards">
+    </div>
+    <!-- end of repeating for each market that seller has in the db -->
+
+
+<!-- NG-REPEAT FOR CUSTOM LOCATIONS -->
+    <div class="new-heading-style">
+            Custom Locations
+    </div>
+    <!-- repeating for each location that seller has in the db -->
+    <div ng-repeat="location in sellerLocations" class="container-for-cards">
+        <div class="card-formatting">
             <div class="row">
 
                 <!-- Display the locations name -->
@@ -56,7 +65,7 @@
                 </div>
 
                 <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
-                <div class="col-xs-3 edit-text-container">
+                <div class="col-xs-3 edit-delete-buttons">
                     <span data-toggle="tooltip" data-placement="bottom" title="Edit Location">
                         <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
                     </span>
@@ -67,13 +76,20 @@
 
             </div>
 
-            <div class="well">
-
+            <div>
                 <p ng-show="location.date"><b>DATE:</b>
                     {{location.date | date:" EEEE',' MMMM d'"}},
                     {{location.address.hours[0].from_hour}} - 
                     {{location.address.hours[0].to_hour}}
                 </p>
+                <div ng-show="location.date == null">
+                <p><b>HOURS:</b></p>
+                        <span ng-repeat="day in location.address.hours">
+                            <p>
+                                {{weekdays[day.weekday - 1]}}: {{day.from_hour}} - {{day.to_hour}}
+                            </p>
+                        </span>
+                </div>
                 <p><b>LOCATION:</b>
                     {{location.address.addr_line1}},
                     {{location.address.city}}, 
@@ -88,75 +104,80 @@
                 <p><b>DETAILS:</b>
                     {{location.description}}
                 </p>
-                </div>
+            </div>
         </div>
-        <br>
     </div>
-<!-- end of repeating for each location that seller has in the db -->
+<!-- end of repeating for each custom location that seller has in the db -->
 
 
-
+<br>
 <!--Display Seller's Inventory-->
-
-   <div class="row">
-        <div class="col-xs-10 seller-title-bar">
-            <h3>Your Inventory</h3>
+    <hr>
+    <div class="row">
+        <div class="col-xs-9 new-hr-heading-style">
+            YOUR INVENTORY
         </div>
-        <div class="col-xs-2 add-new-button-container">
+        <div class="col-xs-3">
             <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" data-target="#itemModal" ng-click="resetItemModal()">Create New Item</button>
         </div>
     </div>
+    <hr>
 
 
+    <!-- repeating for each item that seller has in the db -->
+     <div ng-repeat="product in sellerItems | orderBy:'name'" class="container-for-cards">
 
-<!-- repeating for each item that seller has in the db -->
- <div ng-repeat="product in sellerItems | orderBy:'name'">
+            <!-- Need this div to allow for space between each of the sellers items -->
+            <div class="card-formatting">
+                <div class="row">
 
-        <!-- Need this div to allow for space between each of the sellers items -->
-        <div class="list-group-item" >
-            <div class="row item-content-container">
+                <!-- Display the locations name -->
+                    <div class="col-sm-2 hidden-xs vendor-product-image">
+                        <img ng-src="{{product.photo.image_url}}"/>
 
-            <!-- Display the locations name -->
-                <div class="col-xs-2 thumbnail hidden-xs">
-                    <img ng-src="{{product.photo.image_url}}"/>
+                    </div>
+                    <div class="col-xs-9 col-sm-7">
+                        <h4>{{product.name}}</h4>
+                        {{product.description}}
+                    </div>
 
+                    <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
+                    <div class="col-xs-3 edit-delete-buttons">
+                        <span data-toggle="tooltip" data-placement="bottom" title="Edit Item">
+                            <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#itemModal" ng-click="editItem(product)"></span>
+                        </span>
+                        <span data-toggle="tooltip" data-placement="bottom" title="Delete Item">
+                            <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteProduct(product)" data-toggle="modal" data-target="TBA"></span>
+                        </span>
+                    </div> 
                 </div>
-                <div class="col-xs-9 col-sm-7">
-                    <h4>{{product.name}}</h4>
-                    {{product.description}}
+
+            <!-- THIS IS THE NON-REPEATING PART -->
+            <div class="row">
+                <div class="col-sm-12 seller-stock-formatting">
+                    <hr class="availability-hr">
+                    <b>Current Availability:</b>
+                    <span class="pull-right">
+                        <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="IS"> In Stock
+                        <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="OOS"> Out of Stock
+                    </span>
                 </div>
-
-                <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
-                <div class="col-xs-3 edit-text-container">
-                    <span data-toggle="tooltip" data-placement="bottom" title="Edit Item">
-                        <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#itemModal" ng-click="editItem(product)"></span>
-                    </span>
-                    <span data-toggle="tooltip" data-placement="bottom" title="Delete Item">
-                        <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteProduct(product)" data-toggle="modal" data-target="TBA"></span>
-                    </span>
-                </div> 
-            </div>
-
-        <!-- THIS IS THE NON-REPEATING PART -->
-        <div class="row all-locations seller-item-stock">
-            <div class="col-sm-4 ">
-                <b>Stock</b>
-            </div>
-            <div class="col-sm-8 seller-item">
-                <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="IS"> In Stock
-                <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="OOS"> Out of Stock
             </div>
         </div>
+        <!--  end of repeat for each seller's items location -->
+
     </div>
-    <br>
-    <!--  end of repeat for each seller's items location -->
+    <!--  end of repeat for each item the seller sells-->
 
 </div>
-<!--  end of repeat for each item the seller sells-->
-
+<div class="footer">
+  <p>♥ from the beLocal team</p>
 </div>
 <!-- END OF CONTAINTER-SELLER -->
 
+
+
+<!-- START OF MODALS -->
 
 <!-- Seller Add/Edit Item Modal -->
 <div class="modal fade" id="itemModal">
@@ -234,23 +255,24 @@
                     <form role="form" name="locationForm" novalidate>
                         <div class="row">
                             <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Location Type</label><br />
-                                    <label class="radio-inline">
-                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="farmRadio" value="true"><p>One Time</p>
-                                    </label>
-                                    <label class="radio-inline">
-                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="marketRadio" value="false"><p>Regular Hours</p>
-                                    </label>                            
-                                </div>
-                            </div>                        
-                            <div class="col-xs-6 col-md-6">
                                 <div class="form-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationField.$invalid }">
                                     <label class="control-label">Location Name</label>
                                     <input required ng-model="locationName" type="text" name="locationField" class="form-control" id="item-name" placeholder="Location Name"/>
                                 </div>
-                            </div>
+                            </div>                        
+                            <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Location Type</label><br />
+                                    <label class="radio-inline">
+                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="farmRadio" value="true"><p>One Time Event</p>
+                                    </label>
+                                    <label class="radio-inline radio-inline-responsive">
+                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="marketRadio" value="false"><p>Recurring Event</p>
+                                    </label>                            
+                                </div>
+                            </div>                        
                         </div>
+                        <!-- One Time Date Options -->
                         <div ng-show="locationType" class="row">
                             <div class="col-xs-6 col-md-6">
                                 <div class="form-group">
@@ -276,6 +298,47 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Regular Hour Options -->
+                        <div ng-hide="locationType">
+                            <label>Hours:</label>
+                            <div class="well">
+                                <div class="row">
+                                    <div class="col-xs-6"> 
+                                        <label>Days You are Open:</label>
+                                    </div>
+                                    <div class="col-xs-3"> 
+                                        <label>Opening Time:</label>
+                                    </div>  
+                                    <div class="col-xs-3"> 
+                                        <label>Closing Time:</label>
+                                    </div>                                                              
+                                </div>
+                                <div ng-repeat="day in locationHours" class="row">
+                                    <ng-form name="hoursForm">                                
+                                        <div class="col-xs-6">                              
+                                            <div class="checkbox">
+                                              <label>
+                                                <input name="day{{$index}}Check" ng-model="day.checked" type="checkbox">{{day.day}}
+                                              </label>
+                                            </div>
+                                        </div>
+                                        <div ng-show="day.checked" class="col-xs-3 col-md-3">
+                                            <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.openHours.$invalid}">
+                                                <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.from_hour" name="openHours" bs-timepicker>
+                                            </div>
+                                        </div>
+                                        <div ng-show="day.checked" class="col-xs-3 col-md-3">
+                                            <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.closeHours.$invalid}">
+                                                <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.to_hour" name="closeHours" bs-timepicker>
+                                            </div>
+                                        </div> 
+                                        <div ng-hide="day.checked" class="col-xs-6 col-md-6 closed-container">
+                                            <p class="closed-string">Closed</p>
+                                        </div>
+                                    </ng-form>                                        
+                                </div>
+                            </div>
+                        </div>                       
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
                                   <div class="form-group" ng-class="{ 'has-error' : (locationForm.addressText.$invalid ) && newLocationSubmitted }">

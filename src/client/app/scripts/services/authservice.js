@@ -83,7 +83,7 @@ angular.module('clientApp')
       ipCookie.remove('beLocalUser');
       ipCookie.remove('beLocalBypass');
       delete $http.defaults.headers.common.Authorization;
-      $location.path('/');
+      $location.path('/welcome');
     }
 
     this.createCustomer = function() {

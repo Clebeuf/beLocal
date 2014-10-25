@@ -6,6 +6,14 @@
   text-transform: uppercase;
  }
 
+ .welcome-sign-in {
+  color: #8ed41e !important;
+ }
+
+ .welcome-sign-in:hover {
+  border-bottom-color: rgba(142, 212, 30, 0.5) !important;
+ }
+
 .beLocal-highlight {
   color: #8ed41e !important;
   font-weight: bold;

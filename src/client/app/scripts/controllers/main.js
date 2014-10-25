@@ -3,8 +3,6 @@
 angular.module('clientApp')
   .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q) {
 
-    StateService.getUserPosition();
-
     $scope.showProductDetailsModal = function(item) {
     	$scope.product = item;   	
     }

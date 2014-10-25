@@ -19,6 +19,14 @@ angular.module('clientApp')
             currentLocation = position;
             d.resolve(position);
           });
+        },
+        function(pos){
+          console.log("Loation permission denied");
+          position = undefined;
+          $timeout(function(){
+            currentLocation = null;
+            d.resolve(position);
+          })
         });
       
       return d.promise; 

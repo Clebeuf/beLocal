@@ -407,27 +407,34 @@ class VendorsView(generics.ListAPIView):
     serializer_class = serializers.CustomerVendorSerializer
 
     def post(self, request):
-        lat, lng = map(float, request.DATA['test'].strip('()').split(','))
-        print "user logged in from coordinates ("+str(lat)+","+str(lng)+")"
+        if (request.DATA['test'] is not None):
 
-        locations = SellerLocation.objects.all()
+            lat, lng = map(float, request.DATA['test'].strip('()').split(','))
+            print "user logged in from coordinates ("+str(lat)+","+str(lng)+")"
 
-        #Sort locations based on proximity to current user
-        for location in locations: 
-            location.sortkey = getDistanceFromUser(lat, lng, location.address.latitude, location.address.longitude)
-            #print "distance from user: " + str(location.sortkey); 
+            locations = SellerLocation.objects.all()
 
-        locations = sorted(locations, key=attrgetter('sortkey'))
+            #Sort locations based on proximity to current user
+            for location in locations: 
+                location.sortkey = getDistanceFromUser(lat, lng, location.address.latitude, location.address.longitude)
+                #print "distance from user: " + str(location.sortkey); 
 
-        vendors = [];
+            locations = sorted(locations, key=attrgetter('sortkey'))
 
-        #Fill vendor queryset with order based on their closest locations
-        for location in locations: 
-            if(location.vendor not in vendors):
-                vendors.append(location.vendor)
+            vendors = [];
 
-        serializer = serializers.VendorSerializer(vendors, many=True)
-        return Response(serializer.data)
+            #Fill vendor queryset with order based on their closest locations
+            for location in locations: 
+                if(location.vendor not in vendors):
+                    vendors.append(location.vendor)
+
+            serializer = serializers.VendorSerializer(vendors, many=True)
+            return Response(serializer.data)
+
+        else: 
+            vendors = Vendor.objects.all()
+            serializer = serializers.VendorSerializer(vendors, many=True)
+            return Response(serializer.data)
 
 # class VendorsView(generics.ListAPIView):
 #     """

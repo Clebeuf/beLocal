@@ -50,11 +50,16 @@ var app = angular.module('clientApp', [
     // Define the default action to be taken if an unrecognized route is taken.
     $urlRouterProvider.otherwise('/');
   })
-  .run(function ($rootScope, $state, AuthService, StateService) {
+  .run(function ($rootScope, $state, AuthService, StateService, ipCookie, $location) {
       OAuth.initialize('tA3E0EDqXdTfZNRn4oUlGCpHJ8E');
 
       // This will be called every time we start to change state (navigate to a new URL)
       $rootScope.$on('$stateChangeStart', function(event, toState){
+
+        if(toState.url == '/' && ipCookie('beLocalBypass') === undefined) {
+          $location.path('welcome');
+          return;
+        }
 
         if(StateService.getCurrentUser() === undefined) {
           if(AuthService.isAuthenticated() === true) {
@@ -63,7 +68,6 @@ var app = angular.module('clientApp', [
         }
 
         if (toState.url === '/seller' && (StateService.getCurrentUser() == undefined || StateService.getUserType() !== 'VEN')) {
-          console.log('WHY');
           $state.transitionTo('main', null, {location: 'replace'});
           event.preventDefault();
           return;

@@ -16,6 +16,7 @@ angular.module('clientApp')
   		  if(result.data.token) {
   		  	ipCookie('beLocalToken', result.data.token, {expires: 14});
           ipCookie('beLocalUser', result.data, {expires: 14});
+          ipCookie('beLocalBypass', true, {expires: 14});          
   			$http.defaults.headers.common.Authorization = 'Token ' + result.token;		  	
   		  }
             StateService.setProfile(result.data);		  
@@ -36,6 +37,7 @@ angular.module('clientApp')
         if(result.data.token) {
           ipCookie('beLocalToken', result.data.token, {expires: 14});
           ipCookie('beLocalUser', result.data, {expires: 14});
+          ipCookie('beLocalBypass', true, {expires: 14});
         $http.defaults.headers.common.Authorization = 'Token ' + result.token;        
         }
             StateService.setProfile(result.data);     
@@ -56,6 +58,7 @@ angular.module('clientApp')
         if(result.data.token) {
           ipCookie('beLocalToken', result.data.token, {expires: 14});
           ipCookie('beLocalUser', result.data, {expires: 14});
+          ipCookie('beLocalBypass', true, {expires: 14});          
         $http.defaults.headers.common.Authorization = 'Token ' + result.token;        
         }
             StateService.setProfile(result.data);     
@@ -78,6 +81,7 @@ angular.module('clientApp')
     this.logout = function() {
       ipCookie.remove('beLocalToken');
       ipCookie.remove('beLocalUser');
+      ipCookie.remove('beLocalBypass');
       delete $http.defaults.headers.common.Authorization;
       $location.path('/');
     }

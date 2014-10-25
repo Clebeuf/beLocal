@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('WelcomeCtrl', function ($scope, AuthService, $location) {
+  .controller('WelcomeCtrl', function ($scope, AuthService, $location, ipCookie) {
   	$scope.AuthService = AuthService;
 
 	var url = document.location.toString();
@@ -28,6 +28,11 @@ angular.module('clientApp')
 				angular.element('#accountExistsModal').modal('show'); 				
   			}
   		});
+  	}
+
+  	$scope.getStarted = function() {
+  		ipCookie('beLocalBypass', true, {expires: 14});  		
+  		$location.path('/');
   	}
 
   });

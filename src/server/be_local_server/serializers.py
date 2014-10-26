@@ -149,7 +149,13 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
                  )           
 
 class CustomerVendorSerializer(serializers.ModelSerializer):
-  products = ProductSerializer()
+  products = serializers.SerializerMethodField('get_in_stock_products')
+
+  def get_in_stock_products(self, obj):
+    products = be_local_server.models.Product.objects.filter(vendor=obj, stock="IS")
+    serializer = ProductSerializer(products, many=True)
+    return serializer.data
+
   class Meta:
       model = be_local_server.models.Vendor
       fields = (  'id',   

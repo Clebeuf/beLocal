@@ -23,6 +23,11 @@ from django.forms.models import model_to_dict
 
 import json
 
+def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
+    user = (user_lat, user_lng)
+    item = (item_lat, item_lng)
+
+    return vincenty(user, item).miles
 
 class ObtainAuthToken(APIView):
     throttle_classes = ()
@@ -358,11 +363,36 @@ class TrendingProductView(generics.ListAPIView):
     view currently trending products.
     """   
     permission_classes = (AllowAny,)
-
     serializer_class = serializers.ProductDisplaySerializer
 
-    def get_queryset(self):
-        return Product.objects.filter(stock=Product.IN_STOCK)      
+    def post(self, request):
+        if (request.DATA['user_position'] is not None):
+            lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))
+            print "Sorting vendors by proximity to (" +str(lat)+","+str(lng)+")"
+
+            locations = SellerLocation.objects.all()
+
+            for location in locations: 
+                location.sortkey = getDistanceFromUser(lat, lng, location.address.latitude, location.address.longitude)
+
+            locations = sorted(locations, key=attrgetter('sortkey'))
+
+            products = []
+            vendors = [] 
+
+            #Go through all locations sorted by proximity
+            for location in locations:
+                if(location.vendor not in vendors): #To make sure we don't add the same item from two diff. locations
+                    vendors.append(location.vendor)
+                    products.extend(Product.objects.filter(vendor=location.vendor, stock=Product.IN_STOCK))
+            
+            serializer = serializers.ProductDisplaySerializer(products, many=True) 
+            return Response(serializer.data)
+
+        else:
+            products = Product.objects.filter(stock=Product.IN_STOCK)
+            serializer = serializers.ProductDisplaySerializer(products)
+            return response(serializer.data)  
 
 
 class ListMarketsView(generics.ListAPIView):
@@ -392,11 +422,7 @@ class MarketView(generics.ListAPIView):
 
         return SellerLocation.objects.filter(address = market_address)
 
-def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
-    user = (user_lat, user_lng)
-    item = (item_lat, item_lng)
 
-    return vincenty(user, item).miles
 
 class VendorsView(generics.ListAPIView):
     """
@@ -407,21 +433,20 @@ class VendorsView(generics.ListAPIView):
     serializer_class = serializers.CustomerVendorSerializer
 
     def post(self, request):
-        if (request.DATA['test'] is not None):
+        if (request.DATA['user_position'] is not None):
 
-            lat, lng = map(float, request.DATA['test'].strip('()').split(','))
-            print "user logged in from coordinates ("+str(lat)+","+str(lng)+")"
+            lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))
 
             locations = SellerLocation.objects.all()
 
             #Sort locations based on proximity to current user
             for location in locations: 
                 location.sortkey = getDistanceFromUser(lat, lng, location.address.latitude, location.address.longitude)
-                #print "distance from user: " + str(location.sortkey); 
+                print "distance from user: " + str(location.sortkey); 
 
             locations = sorted(locations, key=attrgetter('sortkey'))
 
-            vendors = [];
+            vendors = []
 
             #Fill vendor queryset with order based on their closest locations
             for location in locations: 

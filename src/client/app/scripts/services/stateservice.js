@@ -68,7 +68,7 @@ angular.module('clientApp')
     };
 
     this.getTrendingProducts = function() {
-      return $http.get(this.getServerAddress() + 'products/trending/')
+      return $http.post(this.getServerAddress() + 'products/trending/', {'user_position':currentLocation})
       .success(function(data) {
         trendingProducts = data;
       })
@@ -78,7 +78,7 @@ angular.module('clientApp')
     };
 
     this.getVendors = function() {
-      return $http.post(this.getServerAddress() + 'vendors/', {'test':currentLocation})
+      return $http.post(this.getServerAddress() + 'vendors/', {'user_position':currentLocation})
       .success(function(data) {
         vendors = data;
       })

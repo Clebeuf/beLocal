@@ -65,6 +65,9 @@ class CreateVendorView(APIView):
                 user.is_active = 0 # make the user inactive
                 user.save()
 
+                vendor.company_name = user.username # set this for Carly's UI
+                vendor.save()
+
             response = {}
             response = {'id': user.id, 'is_active' : user.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN','vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
             

@@ -8,10 +8,13 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseServerError, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from social.apps.django_app.utils import psa
+from secretballot import views
+from secretballot.models import Vote
 from be_local_server import serializers
 from be_local_server.models import *
 
@@ -73,7 +76,12 @@ class VendorDetailsView(generics.CreateAPIView):
         locations = SellerLocation.objects.filter(vendor=vendor)
         products = Product.objects.filter(vendor=vendor, stock="IS")
 
-        return Response({"vendor":serializers.VendorSerializer(vendor).data, "locations":serializers.SellerLocationSerializer(locations, many=True).data, "products":serializers.ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)  
+        return Response({"vendor":serializers.VendorSerializer(vendor).data, 
+                         "locations":serializers.SellerLocationSerializer(locations, many=True).data, 
+                         "products":serializers.ProductSerializer(products, many=True).data
+                        }, 
+                        status=status.HTTP_200_OK
+        )  
 
 
 class AddVendorView(generics.CreateAPIView):
@@ -426,3 +434,44 @@ class AddSellerLocationView(generics.CreateAPIView):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)  
 
+def like(request, content_type, id):
+    """ 
+    Handles likes on a model object.
+    """
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    app, modelname = content_type.split('-')
+    content_type = ContentType.objects.get(app_label=app, 
+                                           model__iexact=modelname)
+    
+    if request.method == 'POST':
+        response = views.vote(
+                              request,
+                              content_type = content_type,
+                              object_id = id,
+                              vote = '+1',
+                              #mimetype='application/json'
+        )
+        return response 
+    
+    if request.method == 'DELETE':
+        response = views.vote(
+                              request,
+                              content_type = content_type,
+                              object_id = id,
+                              vote=None,
+                              #mimetype='application/json'
+        )
+        return response
+    
+    if request.method == 'GET':
+        vote = Product.objects.from_request(request).get(pk=id).user_vote
+        if (vote):
+            body = "{'like': 'True'}"
+            return HttpResponse(body, status=status.HTTP_200_OK)
+        else:
+            body = "{'like': 'False'}"
+            return HttpResponse(body, status=status.HTTP_404_NOT_FOUND) 
+        
+    

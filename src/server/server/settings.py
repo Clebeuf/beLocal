@@ -47,7 +47,8 @@ INSTALLED_APPS = (
     #'south',   # Only if you're relying on South for migrations.
     'be_local_server',
     'undelete',
-    'taggit'
+    'taggit',
+    'secretballot',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -58,6 +59,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    #'secretballot.middleware.SecretBallotIpMiddleware',     
+    #'secretballot.middleware.SecretBallotUserIpUseragentMiddleware',     
+    'be_local_server.middleware.SecretBallotAuthenticatedUserMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

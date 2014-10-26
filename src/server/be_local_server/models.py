@@ -5,6 +5,7 @@ from django.conf import settings
 import os
 from undelete.models import TrashableMixin
 from taggit.managers import TaggableManager
+import secretballot
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -79,6 +80,8 @@ class Product(TrashableMixin, models.Model):
     vendor = models.ForeignKey(Vendor, related_name='products')
     photo = models.ForeignKey(ProductPhoto, blank=True, null=True)
     tags = TaggableManager()
+    
+secretballot.enable_voting_on(Product)
 
 class SellerLocation(TrashableMixin, models.Model):
     vendor = models.ForeignKey(Vendor)

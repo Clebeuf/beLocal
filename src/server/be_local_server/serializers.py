@@ -69,9 +69,9 @@ class VendorSerializer(serializers.ModelSerializer):
     					'country_code',
     					'phone',
     					'extension',
-              'photo',
-              'address',
-              'description'
+                        'photo',
+                        'address',
+                        'description'
     		)
 
 class BusinessVendorSerializer(serializers.ModelSerializer):
@@ -131,7 +131,7 @@ class ProductSerializer(serializers.ModelSerializer):
                   'description',   
                   'vendor',
                   'photo',
-                  'stock'
+                  'stock',
                  )
 
 class ProductDisplaySerializer(serializers.ModelSerializer):
@@ -145,7 +145,7 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
                   #'price', 
                   'vendor',
                   'photo',
-                  'stock'
+                  'stock',
                  )           
 
 class CustomerVendorSerializer(serializers.ModelSerializer):

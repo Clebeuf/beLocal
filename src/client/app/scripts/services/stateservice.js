@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .service('StateService', function StateService($http, ipCookie) {
+  .service('StateService', function StateService($http, ipCookie, $location) {
     var currentUser = undefined; // Currently authenticated user
     var trendingProducts = []; // Currently trending products
     var vendors = [];
@@ -24,6 +24,7 @@ angular.module('clientApp')
       })
       .error(function(data) {
         console.log('Error retrieving vendor info');
+        $location.path('/');
       });
     };
 

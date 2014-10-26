@@ -123,10 +123,13 @@ class VendorDetailsView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         vendor = Vendor.objects.get(pk=request.DATA["id"])
-        locations = SellerLocation.objects.filter(vendor=vendor)
-        products = Product.objects.filter(vendor=vendor, stock="IS")
+        if(vendor.user.is_active == True):
+            locations = SellerLocation.objects.filter(vendor=vendor)
+            products = Product.objects.filter(vendor=vendor, stock="IS")
 
-        return Response({"vendor":serializers.VendorSerializer(vendor).data, "locations":serializers.SellerLocationSerializer(locations, many=True).data, "products":serializers.ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)  
+            return Response({"vendor":serializers.VendorSerializer(vendor).data, "locations":serializers.SellerLocationSerializer(locations, many=True).data, "products":serializers.ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)  
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class AddVendorView(generics.CreateAPIView):
@@ -152,8 +155,8 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
     modify their information
     """
     
-    #authentication_classes = (TokenAuthentication,)
-    permission_classes = (AllowAny,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
     serializer_class = serializers.VendorSerializer
 
     def get(self, request):
@@ -254,10 +257,10 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
 
 class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
     """
-    This view provides an endpoint for deleting and modifying views         
+    This view provides an endpoint for deleting and modifying seller locations         
     """
-    permission_classes = (AllowAny,)
-    serializer_class = serializers.SellerLocationSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def patch(self, request, location_id):
 
@@ -283,6 +286,9 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
         return location
 
 class DeleteSellerLocationView(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+
     def post(self, request):
         if("id" in request.DATA.keys() and "action" in request.DATA.keys()):
             if(request.DATA["action"] == "restore"):
@@ -305,6 +311,9 @@ class DeleteSellerLocationView(generics.CreateAPIView):
             return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)
 
 class DeleteProductView(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+    
     def post(self, request):
         if("id" in request.DATA.keys() and "action" in request.DATA.keys()):
             if(request.DATA["action"] == "restore"):
@@ -406,7 +415,7 @@ class TrendingProductView(generics.ListAPIView):
     serializer_class = serializers.ProductDisplaySerializer
 
     def get_queryset(self):
-        return Product.objects.filter(stock=Product.IN_STOCK)      
+        return Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__user__is_active=True)     
 
 
 class ListMarketsView(generics.ListAPIView):
@@ -446,7 +455,7 @@ class VendorsView(generics.ListAPIView):
     serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
-        return Vendor.objects.all()
+        return Vendor.objects.filter(user__is_active=True)
 
 class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)

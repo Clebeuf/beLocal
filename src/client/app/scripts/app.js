@@ -11,7 +11,8 @@ var app = angular.module('clientApp', [
   'ui.bootstrap',
   'mgcrea.ngStrap.timepicker',
 ])
-  .config(function ($stateProvider, $httpProvider, $urlRouterProvider) {
+  .config(function ($stateProvider, $httpProvider, $urlRouterProvider, $locationProvider) {
+
     $stateProvider
     .state('main', {
       url: '/',
@@ -31,7 +32,6 @@ var app = angular.module('clientApp', [
       controller: 'DetailsCtrl',
       authenticate: false
     });
-
 
     $httpProvider.defaults.headers.patch = {
         'Content-Type': 'application/json;charset=utf-8'

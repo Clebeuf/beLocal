@@ -19,6 +19,8 @@
                     <span data-toggle="tooltip" data-placement="bottom" title="Edit Profile">
                     <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#profileModal" ng-click="editProfile()"></span>
                     </span>
+                    &nbsp;
+                    <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Update Social Media</button>
             </span>
             <br>
             <span class="new-hr-heading-style">
@@ -203,8 +205,8 @@
                             <div class="col-xs-12">
                                 <div class="form-group" ng-class="{ 'has-error' : vendorProfileUpdated && profileForm.imageField.$invalid }">
                                     <label for="item-image">Change Profile Image</label><br />
-                                    <img src="#" id="itemPreview" />                                    
-                                    <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
+                                    <img src="#" id="profilePreview" />                                    
+                                    <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="profile-image">
                                 </div>
                             </div>
                         </div>
@@ -526,3 +528,27 @@ webpage: "www.summerhillsfarms.com"
     </div>
     <!-- /.modal-dialog -->
 </div>
+
+<div class="modal fade" id="shareModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Update Social Media<br /><small>Please review the following fields and check or uncheck the boxes below to update your various social media accounts.</small></h4>
+            </div>
+            <div class="modal-body">
+                <label><i class="fa fa-facebook-square"></i> Facebook Status Update</label>            
+                <textarea rows="10" required ng-model="facebookString" type="text" name="facebookField" class="form-control" id="facebook-field" placeholder="Facebook Status Update" />
+                <div class="checkbox">
+                  <label>
+                    <input name="fbCheck" ng-model="facebookChecked" type="checkbox"><strong>Post to Facebook</strong>
+                  </label>
+                </div>                                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button ng-disabled="!facebookChecked" type="button" ng-click="publishSocialUpdate()" class="btn beLocal-btn-filled">Post Update</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -79,11 +79,11 @@ angular.module('clientApp')
     };
 
     this.logout = function() {
+      $location.path('/welcome');
       ipCookie.remove('beLocalToken');
       ipCookie.remove('beLocalUser');
       ipCookie.remove('beLocalBypass');
       delete $http.defaults.headers.common.Authorization;
-      $location.path('/welcome');
     }
 
     this.createCustomer = function() {

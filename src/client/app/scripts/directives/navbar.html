@@ -50,6 +50,7 @@
       </div> 
       <div ng-show="AuthService.isAuthenticated()">
         <ul class="nav navbar-nav navbar-right">
+          <li><a class="pointer" ng-click="displayAccountPage()">My Account</a></li>        
           <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
         </ul>
       </div>

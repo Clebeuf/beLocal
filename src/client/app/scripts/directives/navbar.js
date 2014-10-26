@@ -29,7 +29,13 @@ angular.module('clientApp')
         $scope.showFarmerSignUp = function() {
             $location.path('/welcome');
             $location.hash('vendors');
-        }        
+        }  
+
+        $scope.displayAccountPage = function() {
+            if(StateService.getUserType() === "VEN") {
+                $location.path('/vendor');
+            }
+        }      
 
       }],
     };

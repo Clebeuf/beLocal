@@ -150,5 +150,17 @@ class ProductTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.content, "{'like': 'False'}")
         
+    def test_trending_products(self):
+        url = reverse('product-trending-list')
+        response = self.client.get(url)
+        print "Trending products: ", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         
+        # Test likes
+        url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'2'})
+        response = self.client.post(url)
+        url = reverse('product-trending-list')
+        response = self.client.get(url)
+        print "Trending products: ", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)   
         

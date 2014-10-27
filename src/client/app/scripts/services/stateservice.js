@@ -175,4 +175,27 @@ angular.module('clientApp')
         })        
       }
     };
+    
+    this.likeUnlikeProduct = function(productID, isLiked) {
+		if (isLiked) {
+			// unlike the product
+			$http.delete(this.getServerAddress() + 'like/be_local_server-product/' + productID + '/')
+			.success(function(data) {
+				console.log("Unliked a product! data: " + data);
+			})
+			.error(function() {
+				console.log("Error unliking product!");
+			})
+		} else {
+			// like the product
+			$http.post(this.getServerAddress() + 'like/be_local_server-product/' + productID + '/')
+			.success(function(data) {
+				console.log("Liked a product! data: " + data);
+			})
+			.error(function() {
+				console.log("Error liking product!");
+			})
+		}
+    };
+    
   });

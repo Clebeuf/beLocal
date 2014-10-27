@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.core.exceptions import ValidationError
 import be_local_server.models
 from django.contrib.auth.models import User
+from secretballot.models import Vote
 
 class UserSerializer(serializers.ModelSerializer):
   class Meta:
@@ -134,10 +135,22 @@ class ProductSerializer(serializers.ModelSerializer):
                   'stock',
                  )
 
+class VoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vote
+        fields = ('id',
+                  'token',
+                  'vote',
+                  'content_type',
+                  'object_id',
+                  )
+        
 class ProductDisplaySerializer(serializers.ModelSerializer):
     vendor = BusinessVendorSerializer() 
     photo = PhotoPathSerializer()
     vote_total = serializers.IntegerField(source='vote_total') 
+    isLiked = serializers.IntegerField()
+    
     class Meta:
         model = be_local_server.models.Product
         fields = ('id', 
@@ -148,6 +161,7 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
                   'photo',
                   'stock',
                   'vote_total',
+                  'isLiked',
                  )           
 
 class CustomerVendorSerializer(serializers.ModelSerializer):

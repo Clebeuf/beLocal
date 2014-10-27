@@ -178,7 +178,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     
     def get(self, request, product_id):       
         product = Product.objects.get(pk=product_id)
-        print "product.vote_total: ", product.vote_total
+        product.isLiked = Product.objects.from_request(request).get(pk=product.id).user_vote
         
         if product is not None:
             serializer = serializers.ProductDisplaySerializer(product) 
@@ -318,13 +318,16 @@ class VendorProductView(generics.ListAPIView):
     """   
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-    serializer_class = serializers.ProductSerializer
+    serializer_class = serializers.ProductDisplaySerializer
 
     def get_queryset(self):
         vendor = Vendor.objects.get(user=self.request.user)
         products = Product.objects.filter(vendor=vendor)
 
         if products is not None:
+            for product in products:
+                product.isLiked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
+            
             return products
         else:
             return Response(status=status.HTTP_404_NOT_FOUND) 
@@ -362,8 +365,14 @@ class TrendingProductView(generics.ListAPIView):
 
     serializer_class = serializers.ProductDisplaySerializer
 
-    def get_queryset(self):
-        return Product.objects.filter(stock=Product.IN_STOCK)      
+    def get_queryset(self):  
+        products = Product.objects.filter(stock=Product.IN_STOCK)
+        if products is not None:
+            for product in products:
+                product.isLiked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
+                
+        return products
+          
 
 
 class ListMarketsView(generics.ListAPIView):
@@ -451,7 +460,7 @@ def like(request, content_type, id):
                               content_type = content_type,
                               object_id = id,
                               vote = '+1',
-                              #mimetype='application/json'
+                              mimetype='application/json'
         )
         return response 
     
@@ -461,7 +470,7 @@ def like(request, content_type, id):
                               content_type = content_type,
                               object_id = id,
                               vote=None,
-                              #mimetype='application/json'
+                              mimetype='application/json'
         )
         return response
     
@@ -469,9 +478,9 @@ def like(request, content_type, id):
         vote = Product.objects.from_request(request).get(pk=id).user_vote
         if (vote):
             body = "{'like': 'True'}"
-            return HttpResponse(body, status=status.HTTP_200_OK)
+            return HttpResponse(body, status=status.HTTP_200_OK, content_type='application/json')
         else:
             body = "{'like': 'False'}"
-            return HttpResponse(body, status=status.HTTP_404_NOT_FOUND) 
+            return HttpResponse(body, status=status.HTTP_404_NOT_FOUND, content_type='application/json') 
         
     

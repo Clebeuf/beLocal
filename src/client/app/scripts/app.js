@@ -41,7 +41,7 @@ var app = angular.module('clientApp', [
     $urlRouterProvider.otherwise('/');
   })
   .run(function ($rootScope, $state, AuthService, StateService) {
-      OAuth.initialize('tA3E0EDqXdTfZNRn4oUlGCpHJ8E');
+      OAuth.initialize('FFQwiNbZnNhnZMbxNeUWxjQVSjk'); //tA3E0EDqXdTfZNRn4oUlGCpHJ8E
 
       // This will be called every time we start to change state (navigate to a new URL)
       $rootScope.$on('$stateChangeStart', function(event, toState){

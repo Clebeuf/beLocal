@@ -116,6 +116,7 @@ angular.module('clientApp')
             if(si.stock === "IS")
                 $scope.facebookString += si.name + '\n';
         }
+    }
 
     $scope.editProfile = function() {
 
@@ -158,7 +159,8 @@ angular.module('clientApp')
                     }
                 });      
             });
-        }      
+        }
+    }      
 
     $scope.vendorProfileUpdate = function() {
         $scope.vendorProfileUpdated = true;
@@ -560,13 +562,13 @@ angular.module('clientApp')
 
   })
   .directive('htmlComp', function($compile, $parse) {
-  return {
-    restrict: 'E',
-    link: function(scope, element, attr) {
-      scope.$watch(attr.content, function() {
-        element.html($parse(attr.content)(scope));
-        $compile(element.contents())(scope);
-      }, true);
-    }
-  }
+      return {
+        restrict: 'E',
+        link: function(scope, element, attr) {
+          scope.$watch(attr.content, function() {
+            element.html($parse(attr.content)(scope));
+            $compile(element.contents())(scope);
+          }, true);
+        }
+      }
   });

@@ -9,6 +9,17 @@ angular.module('clientApp')
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
 
+
+// CARLY
+    this.updateCurrentUser = function(user) {
+      var url = this.getServerAddress() + 'vendor/';        
+      return $http({method: 'PATCH', url: url, data: user.vendor})
+      .success(function() {
+        console.log("Edited User! yay!");
+      }); 
+    };
+
+//CARLY 
     this.setVendorToDisplay = function(vendorID) {
       vendorToDisplay = vendorID;
     };
@@ -33,6 +44,11 @@ angular.module('clientApp')
 
     this.setProfile = function(u) {
       currentUser = u;
+    };
+
+    this.setProfileVendor = function(u) {
+      currentUser.vendor = u;
+      ipCookie('beLocalUser', currentUser, {expires: 14});
     };
 
     this.getUserType = function() {

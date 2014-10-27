@@ -871,6 +871,10 @@ hr{
   padding-right: 25px;
 }
 
+.full-container{
+  width:100%;
+}
+
 .vendor-product-image img{
   padding: 3px;
   border: 1px solid #d3d3d3;

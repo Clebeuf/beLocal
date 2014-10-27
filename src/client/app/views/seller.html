@@ -15,18 +15,16 @@
             <span class="new-vendor-name-style">
                 {{StateService.getCurrentUser().vendor.company_name}}
             </span>
-            <span class="pull-right">
-                    <span data-toggle="tooltip" data-placement="bottom" title="Edit Profile">
-                    <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#profileModal" ng-click="editProfile()"></span>
-                    </span>
-                    &nbsp;
-                    <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Update Social Media</button>
-            </span>
-            <br>
             <span class="new-hr-heading-style">
                 <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
                 | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
             </span>
+            <span class="pull-right">
+                    <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
+                    &nbsp;
+                    <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Update Social Media</button>
+            </span>
+
             <hr>
             <div class="description-container">
                 {{StateService.getCurrentUser().vendor.description}}
@@ -216,15 +214,15 @@
                         </div> -->
                         <div class="row">
                             <div class="col-xs-12">
-                                <div class="form-group" ng-class="{ 'has-error' : vendorProfileUpdated && profileForm.company-name.$invalid }">
+                                <div class="form-group" ng-class="{ 'has-error' : profileForm.companyName.$invalid }">
                                     <label for="company-name">Company Name</label> 
-                                    <input required ng-model="currentUser.vendor.company_name" type="text" name="company-name" class="form-control" id="company-name" placeholder="Company Name"/>
+                                    <input required ng-model="currentUser.vendor.company_name" type="text" name="companyName" class="form-control" id="company-name" placeholder="Company Name"/>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <div class="form-group" ng-class="{ 'has-error' : vendorProfileUpdated && profileForm.number.$invalid }">
+                                <div class="form-group" ng-class="{ 'has-error' : profileForm.number.$invalid }">
                                     <label for="company-description">Company Phone Number</label>
                                     <input required ng-model="currentUser.vendor.phone" type="text" name="number" class="form-control" id="company-description" placeholder="Phone Number"/>
                                 </div>
@@ -232,10 +230,8 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <div class="form-group" ng-class="{ 'has-error' : vendorProfileUpdated && profileForm.website.$invalid }">
-                                    <label for="company-description">Company Website</label>
-                                    <input required ng-model="currentUser.vendor.webpage" type="text" name="website" class="form-control" id="company-description" placeholder="Website URL"/>
-                                </div>
+                                <label for="company-description">Company Website</label>
+                                <input ng-model="currentUser.vendor.webpage" type="text" name="website" class="form-control" id="company-description" placeholder="Optional Website URL"/>
                             </div>
                         </div>
                         <div class="row">
@@ -246,7 +242,7 @@
                         <div class="well">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <div class="form-group" ng-class="{ 'has-error' : vendorProfileUpdated && profileForm.address.$invalid }">
+                                    <div class="form-group" ng-class="{ 'has-error' : profileForm.address.$invalid }">
                                         <label for="item-name">Street Address</label>
                                         <input required ng-model="currentUser.vendor.address.addr_line1" type="text" name="address" class="form-control" id="item-name" placeholder="Street Address"/>
                                     </div>
@@ -254,36 +250,36 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <div class="form-group" ng-class="{ 'has-error' : vendorProfileUpdated && profileForm.city.$invalid }">
+                                    <div class="form-group" ng-class="{ 'has-error' : profileForm.city.$invalid }">
                                         <label for="item-name">City</label>
                                         <input required ng-model="currentUser.vendor.address.city" type="text" name="city" class="form-control" id="item-name" placeholder="City"/>
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
-                                    <div class="form-group" ng-class="{ 'has-error' : vendorProfileUpdated && profileForm.province.$invalid }">
+                                    <div class="form-group" ng-class="{ 'has-error' : profileForm.province.$invalid }">
                                         <label for="item-name">Province</label>
-                                        <input required ng-model="currentUser.vendor.address.state" type="text" name="province" class="form-control" id="item-name" placeholder="Province or Territory"/>
+                                        <input required ng-model="currentUser.vendor.address.state" type="text" name="province" class="form-control" id="item-name" placeholder="Province or Territory" maxlength="2"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <div class="form-group" ng-class="{ 'has-error' : vendorProfileUpdated && profileForm.country.$invalid }">
+                                    <div class="form-group" ng-class="{ 'has-error' : profileForm.country.$invalid }">
                                         <label for="item-name">Country</label>
                                         <input required ng-model="currentUser.vendor.address.country" type="text" name="country" class="form-control" id="item-name" placeholder="Country"/>
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
-                                    <div class="form-group" ng-class="{ 'has-error' : vendorProfileUpdated && profileForm.zip.$invalid }">
+                                    <div class="form-group" ng-class="{ 'has-error' : profileForm.zip.$invalid }">
                                         <label for="item-name">Postal Code</label>
-                                        <input required ng-model="currentUser.vendor.address.zipcode" type="text" name="zip" class="form-control" id="item-name" placeholder="Postal Code"/>
+                                        <input required ng-model="currentUser.vendor.address.zipcode" type="text" name="zip" class="form-control" id="item-name" placeholder="Postal Code" maxlength="7"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <div class="form-group" ng-class="{ 'has-error' : vendorProfileUpdated && profileForm.descriptionField.$invalid }">
+                                <div class="form-group" ng-class="{ 'has-error' : profileForm.descriptionField.$invalid }">
                                     <label for="company-description">About Your Company<br>
                                     </label>
                                     <textarea required ng-model="currentUser.vendor.description" type="text" name="descriptionField" class="form-control" id="company-description" placeholder="About Your Company" maxlength="850"/>

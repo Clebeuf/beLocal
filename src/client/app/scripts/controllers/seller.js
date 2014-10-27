@@ -27,7 +27,7 @@ angular.module('clientApp')
     var geocoder = new google.maps.Geocoder();
 
     $scope.isTwitterAuth = OAuth.create('twitter');
-    $scope.hashtag = ' #belocal';
+    $scope.hashtag = ' #beLocal';
 
     $scope.weekdays = [
         'Monday',
@@ -153,10 +153,7 @@ angular.module('clientApp')
             angular.element('#shareModal').modal('hide');            
             OAuth.popup('twitter', {cache : true}).done(function(twitter) {
                 twitter.post({
-                    url: '/1.1/statuses/update.json',
-                    data : {
-                        status: $scope.twitterString + $scope.hashtag
-                    }
+                    url: '/1.1/statuses/update.json' + '?status=' + escape($scope.twitterString + $scope.hashtag)
                 });      
             });
         }

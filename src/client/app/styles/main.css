@@ -1,5 +1,9 @@
 /* BELOCAL STYLES */
 
+textarea {
+    resize: vertical;
+}
+
 .hours-picker {
   margin-bottom: 5px;
 }
@@ -867,6 +871,10 @@ hr{
   padding-right: 25px;
 }
 
+.full-container{
+  width:100%;
+}
+
 .vendor-product-image img{
   padding: 3px;
   border: 1px solid #d3d3d3;
@@ -881,6 +889,37 @@ hr{
 .availability-hr {
   margin-top: 10px;
   padding-bottom: 5px;
+}
+
+.location-details {
+  display: inline-block;
+  padding: 0px 15px 0px 15px !important;
+  font-size: 13px;
+  font-family: 'Roboto', sans-serif;
+  color: #403e3b;
+  padding-top: 10px;
+  padding-bottom: 0px;
+
+}
+
+.new-stock-style {
+  font-size: 15px;
+  font-family: 'Roboto', sans-serif;
+  color: #403e3b;
+
+}
+.card-lable-style {
+  margin-top: 5px;
+  margin-bottom:5px;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 20px;
+  line-height: normal;
+  font-weight: bolder;
+  color: #403e3b;
+}
+
+.store-hours{
+  padding-left:10px;
 }
 
 @media (max-width: 992px) {

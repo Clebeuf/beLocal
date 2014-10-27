@@ -6,31 +6,36 @@ angular.module('clientApp')
       restrict: 'E',
       templateUrl: 'scripts/directives/navbar.html',
       controller: ['$scope', function($scope) {
-      	$scope.AuthService = AuthService;
-      	$scope.loginError = false;
+        $scope.AuthService = AuthService;
+        $scope.loginError = false;
 
-      	$scope.showLogin = function() {
-      		OAuth.popup('facebook', {cache : true, authorize: {'scope':'email'}})
-		    .done(function (result) {
-		        AuthService.processLogin(result).then(function(response) {
-		          if(response.status !== 200) {
-		            $scope.loginError = true;
-		            $scope.errorMessage = "We couldn't sign you in with Facebook right now! Please try again.";
-		          } else {
-		            $scope.loginError = false;
-		            if(StateService.getUserType() === 'CUS') {
-		            	console.log("You're a customer!");
-		              // $location.path('/customer');
-		            } else if(StateService.getUserType() === 'VEN') {
-			            $location.path('/seller');
-		            }
-		          }        	
-		        });		        
-		    })
-		    .fail(function (error) {
-		        console.log(error);
-		    });
-      	}
+        $scope.showLogin = function() {
+            AuthService.showLogin();
+        }
+
+        $scope.createVendor = function() {
+            AuthService.createVendor();
+        }
+
+        $scope.createCustomer = function() {
+            AuthService.createCustomer();
+        }       
+
+        $scope.showCustomerSignUp = function() {
+            $location.path('/welcome');
+            $location.hash('customers');
+        }
+
+        $scope.showFarmerSignUp = function() {
+            $location.path('/welcome');
+            $location.hash('vendors');
+        }  
+
+        $scope.displayAccountPage = function() {
+            if(StateService.getUserType() === "VEN") {
+                $location.path('/vendor');
+            }
+        }
       }],
     };
   });

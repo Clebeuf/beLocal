@@ -23,7 +23,7 @@
 
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a class="dropdown-toggle pointer" data-toggle="dropdown">Browse <span class="caret"></span></a>
+          <a class="dropdown-toggle pointer">Browse <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="#">Fruits</a></li>
             <li><a href="#">Vegetables</a></li>            
@@ -39,11 +39,18 @@
           <button type="submit" ng-click="showLogin()" class="btn btn-primary beLocal-btn">Sign In</button>
         </form>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#">Register</a></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle pointer">Register <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a class="pointer" ng-click="showCustomerSignUp()">As a Customer</a></li>
+              <li><a class="pointer" ng-click="showFarmerSignUp()">As a Farmer or Foodmaker</a></li>
+            </ul>
+          </li>
         </ul> 
       </div> 
       <div ng-show="AuthService.isAuthenticated()">
         <ul class="nav navbar-nav navbar-right">
+          <li><a class="pointer" ng-click="displayAccountPage()">My Account</a></li>        
           <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
         </ul>
       </div>

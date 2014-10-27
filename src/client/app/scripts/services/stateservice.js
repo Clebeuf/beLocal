@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .service('StateService', function StateService($http, ipCookie) {
+  .service('StateService', function StateService($http, ipCookie, $location) {
     var currentUser = undefined; // Currently authenticated user
     var trendingProducts = []; // Currently trending products
     var vendors = [];
@@ -9,6 +9,17 @@ angular.module('clientApp')
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
     var likedUnlikedProduct = undefined;
+
+
+
+    this.updateCurrentUser = function(user) {
+      var url = this.getServerAddress() + 'vendor/';        
+      return $http({method: 'PATCH', url: url, data: user.vendor})
+      .success(function() {
+        console.log("Edited User! yay!");
+      }); 
+    };
+
 
     this.setVendorToDisplay = function(vendorID) {
       vendorToDisplay = vendorID;
@@ -25,6 +36,7 @@ angular.module('clientApp')
       })
       .error(function(data) {
         console.log('Error retrieving vendor info');
+        $location.path('/');
       });
     };
 
@@ -34,6 +46,11 @@ angular.module('clientApp')
 
     this.setProfile = function(u) {
       currentUser = u;
+    };
+
+    this.setProfileVendor = function(u) {
+      currentUser.vendor = u;
+      ipCookie('beLocalUser', currentUser, {expires: 14});
     };
 
     this.getUserType = function() {
@@ -124,6 +141,18 @@ angular.module('clientApp')
         console.log('Error uploading image.');
       });
     };
+
+    this.uploadProfileFile = function(file) {
+      var fd = new FormData();
+      fd.append('image', file);
+      return $http.post(this.getServerAddress() + 'vendor/photo/add/', fd, {
+        headers: {'Content-Type' : undefined},
+        transformRequest: angular.identity,
+      })
+      .error(function(data) {
+        console.log('Error uploading image.');
+      })
+    };    
 
     this.createItem = function(item, isEditing) {
       if(isEditing) {

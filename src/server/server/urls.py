@@ -10,7 +10,9 @@ urlpatterns = patterns('',
     # url(r'^$', 'server.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
     url(r'^admin/', include(admin.site.urls), name='admin'),
-    url(r'^login/(?P<backend>.+)/$', views.ObtainAuthToken.as_view(), name='login'),
+    url(r'^login/(?P<backend>.+)/$', views.LoginView.as_view(), name='login'),
+    url(r'^vendor/(?P<backend>.+)/create/$', views.CreateVendorView.as_view(), name='create-vendor'),
+    url(r'^customer/(?P<backend>.+)/create/$', views.CreateCustomerView.as_view(), name='create-customer'),     
     
     url(r'^vendor/add/$', views.AddVendorView.as_view(), name='vendor-add'),    
     url(r'^vendor/?$', views.RWDVendorView.as_view(), name='vendor'), 
@@ -33,6 +35,7 @@ urlpatterns = patterns('',
     url(r'^products/trending/$', views.TrendingProductView.as_view(), name='product-trending-list'),
     url(r'^vendors/$', views.VendorsView.as_view(), name='vendors-list'),    
     url(r'^markets/$', views.ListMarketsView.as_view(), name='market-list'),
+    
     url(r'^markets/(?P<market_id>[0-9-]+)/$', views.MarketView.as_view(), name='market-details'),
     
     url(r'^like/(?P<content_type>[\w-]+)/(?P<id>[0-9-]+)/$', views.like, name='like'),

@@ -10,7 +10,7 @@ angular.module('clientApp')
     var vendorDetails = undefined;
 
 
-// CARLY
+
     this.updateCurrentUser = function(user) {
       var url = this.getServerAddress() + 'vendor/';        
       return $http({method: 'PATCH', url: url, data: user.vendor})
@@ -19,7 +19,7 @@ angular.module('clientApp')
       }); 
     };
 
-//CARLY 
+
     this.setVendorToDisplay = function(vendorID) {
       vendorToDisplay = vendorID;
     };

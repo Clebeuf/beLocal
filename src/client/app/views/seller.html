@@ -147,7 +147,11 @@
                     </div>
                     <div class="col-xs-9 col-sm-7 ">
                         <div class="card-lable-style">{{product.name}}</div>
-                        <div class="location-details">{{product.description}}</div>
+                        <div class="location-details">
+                            <p><b>PRODUCT DETAILS:</b> {{product.description}}</p>
+                            <p><b>CATEGORY:</b> </p>
+                            <p><b>TAGS:</b> </p>
+                        </div>
                     </div>
 
                     <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
@@ -163,9 +167,9 @@
 
             <!-- THIS IS THE NON-REPEATING PART -->
             <div class="row">
-                <div class="col-sm-12 seller-stock-formatting">
+                <div class="col-sm-12 seller-stock-formatting new-stock-style">
                     <hr class="availability-hr">
-                    <b>Current Availability:</b>
+                    Current Availability:
                     <span class="pull-right">
                         <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="IS"> In Stock
                         <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="OOS"> Out of Stock

@@ -32,7 +32,7 @@ angular.module('clientApp')
         'Sunday'
     ];
 
-// CARLY!!!!!!!!!
+
     $scope.editProfile = function() {
 
         // var e = angular.element('#item-image');
@@ -56,7 +56,7 @@ angular.module('clientApp')
         }
     }
 
-// CARLY!!!!!!!!!
+
 
     $scope.buildHoursObject = function() {
         var openHours = [];

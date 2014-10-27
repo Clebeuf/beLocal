@@ -16,7 +16,7 @@ from be_local_server import serializers
 from be_local_server.models import *
 
 
-class ObtainAuthToken(APIView):
+class LoginView(APIView):
     throttle_classes = ()
     permission_classes = ()
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
@@ -26,24 +26,81 @@ class ObtainAuthToken(APIView):
  
     def post(self, request, backend):
         serializer = self.serializer_class(data=request.DATA)
-        if backend == 'auth':
-            if serializer.is_valid():
-                token, created = Token.objects.get_or_create(user=serializer.object['user'])
-                return Response({'token': token.key})
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
- 
+        user = register_by_access_token(request, backend)
+
+        if user:
+            token = Token.objects.get(user=user)
+            response = {}
+            if user.is_staff:
+                vendor = Vendor.objects.get(user=user)
+                response = {'id': user.id, 'is_active' : user.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+            else:
+                response = {'id': user.id, 'is_active' : user.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
+            return Response(response)
         else:
-            user = register_by_access_token(request, backend)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)             
+
+class CreateVendorView(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AuthTokenSerializer
+    model = Token
  
-            if user and user.is_active:
-                token, created = Token.objects.get_or_create(user=user)
-                response = {}
-                if user.is_staff:
-                    vendor = Vendor.objects.get(user=user)
-                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
-                else:
-                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
-                return Response(response)
+    def post(self, request, backend):
+        serializer = self.serializer_class(data=request.DATA)
+        user = register_by_access_token(request, backend)
+
+        if user:
+            token, created_token = Token.objects.get_or_create(user=user)
+            vendor, created_vendor = Vendor.objects.get_or_create(user=user)
+
+            if(not created_token):
+                return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)
+            
+            # If the user is a newly created vendor, make them inactive.
+            if(created_vendor):
+                user.is_staff = 1 # make the user a vendor
+                vendor.is_active = False # make the user inactive
+                vendor.save()
+                user.save()
+
+                vendor.company_name = user.username # set this for Carly's UI
+                vendor.save()
+
+            response = {}
+            response = {'id': user.id, 'is_active' : vendor.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN','vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+            
+            return Response(response)    
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CreateCustomerView(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AuthTokenSerializer
+    model = Token
+ 
+    def post(self, request, backend):
+        serializer = self.serializer_class(data=request.DATA)
+        user = register_by_access_token(request, backend)
+
+        if user:
+            token, created_token = Token.objects.get_or_create(user=user)
+            vendor, created_vendor = Vendor.objects.get_or_create(user=user)
+
+            if(not created_token):
+                return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)            
+
+            response = {}
+            response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
+            
+            return Response(response)    
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                               
 
 @psa()
 def register_by_access_token(request, backend):
@@ -70,10 +127,13 @@ class VendorDetailsView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         vendor = Vendor.objects.get(pk=request.DATA["id"])
-        locations = SellerLocation.objects.filter(vendor=vendor)
-        products = Product.objects.filter(vendor=vendor, stock="IS")
+        if(vendor.is_active == True):
+            locations = SellerLocation.objects.filter(vendor=vendor)
+            products = Product.objects.filter(vendor=vendor, stock="IS")
 
-        return Response({"vendor":serializers.VendorSerializer(vendor).data, "locations":serializers.SellerLocationSerializer(locations, many=True).data, "products":serializers.ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)  
+            return Response({"vendor":serializers.VendorSerializer(vendor).data, "locations":serializers.SellerLocationSerializer(locations, many=True).data, "products":serializers.ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)  
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class AddVendorView(generics.CreateAPIView):
@@ -100,7 +160,7 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
     """
     
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,) 
     serializer_class = serializers.VendorSerializer
 
     def get(self, request):
@@ -218,9 +278,10 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
 
 class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
     """
-    This view provides an endpoint for deleting and modifying views         
+    This view provides an endpoint for deleting and modifying seller locations         
     """
-    permission_classes = (AllowAny,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.SellerLocationSerializer
 
     def patch(self, request, location_id):
@@ -247,6 +308,9 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
         return location
 
 class DeleteSellerLocationView(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+
     def post(self, request):
         if("id" in request.DATA.keys() and "action" in request.DATA.keys()):
             if(request.DATA["action"] == "restore"):
@@ -269,6 +333,9 @@ class DeleteSellerLocationView(generics.CreateAPIView):
             return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)
 
 class DeleteProductView(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+    
     def post(self, request):
         if("id" in request.DATA.keys() and "action" in request.DATA.keys()):
             if(request.DATA["action"] == "restore"):
@@ -370,7 +437,7 @@ class TrendingProductView(generics.ListAPIView):
     serializer_class = serializers.ProductDisplaySerializer
 
     def get_queryset(self):
-        return Product.objects.filter(stock=Product.IN_STOCK)      
+        return Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True)     
 
 
 class ListMarketsView(generics.ListAPIView):
@@ -410,7 +477,7 @@ class VendorsView(generics.ListAPIView):
     serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
-        return Vendor.objects.all()
+        return Vendor.objects.filter(is_active=True)
 
 class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)

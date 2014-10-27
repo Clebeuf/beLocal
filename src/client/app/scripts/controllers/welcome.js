@@ -18,7 +18,9 @@ angular.module('clientApp')
   		AuthService.createCustomer().then(function(status) {
   			if(status === 304) {
 				angular.element('#accountExistsModal').modal('show'); 				
-  			}
+  			} else {
+          AuthService.showLogin();
+        }
   		});
   	}
 
@@ -26,7 +28,9 @@ angular.module('clientApp')
   		AuthService.createVendor().then(function(status) {
   			if(status === 304) {
 				angular.element('#accountExistsModal').modal('show'); 				
-  			}
+  			} else {
+          AuthService.showLogin();
+        }
   		});
   	}
 

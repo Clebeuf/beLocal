@@ -52,6 +52,7 @@ class Vendor(models.Model):
     photo = models.ForeignKey(VendorPhoto, blank=True, null=True)
     address = models.ForeignKey(Address, null=True, blank=True)
     description = models.CharField(max_length=900)
+    is_active = models.BooleanField(default=False)
 
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)

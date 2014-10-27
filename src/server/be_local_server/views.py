@@ -62,14 +62,15 @@ class CreateVendorView(APIView):
             # If the user is a newly created vendor, make them inactive.
             if(created_vendor):
                 user.is_staff = 1 # make the user a vendor
-                user.is_active = 0 # make the user inactive
+                vendor.is_active = False # make the user inactive
+                vendor.save()
                 user.save()
 
                 vendor.company_name = user.username # set this for Carly's UI
                 vendor.save()
 
             response = {}
-            response = {'id': user.id, 'is_active' : user.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN','vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+            response = {'id': user.id, 'is_active' : vendor.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN','vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
             
             return Response(response)    
         else:
@@ -95,7 +96,7 @@ class CreateCustomerView(APIView):
                 return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)            
 
             response = {}
-            response = {'id': user.id, 'is_active' : user.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
+            response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
             
             return Response(response)    
         else:
@@ -126,7 +127,7 @@ class VendorDetailsView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         vendor = Vendor.objects.get(pk=request.DATA["id"])
-        if(vendor.user.is_active == True):
+        if(vendor.is_active == True):
             locations = SellerLocation.objects.filter(vendor=vendor)
             products = Product.objects.filter(vendor=vendor, stock="IS")
 
@@ -436,7 +437,7 @@ class TrendingProductView(generics.ListAPIView):
     serializer_class = serializers.ProductDisplaySerializer
 
     def get_queryset(self):
-        return Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__user__is_active=True)     
+        return Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True)     
 
 
 class ListMarketsView(generics.ListAPIView):
@@ -476,7 +477,7 @@ class VendorsView(generics.ListAPIView):
     serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
-        return Vendor.objects.filter(user__is_active=True)
+        return Vendor.objects.filter(is_active=True)
 
 class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)

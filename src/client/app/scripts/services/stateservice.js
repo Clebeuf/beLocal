@@ -140,6 +140,18 @@ angular.module('clientApp')
       })
     };
 
+    this.uploadProfileFile = function(file) {
+      var fd = new FormData();
+      fd.append('image', file);
+      return $http.post(this.getServerAddress() + 'vendor/photo/add/', fd, {
+        headers: {'Content-Type' : undefined},
+        transformRequest: angular.identity,
+      })
+      .error(function(data) {
+        console.log('Error uploading image.');
+      })
+    };    
+
     this.createItem = function(item, isEditing) {
       if(isEditing) {
         var url = this.getServerAddress() + 'vendor/products/' + item.id + '/';        

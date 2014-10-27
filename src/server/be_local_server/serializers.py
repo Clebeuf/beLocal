@@ -76,7 +76,6 @@ class VendorSerializer(serializers.ModelSerializer):
 
 class EditVendorSerializer(serializers.ModelSerializer):
     address = AddressSerializer()
-    photo = VendorPhotoPathSerializer()
     class Meta:
         model = be_local_server.models.Vendor
         fields = (  

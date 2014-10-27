@@ -120,14 +120,14 @@ angular.module('clientApp')
 
     $scope.editProfile = function() {
 
-        // var e = angular.element('#item-image');
-        // e.wrap('<form>').closest('form').get(0).reset();
-        // e.unwrap();
+        var e = angular.element('#profile-image');
+        e.wrap('<form>').closest('form').get(0).reset();
+        e.unwrap();
 
-        // $scope.displayItemThumbnail = item.photo ? true : false;
+        $scope.displayProfileThumbnail = $scope.currentUser.vendor.photo ? true : false;
 
-        // if($scope.displayItemThumbnail)
-        //     angular.element('#itemPreview').attr('src', item.photo.image_url).width(50).height(50);
+        if($scope.displayProfileThumbnail)
+            angular.element('#profilePreview').attr('src', $scope.currentUser.vendor.photo.image_url).width(50).height(50);
     }
 
     $scope.generateSocialStrings = function() {
@@ -166,6 +166,7 @@ angular.module('clientApp')
         $scope.vendorProfileUpdated = true;
         if($scope.profileForm.$valid) {
             angular.element('#profileModal').modal('hide');
+            console.log($scope.currentUser);
             StateService.updateCurrentUser($scope.currentUser).then(function(result) {
                 StateService.setProfileVendor(result.data);
             });
@@ -385,6 +386,26 @@ angular.module('clientApp')
             $scope.newImageID = response.id;
         });
     }
+
+    $scope.profileFileNameChanged = function(file) {
+
+        if (file && file[0]) {
+            var reader = new FileReader();
+            $scope.displayItemThumbnail = true;
+            reader.onload = function(e) {
+                angular.element('#profilePreview')
+                .attr('src', e.target.result)
+                .width(50)
+                .height(50);             
+            };
+            reader.readAsDataURL(file[0]);
+        }
+
+        StateService.uploadProfileFile(file[0])
+        .success(function(response) {
+            $scope.currentUser.vendor.photo = response.id;
+        });
+    }    
 
     $scope.roundTimeToNearestFive = function(date) {
       var coeff = 1000 * 60 * 5;

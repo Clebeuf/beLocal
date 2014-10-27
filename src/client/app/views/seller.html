@@ -203,15 +203,15 @@
             <div class="modal-body">  
                 <div class="container-fluid">                   
                     <form role="form" name="profileForm" novalidate>
-                       <!--  <div class="row">
+                        <div class="row">
                             <div class="col-xs-12">
-                                <div class="form-group" ng-class="{ 'has-error' : vendorProfileUpdated && profileForm.imageField.$invalid }">
-                                    <label for="item-image">Change Profile Image</label><br />
-                                    <img src="#" id="profilePreview" />                                    
-                                    <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="profile-image">
+                                <div class="form-group" ng-class="{ 'has-error' : profileForm.imageField.$invalid }">
+                                    <label for="profile-image">Change Profile Image</label><br />
+                                    <img src="#" id="profilePreview" />
+                                    <input onchange="angular.element(this).scope().profileFileNameChanged(this.files)" name="imageField" type="file" id="profile-image">
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="form-group" ng-class="{ 'has-error' : profileForm.companyName.$invalid }">
@@ -299,29 +299,6 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-
-
-
-<!-- 
-email: "clebeuf@uvic.ca"
-first_name: "Carlene"
-id: 1
-last_name: "Renee"
-name: "CarleneRenee"
-token: "b67f3b4b76635d2bd04086f17cd361ad9f737938"
-userType: "VEN"
-vendor: {id:1, user:1, company_name:Summer Hills Farms, webpage:www.summerhillsfarms.com, country_code:250,…}
-address: {id:1, addr_line1:456 Country Road, city:Victoria, zipcode:V8M3E3, state:BC, country:Canada,…}
-company_name: "Summer Hills Farms"
-country_code: "250"
-description: "This is a very short description about a really awesome vendor."
-extension: "3463"
-id: 1
-phone: "5733046"
-photo: {image_url:http://127.0.0.1:8000/static/media/vendors/CarleneRenee_social_D5xFiMd.jpg}
-user: 1
-webpage: "www.summerhillsfarms.com" 
--->
 
 
 <!-- Seller Add/Edit Item Modal -->

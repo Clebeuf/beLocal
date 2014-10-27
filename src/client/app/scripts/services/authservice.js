@@ -121,7 +121,7 @@ angular.module('clientApp')
             var promise = self.createVendorRequest(result);
             promise.error(function(result, status) {
               d.resolve(status)
-            })
+            });
             promise.then(function(response, status) {
               if(status !== 200) {
                 d.resolve(response);
@@ -140,9 +140,15 @@ angular.module('clientApp')
     }    
 
     this.showLogin = function() {
+        var d = $q.defer();
+
         OAuth.popup('facebook', {cache : true, authorize: {'scope':'email'}})
         .done(function (result) {
-            self.processLogin(result).then(function(response) {
+            var promise = self.processLogin(result);
+            promise.error(function(result, status) {
+              d.resolve(status)
+            });            
+            promise.then(function(response) {
               if(response.status !== 200) {
               } else {
                 if(StateService.getUserType() === 'CUS') {
@@ -158,5 +164,7 @@ angular.module('clientApp')
         .fail(function (error) {
             console.log(error);
         });
+
+        return d.promise;        
     }    
   });

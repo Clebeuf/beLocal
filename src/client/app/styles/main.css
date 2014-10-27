@@ -912,3 +912,19 @@ hr{
   }
 
 }
+
+.like-button {
+	margin-top: 5px;
+}
+
+.like-count {
+	background: #2ea2cc;
+	color: #fff;
+	border-radius: 10px;
+	text-align: center;
+	line-height: 1;
+	padding-top: 1px;
+	padding-right: 3px;
+	padding-bottom: 1px;
+	padding-left: 3px;
+}

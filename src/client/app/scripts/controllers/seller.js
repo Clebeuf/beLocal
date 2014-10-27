@@ -21,6 +21,8 @@ angular.module('clientApp')
     $scope.facebookChecked = true;
     $scope.twitterChecked = true;
     $scope.sellingToday = false;
+    $scope.currentUser = {};
+    angular.copy(StateService.getCurrentUser(), $scope.currentUser);
 
     var geocoder = new google.maps.Geocoder();
 
@@ -115,8 +117,16 @@ angular.module('clientApp')
                 $scope.facebookString += si.name + '\n';
         }
 
-        $scope.facebookString += '\n---\nFull details at ' + $scope.generateVendorURL($scope.currentUser.id);
+    $scope.editProfile = function() {
 
+        // var e = angular.element('#item-image');
+        // e.wrap('<form>').closest('form').get(0).reset();
+        // e.unwrap();
+
+        // $scope.displayItemThumbnail = item.photo ? true : false;
+
+        // if($scope.displayItemThumbnail)
+        //     angular.element('#itemPreview').attr('src', item.photo.image_url).width(50).height(50);
     }
 
     $scope.generateSocialStrings = function() {
@@ -149,31 +159,16 @@ angular.module('clientApp')
                 });      
             });
         }      
+
+    $scope.vendorProfileUpdate = function() {
+        $scope.vendorProfileUpdated = true;
+        if($scope.profileForm.$valid) {
+            angular.element('#profileModal').modal('hide');
+            StateService.updateCurrentUser($scope.currentUser).then(function(result) {
+                StateService.setProfileVendor(result.data);
+            });
+        }
     }
-
-// CARLY!!!!!!!!!
-    $scope.editProfile = function() {
-
-        var e = angular.element('#item-image');
-        e.wrap('<form>').closest('form').get(0).reset();
-        e.unwrap();
-
-        $scope.isEditingItem = true;
-        $scope.newItemSubmitted = false;
-        $scope.submitItemButtonText = "Save Changes";
-        $scope.displayItemThumbnail = item.photo ? true : false;
-
-        if($scope.displayItemThumbnail)
-            angular.element('#itemPreview').attr('src', item.photo.image_url).width(50).height(50);
-
-        $scope.
-        $scope.itemName = item.name;
-        $scope.itemDescription = item.description;
-        $scope.itemID = item.id;
-        $scope.newImageID = item.photo ? item.photo.id : undefined;
-
-    }
-// CARLY!!!!!!!!!
 
     $scope.buildHoursObject = function() {
         var openHours = [];

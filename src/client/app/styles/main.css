@@ -898,6 +898,12 @@ hr{
 
 }
 
+.new-stock-style {
+  font-size: 15px;
+  font-family: 'Roboto', sans-serif;
+  color: #403e3b;
+
+}
 .card-lable-style {
   margin-top: 5px;
   margin-bottom:5px;

@@ -19,8 +19,13 @@ angular.module('clientApp')
     $scope.locationType = 'true';
     $scope.currentUser = StateService.getCurrentUser();
     $scope.facebookChecked = true;
+    $scope.twitterChecked = true;
+    $scope.sellingToday = false;
 
-    var geocoder = new google.maps.Geocoder();    
+    var geocoder = new google.maps.Geocoder();
+
+    $scope.isTwitterAuth = OAuth.create('twitter');
+    $scope.hashtag = ' #belocal';
 
     $scope.weekdays = [
         'Monday',
@@ -32,6 +37,26 @@ angular.module('clientApp')
         'Sunday'
     ];
 
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };
+
+    $scope.doTwitterSignIn = function() {
+        OAuth.popup('twitter', {cache : true})
+        .done(function (twitter) {  
+            $scope.safeApply(function() {
+                $scope.isTwitterAuth = true;
+            });
+        });
+    }
+
     $scope.compareDates = function(date1, date2) {
         if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
             return true;
@@ -42,6 +67,15 @@ angular.module('clientApp')
     $scope.generateVendorURL = function(id) {
         var serverAddress = 'http://127.0.0.1:9000';
         return  serverAddress + '/vendor/details/1'; 
+    }
+
+    $scope.generateTwitterString = function() {
+        var company_name = $scope.currentUser.vendor.company_name !== undefined ? $scope.currentUser.vendor.company_name : $scope.currentUser.name;        
+        if($scope.sellingToday) {
+            $scope.twitterString = company_name + " is open today. For a full list of selling locations and hours, visit " + $scope.generateVendorURL();
+        } else {
+            $scope.twitterString = "We're closed today, but make sure to check out our latest products and selling locations at " + $scope.generateVendorURL();
+        }
     }
 
     $scope.generateFacebookString = function() {
@@ -58,6 +92,7 @@ angular.module('clientApp')
 
                 // If so, add it to the Facebook string.
                 if($scope.compareDates(new Date(), slDate)) {
+                    $scope.sellingToday = true;
                     $scope.facebookString += sl.name + ' at ' + sl.address.addr_line1 + ', ' + sl.address.city + '\nFrom ' + sl.address.hours[0].from_hour + ' - ' + sl.address.hours[0].to_hour + '\n';
                 }
             } else {
@@ -65,6 +100,7 @@ angular.module('clientApp')
                 for(var j = 0; j < sl.address.hours.length; j++) {
                     var today = new Date().getDay();
                     if(sl.address.hours[j].weekday == today) {
+                        $scope.sellingToday = true;
                         $scope.facebookString += sl.name + ' at ' + sl.address.addr_line1 + ', ' + sl.address.city + '\nFrom ' + sl.address.hours[j].from_hour + ' - ' + sl.address.hours[j].to_hour + '\n';                        
                     }
                 }
@@ -75,7 +111,8 @@ angular.module('clientApp')
         $scope.facebookString += '\nSome of the items we will be selling today include the following:\n\n';
         for(var i = 0; i < $scope.sellerItems.length; i++) {
             var si = $scope.sellerItems[i];
-            $scope.facebookString += si.name + '\n';
+            if(si.stock === "IS")
+                $scope.facebookString += si.name + '\n';
         }
 
         $scope.facebookString += '\n---\nFull details at ' + $scope.generateVendorURL($scope.currentUser.id);
@@ -84,11 +121,12 @@ angular.module('clientApp')
 
     $scope.generateSocialStrings = function() {
         $scope.generateFacebookString();
+        $scope.generateTwitterString();
     }
 
     $scope.publishSocialUpdate = function() {
         if($scope.facebookChecked) {
-            angular.element('#shareModal').modal('hide');        
+      
             OAuth.popup('facebook', {cache : true, authorize: {'scope':'email, publish_actions'}})
             .done(function (facebook) {
                 facebook.post({
@@ -98,7 +136,19 @@ angular.module('clientApp')
                     }
                 });
             });
-        }       
+        } 
+
+        if($scope.twitterChecked) {
+            angular.element('#shareModal').modal('hide');            
+            OAuth.popup('twitter', {cache : true}).done(function(twitter) {
+                twitter.post({
+                    url: '/1.1/statuses/update.json',
+                    data : {
+                        status: $scope.twitterString + $scope.hashtag
+                    }
+                });      
+            });
+        }      
     }
 
 // CARLY!!!!!!!!!

@@ -4,9 +4,9 @@ class SecretBallotAuthenticatedUserMiddleware(SecretBallotMiddleware):
 
     def generate_token(self, request):
         auth = request.META.get('HTTP_AUTHORIZATION', b'')
-        if isinstance(auth, type('')):
+        """if isinstance(auth, type('')):
             # Work around django test client oddness
-            auth = auth.encode(HTTP_HEADER_ENCODING)
+            auth = auth.encode(HTTP_HEADER_ENCODING)"""
             
         token = auth.split()      
           

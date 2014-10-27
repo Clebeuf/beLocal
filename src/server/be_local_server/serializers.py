@@ -137,6 +137,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class ProductDisplaySerializer(serializers.ModelSerializer):
     vendor = BusinessVendorSerializer() 
     photo = PhotoPathSerializer()
+    vote_total = serializers.IntegerField(source='vote_total') 
     class Meta:
         model = be_local_server.models.Product
         fields = ('id', 
@@ -146,6 +147,7 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
                   'vendor',
                   'photo',
                   'stock',
+                  'vote_total',
                  )           
 
 class CustomerVendorSerializer(serializers.ModelSerializer):

@@ -12,6 +12,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseServerError, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.views.decorators.csrf import csrf_exempt
 from social.apps.django_app.utils import psa
 from secretballot import views
 from secretballot.models import Vote
@@ -177,9 +178,10 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     
     def get(self, request, product_id):       
         product = Product.objects.get(pk=product_id)
+        print "product.vote_total: ", product.vote_total
         
         if product is not None:
-            serializer = serializers.ProductSerializer(product) 
+            serializer = serializers.ProductDisplaySerializer(product) 
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response("Product not found", status=status.HTTP_404_NOT_FOUND)  
@@ -434,13 +436,11 @@ class AddSellerLocationView(generics.CreateAPIView):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)  
 
+@csrf_exempt
 def like(request, content_type, id):
     """ 
     Handles likes on a model object.
     """
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
     app, modelname = content_type.split('-')
     content_type = ContentType.objects.get(app_label=app, 
                                            model__iexact=modelname)

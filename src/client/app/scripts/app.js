@@ -11,7 +11,8 @@ var app = angular.module('clientApp', [
   'ui.bootstrap',
   'mgcrea.ngStrap.timepicker',
 ])
-  .config(function ($stateProvider, $httpProvider, $urlRouterProvider) {
+  .config(function ($stateProvider, $httpProvider, $urlRouterProvider, $locationProvider) {
+
     $stateProvider
     .state('welcome', {
       url: '/welcome',
@@ -42,7 +43,6 @@ var app = angular.module('clientApp', [
       css: 'styles/main.css'
     });
 
-
     $httpProvider.defaults.headers.patch = {
         'Content-Type': 'application/json;charset=utf-8'
     };    
@@ -50,8 +50,8 @@ var app = angular.module('clientApp', [
     // Define the default action to be taken if an unrecognized route is taken.
     $urlRouterProvider.otherwise('/');
   })
-  .run(function ($rootScope, $state, AuthService, StateService, ipCookie, $location) {
-      OAuth.initialize('tA3E0EDqXdTfZNRn4oUlGCpHJ8E');
+  .run(function ($rootScope, $state, AuthService, StateService) {
+      OAuth.initialize('FFQwiNbZnNhnZMbxNeUWxjQVSjk');
 
       // This will be called every time we start to change state (navigate to a new URL)
       $rootScope.$on('$stateChangeStart', function(event, toState){

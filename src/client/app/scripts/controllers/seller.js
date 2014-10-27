@@ -17,8 +17,17 @@ angular.module('clientApp')
     $scope.warningHTML = '';
     $scope.locationResults = {};
     $scope.locationType = 'true';
+    $scope.currentUser = StateService.getCurrentUser();
+    $scope.facebookChecked = true;
+    $scope.twitterChecked = true;
+    $scope.sellingToday = false;
+    $scope.currentUser = {};
+    angular.copy(StateService.getCurrentUser(), $scope.currentUser);
 
-    var geocoder = new google.maps.Geocoder();    
+    var geocoder = new google.maps.Geocoder();
+
+    $scope.isTwitterAuth = OAuth.create('twitter');
+    $scope.hashtag = ' #beLocal';
 
     $scope.weekdays = [
         'Monday',
@@ -29,6 +38,137 @@ angular.module('clientApp')
         'Saturday',
         'Sunday'
     ];
+
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };
+
+    $scope.doTwitterSignIn = function() {
+        OAuth.popup('twitter', {cache : true})
+        .done(function (twitter) {  
+            $scope.safeApply(function() {
+                $scope.isTwitterAuth = true;
+            });
+        });
+    }
+
+    $scope.compareDates = function(date1, date2) {
+        if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
+            return true;
+        else
+            return false;
+    }
+
+    $scope.generateVendorURL = function(id) {
+        var serverAddress = 'http://127.0.0.1:9000';
+        return  serverAddress + '/vendor/details/1'; 
+    }
+
+    $scope.generateTwitterString = function() {
+        var company_name = $scope.currentUser.vendor.company_name !== undefined ? $scope.currentUser.vendor.company_name : $scope.currentUser.name;        
+        if($scope.sellingToday) {
+            $scope.twitterString = company_name + " is open today. For a full list of selling locations and hours, visit " + $scope.generateVendorURL();
+        } else {
+            $scope.twitterString = "We're closed today, but make sure to check out our latest products and selling locations at " + $scope.generateVendorURL();
+        }
+    }
+
+    $scope.generateFacebookString = function() {
+        var company_name = $scope.currentUser.vendor.company_name !== undefined ? $scope.currentUser.vendor.company_name : $scope.currentUser.name;
+        $scope.facebookString = company_name + ' is selling at the following locations today:\n\n';
+
+        // GENERATE LOCATIONS
+        for(var i = 0; i < $scope.sellerLocations.length; i++) {
+            var sl = $scope.sellerLocations[i];
+            // If we're a one time location, let's see if the date is today's date.
+            if(sl.date !== null) {
+                var slDate = new Date(sl.date);
+                slDate.setTime(slDate.getTime() + slDate.getTimezoneOffset() * 60000);
+
+                // If so, add it to the Facebook string.
+                if($scope.compareDates(new Date(), slDate)) {
+                    $scope.sellingToday = true;
+                    $scope.facebookString += sl.name + ' at ' + sl.address.addr_line1 + ', ' + sl.address.city + '\nFrom ' + sl.address.hours[0].from_hour + ' - ' + sl.address.hours[0].to_hour + '\n';
+                }
+            } else {
+                // We are a recurring location. Let's see if we're open today
+                for(var j = 0; j < sl.address.hours.length; j++) {
+                    var today = new Date().getDay();
+                    if(sl.address.hours[j].weekday == today) {
+                        $scope.sellingToday = true;
+                        $scope.facebookString += sl.name + ' at ' + sl.address.addr_line1 + ', ' + sl.address.city + '\nFrom ' + sl.address.hours[j].from_hour + ' - ' + sl.address.hours[j].to_hour + '\n';                        
+                    }
+                }
+            }
+        }
+
+        // GENERATE ITEMS  
+        $scope.facebookString += '\nSome of the items we will be selling today include the following:\n\n';
+        for(var i = 0; i < $scope.sellerItems.length; i++) {
+            var si = $scope.sellerItems[i];
+            if(si.stock === "IS")
+                $scope.facebookString += si.name + '\n';
+        }
+    }
+
+    $scope.editProfile = function() {
+
+        var e = angular.element('#profile-image');
+        e.wrap('<form>').closest('form').get(0).reset();
+        e.unwrap();
+
+        $scope.displayProfileThumbnail = $scope.currentUser.vendor.photo ? true : false;
+
+        if($scope.displayProfileThumbnail)
+            angular.element('#profilePreview').attr('src', $scope.currentUser.vendor.photo.image_url).width(50).height(50);
+    }
+
+    $scope.generateSocialStrings = function() {
+        $scope.generateFacebookString();
+        $scope.generateTwitterString();
+    }
+
+    $scope.publishSocialUpdate = function() {
+        if($scope.facebookChecked) {
+      
+            OAuth.popup('facebook', {cache : true, authorize: {'scope':'email, publish_actions'}})
+            .done(function (facebook) {
+                facebook.post({
+                    url: '/me/feed',
+                    data : {
+                        message: $scope.facebookString
+                    }
+                });
+            });
+        } 
+
+        if($scope.twitterChecked) {
+            angular.element('#shareModal').modal('hide');            
+            OAuth.popup('twitter', {cache : true}).done(function(twitter) {
+                twitter.post({
+                    url: '/1.1/statuses/update.json' + '?status=' + escape($scope.twitterString + $scope.hashtag)
+                });      
+            });
+        }
+    }      
+
+    $scope.vendorProfileUpdate = function() {
+        $scope.vendorProfileUpdated = true;
+        if($scope.profileForm.$valid) {
+            angular.element('#profileModal').modal('hide');
+            console.log($scope.currentUser);
+            StateService.updateCurrentUser($scope.currentUser).then(function(result) {
+                StateService.setProfileVendor(result.data);
+            });
+        }
+    }
 
     $scope.buildHoursObject = function() {
         var openHours = [];
@@ -244,6 +384,26 @@ angular.module('clientApp')
         });
     }
 
+    $scope.profileFileNameChanged = function(file) {
+
+        if (file && file[0]) {
+            var reader = new FileReader();
+            $scope.displayItemThumbnail = true;
+            reader.onload = function(e) {
+                angular.element('#profilePreview')
+                .attr('src', e.target.result)
+                .width(50)
+                .height(50);             
+            };
+            reader.readAsDataURL(file[0]);
+        }
+
+        StateService.uploadProfileFile(file[0])
+        .success(function(response) {
+            $scope.currentUser.vendor.photo = response.id;
+        });
+    }    
+
     $scope.roundTimeToNearestFive = function(date) {
       var coeff = 1000 * 60 * 5;
       return new Date(Math.round(date.getTime() / coeff) * coeff);
@@ -420,13 +580,13 @@ angular.module('clientApp')
 
   })
   .directive('htmlComp', function($compile, $parse) {
-  return {
-    restrict: 'E',
-    link: function(scope, element, attr) {
-      scope.$watch(attr.content, function() {
-        element.html($parse(attr.content)(scope));
-        $compile(element.contents())(scope);
-      }, true);
-    }
-  }
+      return {
+        restrict: 'E',
+        link: function(scope, element, attr) {
+          scope.$watch(attr.content, function() {
+            element.html($parse(attr.content)(scope));
+            $compile(element.contents())(scope);
+          }, true);
+        }
+      }
   });

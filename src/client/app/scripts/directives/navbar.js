@@ -35,8 +35,7 @@ angular.module('clientApp')
             if(StateService.getUserType() === "VEN") {
                 $location.path('/vendor');
             }
-        }      
-
+        }
       }],
     };
   });

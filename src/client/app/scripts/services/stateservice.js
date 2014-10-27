@@ -8,6 +8,7 @@ angular.module('clientApp')
     var marketlist = [];
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
+    var likedUnlikedProduct = undefined;
 
     this.setVendorToDisplay = function(vendorID) {
       vendorToDisplay = vendorID;
@@ -77,35 +78,35 @@ angular.module('clientApp')
       return $http.get(this.getServerAddress() + 'vendor/location/list/')
       .error(function(data) {
         console.log('Error retrieving seller locations');
-      }) 
+      }); 
     };
 
     this.trashOrRestoreLocation = function(id, action) {
       return $http.post(this.getServerAddress() + 'vendor/location/delete/', {'id' : id, 'action' : action})
       .error(function(data) {
         console.log('Error deleting location');
-      })
+      });
     };
 
     this.trashOrRestoreProduct = function(id, action) {
       return $http.post(this.getServerAddress() + 'vendor/products/delete/', {'id' : id, 'action' : action})
       .error(function(data) {
         console.log('Error deleting product');
-      })
+      });
     };    
 
-    this.updateStockValue = function(product_id, value) {
-      return $http.post(this.getServerAddress() + 'vendor/products/stock/', {'product_id' : product_id, 'value' : value})
+    this.updateStockValue = function(productId, value) {
+      return $http.post(this.getServerAddress() + 'vendor/products/stock/', {'product_id' : productId, 'value' : value})
       .error(function(data) {
         console.log('Error updating product stock');
-      })
+      });
     };
 
     this.getSellerItems = function() {
       return $http.get(this.getServerAddress() + 'vendor/products/list/')
       .error(function(data) {
         console.log('Error retrieving seller products');
-      }) 
+      });
     };
 
     this.getServerAddress = function() {
@@ -121,7 +122,7 @@ angular.module('clientApp')
       })
       .error(function(data) {
         console.log('Error uploading image.');
-      })
+      });
     };
 
     this.createItem = function(item, isEditing) {
@@ -176,26 +177,35 @@ angular.module('clientApp')
       }
     };
     
-    this.likeUnlikeProduct = function(productID, isLiked) {
-		if (isLiked) {
-			// unlike the product
-			$http.delete(this.getServerAddress() + 'like/be_local_server-product/' + productID + '/')
-			.success(function(data) {
-				console.log("Unliked a product! data: " + data);
-			})
-			.error(function() {
-				console.log("Error unliking product!");
-			})
-		} else {
-			// like the product
-			$http.post(this.getServerAddress() + 'like/be_local_server-product/' + productID + '/')
-			.success(function(data) {
-				console.log("Liked a product! data: " + data);
-			})
-			.error(function() {
-				console.log("Error liking product!");
-			})
-		}
+    this.likeUnlikeProduct = function(product) {
+      likedUnlikedProduct = product;
+      if (product.isLiked) {
+        // unlike the product
+        return $http.delete(this.getServerAddress() + 'like/be_local_server-product/' + product.id + '/')
+        .success(function(data, status, headers, config) {
+          console.log('Unliked a product! total_likes: ' + data.num_votes);
+          likedUnlikedProduct.vote_total = data.num_votes;
+          likedUnlikedProduct.isLiked = null;
+        })
+        .error(function() {
+          console.log('Error unliking product!');
+        });
+      } else {
+        // like the product
+        return $http.post(this.getServerAddress() + 'like/be_local_server-product/' + product.id + '/')
+        .success(function(data, status, headers, config) {
+          console.log('Liked a product! total_likes: '+ data.num_votes);
+          likedUnlikedProduct.vote_total = data.num_votes;
+          likedUnlikedProduct.isLiked = true;
+        })
+        .error(function() {
+          console.log('Error liking product!');
+        });
+      }
+    };
+    
+    this.getLikedUnlikedProduct = function() {
+      return likedUnlikedProduct;
     };
     
   });

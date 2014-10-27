@@ -3,7 +3,7 @@
 angular.module('clientApp')
   .controller('MainCtrl', function ($scope, $location, $timeout, StateService) {
 	
-    if (StateService.currentUser) {
+    if (StateService.getCurrentUser()) {
     	$scope.likeDisabled = false;
     } else {
     	$scope.likeDisabled = true;
@@ -29,8 +29,10 @@ angular.module('clientApp')
       angular.element('#productDetailsModal').modal('hide');      
     };
     
-    $scope.likeUnLikeProduct = function(productID, isLiked) {
-    	StateService.likeUnlikeProduct(productID, isLiked);
+    $scope.likeUnLikeProduct = function(product) {
+      StateService.likeUnlikeProduct(product).then(function() {
+        product = StateService.getLikedUnlikedProduct();
+      });
     };
     
     StateService.getTrendingProducts().then(function() {

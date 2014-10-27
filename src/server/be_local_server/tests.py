@@ -121,7 +121,7 @@ class ProductTestCase(APITestCase):
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.post(url)
         print "After adding like: ", response
-        self.assertEqual(response.content, "{'num_votes':1}")
+        self.assertEqual(response.content, '{"num_votes":1}')
          
     def test_delete_like(self):
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
@@ -130,7 +130,7 @@ class ProductTestCase(APITestCase):
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.delete(url)
         print "After deleting like: ", response
-        self.assertEqual(response.content, "{'num_votes':0}")
+        self.assertEqual(response.content, '{"num_votes":0}')
     
     def test_get_user_like(self):
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
@@ -140,7 +140,7 @@ class ProductTestCase(APITestCase):
         response = self.client.get(url)
         print "Get like status: ", response.content
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.content, "{'like': 'True'}")
+        self.assertEqual(response.content, '{"like": true}')
         
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.delete(url)
@@ -148,7 +148,7 @@ class ProductTestCase(APITestCase):
         response = self.client.get(url)
         print "Get like status: ", response.content
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertEqual(response.content, "{'like': 'False'}")
+        self.assertEqual(response.content, '{"like": false}')
         
     def test_trending_products(self):
         url = reverse('product-trending-list')

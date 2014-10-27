@@ -18,6 +18,7 @@ from secretballot import views
 from secretballot.models import Vote
 from be_local_server import serializers
 from be_local_server.models import *
+import json
 
 
 class ObtainAuthToken(APIView):
@@ -462,6 +463,8 @@ def like(request, content_type, id):
                               vote = '+1',
                               mimetype='application/json'
         )
+        # json formatting
+        response.content = response.content.replace("'","\"")
         return response 
     
     if request.method == 'DELETE':
@@ -472,15 +475,17 @@ def like(request, content_type, id):
                               vote=None,
                               mimetype='application/json'
         )
+        # json formatting
+        response.content = response.content.replace("'","\"")
         return response
     
     if request.method == 'GET':
         vote = Product.objects.from_request(request).get(pk=id).user_vote
         if (vote):
-            body = "{'like': 'True'}"
+            body = '{"like": true}'
             return HttpResponse(body, status=status.HTTP_200_OK, content_type='application/json')
         else:
-            body = "{'like': 'False'}"
+            body = '{"like": false}'
             return HttpResponse(body, status=status.HTTP_404_NOT_FOUND, content_type='application/json') 
         
     

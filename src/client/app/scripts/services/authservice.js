@@ -17,7 +17,8 @@ angular.module('clientApp')
   		  	ipCookie('beLocalToken', result.data.token, {expires: 14});
           ipCookie('beLocalUser', result.data, {expires: 14});
           ipCookie('beLocalBypass', true, {expires: 14});          
-  			$http.defaults.headers.common.Authorization = 'Token ' + result.token;		  	
+  			$http.defaults.headers.common.Authorization = 'Token ' + result.token;
+        $http.defaults.headers.patch.Authorization = 'Token ' + result.token;          
   		  }
             StateService.setProfile(result.data);		  
   		});

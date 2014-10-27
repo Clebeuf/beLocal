@@ -264,6 +264,7 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
     """
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.SellerLocationSerializer
 
     def patch(self, request, location_id):
 

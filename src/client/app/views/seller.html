@@ -543,11 +543,26 @@ webpage: "www.summerhillsfarms.com"
                   <label>
                     <input name="fbCheck" ng-model="facebookChecked" type="checkbox"><strong>Post to Facebook</strong>
                   </label>
-                </div>                                
+                </div>
+                <label><i class="fa fa-twitter-square"></i> Twitter Status Update</label>
+                <div ng-show="isTwitterAuth">
+                    <textarea rows="4" required ng-model="twitterString" type="text" name="twitterField" class="form-control" id="twitter-field" placeholder="Twitter Status Update" maxlength="140" />
+                    <p class="character-counter">
+                        {{140 - twitterString.length - hashtag.length}} left (All Tweets will include the beLocal hashtag)
+                    </p>
+                    <div class="checkbox">
+                      <label>
+                        <input name="twChecked" ng-model="twitterChecked" type="checkbox"><strong>Post to Twitter</strong>
+                      </label>
+                    </div>
+                </div>
+                <div style="text-align:center;" ng-hide="isTwitterAuth">
+                    <button type="submit" ng-click="doTwitterSignIn()" class="beLocal-btn-filled btn">Sign in to Twitter</button>                    
+                </div>                                           
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button ng-disabled="!facebookChecked" type="button" ng-click="publishSocialUpdate()" class="btn beLocal-btn-filled">Post Update</button>
+                <button ng-disabled="!facebookChecked && !twitterChecked" type="button" ng-click="publishSocialUpdate()" class="btn beLocal-btn-filled">Post Update</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

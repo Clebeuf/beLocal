@@ -111,6 +111,8 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
 AUTHENTICATION_BACKENDS = (
     'social.backends.google.GoogleOAuth2',
     'social.backends.twitter.TwitterOAuth',

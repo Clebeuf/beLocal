@@ -419,6 +419,6 @@ def autocomplete(request):
     prodSqs = SearchQuerySet().autocomplete(name_auto=request.GET.get('q', ''))[:5]
     products = [result.name for result in prodSqs]
     the_data = json.dumps({
-        'products': products
+        'products': list(set(products))
     })
     return HttpResponse(the_data, content_type='application/json')

@@ -8,18 +8,23 @@
     <br><br>
     <div class="row vendor-profile-header">
         <div class="col-md-5 new-vendor-avatar">
-            <img src="http://www.sexyli.com/wp-content/uploads/2013/05/Green-Snake-Image-Wallpaper.jpg">
+            <img src="{{StateService.getCurrentUser().vendor.photo.image_url}}">
         </div>
         <div class="vendor-header-content">
 
             <span class="new-vendor-name-style">
-                {{StateService.getCurrentUser().first_name}} {{StateService.getCurrentUser().last_name}}
+                {{StateService.getCurrentUser().vendor.company_name}}<br>
             </span>
-            <br>
             <span class="new-hr-heading-style">
                 <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
                 | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
             </span>
+            <span class="pull-right">
+                    <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
+                    &nbsp;
+                    <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Update Social Media</button>
+            </span>
+
             <hr>
             <div class="description-container">
                 {{StateService.getCurrentUser().vendor.description}}
@@ -60,35 +65,37 @@
             <div class="row">
 
                 <!-- Display the locations name -->
-                <div class="col-xs-9">
-                    <h4>{{location.name}}</h4> 
+                <div class="col-xs-9 card-lable-style">
+                    {{location.name}}
                 </div>
 
                 <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
                 <div class="col-xs-3 edit-delete-buttons">
                     <span data-toggle="tooltip" data-placement="bottom" title="Edit Location">
-                        <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
+                    <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
                     </span>
                     <span data-toggle="tooltip" data-placement="bottom" title="Delete Location">
-                        <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
+                    <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
                     </span>
                 </div> 
 
             </div>
 
-            <div>
+            <div class="location-details">
                 <p ng-show="location.date"><b>DATE:</b>
                     {{location.date | date:" EEEE',' MMMM d'"}},
                     {{location.address.hours[0].from_hour}} - 
                     {{location.address.hours[0].to_hour}}
                 </p>
-                <div ng-show="location.date == null">
-                <p><b>HOURS:</b></p>
-                        <span ng-repeat="day in location.address.hours">
-                            <p>
-                                {{weekdays[day.weekday - 1]}}: {{day.from_hour}} - {{day.to_hour}}
-                            </p>
-                        </span>
+                <div ng-show="location.date == null" >
+                <p><b>HOURS:</b>
+                        <ul class="list-inline store-hours">&nbsp
+                        <li ng-repeat="day in location.address.hours">
+                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                        </li>
+
+                        </ul>
+                </p>
                 </div>
                 <p><b>LOCATION:</b>
                     {{location.address.addr_line1}},
@@ -136,9 +143,13 @@
                         <img ng-src="{{product.photo.image_url}}"/>
 
                     </div>
-                    <div class="col-xs-9 col-sm-7">
-                        <h4>{{product.name}}</h4>
-                        {{product.description}}
+                    <div class="col-xs-9 col-sm-7 ">
+                        <div class="card-lable-style">{{product.name}}</div>
+                        <div class="location-details">
+                            <p><b>PRODUCT DETAILS:</b> {{product.description}}</p>
+                            <p><b>CATEGORY:</b> </p>
+                            <p><b>TAGS:</b> </p>
+                        </div>
                     </div>
 
                     <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
@@ -154,9 +165,9 @@
 
             <!-- THIS IS THE NON-REPEATING PART -->
             <div class="row">
-                <div class="col-sm-12 seller-stock-formatting">
+                <div class="col-sm-12 seller-stock-formatting new-stock-style">
                     <hr class="availability-hr">
-                    <b>Current Availability:</b>
+                    Current Availability:
                     <span class="pull-right">
                         <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="IS"> In Stock
                         <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="OOS"> Out of Stock
@@ -178,6 +189,117 @@
 
 
 <!-- START OF MODALS -->
+
+<!-- Seller Profile Modal -->
+<div class="modal fade" id="profileModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4>Update Your Profile<br />
+                <small>Please Note: This information will be visable to others using this application.</small>
+                </h4>               
+            </div>
+            <div class="modal-body">  
+                <div class="container-fluid">                   
+                    <form role="form" name="profileForm" novalidate>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group" ng-class="{ 'has-error' : profileForm.imageField.$invalid }">
+                                    <label for="profile-image">Change Profile Image</label><br />
+                                    <img src="#" id="profilePreview" />
+                                    <input onchange="angular.element(this).scope().profileFileNameChanged(this.files)" name="imageField" type="file" id="profile-image">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group" ng-class="{ 'has-error' : profileForm.companyName.$invalid }">
+                                    <label for="company-name">Company Name</label> 
+                                    <input required ng-model="currentUser.vendor.company_name" type="text" name="companyName" class="form-control" id="company-name" placeholder="Company Name"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group" ng-class="{ 'has-error' : profileForm.number.$invalid }">
+                                    <label for="company-description">Company Phone Number</label>
+                                    <input required ng-model="currentUser.vendor.phone" type="text" name="number" class="form-control" id="company-description" placeholder="Phone Number"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="company-description">Company Website</label>
+                                <input ng-model="currentUser.vendor.webpage" type="text" name="website" class="form-control" id="company-description" placeholder="Optional Website URL"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="item-name">Company Address</label>
+                            </div>
+                        </div>
+                        <div class="well">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group" ng-class="{ 'has-error' : profileForm.address.$invalid }">
+                                        <label for="item-name">Street Address</label>
+                                        <input required ng-model="currentUser.vendor.address.addr_line1" type="text" name="address" class="form-control" id="item-name" placeholder="Street Address"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group" ng-class="{ 'has-error' : profileForm.city.$invalid }">
+                                        <label for="item-name">City</label>
+                                        <input required ng-model="currentUser.vendor.address.city" type="text" name="city" class="form-control" id="item-name" placeholder="City"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group" ng-class="{ 'has-error' : profileForm.province.$invalid }">
+                                        <label for="item-name">Province</label>
+                                        <input required ng-model="currentUser.vendor.address.state" type="text" name="province" class="form-control" id="item-name" placeholder="Province or Territory" maxlength="2"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group" ng-class="{ 'has-error' : profileForm.country.$invalid }">
+                                        <label for="item-name">Country</label>
+                                        <input required ng-model="currentUser.vendor.address.country" type="text" name="country" class="form-control" id="item-name" placeholder="Country"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group" ng-class="{ 'has-error' : profileForm.zip.$invalid }">
+                                        <label for="item-name">Postal Code</label>
+                                        <input required ng-model="currentUser.vendor.address.zipcode" type="text" name="zip" class="form-control" id="item-name" placeholder="Postal Code" maxlength="7"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group" ng-class="{ 'has-error' : profileForm.descriptionField.$invalid }">
+                                    <label for="company-description">About Your Company<br>
+                                    </label>
+                                    <textarea required ng-model="currentUser.vendor.description" type="text" name="descriptionField" class="form-control" id="company-description" placeholder="About Your Company" maxlength="850"/>
+                                    <p class="pull-right">{{850 - currentUser.vendor.description.length}} characters remaining</p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" ng-click="vendorProfileUpdate()" class="btn beLocal-btn-filled">Save Changes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
 
 <!-- Seller Add/Edit Item Modal -->
 <div class="modal fade" id="itemModal">
@@ -240,6 +362,8 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+
+
 
 <!-- Seller Add/Edit Location Modal  -->
 <div class="modal fade" id="locationModal">
@@ -381,3 +505,42 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+
+<div class="modal fade" id="shareModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Update Social Media<br /><small>Please review the following fields and check or uncheck the boxes below to update your various social media accounts.</small></h4>
+            </div>
+            <div class="modal-body">
+                <label><i class="fa fa-facebook-square"></i> Facebook Status Update</label>            
+                <textarea rows="10" required ng-model="facebookString" type="text" name="facebookField" class="form-control" id="facebook-field" placeholder="Facebook Status Update" />
+                <div class="checkbox">
+                  <label>
+                    <input name="fbCheck" ng-model="facebookChecked" type="checkbox"><strong>Post to Facebook</strong>
+                  </label>
+                </div>
+                <label><i class="fa fa-twitter-square"></i> Twitter Status Update</label>
+                <div ng-show="isTwitterAuth">
+                    <textarea rows="4" required ng-model="twitterString" type="text" name="twitterField" class="form-control" id="twitter-field" placeholder="Twitter Status Update" maxlength="140" />
+                    <p class="character-counter">
+                        {{140 - twitterString.length - hashtag.length}} left (All Tweets will include the beLocal hashtag)
+                    </p>
+                    <div class="checkbox">
+                      <label>
+                        <input name="twChecked" ng-model="twitterChecked" type="checkbox"><strong>Post to Twitter</strong>
+                      </label>
+                    </div>
+                </div>
+                <div style="text-align:center;" ng-hide="isTwitterAuth">
+                    <button type="submit" ng-click="doTwitterSignIn()" class="beLocal-btn-filled btn">Sign in to Twitter</button>                    
+                </div>                                           
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button ng-disabled="!facebookChecked && !twitterChecked" type="button" ng-click="publishSocialUpdate()" class="btn beLocal-btn-filled">Post Update</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

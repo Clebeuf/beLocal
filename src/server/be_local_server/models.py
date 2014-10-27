@@ -51,7 +51,7 @@ class Vendor(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     photo = models.ForeignKey(VendorPhoto, blank=True, null=True)
     address = models.ForeignKey(Address)
-    description = models.CharField(max_length=800)
+    description = models.CharField(max_length=900)
 
     def as_dict(self):
         return {
@@ -103,7 +103,7 @@ class SellerLocation(TrashableMixin, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=25)
-    description = models.CharField(max_length=400)
+    description = models.CharField(max_length=800)
 
 class Market(models.Model):
     name = models.CharField(max_length=100)

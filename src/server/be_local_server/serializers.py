@@ -50,7 +50,7 @@ class VendorPhotoPathSerializer(serializers.ModelSerializer):
     image_url = serializers.Field(source="image_url")  
     class Meta: 
         model = be_local_server.models.VendorPhoto
-        fields = ('image_url',)
+        fields = ('id', 'image_url',)
 
 class VendorPhotoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -73,6 +73,23 @@ class VendorSerializer(serializers.ModelSerializer):
               'address',
               'description'
     		)
+
+class EditVendorSerializer(serializers.ModelSerializer):
+    address = AddressSerializer()
+    class Meta:
+        model = be_local_server.models.Vendor
+        fields = (  
+              'id', 
+              'user',
+              'company_name',
+              'webpage',
+              'country_code',
+              'phone',
+              'extension',
+              'photo',
+              'address',
+              'description'
+        )        
 
 class BusinessVendorSerializer(serializers.ModelSerializer):
     photo = VendorPhotoPathSerializer()

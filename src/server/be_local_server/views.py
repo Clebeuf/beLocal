@@ -113,8 +113,8 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
     modify their information
     """
     
-    #authentication_classes = (TokenAuthentication,)
-    permission_classes = (AllowAny,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.VendorSerializer
 
     def get(self, request):
@@ -139,8 +139,24 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
         else:
             return Response("Vendor not found", status=status.HTTP_404_NOT_FOUND)
 
-    def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
+    def patch(self, request):
+        vendor = Vendor.objects.get(user=request.user) 
+   
+        if vendor is not None:
+            serializer = serializers.EditVendorSerializer(vendor, data=request.DATA, partial=True)
+           
+            if serializer.is_valid():
+                serializer.save()
+
+                d = serializer.data
+                p = VendorPhoto.objects.get(pk=serializer.data["photo"])
+                serializer.data["photo"] = serializers.VendorPhotoPathSerializer(p).data
+
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        else:
+            return Response("Vendor not found", status=status.HTTP_404_NOT_FOUND) 
 
     def get_object(self):
         try:
@@ -207,6 +223,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
            
             if serializer.is_valid():
                 serializer.save()
+
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 

@@ -11,6 +11,12 @@ body {
     url('../images/sellerbanner-peas.jpg') !important;
 }
 
+.cover-heading{
+  font-family: 'Libre Baskerville', serif;
+  font-weight: bolder;
+  font-size: 38px;
+}
+
  .how-it-works {
   text-transform: uppercase;
  }

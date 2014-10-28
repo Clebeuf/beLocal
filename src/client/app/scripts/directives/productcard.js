@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .directive('productCard', function (StateService, $location) {
+  .directive('productCard', function (StateService, $location, $timeout) {
     return {
       templateUrl: 'scripts/directives/productCard.html',
       restrict: 'E',
@@ -15,7 +15,12 @@ angular.module('clientApp')
 
       	scope.displayVendor = function (id) {
       		$location.path('vendor/details/'+id).replace();
-      	}      	
+      	}   
+
+        $timeout(function(){
+            angular.element("[data-toggle='tooltip']").tooltip();
+        });
+
       }
     };
   });

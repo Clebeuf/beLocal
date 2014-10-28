@@ -10,13 +10,15 @@ angular.module('clientApp')
     var vendorDetails = undefined;
     var likedUnlikedProduct = undefined;
 
-
+    this.clearCurrentUser = function() {
+      currentUser = undefined;
+    }
 
     this.updateCurrentUser = function(user) {
       var url = this.getServerAddress() + 'vendor/';        
       return $http({method: 'PATCH', url: url, data: user.vendor})
       .success(function() {
-        console.log("Edited User! yay!");
+        console.log("Edited User!");
       }); 
     };
 

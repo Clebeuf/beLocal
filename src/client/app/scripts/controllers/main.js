@@ -2,12 +2,6 @@
 
 angular.module('clientApp')
   .controller('MainCtrl', function ($scope, $location, $timeout, StateService) {
-	
-    if (StateService.getCurrentUser()) {
-    	$scope.likeDisabled = false;
-    } else {
-    	$scope.likeDisabled = true;
-    }
 	    
     $scope.showProductDetailsModal = function(item) {
     	$scope.product = item;   	

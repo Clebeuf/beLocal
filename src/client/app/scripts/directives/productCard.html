@@ -8,14 +8,15 @@
 	    		<a class="pointer container-display-vendor-name" ng-click="displayVendor(item.vendor.id)">{{item.vendor.company_name}}</a>		        
 			</div>
 			<div class="container-md col-lg-6 col-md-6 col-sm-6">
-		        <button class="btn beLocal-btn-filled" role="button" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(item)">More Details</button>
-                
-                <button class="btn btn-default btn-sm like-button" role="button" ng-click="likeUnLikeProduct(item)" ng-disabled="likeDisabled">
-                    <span class="glyphicon glyphicon-heart"></span> 
-                    <span ng-hide="item.is_liked"> Like </span>
-                    <span ng-show="item.is_liked"> Liked </span> 
-                    <span class="like-count" ng-show="item.vote_total > 0"> {{item.vote_total}} </span> 
-                </button>
+            <!-- <button class="btn beLocal-btn-filled" role="button" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(item)">More Details</button>-->
+            <button ng-disabled="likeDisabled" ng-click="likeUnLikeProduct(item)" type="button" class="btn btn-default beLocal-btn-default">
+                  <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : item.is_liked}"></span>
+                  <span ng-hide="item.is_liked">Like</span>
+                  <span ng-show="item.is_liked">Unlike</span>
+                <span class="like-container" ng-show="item.vote_total > 0">
+                  {{item.vote_total}}
+                </span>
+            </button>
 	        </div>
 	    </div>      
     </div>

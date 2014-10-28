@@ -1,5 +1,41 @@
 /* BELOCAL STYLES */
 
+.like-container {
+  padding-left: 10px;
+  margin-left:3px;
+  border-left: 1px solid #A7A7A7;
+}
+
+.like-button {
+  color: #A7A7A7;
+}
+
+.beLocal-btn-default {
+  background-color: white !important;  
+  border-color: #CCCCCC !important;
+}
+
+.beLocal-btn-default:hover {
+  background-color: #EFEFEF !important;  
+}
+
+button:focus,button:hover,button:active {
+  outline: 0px !important;
+  -webkit-appearance:none;
+}
+
+.like-button:hover {
+  color: #979797;
+}
+
+.like-button:focus {
+  background-color: white !important;
+}
+
+.like-button-liked {
+  color: #d35b3d !important;
+}
+
 textarea {
     resize: vertical;
 }
@@ -950,20 +986,4 @@ hr{
     padding-bottom: 15px;
   }
 
-}
-
-.like-button {
-	margin-top: 5px;
-}
-
-.like-count {
-	background: #2ea2cc;
-	color: #fff;
-	border-radius: 10px;
-	text-align: center;
-	line-height: 1;
-	padding-top: 1px;
-	padding-right: 3px;
-	padding-bottom: 1px;
-	padding-left: 3px;
 }

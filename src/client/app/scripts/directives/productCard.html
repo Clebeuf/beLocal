@@ -12,8 +12,8 @@
                 
                 <button class="btn btn-default btn-sm like-button" role="button" ng-click="likeUnLikeProduct(item)" ng-disabled="likeDisabled">
                     <span class="glyphicon glyphicon-heart"></span> 
-                    <span ng-hide="item.isLiked"> Like </span>
-                    <span ng-show="item.isLiked"> Liked </span> 
+                    <span ng-hide="item.is_liked"> Like </span>
+                    <span ng-show="item.is_liked"> Liked </span> 
                     <span class="like-count" ng-show="item.vote_total > 0"> {{item.vote_total}} </span> 
                 </button>
 	        </div>

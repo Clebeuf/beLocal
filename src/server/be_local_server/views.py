@@ -254,7 +254,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     
     def get(self, request, product_id):       
         product = Product.objects.get(pk=product_id)
-        product.isLiked = Product.objects.from_request(request).get(pk=product.id).user_vote
+        product.is_liked = Product.objects.from_request(request).get(pk=product.id).user_vote
         
         if product is not None:
             serializer = serializers.ProductDisplaySerializer(product) 
@@ -410,7 +410,7 @@ class VendorProductView(generics.ListAPIView):
 
         if products is not None:
             for product in products:
-                product.isLiked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
+                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
             
             return products
         else:
@@ -453,7 +453,7 @@ class TrendingProductView(generics.ListAPIView):
         products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True) 
         if products is not None:
             for product in products:
-                product.isLiked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
+                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
                 
         return products
 
@@ -563,10 +563,10 @@ def like(request, content_type, id):
     if request.method == 'GET':
         vote = Product.objects.from_request(request).get(pk=id).user_vote
         if (vote):
-            body = '{"like": true}'
+            body = '{"is_liked": true}'
             return HttpResponse(body, status=status.HTTP_200_OK, content_type='application/json')
         else:
-            body = '{"like": false}'
+            body = '{"is_liked": false}'
             return HttpResponse(body, status=status.HTTP_404_NOT_FOUND, content_type='application/json') 
         
     

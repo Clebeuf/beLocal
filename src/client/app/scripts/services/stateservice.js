@@ -208,13 +208,13 @@ angular.module('clientApp')
     
     this.likeUnlikeProduct = function(product) {
       likedUnlikedProduct = product;
-      if (product.isLiked) {
+      if (product.is_liked) {
         // unlike the product
         return $http.delete(this.getServerAddress() + 'like/be_local_server-product/' + product.id + '/')
         .success(function(data, status, headers, config) {
           console.log('Unliked a product! total_likes: ' + data.num_votes);
           likedUnlikedProduct.vote_total = data.num_votes;
-          likedUnlikedProduct.isLiked = null;
+          likedUnlikedProduct.is_liked = null;
         })
         .error(function() {
           console.log('Error unliking product!');
@@ -225,7 +225,7 @@ angular.module('clientApp')
         .success(function(data, status, headers, config) {
           console.log('Liked a product! total_likes: '+ data.num_votes);
           likedUnlikedProduct.vote_total = data.num_votes;
-          likedUnlikedProduct.isLiked = true;
+          likedUnlikedProduct.is_liked = true;
         })
         .error(function() {
           console.log('Error liking product!');

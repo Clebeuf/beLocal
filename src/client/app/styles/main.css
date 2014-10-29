@@ -864,10 +864,11 @@ color: #000 !important;
 
 .card-formatting {
   background: #FFFFFF;
-  -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3);
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3) !important;
   padding: 10px;
   margin-top: 5px;
   margin-bottom: 10px;
+  
 }
 
 .container-for-cards{
@@ -944,6 +945,11 @@ hr{
   padding-top: 10px;
   padding-bottom: 0px;
 
+}
+
+.indent-after-first-line {
+  text-indent:-15px;
+  margin-left:15px
 }
 
 .new-stock-style {

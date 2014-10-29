@@ -50,7 +50,8 @@ var app = angular.module('clientApp', [
     // Define the default action to be taken if an unrecognized route is taken.
     $urlRouterProvider.otherwise('/');
   })
-  .run(function ($rootScope, $state, AuthService, StateService, ipCookie) {
+
+  .run(function ($rootScope, $state, $location, AuthService, StateService, ipCookie) {
       OAuth.initialize('FFQwiNbZnNhnZMbxNeUWxjQVSjk');
 
       // This will be called every time we start to change state (navigate to a new URL)

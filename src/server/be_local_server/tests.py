@@ -6,7 +6,7 @@ from rest_framework.test import APIRequestFactory, APIClient, APITestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.authtoken.models import Token
-from be_local_server.models import Vendor, Product
+from be_local_server.models import Vendor, Product, Address
 from be_local_server.views import *
 
 # Create your tests here.
@@ -19,13 +19,23 @@ class ProductTestCase(APITestCase):
         # Load some data in database 
         user1 = User.objects.create_user(username='admin', email="admin@…", password='admin')
         user2 = User.objects.create_user(username='john', email="john@…", password='john')
+        address1 = Address.objects.create(
+                                          addr_line1='456 Country Road',
+                                          city='Victoria',
+                                          state='BC',
+                                          country='Canada',
+                                          zipcode='V8M3E3'
+                                          )
         vendor1 = Vendor.objects.create(
                                         user=user1, 
                                         company_name="etsy",
                                         webpage="www.etsy.com",
                                         country_code="1",
                                         phone="7777777777",
-                                        extension="123"
+                                        extension="123",
+                                        description="This is a short description.",
+                                        photo=None,
+                                        address=address1
                                         )
         vendor2 = Vendor.objects.create(
                                         user=user2, 
@@ -33,19 +43,24 @@ class ProductTestCase(APITestCase):
                                         webpage="www.amazon.com",
                                         country_code="1",
                                         phone="7777777777",
-                                        extension="123"
+                                        extension="123",
+                                        description="This is a short description.",
+                                        photo=None,
+                                        address=address1
                                         )
         Product.objects.create(
                                vendor=vendor1,
                                name="carrots",
                                description="test product",
-                               price="10"
+                               photo=None,
+                               stock="IS"
                                )
         Product.objects.create(
                                vendor=vendor2,
                                name="tomato",
                                description="test product",
-                               price="5"
+                               photo=None,
+                               stock="IS"
                                )
         
         # Token Authentication
@@ -57,8 +72,9 @@ class ProductTestCase(APITestCase):
     
     # product lists
     def test_list_vendor_products(self):            
-        url = reverse('vendor-products-list', kwargs={'vendor_id': '2'}) 
+        url = reverse('vendor-products-list') 
         response = self.client.get(url)
+        print "Vendor products list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
     
     # product details
@@ -68,23 +84,83 @@ class ProductTestCase(APITestCase):
                 'vendor':"2",
                 'name':"carrots",
                 'description':"test product",
-                'price':"15",
+                'photo': "",
+                'stock': "IS",
                 } 
         response = self.client.post(url, data)
+        print "Add Vendor's product : \n", response
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
     def test_read_product(self):             
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         response = self.client.get(url)
+        print "Vendor's product details: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK) 
+        
+        # Test likes
+        url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'2'})
+        response = self.client.post(url)
+        url = reverse('vendor-products-details', kwargs={'product_id': '2'})
+        response = self.client.get(url)
+        print "Vendor's product details: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)   
     
     def test_edit_product(self): 
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
-        data = {'price':"20"}
+        data = {'stock':"OOS"}
         response = self.client.patch(url, data)
+        print "Edit Vendor's product: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)  
         
     def test_delete_product(self):
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)      
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)  
+        
+    def test_add_like(self):
+        url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
+        response = self.client.post(url)
+        print "After adding like: ", response
+        self.assertEqual(response.content, '{"num_votes":1}')
+         
+    def test_delete_like(self):
+        url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
+        response = self.client.post(url)
+        
+        url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
+        response = self.client.delete(url)
+        print "After deleting like: ", response
+        self.assertEqual(response.content, '{"num_votes":0}')
+    
+    def test_get_user_like(self):
+        url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
+        response = self.client.post(url)
+        
+        url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
+        response = self.client.get(url)
+        print "Get like status: ", response.content
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, '{"is_liked": true}')
+        
+        url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
+        response = self.client.delete(url)
+        url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
+        response = self.client.get(url)
+        print "Get like status: ", response.content
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.content, '{"is_liked": false}')
+        
+    def test_trending_products(self):
+        url = reverse('product-trending-list')
+        response = self.client.get(url)
+        print "Trending products: ", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        # Test likes
+        url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'2'})
+        response = self.client.post(url)
+        url = reverse('product-trending-list')
+        response = self.client.get(url)
+        print "Trending products: ", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)   
+        

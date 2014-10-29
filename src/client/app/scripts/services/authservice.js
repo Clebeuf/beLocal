@@ -85,6 +85,7 @@ angular.module('clientApp')
       ipCookie.remove('beLocalUser');
       ipCookie.remove('beLocalBypass');
       delete $http.defaults.headers.common.Authorization;
+      StateService.clearCurrentUser();
     }
 
     this.createCustomer = function() {
@@ -96,7 +97,7 @@ angular.module('clientApp')
             promise.error(function(response, status) {
               d.resolve(status)
             });
-            promise.then(function(response, status) {
+            promise.success(function(response, status) {
               if(status !== 200) {                
               } else {
                 if(StateService.getUserType() === 'CUS') {
@@ -122,7 +123,7 @@ angular.module('clientApp')
             promise.error(function(result, status) {
               d.resolve(status)
             });
-            promise.then(function(response, status) {
+            promise.success(function(response, status) {
               if(status !== 200) {
                 d.resolve(response);
               } else {

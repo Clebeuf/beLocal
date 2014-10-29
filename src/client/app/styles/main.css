@@ -1,5 +1,13 @@
 /* BELOCAL STYLES */
 
+.vendor-card-name {
+  color: #000;
+}
+
+.vendor-card-name:hover {
+  color: #000;
+}
+
 .like-container {
   padding-left: 10px;
   margin-left:3px;
@@ -729,7 +737,7 @@ color: #000 !important;
   text-align: right;
 }
 
-.container-display-vendor-name{
+.container-display-vendor-name {
   color: #696969 !important;
   font-size: 12px;
   padding-top: 0px;

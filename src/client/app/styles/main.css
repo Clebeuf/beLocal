@@ -20,6 +20,12 @@
   color: #A7A7A7;
 }
 
+.like-button-container {
+  top: -50px;
+  height: 1px;
+  text-align: right;
+}
+
 .beLocal-btn-default {
   background-color: white !important;  
   border-color: #CCCCCC !important;
@@ -750,6 +756,7 @@ color: #000 !important;
 
 .container-display-vendor-name {
   color: #696969 !important;
+  font-family: 'Roboto', sans-serif;
   font-size: 12px;
   padding-top: 0px;
 }

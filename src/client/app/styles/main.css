@@ -2,6 +2,8 @@
 
 .vendor-card-name {
   color: #000;
+  font-family: 'Libre Baskerville', serif;
+  font-weight: bolder;
 }
 
 .vendor-card-name:hover {
@@ -147,6 +149,15 @@ body {
   max-width: 485px;
   margin-right: auto;
   margin-left: auto;
+  padding: 0px !important;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3) !important;
+  border: 0px !important;
+  border-radius: 0px !important; 
+}
+
+.product-card img {
+  margin: 0px !important;
+  width:100%;
 }
 
 .market-card {

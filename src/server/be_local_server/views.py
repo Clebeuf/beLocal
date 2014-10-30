@@ -444,6 +444,11 @@ class AddSellerLocationView(generics.CreateAPIView):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)  
 
+class JsonHelper(json.JSONEncoder):
+     """ simplejson.JSONEncoder extension: handle SearchProductViewModel"""
+     def default(self, obj):
+        return obj.__dict__
+
 def autocomplete(request):
     prodSqs = SearchQuerySet().autocomplete(name_auto=request.GET.get('q', ''))[:5]
     products = [result.name for result in prodSqs]
@@ -451,3 +456,19 @@ def autocomplete(request):
         'products': list(set(products))
     })
     return HttpResponse(the_data, content_type='application/json')
+
+class SearchProductViewModel():
+    def __init__(self,prodName,vendorName):
+        self.name = prodName
+        self.vendor = vendorName
+
+
+def searchProducts(request):
+    srch = request.GET.get('q', '')
+    sqs = SearchQuerySet() #.filter(has_title=True)
+    clean_query = sqs.query.clean(srch)
+    results = sqs.filter(content=clean_query)
+    #not sure if below is the best way to do this
+    products = [SearchProductViewModel(r.name,r.object.vendor.company_name) for r in results]
+    the_data = json.dumps(products, cls=JsonHelper)
+    return HttpResponse(the_data, content_type='application/json')    

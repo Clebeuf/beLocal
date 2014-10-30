@@ -54,7 +54,8 @@ class Vendor(models.Model):
     address = models.ForeignKey(Address, null=True, blank=True)
     description = models.CharField(max_length=900)
     is_active = models.BooleanField(default=False)
-secretballot.enable_voting_on(Product)
+
+secretballot.enable_voting_on(Vendor)
 
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)

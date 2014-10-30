@@ -19,12 +19,8 @@ from secretballot import views
 from secretballot.models import Vote
 from be_local_server import serializers
 from be_local_server.models import *
-<<<<<<< HEAD
 from haystack.query import SearchQuerySet
-=======
 import json
-
->>>>>>> master
 
 class LoginView(APIView):
     throttle_classes = ()

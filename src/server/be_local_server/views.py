@@ -385,7 +385,6 @@ class TrendingProductView(generics.ListAPIView):
     def post(self, request):
         if (request.DATA['user_position'] is not None):
             lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))
-            print "Sorting vendors by proximity to (" +str(lat)+","+str(lng)+")"
 
             locations = SellerLocation.objects.all()
 
@@ -459,7 +458,6 @@ class VendorsView(generics.ListAPIView):
             #Sort locations based on proximity to current user
             for location in locations: 
                 location.sortkey = getDistanceFromUser(lat, lng, location.address.latitude, location.address.longitude)
-                print "distance from user: " + str(location.sortkey); 
 
             locations = sorted(locations, key=attrgetter('sortkey'))
 
@@ -478,39 +476,6 @@ class VendorsView(generics.ListAPIView):
             serializer = serializers.VendorSerializer(vendors, many=True)
             return Response(serializer.data)
 
-# class VendorsView(generics.ListAPIView):
-#     """
-#     This view provides an endpoint for customers to view
-#     vendors.
-#     """
-#     permission_classes = (AllowAny,)
-
-#     serializer_class = serializers.CustomerVendorSerializer
-
-#     def date_handler(obj):
-#         return obj.isoforma() if hasattrb(obj, 'isoformat') else obj
-
-#     def post(self, request):
-
-#         #Testing
-#         print request.DATA['test']
-
-#         data = Vendor.objects.all()
-
-#         dictionaries = [obj.as_dict() for obj in data]
-
-#         for item in dictionaries:
-#             item['user'] = model_to_dict(item['user'])
-#             item['photo'] = model_to_dict(item['photo'])
-#             item['address'] = model_to_dict(item['address'])
-
-#         dthandler = lambda obj: (
-#             obj.isoformat()
-#             if isinstance(obj, datetime.datetime)
-#             or isinstance(obj, datetime.date)
-#             else None)
-
-#         return HttpResponse(json.dumps(dictionaries, default=dthandler), content_type='application/json')
 
 class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)

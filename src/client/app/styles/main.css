@@ -1,4 +1,43 @@
-/* BELOCAL STYLES */
+/* BELOCAL STYLES 
+-possible background colour: #EFF7EF;
+
+
+*/
+
+
+
+
+.top-nav-large {
+  background-color: #FAFAFA;
+  border-bottom: 1px solid #e5e1dd;
+  border-top: 5px solid #89cc1d;
+  padding: 10px;
+  padding-top: 35px;
+}
+
+.top-nav-large li a {
+  padding-left: 0px !important;
+  padding-right: 30px !important;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 18px;
+  line-height: normal;
+  font-weight: bolder;
+  color: #403e3b !important;
+  vertical-align: center;
+
+}
+
+.top-nav-large li.active{
+  color: red;
+}
+
+.logo {
+  text-align: center;
+}
+
+.logo img {
+  width: 100%;
+}
 
 .vendor-card-name {
   color: #000;
@@ -82,13 +121,13 @@ textarea {
 html {
   position: relative;
   min-height: 100%;
-  background-color: #EEEEEE;
+  background-color: #EFF7EF;
 }
 
 body {
   /* Margin bottom by footer height */
   margin-bottom: 40px;
-  background-color: #EEEEEE;  
+  background-color: #EFF7EF;  
 }
 
 .footer {
@@ -96,9 +135,24 @@ body {
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
-  height: 60px;
+/*  height: 60px;*/
   background-color: #777777;
   color: #EFEFEF;
+  padding-top: 5px !important;
+  padding-bottom: 40px;
+}
+
+.footerCopyright {
+  position: absolute;
+  bottom: 0;
+  height: 30px;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+/*  height: 60px;*/
+  background-color: #403e3b;
+  color: #FFFFFF;
+  text-align: center;
+  padding: 5px;
 }
 
 @media (max-width: 598px) {
@@ -206,8 +260,10 @@ body {
 }
 
 .container-home-page {
-  margin-top: 25px;
-  max-width: 1170px !important;
+  margin-top: 10px;
+
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .full-width {
@@ -309,6 +365,7 @@ body {
   font-size: 11px;
   padding: 5px;
   float: left;
+  background-color: #FFFFFF;
 }
 
 .vendor-card-product img{
@@ -774,9 +831,6 @@ color: #000 !important;
   color: #89cc1d;
 }
 
-.blah {
-  background-color: red;
-}
 
 .beLocal-searchProducts{
   width:100%;

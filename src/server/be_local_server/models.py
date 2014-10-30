@@ -53,20 +53,6 @@ class Vendor(models.Model):
     address = models.ForeignKey(Address)
     description = models.CharField(max_length=900)
 
-    def as_dict(self):
-        return {
-            "user": self.user,
-            "company_name": self.company_name,
-            "webpage": self.webpage,
-            "country_code": self.country_code,
-            "phone":self.phone,
-            "extension": self.extension,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at,
-            "photo": self.photo,
-            "address": self.address
-        }
-
 
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)

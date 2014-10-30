@@ -54,6 +54,7 @@ class Vendor(models.Model):
     address = models.ForeignKey(Address, null=True, blank=True)
     description = models.CharField(max_length=900)
     is_active = models.BooleanField(default=False)
+secretballot.enable_voting_on(Product)
 
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)
@@ -99,6 +100,7 @@ class Market(models.Model):
     address = models.ForeignKey(Address)
     description = models.CharField(max_length=400)
     vendors = models.ManyToManyField(Vendor)
+
 
 class OpeningHours(models.Model):
     address = models.ForeignKey(Address, related_name="hours", null=True)

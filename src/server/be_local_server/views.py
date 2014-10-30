@@ -38,9 +38,26 @@ class LoginView(APIView):
             response = {}
             if user.is_staff:
                 vendor = Vendor.objects.get(user=user)
-                response = {'id': user.id, 'is_active' : vendor.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+                vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=product.id).user_vote
+                response = {'id': user.id, 
+                            'is_active' : vendor.is_active, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'VEN', 
+                            'vendor' : serializers.VendorSerializer(vendor).data, 
+                            'token': token.key
+                }
             else:
-                response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
+                response = {'id': user.id, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'CUS', 
+                            'token': token.key
+                }
             return Response(response)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)             
@@ -73,9 +90,20 @@ class CreateVendorView(APIView):
 
                 vendor.company_name = user.username # set this for Carly's UI
                 vendor.save()
-
+                
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=product.id).user_vote
+            
             response = {}
-            response = {'id': user.id, 'is_active' : vendor.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN','vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+            response = {'id': user.id, 
+                        'is_active' : vendor.is_active, 
+                        'name': user.username, 
+                        'email' : user.email, 
+                        'first_name': user.first_name, 
+                        'last_name': user.last_name, 
+                        'userType': 'VEN',
+                        'vendor' : serializers.VendorSerializer(vendor).data, 
+                        'token': token.key
+            }
             
             return Response(response)    
         else:
@@ -135,6 +163,7 @@ class VendorDetailsView(generics.CreateAPIView):
         if(vendor.is_active == True):
             locations = SellerLocation.objects.filter(vendor=vendor)
             products = Product.objects.filter(vendor=vendor, stock="IS")
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=product.id).user_vote
 
             if products is not None:
                 for product in products:
@@ -180,6 +209,7 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
         vendor = Vendor.objects.get(user=request.user)
         
         if vendor is not None:
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=product.id).user_vote
             serializer = serializers.VendorSerializer(vendor)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -498,7 +528,12 @@ class VendorsView(generics.ListAPIView):
     serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
-        return Vendor.objects.filter(is_active=True)
+        vendors = Vendor.objects.filter(is_active=True)
+        if vendors is not None:
+            for vendor in vendors:
+                vendor.is_liked = Product.objects.from_request(self.request).get(pk=vendor.id).user_vote 
+                
+        return vendors
 
 class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)

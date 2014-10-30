@@ -5,6 +5,7 @@ from django.conf import settings
 import os
 from undelete.models import TrashableMixin
 from taggit.managers import TaggableManager
+import secretballot
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -42,17 +43,17 @@ class Address(models.Model):
 
 class Vendor(models.Model):
     user = models.ForeignKey(User) 
-    company_name = models.CharField(max_length=200)
-    webpage = models.CharField(max_length=400)
-    country_code = models.CharField(max_length=50)
-    phone = models.CharField(max_length=25)
-    extension = models.CharField(max_length=25)
+    company_name = models.CharField(max_length=200, null=True, blank=True)
+    webpage = models.CharField(max_length=400, null=True, blank=True)
+    country_code = models.CharField(max_length=50, null=True, blank=True)
+    phone = models.CharField(max_length=25, null=True, blank=True)
+    extension = models.CharField(max_length=25, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     photo = models.ForeignKey(VendorPhoto, blank=True, null=True)
-    address = models.ForeignKey(Address)
+    address = models.ForeignKey(Address, null=True, blank=True)
     description = models.CharField(max_length=900)
-
+    is_active = models.BooleanField(default=False)
 
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)
@@ -79,6 +80,8 @@ class Product(TrashableMixin, models.Model):
     vendor = models.ForeignKey(Vendor, related_name='products')
     photo = models.ForeignKey(ProductPhoto, blank=True, null=True)
     tags = TaggableManager()
+    
+secretballot.enable_voting_on(Product)
 
 class SellerLocation(TrashableMixin, models.Model):
     vendor = models.ForeignKey(Vendor)

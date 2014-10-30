@@ -1,5 +1,49 @@
 /* BELOCAL STYLES */
 
+.vendor-card-name {
+  color: #000;
+}
+
+.vendor-card-name:hover {
+  color: #000;
+}
+
+.like-container {
+  padding-left: 10px;
+  margin-left:3px;
+  border-left: 1px solid #A7A7A7;
+}
+
+.like-button {
+  color: #A7A7A7;
+}
+
+.beLocal-btn-default {
+  background-color: white !important;  
+  border-color: #CCCCCC !important;
+}
+
+.beLocal-btn-default:hover {
+  background-color: #EFEFEF !important;  
+}
+
+button:focus,button:hover,button:active {
+  outline: 0px !important;
+  -webkit-appearance:none;
+}
+
+.like-button:hover {
+  color: #979797;
+}
+
+.like-button:focus {
+  background-color: white !important;
+}
+
+.like-button-liked {
+  color: #d35b3d !important;
+}
+
 textarea {
     resize: vertical;
 }
@@ -693,7 +737,7 @@ color: #000 !important;
   text-align: right;
 }
 
-.container-display-vendor-name{
+.container-display-vendor-name {
   color: #696969 !important;
   font-size: 12px;
   padding-top: 0px;
@@ -820,10 +864,11 @@ color: #000 !important;
 
 .card-formatting {
   background: #FFFFFF;
-  -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3);
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3) !important;
   padding: 10px;
   margin-top: 5px;
   margin-bottom: 10px;
+  
 }
 
 .container-for-cards{
@@ -900,6 +945,11 @@ hr{
   padding-top: 10px;
   padding-bottom: 0px;
 
+}
+
+.indent-after-first-line {
+  text-indent:-15px;
+  margin-left:15px
 }
 
 .new-stock-style {

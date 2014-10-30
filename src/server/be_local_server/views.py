@@ -9,15 +9,24 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseServerError, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.views.decorators.csrf import csrf_exempt
 from social.apps.django_app.utils import psa
+from secretballot import views
+from secretballot.models import Vote
 from be_local_server import serializers
 from be_local_server.models import *
+<<<<<<< HEAD
 from haystack.query import SearchQuerySet
+=======
+import json
 
-class ObtainAuthToken(APIView):
+>>>>>>> master
+
+class LoginView(APIView):
     throttle_classes = ()
     permission_classes = ()
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
@@ -27,24 +36,81 @@ class ObtainAuthToken(APIView):
  
     def post(self, request, backend):
         serializer = self.serializer_class(data=request.DATA)
-        if backend == 'auth':
-            if serializer.is_valid():
-                token, created = Token.objects.get_or_create(user=serializer.object['user'])
-                return Response({'token': token.key})
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
- 
+        user = register_by_access_token(request, backend)
+
+        if user:
+            token = Token.objects.get(user=user)
+            response = {}
+            if user.is_staff:
+                vendor = Vendor.objects.get(user=user)
+                response = {'id': user.id, 'is_active' : vendor.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+            else:
+                response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
+            return Response(response)
         else:
-            user = register_by_access_token(request, backend)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)             
+
+class CreateVendorView(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AuthTokenSerializer
+    model = Token
  
-            if user and user.is_active:
-                token, created = Token.objects.get_or_create(user=user)
-                response = {}
-                if user.is_staff:
-                    vendor = Vendor.objects.get(user=user)
-                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
-                else:
-                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
-                return Response(response)
+    def post(self, request, backend):
+        serializer = self.serializer_class(data=request.DATA)
+        user = register_by_access_token(request, backend)
+
+        if user:
+            token, created_token = Token.objects.get_or_create(user=user)
+            vendor, created_vendor = Vendor.objects.get_or_create(user=user)
+
+            if(not created_token):
+                return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)
+            
+            # If the user is a newly created vendor, make them inactive.
+            if(created_vendor):
+                user.is_staff = 1 # make the user a vendor
+                vendor.is_active = False # make the user inactive
+                vendor.save()
+                user.save()
+
+                vendor.company_name = user.username # set this for Carly's UI
+                vendor.save()
+
+            response = {}
+            response = {'id': user.id, 'is_active' : vendor.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN','vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+            
+            return Response(response)    
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CreateCustomerView(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AuthTokenSerializer
+    model = Token
+ 
+    def post(self, request, backend):
+        serializer = self.serializer_class(data=request.DATA)
+        user = register_by_access_token(request, backend)
+
+        if user:
+            token, created_token = Token.objects.get_or_create(user=user)
+            vendor, created_vendor = Vendor.objects.get_or_create(user=user)
+
+            if(not created_token):
+                return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)            
+
+            response = {}
+            response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
+            
+            return Response(response)    
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                               
 
 @psa()
 def register_by_access_token(request, backend):
@@ -71,11 +137,22 @@ class VendorDetailsView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         vendor = Vendor.objects.get(pk=request.DATA["id"])
-        locations = SellerLocation.objects.filter(vendor=vendor)
-        products = Product.objects.filter(vendor=vendor, stock="IS")
+        if(vendor.is_active == True):
+            locations = SellerLocation.objects.filter(vendor=vendor)
+            products = Product.objects.filter(vendor=vendor, stock="IS")
 
-        return Response({"vendor":serializers.VendorSerializer(vendor).data, "locations":serializers.SellerLocationSerializer(locations, many=True).data, "products":serializers.ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)  
+            if products is not None:
+                for product in products:
+                    product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
 
+            return Response({"vendor":serializers.VendorSerializer(vendor).data, 
+                             "locations":serializers.SellerLocationSerializer(locations, many=True).data, 
+                             "products":serializers.ProductDisplaySerializer(products, many=True).data
+                            }, 
+                            status=status.HTTP_200_OK
+            )  
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class AddVendorView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
@@ -101,7 +178,7 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
     """
     
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,) 
     serializer_class = serializers.VendorSerializer
 
     def get(self, request):
@@ -186,9 +263,10 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     
     def get(self, request, product_id):       
         product = Product.objects.get(pk=product_id)
+        product.is_liked = Product.objects.from_request(request).get(pk=product.id).user_vote
         
         if product is not None:
-            serializer = serializers.ProductSerializer(product) 
+            serializer = serializers.ProductDisplaySerializer(product) 
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response("Product not found", status=status.HTTP_404_NOT_FOUND)  
@@ -219,9 +297,10 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
 
 class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
     """
-    This view provides an endpoint for deleting and modifying views         
+    This view provides an endpoint for deleting and modifying seller locations         
     """
-    permission_classes = (AllowAny,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.SellerLocationSerializer
 
     def patch(self, request, location_id):
@@ -248,6 +327,9 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
         return location
 
 class DeleteSellerLocationView(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+
     def post(self, request):
         if("id" in request.DATA.keys() and "action" in request.DATA.keys()):
             if(request.DATA["action"] == "restore"):
@@ -270,6 +352,9 @@ class DeleteSellerLocationView(generics.CreateAPIView):
             return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)
 
 class DeleteProductView(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+    
     def post(self, request):
         if("id" in request.DATA.keys() and "action" in request.DATA.keys()):
             if(request.DATA["action"] == "restore"):
@@ -326,13 +411,16 @@ class VendorProductView(generics.ListAPIView):
     """   
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-    serializer_class = serializers.ProductSerializer
+    serializer_class = serializers.ProductDisplaySerializer
 
     def get_queryset(self):
         vendor = Vendor.objects.get(user=self.request.user)
         products = Product.objects.filter(vendor=vendor)
 
         if products is not None:
+            for product in products:
+                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
+            
             return products
         else:
             return Response(status=status.HTTP_404_NOT_FOUND) 
@@ -370,9 +458,13 @@ class TrendingProductView(generics.ListAPIView):
 
     serializer_class = serializers.ProductDisplaySerializer
 
-    def get_queryset(self):
-        return Product.objects.filter(stock=Product.IN_STOCK)      
-
+    def get_queryset(self):  
+        products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True) 
+        if products is not None:
+            for product in products:
+                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
+                
+        return products
 
 class ListMarketsView(generics.ListAPIView):
     """
@@ -411,7 +503,7 @@ class VendorsView(generics.ListAPIView):
     serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
-        return Vendor.objects.all()
+        return Vendor.objects.filter(is_active=True)
 
 class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -472,3 +564,46 @@ def searchProducts(request):
     products = [SearchProductViewModel(r.name,r.object.vendor.company_name) for r in results]
     the_data = json.dumps(products, cls=JsonHelper)
     return HttpResponse(the_data, content_type='application/json')    
+
+@csrf_exempt
+def like(request, content_type, id):
+    """ 
+    Handles likes on a model object.
+    """
+    app, modelname = content_type.split('-')
+    content_type = ContentType.objects.get(app_label=app, 
+                                           model__iexact=modelname)
+    
+    if request.method == 'POST':
+        response = views.vote(
+                              request,
+                              content_type = content_type,
+                              object_id = id,
+                              vote = '+1',
+                              mimetype='application/json'
+        )
+        # JSON formatting
+        response.content = response.content.replace("'","\"")
+        return response 
+    
+    if request.method == 'DELETE':
+        response = views.vote(
+                              request,
+                              content_type = content_type,
+                              object_id = id,
+                              vote=None,
+                              mimetype='application/json'
+        )
+        # JSON formatting
+        response.content = response.content.replace("'","\"")
+        return response
+    
+    if request.method == 'GET':
+        vote = Product.objects.from_request(request).get(pk=id).user_vote
+        if (vote):
+            body = '{"is_liked": true}'
+            return HttpResponse(body, status=status.HTTP_200_OK, content_type='application/json')
+        else:
+            body = '{"is_liked": false}'
+            return HttpResponse(body, status=status.HTTP_404_NOT_FOUND, content_type='application/json') 
+        

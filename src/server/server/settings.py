@@ -48,7 +48,8 @@ INSTALLED_APPS = (
     #'south',   # Only if you're relying on South for migrations.
     'be_local_server',
     'undelete',
-    'taggit'
+    'taggit',
+    'secretballot',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -58,7 +59,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',     
+    'be_local_server.middleware.SecretBallotAuthenticatedUserMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -74,6 +76,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'social.apps.django_app.context_processors.backends',
     'social.apps.django_app.context_processors.login_redirect',
  
+    'django.core.context_processors.csrf',
     #'account.context_processors.account',
  
 )

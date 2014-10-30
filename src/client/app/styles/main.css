@@ -1,5 +1,24 @@
 /* BELOCAL STYLES */
 
+textarea {
+    resize: vertical;
+}
+
+.hours-picker {
+  margin-bottom: 5px;
+}
+
+.closed-string {
+  margin: 0px;
+  font-weight: bold;
+  padding-top:10px;
+  padding-bottom:10px;
+}
+
+.closed-container {
+  text-align: center;
+}
+
 .btn-more-details {
   margin-top: 5px;
 }
@@ -11,11 +30,13 @@
 html {
   position: relative;
   min-height: 100%;
+  background-color: #EEEEEE;
 }
 
 body {
   /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  margin-bottom: 40px;
+  background-color: #EEEEEE;  
 }
 
 .footer {
@@ -24,7 +45,14 @@ body {
   width: 100%;
   /* Set the fixed height of the footer here */
   height: 60px;
-  background-color: #f5f5f5;
+  background-color: #777777;
+  color: #EFEFEF;
+}
+
+@media (max-width: 598px) {
+  .radio-inline-responsive {
+    margin-left: 0px !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -279,7 +307,7 @@ body {
 /* Custom page footer */
 .footer {
   padding-top: 19px;
-  color: #777;
+  background-color: #777;
   border-top: 1px solid #e5e5e5;
 }
 
@@ -447,9 +475,10 @@ body {
 
 .seller-item-stock {
   vertical-align: center;
-  border-top: 1px solid #dddddd;
   padding-top: 5px;
   padding-bottom: 5px;
+  margin-top: 5px;
+  margin-left: 5px;
 }
 
 .seller-item {
@@ -647,14 +676,6 @@ color: #000 !important;
 
 }
 
-.hr {
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
-  margin-top: 0px !important;
-  margin-bottom: 0px !important;
-
-}
-
 .icon-map-styles {
   font-size: 40px;
   color: #dddddd !important;
@@ -748,4 +769,185 @@ color: #000 !important;
   padding: 5px;
   /*width:90% !important;*/
   border-radius: 5px !important;
+}
+
+
+
+/*NEW UI STYLES (OCT 21st)*/
+
+
+.new-formatting-container{
+  padding: 5px 15px 5px 15px !important;
+  background-color: #EEEEEE;
+}
+
+.new-heading-style {
+  margin-top: 15px;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 25px;
+  line-height: normal;
+  font-weight: bold;
+  color: #403e3b;
+
+}
+
+.new-hr-heading-style {
+  font-size: 16px;
+  display: inline-block;
+  font-family: 'Roboto', sans-serif;
+  color: #9c9795;
+  height: 34px;
+  vertical-align: middle !important;
+  padding-top: 7px;
+}
+
+.new-hr-heading-style a {
+  color: #9C9795;
+}
+
+.new-hr-heading-style a:hover {
+  color: #7d7978;
+}
+
+.new-vendor-name-style {
+  margin-top: 15px;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 40px;
+  line-height: normal;
+  font-weight: bolder;
+  color: #403e3b;
+}
+
+.card-formatting {
+  background: #FFFFFF;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3);
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.container-for-cards{
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 5px; /* Adding this for now since I think we're just alphabetizing cards rather than displaying them with headings */
+}
+
+hr{
+  border-color: #d3d3d3 !important;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.new-vendor-avatar { 
+  width: 500px;
+  height: 100%; 
+  max-width: 100%;
+  overflow: hidden; 
+  vertical-align: middle;
+}
+
+.new-vendor-avatar img { 
+  width: 100%; 
+}
+
+.description-container {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 14px;
+  font-family: Graphik,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  line-height: normal;
+}
+
+.vendor-header-content {
+  padding-right: 15px;
+}
+
+.vendor-profile-header{
+  padding: 5px 0px 15px 0px;
+}
+
+.edit-delete-buttons{
+  text-align: right;
+  padding-right: 25px;
+}
+
+.full-container{
+  width:100%;
+}
+
+.vendor-product-image img{
+  padding: 3px;
+  border: 1px solid #d3d3d3;
+  width:100%;
+}
+
+.seller-stock-formatting input[type="radio"]{
+  margin-left:25px;
+  text-align: right !important;
+}
+
+.availability-hr {
+  margin-top: 10px;
+  padding-bottom: 5px;
+}
+
+.location-details {
+  display: inline-block;
+  padding: 0px 15px 0px 15px !important;
+  font-size: 13px;
+  font-family: 'Roboto', sans-serif;
+  color: #403e3b;
+  padding-top: 10px;
+  padding-bottom: 0px;
+
+}
+
+.new-stock-style {
+  font-size: 15px;
+  font-family: 'Roboto', sans-serif;
+  color: #403e3b;
+
+}
+.card-lable-style {
+  margin-top: 5px;
+  margin-bottom:5px;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 20px;
+  line-height: normal;
+  font-weight: bolder;
+  color: #403e3b;
+}
+
+.store-hours{
+  padding-left:10px;
+}
+
+@media (max-width: 992px) {
+  .new-vendor-avatar { 
+    max-width: 500px; 
+    height: 100%; 
+    overflow: hidden; 
+    vertical-align: middle;
+  }
+
+  .vendor-header-content {
+    padding-left: 15px;
+    padding-bottom: 15px;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .new-vendor-avatar { 
+    max-width: 90%; 
+    height: 100%; 
+    overflow: hidden; 
+    vertical-align: middle;
+  }
+
+  .vendor-header-content {
+    padding-left: 15px;
+    padding-bottom: 15px;
+  }
+
 }

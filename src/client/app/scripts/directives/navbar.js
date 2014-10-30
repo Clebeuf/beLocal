@@ -10,7 +10,7 @@ angular.module('clientApp')
       	$scope.loginError = false;
 
       	$scope.showLogin = function() {
-      		OAuth.popup('facebook', {cache : true, authorize: {'scope':'email'}})
+      		OAuth.popup('facebook', {cache : true, authorize: {'scope':'email, publish_actions'}})
 		    .done(function (result) {
 		        AuthService.processLogin(result).then(function(response) {
 		          if(response.status !== 200) {

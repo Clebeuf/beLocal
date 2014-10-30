@@ -41,7 +41,7 @@ class AddressSerializer(serializers.ModelSerializer):
     fields = ( 'id', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude', 'hours')
 
 class AddAddressSerializer(serializers.ModelSerializer):
-  hours = AddOpeningHoursSerializer(many=True)  
+  hours = AddOpeningHoursSerializer(many=True, allow_add_remove=True, read_only=False)  
   class Meta:
     model = be_local_server.models.Address
     fields = ( 'id', 'addr_line1', 'city', 'zipcode', 'state', 'country', 'latitude', 'longitude', 'hours')    
@@ -50,7 +50,7 @@ class VendorPhotoPathSerializer(serializers.ModelSerializer):
     image_url = serializers.Field(source="image_url")  
     class Meta: 
         model = be_local_server.models.VendorPhoto
-        fields = ('image_url',)
+        fields = ('id', 'image_url',)
 
 class VendorPhotoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -70,8 +70,26 @@ class VendorSerializer(serializers.ModelSerializer):
     					'phone',
     					'extension',
               'photo',
-              'address'
+              'address',
+              'description'
     		)
+
+class EditVendorSerializer(serializers.ModelSerializer):
+    address = AddressSerializer()
+    class Meta:
+        model = be_local_server.models.Vendor
+        fields = (  
+              'id', 
+              'user',
+              'company_name',
+              'webpage',
+              'country_code',
+              'phone',
+              'extension',
+              'photo',
+              'address',
+              'description'
+        )        
 
 class BusinessVendorSerializer(serializers.ModelSerializer):
     photo = VendorPhotoPathSerializer()
@@ -83,7 +101,7 @@ class BusinessVendorSerializer(serializers.ModelSerializer):
                     'country_code',
                     'phone',
                     'extension',
-                    'photo'
+                    'photo',
         ) 
 
 class PhotoPathSerializer(serializers.ModelSerializer):

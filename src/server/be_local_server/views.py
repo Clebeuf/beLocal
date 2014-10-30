@@ -41,7 +41,7 @@ class ObtainAuthToken(APIView):
                 response = {}
                 if user.is_staff:
                     vendor = Vendor.objects.get(user=user)
-                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : {'company_name' : vendor.company_name}, 'token': token.key}
+                    response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
                 else:
                     response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
                 return Response(response)
@@ -100,8 +100,8 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
     modify their information
     """
     
-    #authentication_classes = (TokenAuthentication,)
-    permission_classes = (AllowAny,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.VendorSerializer
 
     def get(self, request):
@@ -126,8 +126,24 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
         else:
             return Response("Vendor not found", status=status.HTTP_404_NOT_FOUND)
 
-    def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
+    def patch(self, request):
+        vendor = Vendor.objects.get(user=request.user) 
+   
+        if vendor is not None:
+            serializer = serializers.EditVendorSerializer(vendor, data=request.DATA, partial=True)
+           
+            if serializer.is_valid():
+                serializer.save()
+
+                d = serializer.data
+                p = VendorPhoto.objects.get(pk=serializer.data["photo"])
+                serializer.data["photo"] = serializers.VendorPhotoPathSerializer(p).data
+
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        else:
+            return Response("Vendor not found", status=status.HTTP_404_NOT_FOUND) 
 
     def get_object(self):
         try:
@@ -194,6 +210,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
            
             if serializer.is_valid():
                 serializer.save()
+
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
@@ -208,6 +225,18 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.SellerLocationSerializer
 
     def patch(self, request, location_id):
+
+        # Workaround for a Django bug that doesn't allow for multiple nested objects to be deserialized properly
+        # As a result, we need to clear out the hours for recurring events and re-add them each time
+        if(request.method == 'PATCH'):
+            location = SellerLocation.objects.get(pk=location_id)
+            address = location.address
+            address.date = None
+            address.save()
+            hours = OpeningHours.objects.filter(address=address)
+            for hour in hours:
+                hour.delete()
+
         self.id = location_id
         return self.partial_update(request)
 

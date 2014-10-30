@@ -17,8 +17,182 @@ angular.module('clientApp')
     $scope.warningHTML = '';
     $scope.locationResults = {};
     $scope.locationType = 'true';
+    $scope.currentUser = StateService.getCurrentUser();
+    $scope.facebookChecked = true;
+    $scope.twitterChecked = true;
+    $scope.sellingToday = false;
+    $scope.currentUser = {};
+    angular.copy(StateService.getCurrentUser(), $scope.currentUser);
 
-    var geocoder = new google.maps.Geocoder();    
+    var geocoder = new google.maps.Geocoder();
+
+    $scope.isTwitterAuth = OAuth.create('twitter');
+    $scope.hashtag = ' #beLocal';
+
+    $scope.weekdays = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+    ];
+
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };
+
+    $scope.doTwitterSignIn = function() {
+        OAuth.popup('twitter', {cache : true})
+        .done(function (twitter) {  
+            $scope.safeApply(function() {
+                $scope.isTwitterAuth = true;
+            });
+        });
+    }
+
+    $scope.compareDates = function(date1, date2) {
+        if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
+            return true;
+        else
+            return false;
+    }
+
+    $scope.generateVendorURL = function(id) {
+        var serverAddress = 'http://127.0.0.1:9000';
+        return  serverAddress + '/vendor/details/1'; 
+    }
+
+    $scope.generateTwitterString = function() {
+        var company_name = $scope.currentUser.vendor.company_name !== undefined ? $scope.currentUser.vendor.company_name : $scope.currentUser.name;        
+        if($scope.sellingToday) {
+            $scope.twitterString = company_name + " is open today. For a full list of selling locations and hours, visit " + $scope.generateVendorURL();
+        } else {
+            $scope.twitterString = "We're closed today, but make sure to check out our latest products and selling locations at " + $scope.generateVendorURL();
+        }
+    }
+
+    $scope.generateFacebookString = function() {
+        var company_name = $scope.currentUser.vendor.company_name !== undefined ? $scope.currentUser.vendor.company_name : $scope.currentUser.name;
+        $scope.facebookString = company_name + ' is selling at the following locations today:\n\n';
+
+        // GENERATE LOCATIONS
+        for(var i = 0; i < $scope.sellerLocations.length; i++) {
+            var sl = $scope.sellerLocations[i];
+            // If we're a one time location, let's see if the date is today's date.
+            if(sl.date !== null) {
+                var slDate = new Date(sl.date);
+                slDate.setTime(slDate.getTime() + slDate.getTimezoneOffset() * 60000);
+
+                // If so, add it to the Facebook string.
+                if($scope.compareDates(new Date(), slDate)) {
+                    $scope.sellingToday = true;
+                    $scope.facebookString += sl.name + ' at ' + sl.address.addr_line1 + ', ' + sl.address.city + '\nFrom ' + sl.address.hours[0].from_hour + ' - ' + sl.address.hours[0].to_hour + '\n';
+                }
+            } else {
+                // We are a recurring location. Let's see if we're open today
+                for(var j = 0; j < sl.address.hours.length; j++) {
+                    var today = new Date().getDay();
+                    if(sl.address.hours[j].weekday == today) {
+                        $scope.sellingToday = true;
+                        $scope.facebookString += sl.name + ' at ' + sl.address.addr_line1 + ', ' + sl.address.city + '\nFrom ' + sl.address.hours[j].from_hour + ' - ' + sl.address.hours[j].to_hour + '\n';                        
+                    }
+                }
+            }
+        }
+
+        // GENERATE ITEMS  
+        $scope.facebookString += '\nSome of the items we will be selling today include the following:\n\n';
+        for(var i = 0; i < $scope.sellerItems.length; i++) {
+            var si = $scope.sellerItems[i];
+            if(si.stock === "IS")
+                $scope.facebookString += si.name + '\n';
+        }
+    }
+
+    $scope.editProfile = function() {
+
+        var e = angular.element('#profile-image');
+        e.wrap('<form>').closest('form').get(0).reset();
+        e.unwrap();
+
+        $scope.displayProfileThumbnail = $scope.currentUser.vendor.photo ? true : false;
+
+        if($scope.displayProfileThumbnail)
+            angular.element('#profilePreview').attr('src', $scope.currentUser.vendor.photo.image_url).width(50).height(50);
+    }
+
+    $scope.generateSocialStrings = function() {
+        $scope.generateFacebookString();
+        $scope.generateTwitterString();
+    }
+
+    $scope.publishSocialUpdate = function() {
+        if($scope.facebookChecked) {
+      
+            OAuth.popup('facebook', {cache : true, authorize: {'scope':'email, publish_actions'}})
+            .done(function (facebook) {
+                facebook.post({
+                    url: '/me/feed',
+                    data : {
+                        message: $scope.facebookString
+                    }
+                });
+            });
+        } 
+
+        if($scope.twitterChecked) {
+            angular.element('#shareModal').modal('hide');            
+            OAuth.popup('twitter', {cache : true}).done(function(twitter) {
+                twitter.post({
+                    url: '/1.1/statuses/update.json' + '?status=' + escape($scope.twitterString + $scope.hashtag)
+                });      
+            });
+        }
+    }      
+
+    $scope.vendorProfileUpdate = function() {
+        $scope.vendorProfileUpdated = true;
+        if($scope.profileForm.$valid) {
+            angular.element('#profileModal').modal('hide');
+            console.log($scope.currentUser);
+            StateService.updateCurrentUser($scope.currentUser).then(function(result) {
+                StateService.setProfileVendor(result.data);
+            });
+        }
+    }
+
+    $scope.buildHoursObject = function() {
+        var openHours = [];
+
+        var start = new Date();
+        var end = new Date();
+
+        start.setHours(8);
+        start.setMinutes(0,0);
+        end.setHours(16);
+        end.setMinutes(0,0);
+
+        for(var i = 1; i < 8; i++) {
+            openHours.push({
+                weekday : i, 
+                day : $scope.weekdays[i - 1], 
+                from_hour : start, 
+                to_hour: end,
+                checked: i == 6 || i == 7 ? false : true
+            });
+        }
+
+        return openHours;
+    } 
 
     $scope.resetLocationModal = function() {
         $scope.addressSearchText = undefined;
@@ -30,7 +204,8 @@ angular.module('clientApp')
         tempDate.setHours(tempDate.getHours() + 1);
         $scope.startTime = $scope.roundTimeToNearestFive(new Date());
         $scope.endTime = $scope.roundTimeToNearestFive(tempDate);
-        $scope.locationDate = new Date();        
+        $scope.locationDate = new Date();
+        $scope.locationHours = $scope.buildHoursObject();
 
         $scope.locationAddress = undefined;
         $scope.locationCity = undefined;
@@ -57,14 +232,46 @@ angular.module('clientApp')
     }
 
     $scope.editLocation = function(location) {
+
+        if(location.date == null) {
+            var hours = $scope.buildHoursObject();
+            var currentHour = 0;
+
+            var start = new Date();
+            var end = new Date();
+
+            start.setHours(8);
+            start.setMinutes(0,0);
+            end.setHours(16);
+            end.setMinutes(0,0);        
+
+            for(var i = 0; i < hours.length; i++) {
+                if(currentHour < location.address.hours.length && hours[i].weekday === location.address.hours[currentHour].weekday) {
+                    hours[i].checked = true;
+                    hours[i].day = $scope.weekdays[i];
+                    hours[i].from_hour = $scope.setTime(location.address.hours[currentHour].from_hour);
+                    hours[i].to_hour = $scope.setTime(location.address.hours[currentHour].to_hour);
+                    currentHour += 1;                    
+                } else {
+                    hours[i].checked = false;
+                    hours[i].from_hour = start;
+                    hours[i].to_hour = end;
+                }
+            }
+            $scope.locationDate = new Date(); // This shouldn't be necessary, but it is.
+            $scope.locationHours = hours;  
+            $scope.locationType = 'false';        
+        } else {
+            $scope.locationType = 'true';
+            $scope.locationDate = location.date;
+
+            $scope.startTime = $scope.setTime(location.address.hours[0].from_hour);
+            $scope.endTime = $scope.setTime(location.address.hours[0].to_hour);
+        }
+
         $scope.isEditingLocation = true;
         $scope.newLocationSubmitted = false;
         $scope.submitLocationButtonText = "Save Changes";
-
-        $scope.locationDate = location.date;
-
-        $scope.startTime = $scope.setTime(location.address.hours[0].from_hour);
-        $scope.endTime = $scope.setTime(location.address.hours[0].to_hour);
 
         $scope.addressSearchText = location.address.addr_line1 + ', ' + location.address.city + ', ' + location.address.state + ' ' + location.address.zipcode + ', ' + location.address.country;
 
@@ -177,6 +384,26 @@ angular.module('clientApp')
         });
     }
 
+    $scope.profileFileNameChanged = function(file) {
+
+        if (file && file[0]) {
+            var reader = new FileReader();
+            $scope.displayItemThumbnail = true;
+            reader.onload = function(e) {
+                angular.element('#profilePreview')
+                .attr('src', e.target.result)
+                .width(50)
+                .height(50);             
+            };
+            reader.readAsDataURL(file[0]);
+        }
+
+        StateService.uploadProfileFile(file[0])
+        .success(function(response) {
+            $scope.currentUser.vendor.photo = response.id;
+        });
+    }    
+
     $scope.roundTimeToNearestFive = function(date) {
       var coeff = 1000 * 60 * 5;
       return new Date(Math.round(date.getTime() / coeff) * coeff);
@@ -220,11 +447,11 @@ angular.module('clientApp')
         }
     }
 
-    $scope.newLocationSubmit = function() {
+    $scope.newLocationSubmit = function() {       
         $scope.newLocationSubmitted = true;
         if($scope.locationForm.$valid) {
-            angular.element('#locationModal').modal('hide');
-            var hours = {};                  
+            angular.element('#locationModal').modal('hide');                 
+            var hours = [];
 
             var address = {
                 "addr_line1" : $scope.locationAddress,
@@ -234,7 +461,7 @@ angular.module('clientApp')
                 "zipcode" : $scope.locationPostalCode,
                 "latitude" : $scope.latitude,
                 "longitude" : $scope.longitude
-            };
+            }
 
             // If we are a one time location...
             if($scope.locationType == 'true') {
@@ -243,9 +470,21 @@ angular.module('clientApp')
                     "from_hour" : $scope.startTime.getHours() + ':' + $scope.startTime.getMinutes(),
                     "to_hour" : $scope.endTime.getHours() + ':' + $scope.endTime.getMinutes()
                 }];
+            } else {
+                var hours = [];
+                $scope.locationDate = null;
+                for(var i = 0; i < $scope.locationHours.length; i++) {
+                    if($scope.locationHours[i].checked) {
+                        hours.push({
+                            "weekday" : $scope.locationHours[i].weekday,
+                            "from_hour" : $scope.locationHours[i].from_hour.getHours() + ':' + $scope.locationHours[i].from_hour.getMinutes(),
+                            "to_hour" : $scope.locationHours[i].to_hour.getHours() + ':' + $scope.locationHours[i].to_hour.getMinutes()
+                        });
+                    }
+                }             
             }
 
-            address.hours = hours;
+            address.hours = hours;             
 
             var sellerLocation = {
                 "id" : $scope.locationId,
@@ -341,13 +580,13 @@ angular.module('clientApp')
 
   })
   .directive('htmlComp', function($compile, $parse) {
-  return {
-    restrict: 'E',
-    link: function(scope, element, attr) {
-      scope.$watch(attr.content, function() {
-        element.html($parse(attr.content)(scope));
-        $compile(element.contents())(scope);
-      }, true);
-    }
-  }
+      return {
+        restrict: 'E',
+        link: function(scope, element, attr) {
+          scope.$watch(attr.content, function() {
+            element.html($parse(attr.content)(scope));
+            $compile(element.contents())(scope);
+          }, true);
+        }
+      }
   });

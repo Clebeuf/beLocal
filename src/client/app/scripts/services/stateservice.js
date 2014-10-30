@@ -9,6 +9,17 @@ angular.module('clientApp')
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
 
+
+
+    this.updateCurrentUser = function(user) {
+      var url = this.getServerAddress() + 'vendor/';        
+      return $http({method: 'PATCH', url: url, data: user.vendor})
+      .success(function() {
+        console.log("Edited User! yay!");
+      }); 
+    };
+
+
     this.setVendorToDisplay = function(vendorID) {
       vendorToDisplay = vendorID;
     };
@@ -33,6 +44,11 @@ angular.module('clientApp')
 
     this.setProfile = function(u) {
       currentUser = u;
+    };
+
+    this.setProfileVendor = function(u) {
+      currentUser.vendor = u;
+      ipCookie('beLocalUser', currentUser, {expires: 14});
     };
 
     this.getUserType = function() {
@@ -124,6 +140,18 @@ angular.module('clientApp')
       })
     };
 
+    this.uploadProfileFile = function(file) {
+      var fd = new FormData();
+      fd.append('image', file);
+      return $http.post(this.getServerAddress() + 'vendor/photo/add/', fd, {
+        headers: {'Content-Type' : undefined},
+        transformRequest: angular.identity,
+      })
+      .error(function(data) {
+        console.log('Error uploading image.');
+      })
+    };    
+
     this.createItem = function(item, isEditing) {
       if(isEditing) {
         var url = this.getServerAddress() + 'vendor/products/' + item.id + '/';        
@@ -157,7 +185,7 @@ angular.module('clientApp')
 
     this.createSellerLocation = function(sellerLocation, isEditing) {
       if(isEditing) {
-        var url = this.getServerAddress() + 'vendor/location/' + sellerLocation.id + '/';
+        var url = this.getServerAddress() + 'vendor/location/' + sellerLocation.id + '/';       
         return $http({method: 'PATCH', url: url, data: sellerLocation})
         .success(function() {
           console.log("Edited a location!");

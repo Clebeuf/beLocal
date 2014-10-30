@@ -47,7 +47,8 @@ class ProductTestCase(APITestCase):
                                         extension="123",
                                         description="This is a short description.",
                                         photo=None,
-                                        address=address1
+                                        address=address1,
+                                        is_active=True,
                                         )
         Product.objects.create(
                                vendor=vendor1,
@@ -75,7 +76,7 @@ class ProductTestCase(APITestCase):
     def test_list_vendor_products(self):            
         url = reverse('vendor-products-list') 
         response = self.client.get(url)
-        print "Vendor products list: \n", response
+        #print "Vendor products list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
     
     # product details
@@ -89,13 +90,13 @@ class ProductTestCase(APITestCase):
                 'stock': "IS",
                 } 
         response = self.client.post(url, data)
-        print "Add Vendor's product : \n", response
+        #print "Add Vendor's product : \n", response
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
     def test_read_product(self):             
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         response = self.client.get(url)
-        print "Vendor's product details: \n", response
+        #print "Vendor's product details: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
         
         # Test likes
@@ -103,14 +104,14 @@ class ProductTestCase(APITestCase):
         response = self.client.post(url)
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         response = self.client.get(url)
-        print "Vendor's product details: \n", response
+        #print "Vendor's product details: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)   
     
     def test_edit_product(self): 
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         data = {'stock':"OOS"}
         response = self.client.patch(url, data)
-        print "Edit Vendor's product: \n", response
+        #print "Edit Vendor's product: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)  
         
     def test_delete_product(self):
@@ -118,28 +119,28 @@ class ProductTestCase(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)  
         
-    def test_add_like(self):
+    def test_like_product(self):
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.post(url)
-        print "After adding like: ", response
+        #print "After liking a product: ", response
         self.assertEqual(response.content, '{"num_votes":1}')
          
-    def test_delete_like(self):
+    def test_unlike_product(self):
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.post(url)
         
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.delete(url)
-        print "After deleting like: ", response
+        #print "After deleting like of product : ", response
         self.assertEqual(response.content, '{"num_votes":0}')
     
-    def test_get_user_like(self):
+    def test_get_product_likes(self):
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.post(url)
         
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.get(url)
-        print "Get like status: ", response.content
+        #print "Get product like status: ", response.content
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.content, '{"is_liked": true}')
         
@@ -147,14 +148,14 @@ class ProductTestCase(APITestCase):
         response = self.client.delete(url)
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.get(url)
-        print "Get like status: ", response.content
+        #print "Get product like status: ", response.content
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.content, '{"is_liked": false}')
         
     def test_trending_products(self):
         url = reverse('product-trending-list')
         response = self.client.get(url)
-        print "Trending products: ", response
+        #print "Trending products: ", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
         # Test likes
@@ -162,7 +163,7 @@ class ProductTestCase(APITestCase):
         response = self.client.post(url)
         url = reverse('product-trending-list')
         response = self.client.get(url)
-        print "Trending products: ", response
+        #print "Trending products: ", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)   
         
 # Vendor test cases
@@ -230,14 +231,14 @@ class VendorTestCase(APITestCase):
     def test_list_vendors(self):            
         url = reverse('vendors-list') 
         response = self.client.get(url)
-        print "Vendors list: \n", response
+        #print "Vendors list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
     # read vendor    
     def test_read_vendor(self):             
         url = reverse('vendor')
         response = self.client.get(url)
-        print "Vendor details: \n", response
+        #print "Vendor details: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
         
     # vendor details    
@@ -245,14 +246,46 @@ class VendorTestCase(APITestCase):
         url = reverse('vendor-details')
         data = {'id': 2}
         response = self.client.post(url, data)
-        print "Vendor details: \n", response
+        #print "Vendor details: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
         #inactive vendor
         url = reverse('vendor-details')
         data = {'id': 1}
         response = self.client.post(url, data)
-        print "Vendor details: \n", response
+        #print "Vendor details: \n", response
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-          
+         
+    def test_like_vendor(self):
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.post(url)
+        #print "After liking a vendor: ", response
+        self.assertEqual(response.content, '{"num_votes":1}')
+         
+    def test_unlike_vendor(self):
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.post(url)
+        
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.delete(url)
+        #print "After unliking vendor: ", response
+        self.assertEqual(response.content, '{"num_votes":0}')
+    
+    def test_get_vendor_like(self):
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.post(url)
+        
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.get(url)
+        #print "Get vendor like status: ", response.content
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, '{"is_liked": true}')
+        
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.delete(url)
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.get(url)
+        #print "Get vendor like status: ", response.content
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.content, '{"is_liked": false}')         
     

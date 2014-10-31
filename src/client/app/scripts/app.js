@@ -14,23 +14,33 @@ var app = angular.module('clientApp', [
   .config(function ($stateProvider, $httpProvider, $urlRouterProvider, $locationProvider) {
 
     $stateProvider
+    .state('welcome', {
+      url: '/welcome',
+      templateUrl: 'views/welcome.html',
+      controller: 'WelcomeCtrl',
+      authenticate: false,
+      css: 'styles/welcome.css'
+    })    
     .state('main', {
       url: '/',
       templateUrl: 'views/main.html',
       controller: 'MainCtrl',
-      authenticate: false
+      authenticate: false,
+      css: 'styles/main.css'      
     })
-    .state('seller', {
-      url: '/seller',
+    .state('vendor', {
+      url: '/vendor',
       templateUrl: 'views/seller.html',
       controller: 'SellerCtrl',
-      authenticate: true
+      authenticate: true,
+      css: 'styles/main.css' 
     })
     .state('vendor/details', {
       url: '/vendor/details/{vendorid:[0-9]{1,8}}',
       templateUrl: 'views/details.html',
       controller: 'DetailsCtrl',
-      authenticate: false
+      authenticate: false,
+      css: 'styles/main.css'
     });
 
     $httpProvider.defaults.headers.patch = {
@@ -40,11 +50,17 @@ var app = angular.module('clientApp', [
     // Define the default action to be taken if an unrecognized route is taken.
     $urlRouterProvider.otherwise('/');
   })
-  .run(function ($rootScope, $state, AuthService, StateService) {
+
+  .run(function ($rootScope, $state, $location, AuthService, StateService, ipCookie) {
       OAuth.initialize('FFQwiNbZnNhnZMbxNeUWxjQVSjk');
 
       // This will be called every time we start to change state (navigate to a new URL)
       $rootScope.$on('$stateChangeStart', function(event, toState){
+
+        if(toState.url == '/' && ipCookie('beLocalBypass') === undefined) {
+          $location.path('welcome');
+          return;
+        }
 
         if(StateService.getCurrentUser() === undefined) {
           if(AuthService.isAuthenticated() === true) {
@@ -53,7 +69,6 @@ var app = angular.module('clientApp', [
         }
 
         if (toState.url === '/seller' && (StateService.getCurrentUser() == undefined || StateService.getUserType() !== 'VEN')) {
-          console.log('WHY');
           $state.transitionTo('main', null, {location: 'replace'});
           event.preventDefault();
           return;
@@ -75,3 +90,34 @@ app.directive('holderFix', function () {
         }
     };
 });
+
+app.directive('head', ['$rootScope','$compile',
+    function($rootScope, $compile){
+        return {
+            restrict: 'E',
+            link: function(scope, elem){
+                var html = '<link rel="stylesheet" ng-repeat="(stateCtrl, cssUrl) in stateStyles" ng-href="{{cssUrl}}" />';
+                elem.append($compile(html)(scope));
+                scope.stateStyles = {};
+                $rootScope.$on('$stateChangeStart', function (e, next, nextParams, current) {
+                    if(current && current.css){
+                        if(!Array.isArray(current.css)){
+                            current.css = [current.css];
+                        }
+                        angular.forEach(current.css, function(sheet){
+                            delete scope.stateStyles[sheet];
+                        });
+                    }
+                    if(next && next.css){
+                        if(!Array.isArray(next.css)){
+                            next.css = [next.css];
+                        }
+                        angular.forEach(next.css, function(sheet){
+                            scope.stateStyles[sheet] = sheet;
+                        });
+                    }
+                });
+            }
+        };
+    }
+]);

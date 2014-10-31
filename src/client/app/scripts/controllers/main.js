@@ -2,14 +2,14 @@
 
 angular.module('clientApp')
   .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q) {
-
+	    
     $scope.showProductDetailsModal = function(item) {
     	$scope.product = item;   	
-    }
+    };
 	    
     $scope.hideProductDetailsModal = function() {   
     	$scope.product = {};    		
-    }
+    };
     
     $scope.goToVendorDetails = function(vendorID){
     	$scope.hideProductDetailsModal();
@@ -20,19 +20,24 @@ angular.module('clientApp')
       	 $location.path('vendor/details/'+ vendorID).replace();
         });
       });
-      angular.element('#productDetailsModal').modal('hide');      
+      angular.element('#productDetailsModal').modal('hide');
+
     }
    
-    StateService.getUserPosition().then(function(){
+    StateService.getUserPosition().then(function() {
         StateService.getTrendingProducts().then(function() {
           $scope.trendingProducts = StateService.getTrendingProductsList();
         });
-
         StateService.getVendors().then(function() {
           $scope.vendors = StateService.getVendorsList();
-        });
+        });        
     });
-
+    
+    $scope.likeUnLikeProduct = function(product) {
+      StateService.likeUnlikeProduct(product).then(function() {
+        product = StateService.getLikedUnlikedProduct();
+      });
+    };
 
     $scope.trendingMasonry = function() {
 	    $timeout(function() {
@@ -42,7 +47,7 @@ angular.module('clientApp')
 			  columnWidth: '.ms-item'
 			});    
 	    }, 1000)
-	}
+	};
 
     $scope.marketMasonry = function() {
 		var container = document.querySelector('#masonry-market-container');
@@ -50,7 +55,7 @@ angular.module('clientApp')
 		  itemSelector: '.ms-market-item',
 		  columnWidth: '.ms-market-item'
 		});    
-	}
+	};
 
 	/* Magic! This is a hacky way of ensuring that masonry rebuilds itself while the proper tab content pane is visible
 	   (it won't work otherwise) */

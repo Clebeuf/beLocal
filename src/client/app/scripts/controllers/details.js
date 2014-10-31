@@ -9,6 +9,21 @@ angular.module('clientApp')
     	$scope.vendorDetails = StateService.getVendorDetails();
     });
 
+    $scope.weekdays = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+    ];
+
+    $scope.likeUnLikeProduct = function(product) {
+      StateService.likeUnlikeProduct(product).then(function() {
+        product = StateService.getLikedUnlikedProduct();
+      });
+    };
 
     $timeout(function() {
 		var container = document.querySelector('#masonry-container');

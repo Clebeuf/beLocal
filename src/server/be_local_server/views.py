@@ -407,8 +407,8 @@ class TrendingProductView(generics.ListAPIView):
 
         else:
             products = Product.objects.filter(stock=Product.IN_STOCK)
-            serializer = serializers.ProductDisplaySerializer(products)
-            return response(serializer.data)  
+            serializer = serializers.ProductDisplaySerializer(products, many=True)
+            return Response(serializer.data)  
 
 
 class ListMarketsView(generics.ListAPIView):

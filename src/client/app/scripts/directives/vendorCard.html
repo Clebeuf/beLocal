@@ -4,29 +4,37 @@
 
   <!-- LARGE/MEDIUM SCREEN VIEW -->
   <div class="row vendor-card hidden-sm hidden-xs">
-    <div class="col-sm-1 vendor-card-product vendor-images">
-      <img ng-src="{{vendor.photo.image_url}}" />
+    <div class="col-sm-1 no-padding">
+      <div class="vendor-image-container">
+        <div class="vendor-images" style="background-image:url({{vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat;">
+        </div>
+      </div>
     </div>
     <div class="col-sm-5">
       <h4>{{vendor.company_name}}</h4>
-        <span class="glyphicon glyphicon-map-marker"></span> 404 Farm Street, Victoria, BC
+        <span class="glyphicon glyphicon-map-marker"></span> {{vendor.address.addr_line1}}, {{vendor.address.city}}, {{vendor.address.state}}
         <!-- <br><span class="glyphicon glyphicon-envelope"></span> belocalVendor@beLocal.ca -->
         <br><span class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}
         <!-- <br><span class="glyphicon glyphicon-phone-alt"></span> {{vendor.phone}} -->
     </div>
-
-    <div class="col-sm-1 vendor-card-product vendor-images" ng-repeat="product in vendor.products | limitTo:5">
-      <img src="{{product.photo.image_url}}"/>
+    <div class="col-sm-1 no-padding" ng-repeat="product in vendor.products | limitTo:5">
+      <div class="vendor-image-container">
+        <div class="vendor-images" style="background-image:url({{product.photo.image_url}}); background-size: cover; background-repeat: no-repeat;">
+        </div>
+      </div>
     </div>
-    <div class="col-sm-1 vendor-card-product vendor-images">
-      <img alt="" src="../images/placeholder.png" />
+    <div class="col-sm-1 no-padding">
+      <div class="vendor-image-container">
+        <div class="vendor-images" style="background-image:url(../images/placeholder.png); background-size: cover; background-repeat: no-repeat;">
+        </div>
+      </div>
     </div>
   </div>
 
 
   <!-- SMALL SCREEN VIEW -->
   <div class="row vendor-card hidden-md hidden-lg hidden-xs">
-    <div class="col-xs-2 vendor-card-product vendor-images">
+    <div class="col-xs-2 vendor-images">
       <img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
     </div>
     <div class="col-xs-4">
@@ -37,10 +45,10 @@
         <!-- <br><span class="glyphicon glyphicon-phone-alt"></span> {{vendor.phone}} -->
     </div>
 
-    <div class="col-xs-2 vendor-card-product vendor-images" ng-repeat="product in vendor.products | limitTo:2">
+    <div class="col-xs-2 vendor-images" ng-repeat="product in vendor.products | limitTo:2">
       <img src="{{product.photo.image_url}}"/>
     </div>
-    <div class="col-xs-2 vendor-card-product vendor-images">
+    <div class="col-xs-2 vendor-images">
       <img alt="" src="../images/placeholder.png" />
     </div>
   </div>

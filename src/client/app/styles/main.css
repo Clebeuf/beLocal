@@ -5,8 +5,6 @@
 */
 
 
-
-
 .top-nav-large {
   background-color: #FAFAFA;
   border-bottom: 1px solid #e5e1dd;
@@ -27,6 +25,10 @@
 
 }
 
+.top-nav-large img{
+  margin: 10px;
+}
+
 .top-nav-large li.active{
   color: red;
 }
@@ -34,6 +36,8 @@
 .logo {
   text-align: center;
 }
+
+
 
 .logo img {
   width: 100%;
@@ -365,11 +369,6 @@ body {
   font-size: 11px;
   padding: 5px;
   float: left;
-}
-
-.vendor-card-product img{
-  width:100%;
-  border: 1px solid #EAEAEA;
 }
 
 .vendor-card {
@@ -879,17 +878,26 @@ color: #000 !important;
   border-radius: 5px !important;
 }
 
+
 .vendor-images{
-  padding-left:5px;
-  padding-right: 5px;
+  width: 100%;
+  height: 100px;
 }
 
-.vendor-images img{
-  padding: 5px;
-  /*width:90% !important;*/
-  border-radius: 5px !important;
+.vendor-card {
+  height:120px;
+  margin-top: 15px;
 }
 
+.vendor-image-container {
+  width: 100%;
+  height: 100%;
+  padding: 3px;
+}
+
+.no-padding {
+  padding: 0px !important;
+}
 
 
 /*NEW UI STYLES (OCT 21st)*/

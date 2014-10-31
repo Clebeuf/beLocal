@@ -183,6 +183,8 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
 
 class CustomerVendorSerializer(serializers.ModelSerializer):
   products = serializers.SerializerMethodField('get_in_stock_products')
+  photo = VendorPhotoPathSerializer()
+  address = AddressSerializer()
 
   def get_in_stock_products(self, obj):
     products = be_local_server.models.Product.objects.filter(vendor=obj, stock="IS")
@@ -197,7 +199,9 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
                   'country_code',
                   'phone',
                   'extension',
-                  'products'
+                  'products',
+                  'photo',
+                  'address'
       )      
 
 class MarketDisplaySerializer(serializers.ModelSerializer):

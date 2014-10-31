@@ -73,20 +73,19 @@ class CreateVendorView(APIView):
 
         if user:
             token, created_token = Token.objects.get_or_create(user=user)
-            vendor, created_vendor = Vendor.objects.get_or_create(user=user)
+            vendor = Vendor.objects.get(user=user)
 
             if(not created_token):
                 return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)
             
             # If the user is a newly created vendor, make them inactive.
-            if(created_vendor):
-                user.is_staff = 1 # make the user a vendor
-                vendor.is_active = False # make the user inactive
-                vendor.save()
-                user.save()
+            user.is_staff = 1 # make the user a vendor
+            vendor.is_active = False # make the user inactive
+            vendor.save()
+            user.save()
 
-                vendor.company_name = user.username # set this for Carly's UI
-                vendor.save()
+            vendor.company_name = user.username # set this for Carly's UI
+            vendor.save()
 
             response = {}
             response = {'id': user.id, 'is_active' : vendor.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN','vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}

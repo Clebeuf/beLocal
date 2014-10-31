@@ -467,7 +467,7 @@ class TrendingProductView(generics.ListAPIView):
     serializer_class = serializers.ProductDisplaySerializer
 
     def post(self, request):
-        if ('user_position' in request.DATA.keys()):
+        if ('user_position' in request.DATA.keys() and request.DATA['user_position'] is not None):
             lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))
 
             locations = SellerLocation.objects.filter(vendor__is_active=True)
@@ -539,7 +539,7 @@ class VendorsView(generics.ListAPIView):
     serializer_class = serializers.CustomerVendorSerializer
 
     def post(self, request):
-        if ('user_position' in request.DATA.keys()):
+        if ('user_position' in request.DATA.keys() and request.DATA['user_position'] is not None):
 
             lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))
 

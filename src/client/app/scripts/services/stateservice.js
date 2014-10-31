@@ -251,7 +251,6 @@ angular.module('clientApp')
         // unlike the product
         return $http.delete(this.getServerAddress() + 'like/be_local_server-product/' + product.id + '/')
         .success(function(data, status, headers, config) {
-          console.log('Unliked a product! total_likes: ' + data.num_votes);
           likedUnlikedProduct.vote_total = data.num_votes;
           likedUnlikedProduct.is_liked = null;
         })
@@ -262,7 +261,6 @@ angular.module('clientApp')
         // like the product
         return $http.post(this.getServerAddress() + 'like/be_local_server-product/' + product.id + '/')
         .success(function(data, status, headers, config) {
-          console.log('Liked a product! total_likes: '+ data.num_votes);
           likedUnlikedProduct.vote_total = data.num_votes;
           likedUnlikedProduct.is_liked = true;
         })

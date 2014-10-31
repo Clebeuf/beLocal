@@ -365,7 +365,6 @@ body {
   font-size: 11px;
   padding: 5px;
   float: left;
-  background-color: #FFFFFF;
 }
 
 .vendor-card-product img{
@@ -375,8 +374,12 @@ body {
 
 .vendor-card {
   margin: 5px 0px 5px 0px;
-  border: 1px solid #EAEAEA;
+  border: 0px !important;
   padding:10px;
+  background: #FFFFFF;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3) !important;
+  border-radius:0px !important;
+
 }
 
 /* END OF VENDOR CARD */

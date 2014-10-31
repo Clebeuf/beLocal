@@ -2,10 +2,10 @@
       <!-- <img data-src="holder.js/350x300" alt="..." holder-fix> -->
 <!--       <img ng-src="{{vendor.photo.image_url}}" /> -->
 
-
-  <div class="row vendor-card vendor-tab-styles hidden-sm hidden-xs">
+  <!-- LARGE/MEDIUM SCREEN VIEW -->
+  <div class="row vendor-card hidden-sm hidden-xs">
     <div class="col-sm-1 vendor-card-product vendor-images">
-      <img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
+      <img ng-src="{{vendor.photo.image_url}}" />
     </div>
     <div class="col-sm-5">
       <h4>{{vendor.company_name}}</h4>
@@ -24,7 +24,8 @@
   </div>
 
 
-  <div class="row vendor-card vendor-tab-styles hidden-md hidden-lg hidden-xs">
+  <!-- SMALL SCREEN VIEW -->
+  <div class="row vendor-card hidden-md hidden-lg hidden-xs">
     <div class="col-xs-2 vendor-card-product vendor-images">
       <img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
     </div>
@@ -44,7 +45,9 @@
     </div>
   </div>
 
-  <div class="row vendor-card vendor-tab-styles hidden-md hidden-lg hidden-sm">
+
+  <!-- XS SCREEN VIEW -->
+  <div class="row vendor-card hidden-md hidden-lg hidden-sm">
     <div class="col-xs-3 vendor-card-product vendor-images">
       <img src="http://gradschool.oregonstate.edu/sites/gradschool.oregonstate.edu/files/styles/square_medium/public/default_images/user_icon.png?itok=mbz2tJug">
     </div>

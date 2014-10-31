@@ -63,47 +63,13 @@ angular.module('clientApp')
 		angular.element(e.target).triggerHandler('click');
 	})
 
-/* Uncomment this for actual data (non-hardcoded)
-    StateService.getMarkets().then(function() {
-    	$scope.marketlist = StateService.getMarketList();
-      console.log($scope.marketlist);
-    })
-
-*/
-
-    //This is hardcoded data
-    StateService.getMarkets().then(function() {
-      $scope.marketList = [
-        {
-          "name":"The Nice Market",
-          "addr_line1":"9079 Interesting Ave.",
-          "addr_type":"MAR",
-          "city":"Victoria",
-          "country":"Canada",
-          "state":"BC",
-          "zipcode":"5p69i3",
-          "running_info":"Monday to Friday",
-          "hours":"9:00am to 3:00pm"
-        },
-
-        {
-          "name":"Local Marketplace",
-          "addr_line1":"9760 Douglas St.",
-          "addr_type":"MAR",
-          "city":"Saanich",
-          "country":"Canada",
-          "state":"BC",
-          "zipcode":"9i91r3",
-          "running_info":"Every Wednesday",
-          "hours":"9:00am to 4:00pm"
-        }
-
-      ]
-    })
-
-    $scope.trendingMasonry();
-    $scope.marketMasonry();
-
+  StateService.getMarkets().then(function() {
+  	$scope.marketList = StateService.getMarketList();
   });
+
+  $scope.trendingMasonry();
+  $scope.marketMasonry();
+
+});
 
 

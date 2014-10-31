@@ -203,7 +203,7 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
 
 class MarketDisplaySerializer(serializers.ModelSerializer):
     vendors = BusinessVendorSerializer(many=True)
-    address = AddressSerializer()
+    address = AddAddressSerializer()
     class Meta:
         model = be_local_server.models.Market
         fields = (  'vendors',

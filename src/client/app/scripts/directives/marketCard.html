@@ -10,15 +10,14 @@
       <div class="col-sm-12">
         <p class="market-card-text">
           <span class="glyphicon glyphicon-map-marker"></span>
-          {{market.addr_line1}}, {{market.city}}, {{market.state}}
+          {{market.address.addr_line1}}, {{market.address.city}}, {{market.address.state}}
         </p>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-12">
         <p class="product-details-text no-bottom-margin">
-          <span class="glyphicon glyphicon glyphicon-calendar"></span>        
-          {{market.running_info}} | {{market.hours}}
+          {{openString}}
         </p>
       </div>
     </div>

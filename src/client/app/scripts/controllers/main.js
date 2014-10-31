@@ -34,7 +34,7 @@ angular.module('clientApp')
     });
 
     StateService.getVendors().then(function() {
-    	$scope.vendors = StateService.getVendorsList();
+      $scope.vendors = StateService.getVendorsList();
     });
 
     $scope.trendingMasonry = function() {

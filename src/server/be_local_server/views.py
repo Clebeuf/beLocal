@@ -500,7 +500,12 @@ class ListMarketsView(generics.ListAPIView):
     serializer_class = serializers.MarketDisplaySerializer
 
     def get_queryset(self):
-        return Market.objects.all()
+        markets = Market.objects.all()
+        if markets is not None:
+            for market in markets:
+                market.is_liked = Market.objects.from_request(self.request).get(pk=market.id).user_vote
+        
+        return markets
 
 
 class MarketView(generics.ListAPIView):

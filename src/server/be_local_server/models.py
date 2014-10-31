@@ -100,8 +100,9 @@ class Market(models.Model):
     name = models.CharField(max_length=100)
     address = models.ForeignKey(Address)
     description = models.CharField(max_length=400)
-    vendors = models.ManyToManyField(Vendor)
-
+    vendors = models.ManyToManyField(Vendor, related_name='vendors', blank=True)
+    
+secretballot.enable_voting_on(Market)
 
 class OpeningHours(models.Model):
     address = models.ForeignKey(Address, related_name="hours", null=True)

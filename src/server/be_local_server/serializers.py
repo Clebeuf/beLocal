@@ -212,11 +212,16 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
 class MarketDisplaySerializer(serializers.ModelSerializer):
     vendors = BusinessVendorSerializer(many=True)
     address = AddressSerializer()
+    total_likes = serializers.IntegerField(source='vote_total') 
+    is_liked = serializers.IntegerField()
+  
     class Meta:
         model = be_local_server.models.Market
         fields = (  'vendors',
                     'address',
                     'name',
                     'description',
-                    )
+                    'total_likes',
+                    'is_liked',
+        )
 

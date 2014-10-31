@@ -13,12 +13,12 @@ from django.http import HttpResponse, HttpResponseServerError, Http404, HttpResp
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models.base import ModelBase
 from social.apps.django_app.utils import psa
 from secretballot import views
 from secretballot.models import Vote
 from be_local_server import serializers
 from be_local_server.models import *
-import json
 
 
 class LoginView(APIView):
@@ -38,9 +38,26 @@ class LoginView(APIView):
             response = {}
             if user.is_staff:
                 vendor = Vendor.objects.get(user=user)
-                response = {'id': user.id, 'is_active' : vendor.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+                vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
+                response = {'id': user.id, 
+                            'is_active' : vendor.is_active, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'VEN', 
+                            'vendor' : serializers.VendorSerializer(vendor).data, 
+                            'token': token.key
+                }
             else:
-                response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
+                response = {'id': user.id, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'CUS', 
+                            'token': token.key
+                }
             return Response(response)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)             
@@ -73,9 +90,20 @@ class CreateVendorView(APIView):
 
                 vendor.company_name = user.username # set this for Carly's UI
                 vendor.save()
-
+                
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
+            
             response = {}
-            response = {'id': user.id, 'is_active' : vendor.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN','vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+            response = {'id': user.id, 
+                        'is_active' : vendor.is_active, 
+                        'name': user.username, 
+                        'email' : user.email, 
+                        'first_name': user.first_name, 
+                        'last_name': user.last_name, 
+                        'userType': 'VEN',
+                        'vendor' : serializers.VendorSerializer(vendor).data, 
+                        'token': token.key
+            }
             
             return Response(response)    
         else:
@@ -135,6 +163,7 @@ class VendorDetailsView(generics.CreateAPIView):
         if(vendor.is_active == True):
             locations = SellerLocation.objects.filter(vendor=vendor)
             products = Product.objects.filter(vendor=vendor, stock="IS")
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
 
             if products is not None:
                 for product in products:
@@ -180,6 +209,7 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
         vendor = Vendor.objects.get(user=request.user)
         
         if vendor is not None:
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
             serializer = serializers.VendorSerializer(vendor)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -470,7 +500,12 @@ class ListMarketsView(generics.ListAPIView):
     serializer_class = serializers.MarketDisplaySerializer
 
     def get_queryset(self):
-        return Market.objects.all()
+        markets = Market.objects.all()
+        if markets is not None:
+            for market in markets:
+                market.is_liked = Market.objects.from_request(self.request).get(pk=market.id).user_vote
+        
+        return markets
 
 
 class MarketView(generics.ListAPIView):
@@ -498,7 +533,12 @@ class VendorsView(generics.ListAPIView):
     serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
-        return Vendor.objects.filter(is_active=True)
+        vendors = Vendor.objects.filter(is_active=True)
+        if vendors is not None:
+            for vendor in vendors:
+                vendor.is_liked = Product.objects.from_request(self.request).get(pk=vendor.id).user_vote 
+                
+        return vendors
 
 class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -536,10 +576,17 @@ def like(request, content_type, id):
     """ 
     Handles likes on a model object.
     """
-    app, modelname = content_type.split('-')
-    content_type = ContentType.objects.get(app_label=app, 
-                                           model__iexact=modelname)
-    
+    # check the content_type
+    if isinstance(content_type, ContentType):
+        pass
+    elif isinstance(content_type, ModelBase):
+        content_type = ContentType.objects.get_for_model(content_type)
+    elif isinstance(content_type, basestring) and '-' in content_type:
+        app, modelname = content_type.split('-')
+        content_type = ContentType.objects.get(app_label=app, model__iexact=modelname)
+    else:
+        raise ValueError('content_type must be an instance of ContentType, a model, or "app-modelname" string')
+
     if request.method == 'POST':
         response = views.vote(
                               request,
@@ -548,6 +595,7 @@ def like(request, content_type, id):
                               vote = '+1',
                               mimetype='application/json'
         )
+        
         # JSON formatting
         response.content = response.content.replace("'","\"")
         return response 
@@ -560,12 +608,13 @@ def like(request, content_type, id):
                               vote=None,
                               mimetype='application/json'
         )
+        
         # JSON formatting
         response.content = response.content.replace("'","\"")
         return response
     
     if request.method == 'GET':
-        vote = Product.objects.from_request(request).get(pk=id).user_vote
+        vote = content_type.model_class().objects.from_request(request).get(pk=id).user_vote
         if (vote):
             body = '{"is_liked": true}'
             return HttpResponse(body, status=status.HTTP_200_OK, content_type='application/json')

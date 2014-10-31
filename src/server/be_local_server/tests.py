@@ -6,11 +6,12 @@ from rest_framework.test import APIRequestFactory, APIClient, APITestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.authtoken.models import Token
-from be_local_server.models import Vendor, Product, Address
+from be_local_server.models import *
 from be_local_server.views import *
 
 # Create your tests here.
 
+# Product test cases
 class ProductTestCase(APITestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -19,13 +20,15 @@ class ProductTestCase(APITestCase):
         # Load some data in database 
         user1 = User.objects.create_user(username='admin', email="admin@…", password='admin')
         user2 = User.objects.create_user(username='john', email="john@…", password='john')
+        
         address1 = Address.objects.create(
                                           addr_line1='456 Country Road',
                                           city='Victoria',
                                           state='BC',
                                           country='Canada',
                                           zipcode='V8M3E3'
-                                          )
+        )
+        
         vendor1 = Vendor.objects.create(
                                         user=user1, 
                                         company_name="etsy",
@@ -36,7 +39,8 @@ class ProductTestCase(APITestCase):
                                         description="This is a short description.",
                                         photo=None,
                                         address=address1
-                                        )
+        )
+        
         vendor2 = Vendor.objects.create(
                                         user=user2, 
                                         company_name="amazon",
@@ -46,22 +50,25 @@ class ProductTestCase(APITestCase):
                                         extension="123",
                                         description="This is a short description.",
                                         photo=None,
-                                        address=address1
-                                        )
+                                        address=address1,
+                                        is_active=True,
+        )
+        
         Product.objects.create(
                                vendor=vendor1,
                                name="carrots",
                                description="test product",
                                photo=None,
                                stock="IS"
-                               )
+        )
+        
         Product.objects.create(
                                vendor=vendor2,
                                name="tomato",
                                description="test product",
                                photo=None,
                                stock="IS"
-                               )
+        )
         
         # Token Authentication
         token = Token.objects.create(user=user2)
@@ -74,7 +81,7 @@ class ProductTestCase(APITestCase):
     def test_list_vendor_products(self):            
         url = reverse('vendor-products-list') 
         response = self.client.get(url)
-        print "Vendor products list: \n", response
+        #print "Vendor products list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
     
     # product details
@@ -88,13 +95,13 @@ class ProductTestCase(APITestCase):
                 'stock': "IS",
                 } 
         response = self.client.post(url, data)
-        print "Add Vendor's product : \n", response
+        #print "Add Vendor's product : \n", response
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
     def test_read_product(self):             
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         response = self.client.get(url)
-        print "Vendor's product details: \n", response
+        #print "Vendor's product details: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
         
         # Test likes
@@ -102,14 +109,14 @@ class ProductTestCase(APITestCase):
         response = self.client.post(url)
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         response = self.client.get(url)
-        print "Vendor's product details: \n", response
+        #print "Vendor's product details: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)   
     
     def test_edit_product(self): 
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         data = {'stock':"OOS"}
         response = self.client.patch(url, data)
-        print "Edit Vendor's product: \n", response
+        #print "Edit Vendor's product: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)  
         
     def test_delete_product(self):
@@ -117,28 +124,28 @@ class ProductTestCase(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)  
         
-    def test_add_like(self):
+    def test_like_product(self):
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.post(url)
-        print "After adding like: ", response
+        #print "After liking a product: ", response
         self.assertEqual(response.content, '{"num_votes":1}')
          
-    def test_delete_like(self):
+    def test_unlike_product(self):
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.post(url)
         
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.delete(url)
-        print "After deleting like: ", response
+        #print "After deleting like of product : ", response
         self.assertEqual(response.content, '{"num_votes":0}')
     
-    def test_get_user_like(self):
+    def test_get_product_likes(self):
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.post(url)
         
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.get(url)
-        print "Get like status: ", response.content
+        #print "Get product like status: ", response.content
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.content, '{"is_liked": true}')
         
@@ -146,14 +153,14 @@ class ProductTestCase(APITestCase):
         response = self.client.delete(url)
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
         response = self.client.get(url)
-        print "Get like status: ", response.content
+        #print "Get product like status: ", response.content
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.content, '{"is_liked": false}')
         
     def test_trending_products(self):
         url = reverse('product-trending-list')
         response = self.client.get(url)
-        print "Trending products: ", response
+        #print "Trending products: ", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
         # Test likes
@@ -161,6 +168,242 @@ class ProductTestCase(APITestCase):
         response = self.client.post(url)
         url = reverse('product-trending-list')
         response = self.client.get(url)
-        print "Trending products: ", response
+        #print "Trending products: ", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)   
         
+# Vendor test cases
+class VendorTestCase(APITestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+        
+        # Load some data in database 
+        user1 = User.objects.create_user(username='admin', email="admin@…", password='admin')
+        user2 = User.objects.create_user(username='john', email="john@…", password='john')
+        
+        address1 = Address.objects.create(
+                                          addr_line1='456 Country Road',
+                                          city='Victoria',
+                                          state='BC',
+                                          country='Canada',
+                                          zipcode='V8M3E3'
+        )
+        
+        vendor1 = Vendor.objects.create(
+                                        user=user1, 
+                                        company_name="etsy",
+                                        webpage="www.etsy.com",
+                                        country_code="1",
+                                        phone="7777777777",
+                                        extension="123",
+                                        description="This is a short description.",
+                                        photo=None,
+                                        address=address1
+        )
+        vendor2 = Vendor.objects.create(
+                                        user=user2, 
+                                        company_name="amazon",
+                                        webpage="www.amazon.com",
+                                        country_code="1",
+                                        phone="7777777777",
+                                        extension="123",
+                                        description="This is a short description.",
+                                        photo=None,
+                                        address=address1,
+                                        is_active=True,
+        )
+        
+        Product.objects.create(
+                               vendor=vendor1,
+                               name="carrots",
+                               description="test product",
+                               photo=None,
+                               stock="IS"
+        )
+        Product.objects.create(
+                               vendor=vendor2,
+                               name="tomato",
+                               description="test product",
+                               photo=None,
+                               stock="IS"
+        )
+        
+        # Token Authentication
+        token = Token.objects.create(user=user2)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key) 
+    
+    def tearDown(self):
+        self.client.credentials()
+    
+    # vendor lists
+    def test_list_vendors(self):            
+        url = reverse('vendors-list') 
+        response = self.client.get(url)
+        #print "Vendors list: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
+    # read vendor    
+    def test_read_vendor(self):             
+        url = reverse('vendor')
+        response = self.client.get(url)
+        #print "Vendor details: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK) 
+        
+    # vendor details    
+    def test_vendor_details(self):             
+        url = reverse('vendor-details')
+        data = {'id': 2}
+        response = self.client.post(url, data)
+        #print "Vendor details: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        #inactive vendor
+        url = reverse('vendor-details')
+        data = {'id': 1}
+        response = self.client.post(url, data)
+        #print "Vendor details: \n", response
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+         
+    def test_like_vendor(self):
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.post(url)
+        #print "After liking a vendor: ", response
+        self.assertEqual(response.content, '{"num_votes":1}')
+         
+    def test_unlike_vendor(self):
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.post(url)
+        
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.delete(url)
+        #print "After unliking vendor: ", response
+        self.assertEqual(response.content, '{"num_votes":0}')
+    
+    def test_get_vendor_like(self):
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.post(url)
+        
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.get(url)
+        #print "Get vendor like status: ", response.content
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, '{"is_liked": true}')
+        
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.delete(url)
+        url = reverse('like', kwargs={'content_type':'be_local_server-vendor', 'id':'2'})
+        response = self.client.get(url)
+        #print "Get vendor like status: ", response.content
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.content, '{"is_liked": false}')         
+ 
+ # Market test cases
+class MarketTestCase(APITestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.client = APIClient()
+        
+        # Load some data in database 
+        user1 = User.objects.create_user(username='admin', email="admin@…", password='admin')
+        user2 = User.objects.create_user(username='john', email="john@…", password='john')
+        address1 = Address.objects.create(
+                                          addr_line1='456 Country Road',
+                                          city='Victoria',
+                                          state='BC',
+                                          country='Canada',
+                                          zipcode='V8M3E3'
+        )
+        
+        vendor1 = Vendor.objects.create(
+                                        user=user1, 
+                                        company_name="etsy",
+                                        webpage="www.etsy.com",
+                                        country_code="1",
+                                        phone="7777777777",
+                                        extension="123",
+                                        description="This is a short description.",
+                                        photo=None,
+                                        address=address1
+        )
+        vendor2 = Vendor.objects.create(
+                                        user=user2, 
+                                        company_name="amazon",
+                                        webpage="www.amazon.com",
+                                        country_code="1",
+                                        phone="7777777777",
+                                        extension="123",
+                                        description="This is a short description.",
+                                        photo=None,
+                                        address=address1,
+                                        is_active=True,
+        )
+        
+        Product.objects.create(
+                               vendor=vendor2,
+                               name="carrots",
+                               description="test product",
+                               photo=None,
+                               stock="IS"
+        )
+        
+        market1 = Market.objects.create(
+                              name="Hudson Market",
+                              address=address1,
+                              description="Open only in summer!",
+                              
+        )
+        Market.objects.create(
+                              name="Fairway Market",
+                              address=address1,
+                              description="Open in all seasons!",
+                              
+        )
+        
+        market1.vendors.add(vendor1, vendor2)      
+        
+        # Token Authentication
+        token = Token.objects.create(user=user2)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key) 
+    
+    def tearDown(self):
+        self.client.credentials()
+    
+    # market lists
+    def test_list_markets(self):            
+        url = reverse('market-list') 
+        response = self.client.get(url)
+        #print "Markets list: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+         
+    def test_like_market(self):
+        url = reverse('like', kwargs={'content_type':'be_local_server-market', 'id':'1'})
+        response = self.client.post(url)
+        #print "After liking a market: ", response
+        self.assertEqual(response.content, '{"num_votes":1}')
+         
+    def test_unlike_market(self):
+        url = reverse('like', kwargs={'content_type':'be_local_server-market', 'id':'1'})
+        response = self.client.post(url)
+        
+        url = reverse('like', kwargs={'content_type':'be_local_server-market', 'id':'1'})
+        response = self.client.delete(url)
+        #print "After unliking market: ", response
+        self.assertEqual(response.content, '{"num_votes":0}')
+    
+    def test_get_market_like(self):
+        url = reverse('like', kwargs={'content_type':'be_local_server-market', 'id':'1'})
+        response = self.client.post(url)
+        
+        url = reverse('like', kwargs={'content_type':'be_local_server-market', 'id':'1'})
+        response = self.client.get(url)
+        #print "Get market like status: ", response.content
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, '{"is_liked": true}')
+        
+        url = reverse('like', kwargs={'content_type':'be_local_server-market', 'id':'1'})
+        response = self.client.delete(url)
+        url = reverse('like', kwargs={'content_type':'be_local_server-market', 'id':'1'})
+        response = self.client.get(url)
+        #print "Get market like status: ", response.content
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.content, '{"is_liked": false}')   

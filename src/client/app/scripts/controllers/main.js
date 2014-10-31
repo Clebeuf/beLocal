@@ -23,9 +23,9 @@ angular.module('clientApp')
       angular.element('#productDetailsModal').modal('hide');      
     };
     
-    $scope.likeUnLikeProduct = function(product) {
-      StateService.likeUnlikeProduct(product).then(function() {
-        product = StateService.getLikedUnlikedProduct();
+    $scope.likeUnLikeItem = function(item, itemName) {
+      StateService.likeUnlikeItem(item, itemName).then(function() {
+        item = StateService.getLikedUnlikedItem();
       });
     };
     
@@ -34,7 +34,7 @@ angular.module('clientApp')
     });
 
     StateService.getVendors().then(function() {
-    	$scope.vendors = StateService.getVendorsList();
+      $scope.vendors = StateService.getVendorsList();
     });
 
     $scope.trendingMasonry = function() {

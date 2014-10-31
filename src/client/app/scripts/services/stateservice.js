@@ -8,8 +8,7 @@ angular.module('clientApp')
     var marketlist = [];
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
-    var likedUnlikedProduct = undefined;
-    var likedUnlikedVendor = undefined;
+    var likedUnlikedItem = undefined;
 
     this.clearCurrentUser = function() {
       currentUser = undefined;
@@ -209,66 +208,35 @@ angular.module('clientApp')
       }
     };
     
-    this.likeUnlikeProduct = function(product) {
-      likedUnlikedProduct = product;
-      if (product.is_liked) {
+    this.likeUnlikeItem = function(item, itemName) {
+      likedUnlikedItem = item;
+      if (item.is_liked) {
         // unlike the product
-        return $http.delete(this.getServerAddress() + 'like/be_local_server-product/' + product.id + '/')
+        return $http.delete(this.getServerAddress() + 'like/be_local_server-' + itemName + '/' + item.id + '/')
         .success(function(data, status, headers, config) {
-          console.log('Unliked a product! total_likes: ' + data.num_votes);
-          likedUnlikedProduct.total_likes = data.num_votes;
-          likedUnlikedProduct.is_liked = null;
+          console.log('Unliked an item! total_likes: ' + data.num_votes);
+          likedUnlikedItem.total_likes = data.num_votes;
+          likedUnlikedItem.is_liked = null;
         })
         .error(function() {
-          console.log('Error unliking product!');
+          console.log('Error unliking item!');
         });
       } else {
         // like the product
-        return $http.post(this.getServerAddress() + 'like/be_local_server-product/' + product.id + '/')
+        return $http.post(this.getServerAddress() + 'like/be_local_server-' + itemName + '/' + item.id + '/')
         .success(function(data, status, headers, config) {
-          console.log('Liked a product! total_likes: '+ data.num_votes);
-          likedUnlikedProduct.total_likes = data.num_votes;
-          likedUnlikedProduct.is_liked = true;
+          console.log('Liked an item! total_likes: '+ data.num_votes);
+          likedUnlikedItem.total_likes = data.num_votes;
+          likedUnlikedItem.is_liked = true;
         })
         .error(function() {
-          console.log('Error liking product!');
+          console.log('Error liking item!');
         });
       }
     };
     
-    this.getLikedUnlikedProduct = function() {
-      return likedUnlikedProduct;
-    };
-    
-    this.likeUnlikeVendor = function(vendor) {
-      likedUnlikedVendor = vendor;
-      if (vendor.is_liked) {
-        // unlike the product
-        return $http.delete(this.getServerAddress() + 'like/be_local_server-vendor/' + vendor.id + '/')
-        .success(function(data, status, headers, config) {
-          console.log('Unliked a vendor! total_likes: ' + data.num_votes);
-          likedUnlikedVendor.total_likes = data.num_votes;
-          likedUnlikedVendor.is_liked = null;
-        })
-        .error(function() {
-          console.log('Error unliking vendor!');
-        });
-      } else {
-        // like the product
-        return $http.post(this.getServerAddress() + 'like/be_local_server-vendor/' + vendor.id + '/')
-        .success(function(data, status, headers, config) {
-          console.log('Liked a vendor! total_likes: '+ data.num_votes);
-          likedUnlikedVendor.total_likes = data.num_votes;
-          likedUnlikedVendor.is_liked = true;
-        })
-        .error(function() {
-          console.log('Error liking vendor!');
-        });
-      }
-    };
-    
-    this.getLikedUnlikedVendor = function() {
-      return likedUnlikedVendor;
+    this.getLikedUnlikedItem = function() {
+      return likedUnlikedItem;
     };
     
   });

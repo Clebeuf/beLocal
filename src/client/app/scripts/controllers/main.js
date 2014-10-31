@@ -23,9 +23,9 @@ angular.module('clientApp')
       angular.element('#productDetailsModal').modal('hide');      
     };
     
-    $scope.likeUnLikeProduct = function(product) {
-      StateService.likeUnlikeProduct(product).then(function() {
-        product = StateService.getLikedUnlikedProduct();
+    $scope.likeUnLikeItem = function(item, itemName) {
+      StateService.likeUnlikeItem(item, itemName).then(function() {
+        item = StateService.getLikedUnlikedItem();
       });
     };
     

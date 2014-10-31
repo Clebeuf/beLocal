@@ -11,9 +11,17 @@ angular.module('clientApp')
     var currentLocation = undefined;
 
     this.getUserPosition = function() {
+
       var d = $q.defer();
+
+      // Timeout to fire even if the user does not accept/deny location request
+      var location_timeout = setTimeout(function() {
+        d.resolve(null);
+      }, 5000);
+
       var position; 
         navigator.geolocation.getCurrentPosition(function(pos){
+          clearTimeout(location_timeout);          
           position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude).toString();
           $timeout(function(){
             currentLocation = position;
@@ -21,12 +29,17 @@ angular.module('clientApp')
           });
         },
         function(pos){
+          clearTimeout(location_timeout);          
           console.log("Loation permission denied");
           position = undefined;
           $timeout(function(){
             currentLocation = null;
             d.resolve(position);
           })
+        },
+        {
+          maximumAge:0,
+          timeout: 5000
         });
       
       return d.promise; 

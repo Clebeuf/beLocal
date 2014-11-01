@@ -280,12 +280,20 @@ class AddProductView(generics.CreateAPIView):
 
         if serializer.is_valid():
             current_product = serializer.save()
-
+            
+            # Save tags if they are provided in the request.
+            if type(serializer.data['tags']) is list:                
+                saved_product = Product.objects.get(pk=current_product.pk)
+                saved_product.tags.clear()
+                for tag in serializer.data['tags']:
+                    saved_product.tags.add(tag)
+            
             return Response(status=status.HTTP_201_CREATED)
 
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+    
 
 class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -323,6 +331,13 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
            
             if serializer.is_valid():
                 serializer.save()
+                
+                # Save tags if they are provided in the request.
+                if type(serializer.data['tags']) is list:                
+                    saved_product = Product.objects.get(pk=product_id)
+                    saved_product.tags.clear()
+                    for tag in serializer.data['tags']:
+                        saved_product.tags.add(tag)
 
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:

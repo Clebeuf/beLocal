@@ -62,13 +62,15 @@ class ProductTestCase(APITestCase):
                                stock="IS"
         )
         
-        Product.objects.create(
+        product = Product.objects.create(
                                vendor=vendor2,
                                name="tomato",
                                description="test product",
                                photo=None,
                                stock="IS"
         )
+        
+        product.tags.add("one");
         
         # Token Authentication
         token = Token.objects.create(user=user2)
@@ -81,7 +83,7 @@ class ProductTestCase(APITestCase):
     def test_list_vendor_products(self):            
         url = reverse('vendor-products-list') 
         response = self.client.get(url)
-        #print "Vendor products list: \n", response
+        print "Vendor products list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
     
     # product details
@@ -93,10 +95,16 @@ class ProductTestCase(APITestCase):
                 'description':"test product",
                 'photo': "",
                 'stock': "IS",
+                'tags' : ['new','old'],
                 } 
         response = self.client.post(url, data)
         #print "Add Vendor's product : \n", response
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
+        url = reverse('vendor-products-details', kwargs={'product_id': '3'})
+        response = self.client.get(url)
+        #print "Vendor's product details: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         
     def test_read_product(self):             
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
@@ -160,7 +168,7 @@ class ProductTestCase(APITestCase):
     def test_trending_products(self):
         url = reverse('product-trending-list')
         response = self.client.post(url)
-        #print "Trending products: ", response
+        print "Trending products: ", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
         # Test likes
@@ -170,6 +178,28 @@ class ProductTestCase(APITestCase):
         response = self.client.post(url)
         #print "Trending products: ", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)   
+        
+    # product details
+    def test_edit_tag_product(self):
+        url = reverse('vendor-products-details', kwargs={'product_id': '2'})
+        response = self.client.get(url)
+        print "Vendor's product details: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+          
+        url = reverse('vendor-products-details', kwargs={'product_id': '2'})  
+        data = {
+                'description':"product with tags",
+                'tags' : ['green','dark'],
+                } 
+        response = self.client.patch(url, data)
+        print "Patch Vendor's product : \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        url = reverse('vendor-products-details', kwargs={'product_id': '2'})
+        response = self.client.get(url)
+        print "Vendor's product details: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
         
 # Vendor test cases
 class VendorTestCase(APITestCase):
@@ -239,7 +269,7 @@ class VendorTestCase(APITestCase):
     def test_list_vendors(self):            
         url = reverse('vendors-list') 
         response = self.client.get(url)
-        #print "Vendors list: \n", response
+        print "Vendors list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
     # read vendor    
@@ -372,7 +402,7 @@ class MarketTestCase(APITestCase):
     def test_list_markets(self):            
         url = reverse('market-list') 
         response = self.client.get(url)
-        #print "Markets list: \n", response
+        print "Markets list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
          
     def test_like_market(self):

@@ -39,4 +39,5 @@ urlpatterns = patterns('',
     url(r'^markets/(?P<market_id>[0-9-]+)/$', views.MarketView.as_view(), name='market-details'),
     
     url(r'^like/(?P<content_type>[\w-]+)/(?P<id>[0-9-]+)/$', views.like, name='like'),
+    
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

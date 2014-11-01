@@ -81,7 +81,7 @@ class Product(TrashableMixin, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     vendor = models.ForeignKey(Vendor, related_name='products')
     photo = models.ForeignKey(ProductPhoto, blank=True, null=True)
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
     
 secretballot.enable_voting_on(Product)
 

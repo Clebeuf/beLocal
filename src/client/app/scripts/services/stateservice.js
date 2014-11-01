@@ -249,7 +249,7 @@ angular.module('clientApp')
       likedUnlikedItem = item;
       if (item.is_liked) {
         // unlike the product
-        return $http.delete(this.getServerAddress() + 'like/be_local_server-' + itemName + '/' + item.id + '/')
+        return $http.delete(this.getServerAddress() + 'like/' + itemName + '/' + item.id + '/')
         .success(function(data, status, headers, config) {
           console.log('Unliked an item! total_likes: ' + data.num_votes);
           likedUnlikedItem.total_likes = data.num_votes;
@@ -260,7 +260,7 @@ angular.module('clientApp')
         });
       } else {
         // like the product
-        return $http.post(this.getServerAddress() + 'like/be_local_server-' + itemName + '/' + item.id + '/')
+        return $http.post(this.getServerAddress() + 'like/' + itemName + '/' + item.id + '/')
         .success(function(data, status, headers, config) {
           console.log('Liked an item! total_likes: '+ data.num_votes);
           likedUnlikedItem.total_likes = data.num_votes;

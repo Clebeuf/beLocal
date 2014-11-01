@@ -656,7 +656,7 @@ def like(request, content_type, id):
         app, modelname = content_type.split('-')
         content_type = ContentType.objects.get(app_label=app, model__iexact=modelname)
     else:
-        raise ValueError('content_type must be an instance of ContentType, a model, or "app-modelname" string')
+        content_type = ContentType.objects.get(app_label='be_local_server', model__iexact=content_type)
 
     if request.method == 'POST':
         response = views.vote(

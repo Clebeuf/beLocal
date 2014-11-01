@@ -159,7 +159,7 @@ class ProductTestCase(APITestCase):
         
     def test_trending_products(self):
         url = reverse('product-trending-list')
-        response = self.client.get(url)
+        response = self.client.post(url)
         #print "Trending products: ", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
@@ -167,7 +167,7 @@ class ProductTestCase(APITestCase):
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'2'})
         response = self.client.post(url)
         url = reverse('product-trending-list')
-        response = self.client.get(url)
+        response = self.client.post(url)
         #print "Trending products: ", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)   
         

@@ -716,6 +716,21 @@ class ListProductTags(generics.ListAPIView):
     serializer_class = serializers.TagSerializer
 
     def get_queryset(self):
-        tags = Tag.objects.all() 
-        return tags
+        return Tag.objects.all()
+
+class TaggedProductView(generics.ListAPIView):
+    """ 
+    This view provides an endpoint to list products having a given tag.
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.ProductDisplaySerializer
+
+    def get_queryset(self):
+        products = Product.objects.filter(tags__slug=self.kwargs.get('tag_slug')).filter(stock=Product.IN_STOCK).filter(vendor__is_active=True)
+       
+        if products is not None:
+            for product in products:
+                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
+        
+        return products
        

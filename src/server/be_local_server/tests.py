@@ -83,8 +83,9 @@ class ProductTestCase(APITestCase):
     def test_list_vendor_products(self):            
         url = reverse('vendor-products-list') 
         response = self.client.get(url)
-        print "\nVendor products list: \n", response
-        self.assertEqual(response.status_code, status.HTTP_200_OK) 
+        #print "\nVendor products list: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content,"[{\"id\": 2, \"name\": \"tomato\", \"description\": \"test product\", \"vendor\": {\"id\": 2, \"company_name\": \"amazon\", \"webpage\": \"www.amazon.com\", \"country_code\": \"1\", \"phone\": \"7777777777\", \"extension\": \"123\", \"photo\": null}, \"photo\": null, \"stock\": \"IS\", \"total_likes\": 0, \"is_liked\": null, \"tags\": [\"one\"]}]") 
     
     # product details
     def test_add_product(self):  
@@ -105,20 +106,23 @@ class ProductTestCase(APITestCase):
         response = self.client.get(url)
         #print "Vendor's product details: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
+        self.assertEqual(response.content,"{\"id\": 3, \"name\": \"carrots\", \"description\": \"test product\", \"vendor\": {\"id\": 2, \"company_name\": \"amazon\", \"webpage\": \"www.amazon.com\", \"country_code\": \"1\", \"phone\": \"7777777777\", \"extension\": \"123\", \"photo\": null}, \"photo\": null, \"stock\": \"IS\", \"total_likes\": 0, \"is_liked\": null, \"tags\": [\"new\", \"old\"]}") 
+    
     def test_read_product(self):             
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         response = self.client.get(url)
         #print "Vendor's product details: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
-        
+        self.assertEqual(response.content,"{\"id\": 2, \"name\": \"tomato\", \"description\": \"test product\", \"vendor\": {\"id\": 2, \"company_name\": \"amazon\", \"webpage\": \"www.amazon.com\", \"country_code\": \"1\", \"phone\": \"7777777777\", \"extension\": \"123\", \"photo\": null}, \"photo\": null, \"stock\": \"IS\", \"total_likes\": 0, \"is_liked\": null, \"tags\": [\"one\"]}") 
+    
         # Test likes
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'2'})
         response = self.client.post(url)
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         response = self.client.get(url)
         #print "Vendor's product details: \n", response
-        self.assertEqual(response.status_code, status.HTTP_200_OK)   
+        self.assertEqual(response.status_code, status.HTTP_200_OK) 
+        self.assertEqual(response.content,"{\"id\": 2, \"name\": \"tomato\", \"description\": \"test product\", \"vendor\": {\"id\": 2, \"company_name\": \"amazon\", \"webpage\": \"www.amazon.com\", \"country_code\": \"1\", \"phone\": \"7777777777\", \"extension\": \"123\", \"photo\": null}, \"photo\": null, \"stock\": \"IS\", \"total_likes\": 1, \"is_liked\": 1, \"tags\": [\"one\"]}")   
     
     def test_edit_product(self): 
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
@@ -130,7 +134,7 @@ class ProductTestCase(APITestCase):
     def test_delete_product(self):
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)  
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT) 
         
     def test_like_product(self):
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'1'})
@@ -168,8 +172,9 @@ class ProductTestCase(APITestCase):
     def test_trending_products(self):
         url = reverse('product-trending-list')
         response = self.client.post(url)
-        print "\nTrending products: ", response
+        #print "\nTrending products: ", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, "[{\"id\": 2, \"name\": \"tomato\", \"description\": \"test product\", \"vendor\": {\"id\": 2, \"company_name\": \"amazon\", \"webpage\": \"www.amazon.com\", \"country_code\": \"1\", \"phone\": \"7777777777\", \"extension\": \"123\", \"photo\": null}, \"photo\": null, \"stock\": \"IS\", \"total_likes\": 0, \"is_liked\": null, \"tags\": [\"one\"]}]")
         
         # Test likes
         url = reverse('like', kwargs={'content_type':'be_local_server-product', 'id':'2'})
@@ -177,34 +182,44 @@ class ProductTestCase(APITestCase):
         url = reverse('product-trending-list')
         response = self.client.post(url)
         #print "Trending products: ", response
-        self.assertEqual(response.status_code, status.HTTP_200_OK)   
+        self.assertEqual(response.status_code, status.HTTP_200_OK) 
+        self.assertEqual(response.content, "[{\"id\": 2, \"name\": \"tomato\", \"description\": \"test product\", \"vendor\": {\"id\": 2, \"company_name\": \"amazon\", \"webpage\": \"www.amazon.com\", \"country_code\": \"1\", \"phone\": \"7777777777\", \"extension\": \"123\", \"photo\": null}, \"photo\": null, \"stock\": \"IS\", \"total_likes\": 1, \"is_liked\": 1, \"tags\": [\"one\"]}]")  
         
     # product details
-    def test_edit_tag_product(self):
-        url = reverse('vendor-products-details', kwargs={'product_id': '2'})
-        response = self.client.get(url)
-        print "Vendor's product details: \n", response
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-          
+    def test_edit_tag_product(self):                 
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})  
         data = {
                 'description':"product with tags",
                 'tags' : ['green','dark'],
                 } 
         response = self.client.patch(url, data)
-        print "Patch Vendor's product : \n", response
+        #print "Patch Vendor's product : \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, "{\"id\": 2, \"name\": \"tomato\", \"description\": \"product with tags\", \"vendor\": 2, \"photo\": null, \"stock\": \"IS\", \"tags\": [\"green\", \"dark\"]}")
         
         url = reverse('vendor-products-details', kwargs={'product_id': '2'})
         response = self.client.get(url)
-        print "Vendor's product details: \n", response
+        #print "Vendor's product details: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, "{\"id\": 2, \"name\": \"tomato\", \"description\": \"product with tags\", \"vendor\": {\"id\": 2, \"company_name\": \"amazon\", \"webpage\": \"www.amazon.com\", \"country_code\": \"1\", \"phone\": \"7777777777\", \"extension\": \"123\", \"photo\": null}, \"photo\": null, \"stock\": \"IS\", \"total_likes\": 0, \"is_liked\": null, \"tags\": [\"green\", \"dark\"]}")
         
     def test_product_tag_list(self):
         url = reverse('product-tag-list')
         response = self.client.get(url)
-        print "\nGet tags list: \n", response
+        #print "\nGet tags list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, "[{\"id\": 1, \"name\": \"one\"}]")
+    
+    def test_tagged_products_list(self):
+        url = reverse('tagged-products-list', kwargs={'tag_slug': 'one'})
+        response = self.client.get(url)
+        #print "\nGet tagged products list: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, "[{\"id\": 2, \"name\": \"tomato\", \"description\": \"test product\", \"vendor\": {\"id\": 2, \"company_name\": \"amazon\", \"webpage\": \"www.amazon.com\", \"country_code\": \"1\", \"phone\": \"7777777777\", \"extension\": \"123\", \"photo\": null}, \"photo\": null, \"stock\": \"IS\", \"total_likes\": 0, \"is_liked\": null, \"tags\": [\"one\"]}]")
+        
+        url = reverse('tagged-products-list', kwargs={'tag_slug': 'amen'})
+        response = self.client.get(url)
+        self.assertEqual(response.content, "[]")
         
 # Vendor test cases
 class VendorTestCase(APITestCase):
@@ -274,8 +289,9 @@ class VendorTestCase(APITestCase):
     def test_list_vendors(self):            
         url = reverse('vendors-list') 
         response = self.client.get(url)
-        print "\nVendors list: \n", response
+        #print "\nVendors list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, "[{\"id\": 2, \"company_name\": \"amazon\", \"webpage\": \"www.amazon.com\", \"country_code\": \"1\", \"phone\": \"7777777777\", \"extension\": \"123\", \"products\": [{\"id\": 2, \"name\": \"tomato\", \"description\": \"test product\", \"vendor\": 2, \"photo\": null, \"stock\": \"IS\", \"tags\": []}], \"address\": 1, \"total_likes\": 0, \"is_liked\": null}]")
     
     # read vendor    
     def test_read_vendor(self):             

@@ -13,16 +13,6 @@
         <!-- <br><span class="glyphicon glyphicon-envelope"></span> belocalVendor@beLocal.ca -->
         <br><span class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}
         <!-- <br><span class="glyphicon glyphicon-phone-alt"></span> {{vendor.phone}} -->
-        <div data-toggle="tooltip" style="display:inline-block" data-placement="bottom" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
-          <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(vendor, 'vendor')" type="button" class="btn btn-default beLocal-btn-default">
-            <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : vendor.is_liked}"></span>
-            <span ng-hide="vendor.is_liked">Like</span>
-            <span ng-show="vendor.is_liked">Unlike</span>
-            <span class="like-container" ng-show="vendor.total_likes > 0">
-              {{vendor.total_likes}}
-            </span>
-          </button>
-        </div>
     </div>
 
     <div class="col-sm-1 vendor-card-product vendor-images" ng-repeat="product in vendor.products | limitTo:5">
@@ -64,15 +54,5 @@
         <!-- <br><span class="glyphicon glyphicon-envelope"></span> belocalVendor@beLocal.ca -->
         <br><span class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}
         <!-- <br><span class="glyphicon glyphicon-phone-alt"></span> {{vendor.phone}} -->
-        <div data-toggle="tooltip" style="display:inline-block" data-placement="bottom" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
-          <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(vendor, 'vendor')" type="button" class="btn btn-default beLocal-btn-default">
-            <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : vendor.is_liked}"></span>
-            <span ng-hide="vendor.is_liked">Like</span>
-            <span ng-show="vendor.is_liked">Unlike</span>
-            <span class="like-container" ng-show="vendor.total_likes > 0">
-              {{vendor.total_likes}}
-            </span>
-          </button>
-        </div> 
     </div>
   </div>

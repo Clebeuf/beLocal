@@ -33,9 +33,9 @@ angular.module('clientApp')
         });        
     });
     
-    $scope.likeUnLikeProduct = function(product) {
-      StateService.likeUnlikeProduct(product).then(function() {
-        product = StateService.getLikedUnlikedProduct();
+    $scope.likeUnlikeItem = function(item, itemName) {
+      StateService.likeUnlikeItem(item, itemName).then(function() {
+        item = StateService.getLikedUnlikedItem();
       });
     };
 

@@ -22,5 +22,15 @@
         </p>
       </div>
     </div>
+    <div data-toggle="tooltip" style="display:inline-block" data-placement="bottom" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
+      <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(market, 'market')" type="button" class="btn btn-default beLocal-btn-default">
+        <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : market.is_liked}"></span>
+        <span ng-hide="market.is_liked">Like</span>
+        <span ng-show="market.is_liked">Unlike</span>
+        <span class="like-container" ng-show="market.total_likes > 0">
+          {{market.total_likes}}
+        </span>
+      </button>
+    </div>
   </div>
 </div>

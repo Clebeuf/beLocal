@@ -8,6 +8,7 @@ angular.module('clientApp')
     var marketlist = [];
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
+    var likedUnlikedItem = undefined;
     var currentLocation = undefined;
 
     this.getUserPosition = function() {
@@ -44,7 +45,6 @@ angular.module('clientApp')
       
       return d.promise; 
     }    
-    var likedUnlikedProduct = undefined;
 
     this.clearCurrentUser = function() {
       currentUser = undefined;
@@ -245,33 +245,35 @@ angular.module('clientApp')
       }
     };
     
-    this.likeUnlikeProduct = function(product) {
-      likedUnlikedProduct = product;
-      if (product.is_liked) {
+    this.likeUnlikeItem = function(item, itemName) {
+      likedUnlikedItem = item;
+      if (item.is_liked) {
         // unlike the product
-        return $http.delete(this.getServerAddress() + 'like/be_local_server-product/' + product.id + '/')
+        return $http.delete(this.getServerAddress() + 'like/' + itemName + '/' + item.id + '/')
         .success(function(data, status, headers, config) {
-          likedUnlikedProduct.vote_total = data.num_votes;
-          likedUnlikedProduct.is_liked = null;
+          console.log('Unliked an item! total_likes: ' + data.num_votes);
+          likedUnlikedItem.total_likes = data.num_votes;
+          likedUnlikedItem.is_liked = null;
         })
         .error(function() {
-          console.log('Error unliking product!');
+          console.log('Error unliking item!');
         });
       } else {
         // like the product
-        return $http.post(this.getServerAddress() + 'like/be_local_server-product/' + product.id + '/')
+        return $http.post(this.getServerAddress() + 'like/' + itemName + '/' + item.id + '/')
         .success(function(data, status, headers, config) {
-          likedUnlikedProduct.vote_total = data.num_votes;
-          likedUnlikedProduct.is_liked = true;
+          console.log('Liked an item! total_likes: '+ data.num_votes);
+          likedUnlikedItem.total_likes = data.num_votes;
+          likedUnlikedItem.is_liked = true;
         })
         .error(function() {
-          console.log('Error liking product!');
+          console.log('Error liking item!');
         });
       }
     };
     
-    this.getLikedUnlikedProduct = function() {
-      return likedUnlikedProduct;
+    this.getLikedUnlikedItem = function() {
+      return likedUnlikedItem;
     };
     
   });

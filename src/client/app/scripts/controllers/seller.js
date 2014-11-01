@@ -100,7 +100,7 @@ angular.module('clientApp')
             } else {
                 // We are a recurring location. Let's see if we're open today
                 for(var j = 0; j < sl.address.hours.length; j++) {
-                    var today = new Date().getDay();
+                    var today = new Date().getDay() == 0 ? 6 : new Date().getDay();
                     if(sl.address.hours[j].weekday == today) {
                         $scope.sellingToday = true;
                         $scope.facebookString += sl.name + ' at ' + sl.address.addr_line1 + ', ' + sl.address.city + '\nFrom ' + sl.address.hours[j].from_hour + ' - ' + sl.address.hours[j].to_hour + '\n';                        
@@ -164,6 +164,8 @@ angular.module('clientApp')
         if($scope.profileForm.$valid) {
             angular.element('#profileModal').modal('hide');
             console.log($scope.currentUser);
+            if($scope.currentUser.vendor.photo.id)
+                $scope.currentUser.vendor.photo = $scope.currentUser.vendor.photo.id;
             StateService.updateCurrentUser($scope.currentUser).then(function(result) {
                 StateService.setProfileVendor(result.data);
             });

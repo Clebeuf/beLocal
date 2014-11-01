@@ -40,4 +40,5 @@ urlpatterns = patterns('',
     
     url(r'^like/(?P<content_type>[\w-]+)/(?P<id>[0-9-]+)/$', views.like, name='like'),
     
+    url(r'^products/tag/list/$', views.ListProductTags.as_view(), name='product-tag-list'),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

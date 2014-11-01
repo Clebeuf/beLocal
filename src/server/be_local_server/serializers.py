@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 import be_local_server.models
 from django.contrib.auth.models import User
 from secretballot.models import Vote
+from taggit.models import Tag
 
 class UserSerializer(serializers.ModelSerializer):
   class Meta:
@@ -146,7 +147,12 @@ class TagListSerializer(serializers.WritableField):
         if type(obj) is not list:
             return [tag.name for tag in obj.all()]
         return obj
-    
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('id', 'name')
+        
 class AddProductSerializer(serializers.ModelSerializer):
     tags = TagListSerializer(blank=True)
     class Meta:

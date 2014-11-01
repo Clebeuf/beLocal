@@ -15,6 +15,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models.base import ModelBase
+from django.forms.models import model_to_dict
 from social.apps.django_app.utils import psa
 from secretballot import views
 from secretballot.models import Vote
@@ -22,9 +23,8 @@ from be_local_server import serializers
 from be_local_server.models import *
 from geopy.distance import vincenty
 from operator import itemgetter, attrgetter, methodcaller
-import datetime
-from django.forms.models import model_to_dict
-import json
+import datetime, json
+from taggit.models import Tag
 
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
     user = (user_lat, user_lng)
@@ -708,4 +708,14 @@ def like(request, content_type, id):
             body = '{"is_liked": false}'
             return HttpResponse(body, status=status.HTTP_404_NOT_FOUND, content_type='application/json') 
         
-    
+class ListProductTags(generics.ListAPIView):
+    """ 
+    This view provides an endpoint to list available tags.
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.TagSerializer
+
+    def get_queryset(self):
+        tags = Tag.objects.all() 
+        return tags
+       

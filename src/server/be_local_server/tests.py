@@ -83,7 +83,7 @@ class ProductTestCase(APITestCase):
     def test_list_vendor_products(self):            
         url = reverse('vendor-products-list') 
         response = self.client.get(url)
-        print "Vendor products list: \n", response
+        print "\nVendor products list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
     
     # product details
@@ -168,7 +168,7 @@ class ProductTestCase(APITestCase):
     def test_trending_products(self):
         url = reverse('product-trending-list')
         response = self.client.post(url)
-        print "Trending products: ", response
+        print "\nTrending products: ", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
         # Test likes
@@ -200,6 +200,11 @@ class ProductTestCase(APITestCase):
         print "Vendor's product details: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
+    def test_product_tag_list(self):
+        url = reverse('product-tag-list')
+        response = self.client.get(url)
+        print "\nGet tags list: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         
 # Vendor test cases
 class VendorTestCase(APITestCase):
@@ -269,7 +274,7 @@ class VendorTestCase(APITestCase):
     def test_list_vendors(self):            
         url = reverse('vendors-list') 
         response = self.client.get(url)
-        print "Vendors list: \n", response
+        print "\nVendors list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
     # read vendor    
@@ -402,7 +407,7 @@ class MarketTestCase(APITestCase):
     def test_list_markets(self):            
         url = reverse('market-list') 
         response = self.client.get(url)
-        print "Markets list: \n", response
+        print "\nMarkets list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
          
     def test_like_market(self):

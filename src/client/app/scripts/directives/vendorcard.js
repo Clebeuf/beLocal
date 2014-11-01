@@ -10,11 +10,7 @@ angular.module('clientApp')
           scope.likeDisabled = true;
         } else {
           scope.likeDisabled = false;
-        }  
-
-        $timeout(function(){
-            angular.element("[data-toggle='tooltip']").tooltip();
-        });
+        }
       }
     };
   });

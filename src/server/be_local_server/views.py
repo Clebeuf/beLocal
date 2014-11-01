@@ -7,6 +7,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseServerError, Http404, HttpResponseRedirect
@@ -19,7 +20,17 @@ from secretballot import views
 from secretballot.models import Vote
 from be_local_server import serializers
 from be_local_server.models import *
+from geopy.distance import vincenty
+from operator import itemgetter, attrgetter, methodcaller
+import datetime
+from django.forms.models import model_to_dict
+import json
 
+def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
+    user = (user_lat, user_lng)
+    item = (item_lat, item_lng)
+
+    return vincenty(user, item).miles
 
 class LoginView(APIView):
     throttle_classes = ()
@@ -28,6 +39,7 @@ class LoginView(APIView):
     renderer_classes = (renderers.JSONRenderer,)
     serializer_class = AuthTokenSerializer
     model = Token
+    vendors_per_page = 20; 
  
     def post(self, request, backend):
         serializer = self.serializer_class(data=request.DATA)
@@ -76,23 +88,21 @@ class CreateVendorView(APIView):
 
         if user:
             token, created_token = Token.objects.get_or_create(user=user)
-            vendor, created_vendor = Vendor.objects.get_or_create(user=user)
+            vendor = Vendor.objects.get(user=user)
 
             if(not created_token):
                 return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)
             
             # If the user is a newly created vendor, make them inactive.
-            if(created_vendor):
-                user.is_staff = 1 # make the user a vendor
-                vendor.is_active = False # make the user inactive
-                vendor.save()
-                user.save()
+            user.is_staff = 1 # make the user a vendor
+            vendor.is_active = False # make the user inactive
+            vendor.save()
+            user.save()
 
-                vendor.company_name = user.username # set this for Carly's UI
-                vendor.save()
+            vendor.company_name = user.username # set this for Carly's UI
+            vendor.save()
                 
-            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
-            
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote            
             response = {}
             response = {'id': user.id, 
                         'is_active' : vendor.is_active, 
@@ -480,16 +490,42 @@ class TrendingProductView(generics.ListAPIView):
     view currently trending products.
     """   
     permission_classes = (AllowAny,)
-
     serializer_class = serializers.ProductDisplaySerializer
 
-    def get_queryset(self):  
-        products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True) 
-        if products is not None:
-            for product in products:
-                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
-                
-        return products
+    def post(self, request):
+        if ('user_position' in request.DATA.keys() and request.DATA['user_position'] is not None):
+            lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))
+
+            locations = SellerLocation.objects.filter(vendor__is_active=True)
+
+            for location in locations: 
+                location.sortkey = getDistanceFromUser(lat, lng, location.address.latitude, location.address.longitude)
+
+            locations = sorted(locations, key=attrgetter('sortkey'))
+
+            products = []
+            vendors = [] 
+
+            #Go through all locations sorted by proximity
+            for location in locations:
+                if(location.vendor not in vendors): #To make sure we don't add the same item from two diff. locations
+                    vendors.append(location.vendor)
+                    products.extend(Product.objects.filter(vendor=location.vendor, stock=Product.IN_STOCK))
+
+            if products is not None:
+                for product in products:
+                    product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote                    
+            
+            serializer = serializers.ProductDisplaySerializer(products, many=True) 
+            return Response(serializer.data)
+
+        else:
+            products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True)
+            if products is not None:
+                for product in products:
+                    product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
+            serializer = serializers.ProductDisplaySerializer(products, many=True)
+            return Response(serializer.data)
 
 class ListMarketsView(generics.ListAPIView):
     """
@@ -523,22 +559,57 @@ class MarketView(generics.ListAPIView):
 
         return SellerLocation.objects.filter(address = market_address)
 
+
+
 class VendorsView(generics.ListAPIView):
     """
     This view provides an endpoint for customers to view
     vendors.
     """
     permission_classes = (AllowAny,)
-
     serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
         vendors = Vendor.objects.filter(is_active=True)
         if vendors is not None:
             for vendor in vendors:
-                vendor.is_liked = Product.objects.from_request(self.request).get(pk=vendor.id).user_vote 
+                vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote 
                 
         return vendors
+
+    def post(self, request):
+        if ('user_position' in request.DATA.keys() and request.DATA['user_position'] is not None):
+
+            lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))
+
+            locations = SellerLocation.objects.filter(vendor__is_active=True)
+
+            #Sort locations based on proximity to current user
+            for location in locations: 
+                location.sortkey = getDistanceFromUser(lat, lng, location.address.latitude, location.address.longitude)
+
+            locations = sorted(locations, key=attrgetter('sortkey'))
+
+            vendors = []
+
+            #Fill vendor queryset with order based on their closest locations
+            for location in locations: 
+                if(location.vendor not in vendors):
+                    location.vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=location.vendor.id).user_vote 
+                    vendors.append(location.vendor)
+                    
+            serializer = serializers.VendorSerializer(vendors, many=True)
+            return Response(serializer.data)
+
+        else: 
+            vendors = Vendor.objects.filter(is_active=True)
+            
+            if vendors is not None:
+                for vendor in vendors:
+                    vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
+            
+            serializer = serializers.VendorSerializer(vendors, many=True)
+            return Response(serializer.data)
 
 class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)

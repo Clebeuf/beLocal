@@ -205,6 +205,7 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
                   'phone',
                   'extension',
                   'products',
+                  'address',
                   'total_likes',
                   'is_liked',
       )      

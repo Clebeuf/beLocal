@@ -518,6 +518,7 @@ angular.module('clientApp')
               }
             });
         }
+
         return d.promise;
     }
 

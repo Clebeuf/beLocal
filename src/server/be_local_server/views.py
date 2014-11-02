@@ -148,13 +148,15 @@ class VendorDetailsView(generics.CreateAPIView):
         if(vendor.is_active == True):
             locations = SellerLocation.objects.filter(vendor=vendor)
             products = Product.objects.filter(vendor=vendor, stock="IS")
+            markets = Market.objects.filter(vendors=vendor)
 
             if products is not None:
                 for product in products:
                     product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
 
             return Response({"vendor":serializers.VendorSerializer(vendor).data, 
-                             "locations":serializers.SellerLocationSerializer(locations, many=True).data, 
+                             "locations":serializers.SellerLocationSerializer(locations, many=True).data,
+                             "markets":serializers.MarketDisplaySerializer(markets, many=True).data,
                              "products":serializers.ProductDisplaySerializer(products, many=True).data
                             }, 
                             status=status.HTTP_200_OK

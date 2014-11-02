@@ -10,6 +10,7 @@ angular.module('clientApp')
     var vendorDetails = undefined;
     var currentLocation = undefined;
     var availableMarkets = undefined;
+    var likedUnlikedProduct = undefined;
 
     this.getUserPosition = function() {
 
@@ -44,8 +45,11 @@ angular.module('clientApp')
         });
       
       return d.promise; 
-    }    
-    var likedUnlikedProduct = undefined;
+    } 
+
+    function compareWeekday(a,b) {
+      return a.weekday - b.weekday;
+    }       
 
     this.clearCurrentUser = function() {
       currentUser = undefined;
@@ -72,6 +76,9 @@ angular.module('clientApp')
     this.getVendorInfo = function(){
       return $http.post(this.getServerAddress() + 'vendor/details', {"id":vendorToDisplay})
       .success(function(data) {
+        for(var i = 0; i < data.markets.length; i++) {
+          data.markets[i].address.hours.sort(compareWeekday);
+        }        
         vendorDetails = data;
       })
       .error(function(data) {
@@ -119,11 +126,7 @@ angular.module('clientApp')
       .error(function(data) {
         console.log('error retrieving vendors');
       });
-    };
-
-    function compareWeekday(a,b) {
-      return a.weekday - b.weekday;
-    }    
+    };   
 
     this.getMarkets = function() {
       return $http.get(this.getServerAddress() + 'markets/')

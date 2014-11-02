@@ -120,9 +120,17 @@ angular.module('clientApp')
       });
     };
 
+    function compareWeekday(a,b) {
+      return a.weekday - b.weekday;
+    }    
+
     this.getMarkets = function() {
       return $http.get(this.getServerAddress() + 'markets/')
       .success(function(data) {
+        for(var i = 0; i < data.length; i++) {
+          data[i].address.hours.sort(compareWeekday);
+        }
+        console.log(data);
         marketlist = data;
       })
       .error(function(data) {

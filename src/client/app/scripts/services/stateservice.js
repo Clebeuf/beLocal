@@ -9,6 +9,7 @@ angular.module('clientApp')
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
     var currentLocation = undefined;
+    var availableMarkets = undefined;
 
     this.getUserPosition = function() {
 
@@ -130,13 +131,36 @@ angular.module('clientApp')
         for(var i = 0; i < data.length; i++) {
           data[i].address.hours.sort(compareWeekday);
         }
-        console.log(data);
         marketlist = data;
       })
       .error(function(data) {
         console.log('Error retrieving markets');
       });
     };
+
+    this.getAvailableMarketList = function() {
+      return availableMarkets;
+    }
+
+    this.getAvailableMarkets = function() {
+      return $http.get(this.getServerAddress() + 'vendor/markets/available/')
+      .success(function(data) {
+        for(var i = 0; i < data.length; i++) {
+          data[i].address.hours.sort(compareWeekday);
+        }
+        availableMarkets = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving markets');
+      });
+    };    
+
+    this.getMarketLocations = function() {
+      return $http.get(this.getServerAddress() + 'vendor/markets/list/')
+      .error(function(data) {
+        console.log('Error retrieving seller markets');
+      });      
+    }
 
     this.getSellerLocations = function() {
       return $http.get(this.getServerAddress() + 'vendor/location/list/')
@@ -252,6 +276,28 @@ angular.module('clientApp')
         })        
       }
     };
+
+    this.joinMarket = function(data) {
+      var url = this.getServerAddress() + 'markets/join/';
+        return $http.post(url, data)
+        .success(function() {
+          console.log("Joined a market!");
+        })
+        .error(function() {
+          console.log("Error joining market!");
+        })
+    }
+
+    this.leaveMarket = function(data) {
+      var url = this.getServerAddress() + 'markets/leave/';
+        return $http.post(url, data)
+        .success(function() {
+          console.log("Left a market!");
+        })
+        .error(function() {
+          console.log("Error leaving market!");
+        })
+    }
     
     this.likeUnlikeProduct = function(product) {
       likedUnlikedProduct = product;

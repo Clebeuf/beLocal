@@ -206,7 +206,8 @@ class MarketDisplaySerializer(serializers.ModelSerializer):
     address = AddAddressSerializer()
     class Meta:
         model = be_local_server.models.Market
-        fields = (  'vendors',
+        fields = (  'id',
+                    'vendors',
                     'address',
                     'name',
                     'description',

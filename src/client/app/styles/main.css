@@ -1,5 +1,10 @@
 /* BELOCAL STYLES */
 
+.location-tabs {
+  margin-bottom:15px;
+  border-bottom: 0px;
+}
+
 .hours-string {
   color:#66667d;
 }
@@ -190,6 +195,25 @@ body {
 }
 .full-width-tabs > ul.nav.nav-pills > li > a {
     text-align: center;
+}
+
+.full-width-tabs > ul.nav.nav-tabs {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* To make all "columns" equal width regardless of content */
+}
+.full-width-tabs > ul.nav.nav-tabs > li {
+    float: none;
+    display: table-cell;
+}
+.full-width-tabs > ul.nav.nav-tabs > li > a {
+    text-align: center;
+    border-bottom: 1px solid #DDDDDD;   
+    margin-right: 0px; 
+}
+
+.full-width-tabs > ul.nav.nav-tabs > li.active > a {
+  border-bottom: 0px;
 }
 
 .container-home-page {

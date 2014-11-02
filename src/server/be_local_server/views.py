@@ -576,6 +576,56 @@ class ListVendorLocations(generics.ListAPIView):
 
         return SellerLocation.objects.filter(vendor=vendor)
 
+class ListVendorMarkets(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    serializer_class = serializers.MarketDisplaySerializer
+
+    def get_queryset(self):
+        vendor = Vendor.objects.get(user=self.request.user)
+
+        return Market.objects.filter(vendors=vendor) 
+
+class ListAvailableVendorMarkets(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    serializer_class = serializers.MarketDisplaySerializer
+
+    def get_queryset(self):
+        vendor = Vendor.objects.get(user=self.request.user)
+
+        return Market.objects.exclude(vendors=vendor)              
+
+class JoinMarketView(generics.CreateAPIView):
+
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        vendor = Vendor.objects.get(user=request.user)
+
+        market = Market.objects.get(pk=request.DATA['market_id'])
+        market.vendors.add(vendor)
+        market.save()
+
+        return HttpResponse(status=status.HTTP_200_OK)
+
+class LeaveMarketView(generics.CreateAPIView):
+
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        vendor = Vendor.objects.get(user=request.user)
+
+        market = Market.objects.get(pk=request.DATA['market_id'])
+        market.vendors.remove(vendor)
+        market.save()
+
+        return HttpResponse(status=status.HTTP_200_OK)        
+
 class AddSellerLocationView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)

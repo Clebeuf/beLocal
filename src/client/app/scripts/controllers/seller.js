@@ -23,7 +23,7 @@ angular.module('clientApp')
     $scope.sellingToday = false;
     $scope.currentUser = {};
     angular.copy(StateService.getCurrentUser(), $scope.currentUser);
-    $scope.isCreatingCustomLocation = true;
+    $scope.isCreatingCustomLocation = false;
 
     var geocoder = new google.maps.Geocoder();
 
@@ -58,12 +58,27 @@ angular.module('clientApp')
 
     $scope.doCustomLocation = function() {
         $scope.isCreatingCustomLocation = true;
-        $scope.submitLocationButtonText = "Add Location";        
+        $scope.submitLocationButtonText = "Add Location";
+    }
+
+    $scope.manuallyTriggerCustomLocation = function() {
+        $scope.doCustomLocation();
+        $timeout(function() {
+            angular.element('#customLocationTab').trigger('click');            
+        });        
     }
 
     $scope.doMarketLocation = function() {
         $scope.isCreatingCustomLocation = false;
         $scope.submitLocationButtonText = "Join Market";
+    }
+
+    $scope.manuallyTriggerMarketLocation = function() {
+        $scope.isCreatingCustomLocation = false;
+        $scope.submitLocationButtonText = "Join Market";        
+        $timeout(function() {
+            angular.element('#marketLocationTab').trigger('click');            
+        });        
     }
 
     $scope.doTwitterSignIn = function() {
@@ -213,10 +228,10 @@ angular.module('clientApp')
     } 
 
     $scope.resetLocationModal = function() {
+        $scope.manuallyTriggerMarketLocation();
         $scope.addressSearchText = undefined;
         $scope.newLocationSubmitted = false;
-        $scope.isEditingLocation = false;       
-        $scope.submitLocationButtonText = "Add Location";
+        $scope.isEditingLocation = false;
 
         var tempDate = new Date();
         tempDate.setHours(tempDate.getHours() + 1);
@@ -305,7 +320,7 @@ angular.module('clientApp')
         $scope.locationDescription  = location.description;
     }
 
-    $scope.resetItemModal = function() {
+    $scope.resetItemModal = function() {       
         $scope.submitItemButtonText = "Add Item"; 
         $scope.isEditingItem = false;
         $scope.newItemSubmitted = false;
@@ -635,7 +650,7 @@ angular.module('clientApp')
             angular.element("[data-toggle='tooltip']").tooltip();
         }, 1000)
 
-        $scope.resetLocationModal();3
+        $scope.resetLocationModal();
     }  
 
     $scope.init();   

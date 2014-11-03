@@ -417,12 +417,12 @@
                     <div class="full-width-tabs" ng-show="isEditingLocation == false">
                         <label class="control-label">Are you adding a custom location or joining an existing market?</label>
                         <ul class="nav nav-tabs location-tabs" role="tablist">
-                              <li role="presentation" class="active full-width"><a href="/vendor/#customLocation" ng-click="doCustomLocation()" role="tab" data-toggle="tab">Add a Custom Location</a></li>
-                              <li role="presentation" class="full-width"><a href="/vendor/#marketLocation" ng-click="doMarketLocation()" role="tab" data-toggle="tab">Join a Market</a></li>
+                              <li role="presentation" class="active full-width"><a id="marketLocationTab" href="/vendor/#marketLocation" ng-click="doMarketLocation()" role="tab" data-toggle="tab">Join a Market</a></li>
+                              <li role="presentation" class="full-width"><a id="customLocationTab" href="/vendor/#customLocation" ng-click="doCustomLocation()" role="tab" data-toggle="tab">Add a New Custom Location</a></li>
                         </ul>
                     </div>
                     <div class="tab-content">
-                        <div class="tab-pane active" id="customLocation">                                 
+                        <div class="tab-pane" id="customLocation">                                 
                             <form role="form" name="locationForm" novalidate>
                                 <div class="row">
                                     <div class="col-xs-6 col-md-6">
@@ -542,12 +542,12 @@
                                 </div>                                                          
                             </form>
                         </div>
-                        <div class="tab-pane" id="marketLocation">
+                        <div class="tab-pane active" id="marketLocation">
                             <form role="form" name="marketForm" novalidate>
                                 <div class="form-group">
-                                    <label for="modalOnCampusPicker">Pick the Market You're Selling At</label>
+                                    <label>Select the Market You're Selling At</label>
                                     <select ng-show="StateService.getAvailableMarketList().length > 0" ng-model="newLocationMarket" id="modalMarketPicker" class="form-control" ng-options="market.id as market.name for market in StateService.getAvailableMarketList()"></select>
-                                    <p ng-hide="StateService.getAvailableMarketList().length > 0">It looks like you're already selling at all the markets in town!</p> 
+                                    <p ng-hide="StateService.getAvailableMarketList().length > 0">It looks like you're already selling at all the markets in town! Try <a class="pointer" ng-click="manuallyTriggerCustomLocation()">creating</a> a new custom location instead.</p> 
                                 </div>   
                             </form>
                         </div>

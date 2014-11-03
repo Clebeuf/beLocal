@@ -6,6 +6,8 @@ angular.module('clientApp')
     var trendingProducts = []; // Currently trending products
     var vendors = [];
     var marketlist = [];
+    var categorylist = [];
+    var taglist = [];
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
     var likedUnlikedItem = undefined;
@@ -136,7 +138,27 @@ angular.module('clientApp')
         console.log('Error retrieving seller locations');
       }); 
     };
+    
+    this.getTags = function() {
+      return $http.get(this.getServerAddress() + 'tag/list/')
+      .success(function(data) {
+        taglist = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving tags');
+      });
+    };
 
+    this.getCategories = function() {
+      return $http.get(this.getServerAddress() + 'category/list/')
+      .success(function(data) {
+        categorylist = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving categories');
+      });
+    };
+    
     this.trashOrRestoreLocation = function(id, action) {
       return $http.post(this.getServerAddress() + 'vendor/location/delete/', {'id' : id, 'action' : action})
       .error(function(data) {
@@ -219,6 +241,14 @@ angular.module('clientApp')
     this.getMarketList = function() {
       return marketlist;
     };
+    
+    this.getTagList = function() {
+      return taglist;
+    }
+    
+    this.getCategoryList = function() {
+      return categorylist;
+    }
 
     this.setProfileFromCookie = function() {
       this.setProfile(ipCookie('beLocalUser'));

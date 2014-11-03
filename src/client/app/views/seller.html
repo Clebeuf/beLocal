@@ -341,7 +341,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <div ng-hide="isEditingItem" class="form-group no-bottom-margin">
+                                <div ng-hide="isEditingItem" class="form-group">
                                     <label for="item-name">Item Stock<br></label>
                                     <div>
                                         <input type="radio" ng-model="newItemStock" name="newItemStock" value="IS"><span class="radio-padding-right"> In Stock</span>
@@ -349,6 +349,18 @@
                                     </div>
                                 </div>
                             </div>                        
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group btn-group" dropdown>
+                                    <button type="button" class="btn btn-primary dropdown-toggle">
+                                        Select Category  <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#">Action</a></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>

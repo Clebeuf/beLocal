@@ -49,6 +49,14 @@ angular.module('clientApp')
         this.$apply(fn);
       }
     };
+    
+    StateService.getTags().then(function() {
+      $scope.tagList = StateService.getTagList();
+    });
+    
+    StateService.getCategories().then(function() {
+      $scope.categoryList = StateService.getCategoryList();
+    });
 
     $scope.doTwitterSignIn = function() {
         OAuth.popup('twitter', {cache : true})

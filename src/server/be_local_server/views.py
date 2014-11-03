@@ -598,7 +598,7 @@ class VendorsView(generics.ListAPIView):
                     location.vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=location.vendor.id).user_vote 
                     vendors.append(location.vendor)
                     
-            serializer = serializers.VendorSerializer(vendors, many=True)
+            serializer = serializers.CustomerVendorSerializer(vendors, many=True)
             return Response(serializer.data)
 
         else: 
@@ -608,7 +608,7 @@ class VendorsView(generics.ListAPIView):
                 for vendor in vendors:
                     vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
             
-            serializer = serializers.VendorSerializer(vendors, many=True)
+            serializer = serializers.CustomerVendorSerializer(vendors, many=True)
             return Response(serializer.data)
 
 class ListVendorLocations(generics.ListAPIView):

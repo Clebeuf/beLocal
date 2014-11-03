@@ -42,4 +42,7 @@ urlpatterns = patterns('',
     
     url(r'^tag/list/$', views.ListProductTags.as_view(), name='tag-list'),
     url(r'^products/tag/(?P<tag_slug>[\w-]+)/$', views.TaggedProductView.as_view(), name='tagged-products-list'),
+    url(r'^category/list/$', views.ListProductCategories.as_view(), name='category-list'),
+    url(r'^products/category/(?P<category_slug>[\w-]+)/$', views.CategorizedProductView.as_view(), name='categorized-products-list'),
+    
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

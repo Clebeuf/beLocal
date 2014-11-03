@@ -141,7 +141,7 @@ class ProductTestCase(APITestCase):
         data = {'description': "changed it",
                 'category': 2}
         response = self.client.patch(url, data)
-        print "Edit Vendor's product: \n", response
+        #print "Edit Vendor's product: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)  
         self.assertEqual(response.content, '{"id": 2, "name": "tomato", "description": "changed it", "vendor": 2, "photo": null, "stock": "IS", "tags": ["one", "two"], "category": 2}')
         
@@ -232,6 +232,24 @@ class ProductTestCase(APITestCase):
         self.assertEqual(response.content, '[{"id": 2, "name": "tomato", "description": "test product", "vendor": {"id": 2, "company_name": "amazon", "webpage": "www.amazon.com", "country_code": "1", "phone": "7777777777", "extension": "123", "photo": null}, "photo": null, "stock": "IS", "total_likes": 0, "is_liked": null, "tags": ["one", "two"], "category": {"id": 1, "name": "new vendor"}}]')
         
         url = reverse('tagged-products-list', kwargs={'tag_slug': 'amen'})
+        response = self.client.get(url)
+        self.assertEqual(response.content, "[]")
+    
+    def test_product_category_list(self):
+        url = reverse('category-list')
+        response = self.client.get(url)
+        #print "\nGet tags list: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, '[{"id": 1, "name": "new vendor"}, {"id": 2, "name": "old vendor"}]')
+    
+    def test_categorized_products_list(self):
+        url = reverse('categorized-products-list', kwargs={'category_slug': 'new-vendor'})
+        response = self.client.get(url)
+        #print "\nGet tagged products list: \n", response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content, '[{"id": 2, "name": "tomato", "description": "test product", "vendor": {"id": 2, "company_name": "amazon", "webpage": "www.amazon.com", "country_code": "1", "phone": "7777777777", "extension": "123", "photo": null}, "photo": null, "stock": "IS", "total_likes": 0, "is_liked": null, "tags": ["one", "two"], "category": {"id": 1, "name": "new vendor"}}]')
+        
+        url = reverse('categorized-products-list', kwargs={'category_slug': 'amen'})
         response = self.client.get(url)
         self.assertEqual(response.content, "[]")
         

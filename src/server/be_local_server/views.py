@@ -734,3 +734,29 @@ class TaggedProductView(generics.ListAPIView):
         
         return products
        
+class ListProductCategories(generics.ListAPIView):
+    """ 
+    This view provides an endpoint to list available categories.
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.CategorySerializer
+
+    def get_queryset(self):
+        return Category.objects.all() 
+
+class CategorizedProductView(generics.ListAPIView):
+    """ 
+    This view provides an endpoint to list products of a given cateogry.
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.ProductDisplaySerializer
+
+    def get_queryset(self):
+        products = Product.objects.filter(category__slug=self.kwargs.get('category_slug')).filter(stock=Product.IN_STOCK).filter(vendor__is_active=True)
+       
+        if products is not None:
+            for product in products:
+                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
+        
+        return products   
+    

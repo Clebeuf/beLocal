@@ -172,10 +172,6 @@ body {
   margin-right: 15px;
 }
 
-.nav > li > a {
-  color: #8ed41e;
-}
-
 .nav-pills-home > li > a {
  border-radius: 0px !important; 
 }
@@ -213,6 +209,7 @@ body {
 }
 
 .full-width-tabs > ul.nav.nav-tabs > li.active > a {
+  color: #8ed41e;
   border-bottom: 0px;
 }
 
@@ -308,6 +305,14 @@ body {
 .beLocal-btn-filled {
   background-color: #8ed41e;
   color: white !important;
+}
+
+.beLocal-a {
+  color: #8ed41e;
+}
+
+.beLocal-a:hover {
+  color: #89cc1d;  
 }
 
 .beLocal-btn-filled:hover {

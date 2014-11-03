@@ -6,6 +6,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     name = indexes.CharField(model_attr='name')
     vendor = indexes.CharField(model_attr='vendor')
+    photo = indexes.CharField(model_attr='photo')
     # We add this for autocomplete.
     name_auto = indexes.EdgeNgramField(model_attr='name')
 

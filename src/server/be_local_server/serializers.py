@@ -152,9 +152,15 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'name')
-        
+    
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = be_local_server.models.Category
+        fields = ('id', 'name')
+            
 class AddProductSerializer(serializers.ModelSerializer):
     tags = TagListSerializer(blank=True)
+    
     class Meta:
         model = be_local_server.models.Product
         fields = ('id', 
@@ -164,12 +170,14 @@ class AddProductSerializer(serializers.ModelSerializer):
                   'vendor',
                   'photo',
                   'stock',
-                  'tags'
+                  'tags',
+                  'category'
         )
         
 class ProductSerializer(serializers.ModelSerializer):
     photo = PhotoPathSerializer()    
     tags = TagListSerializer(blank=True)
+    
     class Meta:
         model = be_local_server.models.Product
         fields = ('id', 
@@ -178,7 +186,8 @@ class ProductSerializer(serializers.ModelSerializer):
                   'vendor',
                   'photo',
                   'stock',
-                  'tags'
+                  'tags',
+                  'category'
         )
 
 class VoteSerializer(serializers.ModelSerializer):
@@ -197,6 +206,7 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
     total_likes = serializers.IntegerField(source='vote_total') 
     is_liked = serializers.IntegerField()
     tags = TagListSerializer(blank=True)
+    category = CategorySerializer(blank=True)
     
     class Meta:
         model = be_local_server.models.Product
@@ -209,7 +219,8 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
                   'stock',
                   'total_likes',
                   'is_liked',
-                  'tags'
+                  'tags',
+                  'category'
         )           
 
 class CustomerVendorSerializer(serializers.ModelSerializer):

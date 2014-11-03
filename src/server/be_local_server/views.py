@@ -270,7 +270,8 @@ class AddProductView(generics.CreateAPIView):
     add a product to their products list.
     """         
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)     
+    permission_classes = (IsAuthenticated,)   
+    serializer_class = serializers.AddProductSerializer  
 
     def post(self, request, *args, **kwargs):
         vendor = Vendor.objects.get(user=request.user)
@@ -280,7 +281,6 @@ class AddProductView(generics.CreateAPIView):
 
         if serializer.is_valid():
             current_product = serializer.save()
-            
             # Save tags if they are provided in the request.
             if type(serializer.data['tags']) is list:                
                 saved_product = Product.objects.get(pk=current_product.pk)

@@ -5,7 +5,9 @@ from django.conf import settings
 import os
 from undelete.models import TrashableMixin
 from taggit.managers import TaggableManager
+from taggit.models import GenericTaggedItemBase, TagBase
 import secretballot
+
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -57,13 +59,23 @@ class Vendor(models.Model):
 
 secretballot.enable_voting_on(Vendor)
 
+class Category(models.Model):
+    name = models.CharField(max_length=100, db_index=True)
+    slug = models.SlugField(max_length=100, db_index=True)
+
+    def __unicode__(self):
+        return '%s' % self.name
+
+    class Meta:
+        verbose_name_plural = 'categories'
+  
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)
     
     def get_image_abs_path(self):
         return os.path.join(settings.MEDIA_URL, self.image.name)        
     image_url = property(get_image_abs_path)   
-    
+
 class Product(TrashableMixin, models.Model):
     IN_STOCK = 'IS'
     OUT_OF_STOCK = 'OOS'
@@ -82,6 +94,7 @@ class Product(TrashableMixin, models.Model):
     vendor = models.ForeignKey(Vendor, related_name='products')
     photo = models.ForeignKey(ProductPhoto, blank=True, null=True)
     tags = TaggableManager(blank=True)
+    category = models.ForeignKey('Category', blank=True, null=True)
     
 secretballot.enable_voting_on(Product)
 

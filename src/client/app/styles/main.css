@@ -151,13 +151,13 @@ textarea {
 html {
   position: relative;
   min-height: 100%;
-  background-color: #EFF7EF;
+  background-color: #EEEEEE;
 }
 
 body {
   /* Margin bottom by footer height */
   margin-bottom: 40px;
-  background-color: #EFF7EF;  
+  background-color: #EEEEEE;  
 }
 
 .footer {
@@ -931,7 +931,6 @@ color: #000 !important;
 
 .new-formatting-container{
   padding: 5px 15px 5px 15px !important;
-  background-color: #EEEEEE;
 }
 
 .new-heading-style {

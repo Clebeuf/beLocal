@@ -1,14 +1,50 @@
 'use strict';
 
 angular.module('clientApp')
-  .service('StateService', function StateService($http, ipCookie, $location) {
+  .service('StateService', function StateService($http, ipCookie, $location, $q, $timeout) {
     var currentUser = undefined; // Currently authenticated user
     var trendingProducts = []; // Currently trending products
     var vendors = [];
     var marketlist = [];
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
-    var likedUnlikedProduct = undefined;
+    var likedUnlikedItem = undefined;
+    var currentLocation = undefined;
+
+    this.getUserPosition = function() {
+
+      var d = $q.defer();
+
+      // Timeout to fire even if the user does not accept/deny location request
+      var location_timeout = setTimeout(function() {
+        d.resolve(null);
+      }, 5000);
+
+      var position; 
+        navigator.geolocation.getCurrentPosition(function(pos){
+          clearTimeout(location_timeout);          
+          position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude).toString();
+          $timeout(function(){
+            currentLocation = position;
+            d.resolve(position);
+          });
+        },
+        function(pos){
+          clearTimeout(location_timeout);          
+          console.log("Loation permission denied");
+          position = undefined;
+          $timeout(function(){
+            currentLocation = null;
+            d.resolve(position);
+          })
+        },
+        {
+          maximumAge:0,
+          timeout: 5000
+        });
+      
+      return d.promise; 
+    }    
 
     this.clearCurrentUser = function() {
       currentUser = undefined;
@@ -26,6 +62,7 @@ angular.module('clientApp')
     this.setVendorToDisplay = function(vendorID) {
       vendorToDisplay = vendorID;
     };
+
 
     this.getVendorDetails = function(){
       return vendorDetails;
@@ -64,7 +101,7 @@ angular.module('clientApp')
     };
 
     this.getTrendingProducts = function() {
-      return $http.get(this.getServerAddress() + 'products/trending/')
+      return $http.post(this.getServerAddress() + 'products/trending/', {'user_position':currentLocation})
       .success(function(data) {
         trendingProducts = data;
       })
@@ -74,12 +111,12 @@ angular.module('clientApp')
     };
 
     this.getVendors = function() {
-      return $http.get(this.getServerAddress() + 'vendors/')
+      return $http.post(this.getServerAddress() + 'vendors/', {'user_position':currentLocation})
       .success(function(data) {
         vendors = data;
       })
       .error(function(data) {
-        console.log('Error retrieving vendors');
+        console.log('error retrieving vendors');
       });
     };
 
@@ -208,35 +245,35 @@ angular.module('clientApp')
       }
     };
     
-    this.likeUnlikeProduct = function(product) {
-      likedUnlikedProduct = product;
-      if (product.is_liked) {
+    this.likeUnlikeItem = function(item, itemName) {
+      likedUnlikedItem = item;
+      if (item.is_liked) {
         // unlike the product
-        return $http.delete(this.getServerAddress() + 'like/be_local_server-product/' + product.id + '/')
+        return $http.delete(this.getServerAddress() + 'like/' + itemName + '/' + item.id + '/')
         .success(function(data, status, headers, config) {
-          console.log('Unliked a product! total_likes: ' + data.num_votes);
-          likedUnlikedProduct.vote_total = data.num_votes;
-          likedUnlikedProduct.is_liked = null;
+          console.log('Unliked an item! total_likes: ' + data.num_votes);
+          likedUnlikedItem.total_likes = data.num_votes;
+          likedUnlikedItem.is_liked = null;
         })
         .error(function() {
-          console.log('Error unliking product!');
+          console.log('Error unliking item!');
         });
       } else {
         // like the product
-        return $http.post(this.getServerAddress() + 'like/be_local_server-product/' + product.id + '/')
+        return $http.post(this.getServerAddress() + 'like/' + itemName + '/' + item.id + '/')
         .success(function(data, status, headers, config) {
-          console.log('Liked a product! total_likes: '+ data.num_votes);
-          likedUnlikedProduct.vote_total = data.num_votes;
-          likedUnlikedProduct.is_liked = true;
+          console.log('Liked an item! total_likes: '+ data.num_votes);
+          likedUnlikedItem.total_likes = data.num_votes;
+          likedUnlikedItem.is_liked = true;
         })
         .error(function() {
-          console.log('Error liking product!');
+          console.log('Error liking item!');
         });
       }
     };
     
-    this.getLikedUnlikedProduct = function() {
-      return likedUnlikedProduct;
+    this.getLikedUnlikedItem = function() {
+      return likedUnlikedItem;
     };
     
   });

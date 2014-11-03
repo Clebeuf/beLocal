@@ -3,8 +3,18 @@
 angular.module('clientApp')
   .controller('DetailsCtrl', function ($scope, $timeout, $stateParams, StateService) {
 
-  	StateService.setVendorToDisplay($stateParams.vendorid);
+    StateService.setVendorToDisplay($stateParams.vendorid);
 
+    if (StateService.getCurrentUser() === undefined) {
+      $scope.likeDisabled = true;
+    } else {
+      $scope.likeDisabled = false;
+    } 
+    
+    $timeout(function(){
+      angular.element("[data-toggle='tooltip']").tooltip();
+    });
+    
     StateService.getVendorInfo().then(function() {
     	$scope.vendorDetails = StateService.getVendorDetails();
     });
@@ -19,9 +29,9 @@ angular.module('clientApp')
         'Sunday'
     ];
 
-    $scope.likeUnLikeProduct = function(product) {
-      StateService.likeUnlikeProduct(product).then(function() {
-        product = StateService.getLikedUnlikedProduct();
+    $scope.likeUnlikeItem = function(item, itemName) {
+      StateService.likeUnlikeItem(item, itemName).then(function() {
+        item = StateService.getLikedUnlikedItem();
       });
     };
 

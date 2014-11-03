@@ -1,13 +1,12 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('MainCtrl', function ($scope, $location, $timeout, StateService) {
+  .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q) {
 
 
     $scope.displayVendor = function (id) {
       $location.path('vendor/details/'+id).replace();
     };   
-
 	    
     $scope.showProductDetailsModal = function(item) {
     	$scope.product = item;   	
@@ -26,22 +25,24 @@ angular.module('clientApp')
       	 $location.path('vendor/details/'+ vendorID).replace();
         });
       });
-      angular.element('#productDetailsModal').modal('hide');      
-    };
+      angular.element('#productDetailsModal').modal('hide');
+
+    }
+   
+    StateService.getUserPosition().then(function() {
+        StateService.getTrendingProducts().then(function() {
+          $scope.trendingProducts = StateService.getTrendingProductsList();
+        });
+        StateService.getVendors().then(function() {
+          $scope.vendors = StateService.getVendorsList();
+        });        
+    });
     
-    $scope.likeUnLikeProduct = function(product) {
-      StateService.likeUnlikeProduct(product).then(function() {
-        product = StateService.getLikedUnlikedProduct();
+    $scope.likeUnlikeItem = function(item, itemName) {
+      StateService.likeUnlikeItem(item, itemName).then(function() {
+        item = StateService.getLikedUnlikedItem();
       });
     };
-    
-    StateService.getTrendingProducts().then(function() {
-      $scope.trendingProducts = StateService.getTrendingProductsList();
-    });
-
-    StateService.getVendors().then(function() {
-    	$scope.vendors = StateService.getVendorsList();
-    });
 
     $scope.trendingMasonry = function() {
 	    $timeout(function() {

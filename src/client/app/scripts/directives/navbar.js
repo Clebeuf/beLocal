@@ -10,7 +10,11 @@ angular.module('clientApp')
         $scope.loginError = false;
 
         $scope.showLogin = function() {
-            AuthService.showLogin();
+            AuthService.showLogin().then(function(status) {
+                if(status === 500) {
+                  angular.element('#noValidAccountModal').modal('show');
+                };
+            });
         }
 
         $scope.createVendor = function() {

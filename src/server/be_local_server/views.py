@@ -7,19 +7,30 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseServerError, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models.base import ModelBase
 from social.apps.django_app.utils import psa
 from secretballot import views
 from secretballot.models import Vote
 from be_local_server import serializers
 from be_local_server.models import *
+from geopy.distance import vincenty
+from operator import itemgetter, attrgetter, methodcaller
+import datetime
+from django.forms.models import model_to_dict
 import json
 
+def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
+    user = (user_lat, user_lng)
+    item = (item_lat, item_lng)
+
+    return vincenty(user, item).miles
 
 class LoginView(APIView):
     throttle_classes = ()
@@ -28,6 +39,7 @@ class LoginView(APIView):
     renderer_classes = (renderers.JSONRenderer,)
     serializer_class = AuthTokenSerializer
     model = Token
+    vendors_per_page = 20; 
  
     def post(self, request, backend):
         serializer = self.serializer_class(data=request.DATA)
@@ -38,9 +50,26 @@ class LoginView(APIView):
             response = {}
             if user.is_staff:
                 vendor = Vendor.objects.get(user=user)
-                response = {'id': user.id, 'is_active' : vendor.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN', 'vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+                vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
+                response = {'id': user.id, 
+                            'is_active' : vendor.is_active, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'VEN', 
+                            'vendor' : serializers.VendorSerializer(vendor).data, 
+                            'token': token.key
+                }
             else:
-                response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
+                response = {'id': user.id, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'CUS', 
+                            'token': token.key
+                }
             return Response(response)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)             
@@ -59,23 +88,32 @@ class CreateVendorView(APIView):
 
         if user:
             token, created_token = Token.objects.get_or_create(user=user)
-            vendor, created_vendor = Vendor.objects.get_or_create(user=user)
+            vendor = Vendor.objects.get(user=user)
 
             if(not created_token):
                 return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)
             
             # If the user is a newly created vendor, make them inactive.
-            if(created_vendor):
-                user.is_staff = 1 # make the user a vendor
-                vendor.is_active = False # make the user inactive
-                vendor.save()
-                user.save()
+            user.is_staff = 1 # make the user a vendor
+            vendor.is_active = False # make the user inactive
+            vendor.save()
+            user.save()
 
-                vendor.company_name = user.username # set this for Carly's UI
-                vendor.save()
-
+            vendor.company_name = user.username # set this for Carly's UI
+            vendor.save()
+                
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote            
             response = {}
-            response = {'id': user.id, 'is_active' : vendor.is_active, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'VEN','vendor' : serializers.VendorSerializer(vendor).data, 'token': token.key}
+            response = {'id': user.id, 
+                        'is_active' : vendor.is_active, 
+                        'name': user.username, 
+                        'email' : user.email, 
+                        'first_name': user.first_name, 
+                        'last_name': user.last_name, 
+                        'userType': 'VEN',
+                        'vendor' : serializers.VendorSerializer(vendor).data, 
+                        'token': token.key
+            }
             
             return Response(response)    
         else:
@@ -135,6 +173,7 @@ class VendorDetailsView(generics.CreateAPIView):
         if(vendor.is_active == True):
             locations = SellerLocation.objects.filter(vendor=vendor)
             products = Product.objects.filter(vendor=vendor, stock="IS")
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
 
             if products is not None:
                 for product in products:
@@ -180,6 +219,7 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
         vendor = Vendor.objects.get(user=request.user)
         
         if vendor is not None:
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
             serializer = serializers.VendorSerializer(vendor)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -450,16 +490,42 @@ class TrendingProductView(generics.ListAPIView):
     view currently trending products.
     """   
     permission_classes = (AllowAny,)
-
     serializer_class = serializers.ProductDisplaySerializer
 
-    def get_queryset(self):  
-        products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True) 
-        if products is not None:
-            for product in products:
-                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
-                
-        return products
+    def post(self, request):
+        if ('user_position' in request.DATA.keys() and request.DATA['user_position'] is not None):
+            lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))
+
+            locations = SellerLocation.objects.filter(vendor__is_active=True)
+
+            for location in locations: 
+                location.sortkey = getDistanceFromUser(lat, lng, location.address.latitude, location.address.longitude)
+
+            locations = sorted(locations, key=attrgetter('sortkey'))
+
+            products = []
+            vendors = [] 
+
+            #Go through all locations sorted by proximity
+            for location in locations:
+                if(location.vendor not in vendors): #To make sure we don't add the same item from two diff. locations
+                    vendors.append(location.vendor)
+                    products.extend(Product.objects.filter(vendor=location.vendor, stock=Product.IN_STOCK))
+
+            if products is not None:
+                for product in products:
+                    product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote                    
+            
+            serializer = serializers.ProductDisplaySerializer(products, many=True) 
+            return Response(serializer.data)
+
+        else:
+            products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True)
+            if products is not None:
+                for product in products:
+                    product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
+            serializer = serializers.ProductDisplaySerializer(products, many=True)
+            return Response(serializer.data)
 
 class ListMarketsView(generics.ListAPIView):
     """
@@ -470,7 +536,12 @@ class ListMarketsView(generics.ListAPIView):
     serializer_class = serializers.MarketDisplaySerializer
 
     def get_queryset(self):
-        return Market.objects.all()
+        markets = Market.objects.all()
+        if markets is not None:
+            for market in markets:
+                market.is_liked = Market.objects.from_request(self.request).get(pk=market.id).user_vote
+        
+        return markets
 
 
 class MarketView(generics.ListAPIView):
@@ -488,17 +559,57 @@ class MarketView(generics.ListAPIView):
 
         return SellerLocation.objects.filter(address = market_address)
 
+
+
 class VendorsView(generics.ListAPIView):
     """
     This view provides an endpoint for customers to view
     vendors.
     """
     permission_classes = (AllowAny,)
-
     serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
-        return Vendor.objects.filter(is_active=True)
+        vendors = Vendor.objects.filter(is_active=True)
+        if vendors is not None:
+            for vendor in vendors:
+                vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote 
+                
+        return vendors
+
+    def post(self, request):
+        if ('user_position' in request.DATA.keys() and request.DATA['user_position'] is not None):
+
+            lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))
+
+            locations = SellerLocation.objects.filter(vendor__is_active=True)
+
+            #Sort locations based on proximity to current user
+            for location in locations: 
+                location.sortkey = getDistanceFromUser(lat, lng, location.address.latitude, location.address.longitude)
+
+            locations = sorted(locations, key=attrgetter('sortkey'))
+
+            vendors = []
+
+            #Fill vendor queryset with order based on their closest locations
+            for location in locations: 
+                if(location.vendor not in vendors):
+                    location.vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=location.vendor.id).user_vote 
+                    vendors.append(location.vendor)
+                    
+            serializer = serializers.VendorSerializer(vendors, many=True)
+            return Response(serializer.data)
+
+        else: 
+            vendors = Vendor.objects.filter(is_active=True)
+            
+            if vendors is not None:
+                for vendor in vendors:
+                    vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
+            
+            serializer = serializers.VendorSerializer(vendors, many=True)
+            return Response(serializer.data)
 
 class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -536,10 +647,17 @@ def like(request, content_type, id):
     """ 
     Handles likes on a model object.
     """
-    app, modelname = content_type.split('-')
-    content_type = ContentType.objects.get(app_label=app, 
-                                           model__iexact=modelname)
-    
+    # check the content_type
+    if isinstance(content_type, ContentType):
+        pass
+    elif isinstance(content_type, ModelBase):
+        content_type = ContentType.objects.get_for_model(content_type)
+    elif isinstance(content_type, basestring) and '-' in content_type:
+        app, modelname = content_type.split('-')
+        content_type = ContentType.objects.get(app_label=app, model__iexact=modelname)
+    else:
+        content_type = ContentType.objects.get(app_label='be_local_server', model__iexact=content_type)
+
     if request.method == 'POST':
         response = views.vote(
                               request,
@@ -548,6 +666,7 @@ def like(request, content_type, id):
                               vote = '+1',
                               mimetype='application/json'
         )
+        
         # JSON formatting
         response.content = response.content.replace("'","\"")
         return response 
@@ -560,12 +679,13 @@ def like(request, content_type, id):
                               vote=None,
                               mimetype='application/json'
         )
+        
         # JSON formatting
         response.content = response.content.replace("'","\"")
         return response
     
     if request.method == 'GET':
-        vote = Product.objects.from_request(request).get(pk=id).user_vote
+        vote = content_type.model_class().objects.from_request(request).get(pk=id).user_vote
         if (vote):
             body = '{"is_liked": true}'
             return HttpResponse(body, status=status.HTTP_200_OK, content_type='application/json')

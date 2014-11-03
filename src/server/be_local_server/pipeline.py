@@ -15,8 +15,9 @@ def save_profile_picture(strategy, user, response, details, backend,
             pass
         else:
             try:
-                vendor = Vendor.objects.get(user=user)
+                vendor, created = Vendor.objects.get_or_create(user=user)
             except ObjectDoesNotExist:
+                print "No Vendor matching request found."
                 return
             if(vendor and not vendor.photo):
                 vendorPhoto = VendorPhoto()

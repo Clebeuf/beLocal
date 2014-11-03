@@ -1,9 +1,35 @@
 /* BELOCAL STYLES 
 -possible background colour: #EFF7EF;
-
+-logo green: #78be25;
 
 */
 
+.logo-green {
+  color: #78be25 !important;
+}
+
+.header-font {
+  font-family: 'Libre Baskerville', serif !important;
+}
+
+.plain-text-font {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.center {
+  text-align: center;
+}
+
+.bold-hover .a:hover {
+ font-style: bolder;
+} 
+
+.plain-text {
+  font-size: 15px !important;
+  font-family: 'Roboto', sans-serif !important;
+  color: #696969 !important;
+  margin-top: 1px;
+}
 
 .top-nav-large {
   background-color: #FAFAFA;

@@ -2,11 +2,17 @@
 
 angular.module('clientApp')
   .controller('MainCtrl', function ($scope, $location, $timeout, StateService) {
+
+
+    $scope.displayVendor = function (id) {
+      $location.path('vendor/details/'+id).replace();
+    };   
+
 	    
     $scope.showProductDetailsModal = function(item) {
     	$scope.product = item;   	
     };
-	    
+
     $scope.hideProductDetailsModal = function() {   
     	$scope.product = {};    		
     };

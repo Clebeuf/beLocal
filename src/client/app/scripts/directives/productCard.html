@@ -1,14 +1,9 @@
 <div class="thumbnail product-card" ng-model="item">
-      <img ng-src="{{item.photo.image_url}}" />
+      <img ng-src="{{item.photo.image_url}}" class="pointer vendor-card-name" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(item)"/>
       <div class="caption trending-caption">
 
-      	<div class="row">
-	      	<div class="col-sm-6">
-		        <h4 class="no-bottom-margin"><a class="pointer vendor-card-name" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(item)">{{item.name}}</a></h4>
-	    		<a class="pointer container-display-vendor-name" ng-click="displayVendor(item.vendor.id)">{{item.vendor.company_name}}</a>		        
-			</div>
-			<div class="container-md col-lg-6 col-md-6 col-sm-6">
-            <!-- <button class="btn beLocal-btn-filled" role="button" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(item)">More Details</button>-->
+        <div class="row">
+        <div class="col-sm-12 like-button-container">
             <div data-toggle="tooltip" style="display:inline-block" data-placement="bottom" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
               <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(item, 'product')" type="button" class="btn btn-default beLocal-btn-default">
                   <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : item.is_liked}"></span>
@@ -19,8 +14,14 @@
                   </span>
               </button>
             </div>
-	        </div>
-	    </div>      
+        </div>
+      </div>
+
+      <div class="row">
+	      <div class="col-sm-12">
+		      <h4 class="no-bottom-margin no-top-margin"><a class="pointer vendor-card-name" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(item)">{{item.name}}</a></h4>
+	    		<a class="pointer container-display-vendor-name" ng-click="displayVendor(item.vendor.id)">{{item.vendor.company_name}}</a>		        
+			</div>
     </div>
 </div>
 

@@ -1,7 +1,78 @@
-/* BELOCAL STYLES */
+/* BELOCAL STYLES 
+-possible background colour: #EFF7EF;
+-logo green: #78be25;
+
+*/
+
+.logo-green {
+  color: #78be25 !important;
+}
+
+.header-font {
+  font-family: 'Libre Baskerville', serif !important;
+}
+
+.plain-text-font {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.center {
+  text-align: center;
+}
+
+.bold-hover .a:hover {
+ font-style: bolder;
+} 
+
+.plain-text {
+  font-size: 15px !important;
+  font-family: 'Roboto', sans-serif !important;
+  color: #696969 !important;
+  margin-top: 1px;
+}
+
+.top-nav-large {
+  background-color: #FAFAFA;
+  border-bottom: 1px solid #e5e1dd;
+  border-top: 5px solid #89cc1d;
+  padding: 10px;
+  padding-top: 35px;
+}
+
+.top-nav-large li a {
+  padding-left: 0px !important;
+  padding-right: 30px !important;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 18px;
+  line-height: normal;
+  font-weight: bolder;
+  color: #403e3b !important;
+  vertical-align: center;
+
+}
+
+.top-nav-large img{
+  margin: 10px;
+}
+
+.top-nav-large li.active{
+  color: red;
+}
+
+.logo {
+  text-align: center;
+}
+
+
+
+.logo img {
+  width: 100%;
+}
 
 .vendor-card-name {
   color: #000;
+  font-family: 'Libre Baskerville', serif;
+  font-weight: bolder;
 }
 
 .vendor-card-name:hover {
@@ -16,6 +87,12 @@
 
 .like-button {
   color: #A7A7A7;
+}
+
+.like-button-container {
+  top: -50px;
+  height: 1px;
+  text-align: right;
 }
 
 .beLocal-btn-default {
@@ -88,9 +165,24 @@ body {
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
-  height: 60px;
+/*  height: 60px;*/
   background-color: #777777;
   color: #EFEFEF;
+  padding-top: 5px !important;
+  padding-bottom: 40px;
+}
+
+.footerCopyright {
+  position: absolute;
+  bottom: 0;
+  height: 30px;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+/*  height: 60px;*/
+  background-color: #403e3b;
+  color: #FFFFFF;
+  text-align: center;
+  padding: 5px;
 }
 
 @media (max-width: 598px) {
@@ -147,6 +239,15 @@ body {
   max-width: 485px;
   margin-right: auto;
   margin-left: auto;
+  padding: 0px !important;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3) !important;
+  border: 0px !important;
+  border-radius: 0px !important; 
+}
+
+.product-card img {
+  margin: 0px !important;
+  width:100%;
 }
 
 .market-card {
@@ -189,8 +290,10 @@ body {
 }
 
 .container-home-page {
-  margin-top: 25px;
-  max-width: 1170px !important;
+  margin-top: 10px;
+
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .full-width {
@@ -294,15 +397,14 @@ body {
   float: left;
 }
 
-.vendor-card-product img{
-  width:100%;
-  border: 1px solid #EAEAEA;
-}
-
 .vendor-card {
   margin: 5px 0px 5px 0px;
-  border: 1px solid #EAEAEA;
+  border: 0px !important;
   padding:10px;
+  background: #FFFFFF;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3) !important;
+  border-radius:0px !important;
+
 }
 
 /* END OF VENDOR CARD */
@@ -739,6 +841,7 @@ color: #000 !important;
 
 .container-display-vendor-name {
   color: #696969 !important;
+  font-family: 'Roboto', sans-serif;
   font-size: 12px;
   padding-top: 0px;
 }
@@ -756,9 +859,6 @@ color: #000 !important;
   color: #89cc1d;
 }
 
-.blah {
-  background-color: red;
-}
 
 .beLocal-searchProducts{
   width:100%;
@@ -804,17 +904,26 @@ color: #000 !important;
   border-radius: 5px !important;
 }
 
+
 .vendor-images{
-  padding-left:5px;
-  padding-right: 5px;
+  width: 100%;
+  height: 100px;
 }
 
-.vendor-images img{
-  padding: 5px;
-  /*width:90% !important;*/
-  border-radius: 5px !important;
+.vendor-card {
+  height:120px;
+  margin-top: 15px;
 }
 
+.vendor-image-container {
+  width: 100%;
+  height: 100%;
+  padding: 3px;
+}
+
+.no-padding {
+  padding: 0px !important;
+}
 
 
 /*NEW UI STYLES (OCT 21st)*/
@@ -822,7 +931,6 @@ color: #000 !important;
 
 .new-formatting-container{
   padding: 5px 15px 5px 15px !important;
-  background-color: #EEEEEE;
 }
 
 .new-heading-style {

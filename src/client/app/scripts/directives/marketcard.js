@@ -1,6 +1,6 @@
 'use strict';
 angular.module('clientApp')
-  .directive('marketCard', function ($compile) {
+  .directive('marketCard', function (StateService, $timeout, $compile) {
     return {
       templateUrl: 'scripts/directives/marketCard.html',
       restrict: 'E',
@@ -19,6 +19,12 @@ angular.module('clientApp')
             'Saturday',
             'Sunday'
         ];
+
+        scope.likeUnlikeItem = function(item, itemName) {
+          StateService.likeUnlikeItem(item, itemName).then(function() {
+            item = StateService.getLikedUnlikedItem();
+          });
+        };        
 
         scope.getDate = function(date) {
             if(date.getDay() == 0)
@@ -64,6 +70,15 @@ angular.module('clientApp')
 
         scope.generateOpeningString();
 
+        if (StateService.getCurrentUser() === undefined) {
+          scope.likeDisabled = true;
+        } else {
+          scope.likeDisabled = false;
+        }  
+
+        $timeout(function(){
+            angular.element("[data-toggle='tooltip']").tooltip();
+        });
       }
     };
   });

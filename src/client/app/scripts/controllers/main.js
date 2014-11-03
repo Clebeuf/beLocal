@@ -32,12 +32,6 @@ angular.module('clientApp')
           $scope.vendors = StateService.getVendorsList();
         });        
     });
-    
-    $scope.likeUnLikeProduct = function(product) {
-      StateService.likeUnlikeProduct(product).then(function() {
-        product = StateService.getLikedUnlikedProduct();
-      });
-    };
 
     $scope.trendingMasonry = function() {
 	    $timeout(function() {

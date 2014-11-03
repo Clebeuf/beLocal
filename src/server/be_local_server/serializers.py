@@ -188,6 +188,8 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
 
 class CustomerVendorSerializer(serializers.ModelSerializer):
   products = serializers.SerializerMethodField('get_in_stock_products')
+  photo = VendorPhotoPathSerializer()
+  address = AddressSerializer()
   total_likes = serializers.IntegerField(source='vote_total') 
   is_liked = serializers.IntegerField()
 
@@ -205,6 +207,7 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
                   'phone',
                   'extension',
                   'products',
+                  'photo',
                   'address',
                   'total_likes',
                   'is_liked',

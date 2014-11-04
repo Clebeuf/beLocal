@@ -8,10 +8,10 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('VendorsearchCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('VendorsearchCtrl', function ($scope, $http, $stateParams, StateService) {
+	$scope.vendors = [];
+   	$http.get(StateService.getServerAddress() + "search/vendors/?q=" + $stateParams.q)
+   		.then(function(response){
+  				$scope.vendors = response.data;
+  		});
   });

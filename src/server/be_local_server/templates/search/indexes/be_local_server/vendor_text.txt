@@ -1,9 +1,1 @@
 {{object.company_name}}
-{{object.address.addr_line1}}
-{{object.address.city}}
-{{object.address.state}}
-{{object.address.zipcode}}
-{{object.address.country}}
-{{object.phone}}
-{{object.webpage}}
-{{object.photo.image_url}}

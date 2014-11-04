@@ -708,7 +708,7 @@ class autocompleteViewModel():
         self.name = name
 
 def autocomplete(request):
-    prodSqs = SearchQuerySet().autocomplete(name_auto=request.GET.get('q', ''))[:5]
+    prodSqs = SearchQuerySet().models(Product).autocomplete(name_auto=request.GET.get('q', ''))[:5]
     products = [autocompleteViewModel(result.name) for result in prodSqs]
     the_data = sjson.dumps({
         'products': products}, cls=JsonHelper)
@@ -735,11 +735,7 @@ class SearchVendorView(generics.ListAPIView):
     serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
-        srch = self.request.GET.get('q', '')
-        sqs = SearchQuerySet().models(Vendor) #.filter(has_title=True)
-        clean_query = sqs.query.clean(srch)
-        results = sqs.filter(content=clean_query)
-
+        results = SearchQuerySet().models(Vendor).autocomplete(company_name_auto=self.request.GET.get('q', ''))
         vendors = []
 
         for vendor in [result.object for result in results]:

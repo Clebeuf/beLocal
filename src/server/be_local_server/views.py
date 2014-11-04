@@ -175,14 +175,20 @@ class VendorDetailsView(generics.CreateAPIView):
         if(vendor.is_active == True):
             locations = SellerLocation.objects.filter(vendor=vendor)
             products = Product.objects.filter(vendor=vendor, stock="IS")
+            markets = Market.objects.filter(vendors=vendor)
             vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
 
             if products is not None:
                 for product in products:
                     product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
 
+            if markets is not None:
+                for market in markets:
+                    market.is_liked = Market.objects.from_request(self.request).get(pk=market.id).user_vote                    
+
             return Response({"vendor":serializers.VendorSerializer(vendor).data, 
-                             "locations":serializers.SellerLocationSerializer(locations, many=True).data, 
+                             "locations":serializers.SellerLocationSerializer(locations, many=True).data,
+                             "markets":serializers.MarketDisplaySerializer(markets, many=True).data,
                              "products":serializers.ProductDisplaySerializer(products, many=True).data
                             }, 
                             status=status.HTTP_200_OK
@@ -597,8 +603,9 @@ class VendorsView(generics.ListAPIView):
             #Fill vendor queryset with order based on their closest locations
             for location in locations: 
                 if(location.vendor not in vendors):
-                    location.vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=location.vendor.id).user_vote 
-                    vendors.append(location.vendor)
+                    vendor = Vendor.objects.get(pk=location.vendor.id)
+                    vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote 
+                    vendors.append(vendor)
                     
             serializer = serializers.CustomerVendorSerializer(vendors, many=True)
             return Response(serializer.data)
@@ -623,6 +630,56 @@ class ListVendorLocations(generics.ListAPIView):
         vendor = Vendor.objects.get(user=self.request.user)
 
         return SellerLocation.objects.filter(vendor=vendor)
+
+class ListVendorMarkets(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    serializer_class = serializers.VendorMarketDisplaySerializer
+
+    def get_queryset(self):
+        vendor = Vendor.objects.get(user=self.request.user)
+
+        return Market.objects.filter(vendors=vendor) 
+
+class ListAvailableVendorMarkets(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    serializer_class = serializers.VendorMarketDisplaySerializer
+
+    def get_queryset(self):
+        vendor = Vendor.objects.get(user=self.request.user)
+
+        return Market.objects.exclude(vendors=vendor)              
+
+class JoinMarketView(generics.CreateAPIView):
+
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        vendor = Vendor.objects.get(user=request.user)
+
+        market = Market.objects.get(pk=request.DATA['market_id'])
+        market.vendors.add(vendor)
+        market.save()
+
+        return HttpResponse(status=status.HTTP_200_OK)
+
+class LeaveMarketView(generics.CreateAPIView):
+
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        vendor = Vendor.objects.get(user=request.user)
+
+        market = Market.objects.get(pk=request.DATA['market_id'])
+        market.vendors.remove(vendor)
+        market.save()
+
+        return HttpResponse(status=status.HTTP_200_OK)        
 
 class AddSellerLocationView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)

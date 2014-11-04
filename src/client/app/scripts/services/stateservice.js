@@ -10,6 +10,8 @@ angular.module('clientApp')
     var vendorDetails = undefined;
     var likedUnlikedItem = undefined;
     var currentLocation = undefined;
+    var availableMarkets = undefined;
+    var likedUnlikedProduct = undefined;
 
     this.getUserPosition = function() {
 
@@ -44,7 +46,11 @@ angular.module('clientApp')
         });
       
       return d.promise; 
-    }    
+    } 
+
+    function compareWeekday(a,b) {
+      return a.weekday - b.weekday;
+    }
 
     this.clearCurrentUser = function() {
       currentUser = undefined;
@@ -71,6 +77,9 @@ angular.module('clientApp')
     this.getVendorInfo = function(){
       return $http.post(this.getServerAddress() + 'vendor/details', {"id":vendorToDisplay})
       .success(function(data) {
+        for(var i = 0; i < data.markets.length; i++) {
+          data.markets[i].address.hours.sort(compareWeekday);
+        }        
         vendorDetails = data;
       })
       .error(function(data) {
@@ -118,17 +127,44 @@ angular.module('clientApp')
       .error(function(data) {
         console.log('error retrieving vendors');
       });
-    };
+    };   
 
     this.getMarkets = function() {
       return $http.get(this.getServerAddress() + 'markets/')
       .success(function(data) {
+        for(var i = 0; i < data.length; i++) {
+          data[i].address.hours.sort(compareWeekday);
+        }
         marketlist = data;
       })
       .error(function(data) {
         console.log('Error retrieving markets');
       });
     };
+
+    this.getAvailableMarketList = function() {
+      return availableMarkets;
+    }
+
+    this.getAvailableMarkets = function() {
+      return $http.get(this.getServerAddress() + 'vendor/markets/available/')
+      .success(function(data) {
+        for(var i = 0; i < data.length; i++) {
+          data[i].address.hours.sort(compareWeekday);
+        }
+        availableMarkets = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving markets');
+      });
+    };    
+
+    this.getMarketLocations = function() {
+      return $http.get(this.getServerAddress() + 'vendor/markets/list/')
+      .error(function(data) {
+        console.log('Error retrieving seller markets');
+      });      
+    }
 
     this.getSellerLocations = function() {
       return $http.get(this.getServerAddress() + 'vendor/location/list/')
@@ -244,6 +280,28 @@ angular.module('clientApp')
         })        
       }
     };
+
+    this.joinMarket = function(data) {
+      var url = this.getServerAddress() + 'markets/join/';
+        return $http.post(url, data)
+        .success(function() {
+          console.log("Joined a market!");
+        })
+        .error(function() {
+          console.log("Error joining market!");
+        })
+    }
+
+    this.leaveMarket = function(data) {
+      var url = this.getServerAddress() + 'markets/leave/';
+        return $http.post(url, data)
+        .success(function() {
+          console.log("Left a market!");
+        })
+        .error(function() {
+          console.log("Error leaving market!");
+        })
+    }
     
     this.likeUnlikeItem = function(item, itemName) {
       likedUnlikedItem = item;

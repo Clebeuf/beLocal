@@ -1,3 +1,2 @@
 {{ object.name}}
 {{ object.vendor.company_name}}
-{{ object.photo.image_url}}

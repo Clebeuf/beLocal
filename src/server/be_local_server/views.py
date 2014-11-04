@@ -735,7 +735,20 @@ class SearchVendorView(generics.ListAPIView):
     serializer_class = serializers.CustomerVendorSerializer
 
     def get_queryset(self):
-        results = SearchQuerySet().models(Vendor).autocomplete(company_name_auto=self.request.GET.get('q', ''))
+        srch = self.request.GET.get('q', '')
+        sqs = SearchQuerySet().models(Vendor)
+        company = sqs.filter(company_name=srch)
+        phone = sqs.filter(phone=srch)
+        webpage = sqs.filter(webpage=srch)
+        city = sqs.filter(city=srch)
+        state = sqs.filter(state=srch)
+        zipcode = sqs.filter(zipcode=srch)
+        addr = sqs.filter(addr_line1=srch)
+        country = sqs.filter(country=srch)
+        country_code = sqs.filter(country_code=srch)
+
+        results = company | phone | webpage | city | state | zipcode | addr | country | country_code
+        
         vendors = []
 
         for vendor in [result.object for result in results]:

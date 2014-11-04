@@ -18,8 +18,16 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
 class VendorIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    company_name = indexes.CharField(model_attr='company_name', null=True)
-    company_name_auto = indexes.NgramField(model_attr='company_name')
+    company_name = indexes.NgramField(model_attr='company_name', null=True)
+    addr_line1 = indexes.NgramField(model_attr='address__addr_line1', null=True)
+    city = indexes.NgramField(model_attr='address__city', null=True)
+    state = indexes.NgramField(model_attr='address__state', null=True)
+    country = indexes.NgramField(model_attr='address__country', null=True)
+    zipcode = indexes.NgramField(model_attr='address__zipcode', null=True)
+    webpage = indexes.NgramField(model_attr='webpage', null=True)
+    country_code = indexes.NgramField(model_attr='country_code', null=True)
+    phone = indexes.NgramField(model_attr='phone', null=True)
+
     def get_model(self):
         return Vendor
 

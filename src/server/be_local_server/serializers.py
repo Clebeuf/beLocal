@@ -51,12 +51,18 @@ class VendorPhotoPathSerializer(serializers.ModelSerializer):
     image_url = serializers.Field(source="image_url")  
     class Meta: 
         model = be_local_server.models.VendorPhoto
-        fields = ('id', 'image_url',)
+        fields = ('id', 'image_url',)    
 
 class VendorPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = be_local_server.models.VendorPhoto
         fields = ('id', 'image')
+
+class MarketPhotoPathSerializer(serializers.ModelSerializer):
+    image_url = serializers.Field(source="image_url")  
+    class Meta: 
+        model = be_local_server.models.MarketPhoto
+        fields = ('id', 'image_url',)            
 
 class VendorSerializer(serializers.ModelSerializer):
     photo = VendorPhotoPathSerializer()
@@ -215,17 +221,33 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
 
 class MarketDisplaySerializer(serializers.ModelSerializer):
     vendors = BusinessVendorSerializer(many=True)
-    address = AddressSerializer()
+    address = AddAddressSerializer()
     total_likes = serializers.IntegerField(source='vote_total') 
     is_liked = serializers.IntegerField()
+    photo = MarketPhotoPathSerializer()
   
     class Meta:
         model = be_local_server.models.Market
-        fields = (  'vendors',
+        fields = (  'id',
+                    'vendors',
                     'address',
                     'name',
                     'description',
                     'total_likes',
                     'is_liked',
+                    'photo',
         )
+
+class VendorMarketDisplaySerializer(serializers.ModelSerializer):
+    vendors = BusinessVendorSerializer(many=True)
+    address = AddAddressSerializer()
+  
+    class Meta:
+        model = be_local_server.models.Market
+        fields = (  'id',
+                    'vendors',
+                    'address',
+                    'name',
+                    'description',
+        )        
 

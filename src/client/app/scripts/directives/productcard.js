@@ -11,7 +11,13 @@ angular.module('clientApp')
           scope.likeDisabled = true;
         } else {
           scope.likeDisabled = false;
-        } 
+        }
+
+        scope.likeUnlikeItem = function(item, itemName) {
+          StateService.likeUnlikeItem(item, itemName).then(function() {
+            item = StateService.getLikedUnlikedItem();
+          });
+        };        
 
       	scope.displayVendor = function (id) {
       		$location.path('vendor/details/'+id).replace();

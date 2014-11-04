@@ -8,9 +8,16 @@
   color: #78be25 !important;
 }
 
-.header-font {
-  font-family: 'Libre Baskerville', serif !important;
+
+.medium-margin {
+  margin-left: 10px;
 }
+
+.header-font {
+  font-family: Graphik,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+
 
 .plain-text-font {
   font-family: 'Roboto', sans-serif !important;
@@ -67,6 +74,11 @@
 
 .logo img {
   width: 100%;
+}
+
+.location-tabs {
+  margin-bottom:15px;
+  border-bottom: 0px;
 }
 
 .vendor-card-name {
@@ -264,10 +276,6 @@ body {
   margin-right: 15px;
 }
 
-.nav > li > a {
-  color: #8ed41e;
-}
-
 .nav-pills-home > li > a {
  border-radius: 0px !important; 
 }
@@ -288,6 +296,33 @@ body {
 .full-width-tabs > ul.nav.nav-pills > li > a {
     text-align: center;
 }
+
+.full-width-tabs > ul.nav.nav-tabs {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* To make all "columns" equal width regardless of content */
+}
+.full-width-tabs > ul.nav.nav-tabs > li {
+    float: none;
+    display: table-cell;
+}
+.full-width-tabs > ul.nav.nav-tabs > li > a {
+    text-align: center;
+    border-bottom: 1px solid #DDDDDD;   
+    margin-right: 0px; 
+}
+
+.full-width-tabs > ul.nav.nav-tabs > li.active > a {
+  border-bottom: 0px;
+  color: #555555;
+  font-weight: normal;
+}
+
+.full-width-tabs > ul.nav.nav-tabs > li > a {
+  color: #8ed41e;
+  font-weight: bold;
+}
+
 
 .container-home-page {
   margin-top: 10px;
@@ -383,6 +418,14 @@ body {
 .beLocal-btn-filled {
   background-color: #8ed41e;
   color: white !important;
+}
+
+.beLocal-a {
+  color: #8ed41e;
+}
+
+.beLocal-a:hover {
+  color: #89cc1d;  
 }
 
 .beLocal-btn-filled:hover {

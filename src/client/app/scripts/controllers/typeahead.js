@@ -15,7 +15,7 @@ app.controller('TypeaheadCtrl', function ($scope, $http, StateService, $sce) {
   			).then(function(response){
   				var products = response.data.products;
   				products.push({
-  					name: $sce.trustAsHtml('Look for <b>' + val + '</b> in vendors'),
+  					name: $sce.trustAsHtml('Search for <b>' + val + '</b> in vendors'),
   					vendorSearch: val
   				});
   				return products;
@@ -28,8 +28,5 @@ app.controller('TypeaheadCtrl', function ($scope, $http, StateService, $sce) {
   		} else {
   			window.location.href='#/search/products?q=' + $item.name;
   		}
-
-  		
-  		
   	}
   });

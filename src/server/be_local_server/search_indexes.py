@@ -19,9 +19,9 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
 class VendorIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    company_name = indexes.CharField(model_attr='company_name')
-    address = indexes.CharField(model_attr='address')
-    phone = indexes.CharField(model_attr='phone')
+    company_name = indexes.CharField(model_attr='company_name', null=True)
+    address = indexes.CharField(model_attr='address', null=True)
+    phone = indexes.CharField(model_attr='phone', null=True)
     webpage = indexes.CharField(model_attr='webpage', null=True)
     photo = indexes.CharField(model_attr='photo')
     # We add this for autocomplete.

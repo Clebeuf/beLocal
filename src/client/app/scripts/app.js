@@ -42,17 +42,10 @@ var app = angular.module('clientApp', [
       authenticate: false,
       css: 'styles/main.css'
     })
-    .state('search/vendors', {
-      url: '/search/vendors?q',
-      templateUrl: 'views/vendorsearch.html',
-      controller: 'VendorsearchCtrl',
-      authenticate: false,
-      css: 'styles/main.css'
-    })
-    .state('search/products', {
-      url: '/search/products?q',
-      templateUrl: 'views/productsearch.html',
-      controller: 'ProductsearchCtrl',
+    .state('search', {
+      url: '/search/{search_type}?q',
+      templateUrl: 'views/search.html',
+      controller: 'SearchCtrl',
       authenticate: false,
       css: 'styles/main.css'
     });

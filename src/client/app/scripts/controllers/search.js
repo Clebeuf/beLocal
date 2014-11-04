@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-    .controller('SearchCtrl', function ($scope, $stateParams, StateService) {
+    .controller('SearchCtrl', function ($scope, $stateParams, StateService, $timeout, $location) {
         $scope.productResults = [];
         $scope.vendorResults = [];
         $scope.marketResults = [];
@@ -28,6 +28,27 @@ angular.module('clientApp')
                 $scope.doMarketSearch($stateParams.q);            
             }
         } 
+
+        $scope.showProductDetailsModal = function(item) {
+            $scope.product = item;      
+        };
+
+        $scope.hideProductDetailsModal = function() {   
+            $scope.product = {};            
+        }; 
+        
+        $scope.goToVendorDetails = function(vendorID){
+            $scope.hideProductDetailsModal();
+
+
+          angular.element('#productDetailsModal').on('hidden.bs.modal', function(e) {
+            $timeout(function() {
+             $location.path('vendor/details/'+ vendorID).replace();
+            });
+          });
+          angular.element('#productDetailsModal').modal('hide');
+
+        }               
 
         $scope.doSearch();                      
   });

@@ -23,9 +23,9 @@ class VendorIndex(indexes.SearchIndex, indexes.Indexable):
     address = indexes.CharField(model_attr='address', null=True)
     phone = indexes.CharField(model_attr='phone', null=True)
     webpage = indexes.CharField(model_attr='webpage', null=True)
-    photo = indexes.CharField(model_attr='photo')
+    photo = indexes.CharField(model_attr='photo', null=True)
     # We add this for autocomplete.
-    company_name_auto = indexes.EdgeNgramField(model_attr='company_name')
+    company_name_auto = indexes.EdgeNgramField(model_attr='company_name', null=True)
 
     def get_model(self):
         return Vendor

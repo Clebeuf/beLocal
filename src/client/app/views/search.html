@@ -27,7 +27,7 @@
     <div ng-show="productResults.length > 0">
         <div class="row">
             <!-- DISPLAY ITEMS -->
-            <div class="col-sm-10">
+            <div class="col-sm-12">
                 <div class="new-heading-style">
                     Search Results for "{{query}}"
                 </div>
@@ -43,15 +43,13 @@
     <!-- Vendor Search Results -->
     <div ng-show="vendorResults.length > 0">
         <div class="row">
-            <!-- DISPLAY ITEMS -->
-            <div class="col-sm-10">
+            <!-- DISPLAY VENDOR CARDS -->
+            <div class="col-sm-12">
                 <div class="new-heading-style">
                     Search Results for "{{query}}"
-                </div>
-                <div class="row" style="padding-top:5px">            
-                    <div ng-repeat="vendor in vendorResults">
-                        <vendor-card data="vendor"></vendor-card>
-                    </div>
+                </div>         
+                <div ng-repeat="vendor in vendorResults">
+                    <vendor-card data="vendor"></vendor-card>
                 </div>
             </div>
         </div>

@@ -265,6 +265,7 @@ angular.module('clientApp')
     }
 
     $scope.editLocation = function(location) {
+        $scope.manuallyTriggerCustomLocation();
 
         if(location.date == null) {
             var hours = $scope.buildHoursObject();

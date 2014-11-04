@@ -43,8 +43,8 @@ urlpatterns = patterns('',
     url(r'^markets/leave/$', views.LeaveMarketView.as_view(), name='market-join'),       
 
     url(r'^search/autocomplete', 'be_local_server.views.autocomplete'),
-    url(r'^search/products', 'be_local_server.views.searchProducts'),    
-    url(r'^search/vendors', 'be_local_server.views.searchVendors'),
+    url(r'^search/products', views.SearchProductView.as_view(), name="product-search"),    
+    url(r'^search/vendors', views.SearchVendorView.as_view(), name="vendor-search"),
     
     url(r'^like/(?P<content_type>[\w-]+)/(?P<id>[0-9-]+)/$', views.like, name='like'),
 

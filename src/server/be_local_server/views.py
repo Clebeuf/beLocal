@@ -26,7 +26,6 @@ import json
 from geopy.distance import vincenty
 from operator import itemgetter, attrgetter, methodcaller
 import datetime
-from django.forms.models import model_to_dict
 
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
     user = (user_lat, user_lng)
@@ -567,8 +566,6 @@ class MarketView(generics.ListAPIView):
 
         return SellerLocation.objects.filter(address = market_address)
 
-
-
 class VendorsView(generics.ListAPIView):
     """
     This view provides an endpoint for customers to view
@@ -717,45 +714,39 @@ def autocomplete(request):
         'products': products}, cls=JsonHelper)
     return HttpResponse(the_data, content_type='application/json')
 
-class SearchProductViewModel():
-    def __init__(self,prodId, vendorId, prodName, vendorName, imageUrl):
-        self.id = prodId
-        self.name = prodName
-        self.vendor = vendorName
-        self.vendorId = vendorId
-        self.imageUrl = imageUrl
+class SearchProductView(generics.ListAPIView):
+    serializer_class = serializers.ProductDisplaySerializer
 
-class SearchVendorViewModel():
-    def __init__(self,vendorId,companyName,phone,address,webpage,imageUrl):
-        self.id = vendorId
-        self.companyName = companyName
-        self.phone = phone
-        self.addr_line1 = address.addr_line1
-        self.city = address.city
-        self.state = address.state
-        self.zipcode = address.zipcode
-        self.country = address.country
-        self.webpage = webpage
-        self.imageUrl = imageUrl
+    def get_queryset(self):
+        srch = self.request.GET.get('q', '')
+        sqs = SearchQuerySet().models(Product) #.filter(has_title=True)
+        clean_query = sqs.query.clean(srch)
+        results = sqs.filter(content=clean_query)
 
+        products = []
 
-def searchProducts(request):
-    srch = request.GET.get('q', '')
-    sqs = SearchQuerySet().models(Product) #.filter(has_title=True)
-    clean_query = sqs.query.clean(srch)
-    results = sqs.filter(content=clean_query)
-    products = [SearchProductViewModel(r.object.id, r.object.vendor.id, r.name,r.object.vendor.company_name, r.object.photo.image_url) for r in results]
-    the_data = sjson.dumps(products, cls=JsonHelper)
-    return HttpResponse(the_data, content_type='application/json')
+        for product in [result.object for result in results]:
+            product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote  
+            products.append(product)      
+        
+        return products
 
-def searchVendors(request):
-    srch = request.GET.get('q', '')
-    sqs = SearchQuerySet().models(Vendor) #.filter(has_title=True)
-    clean_query = sqs.query.clean(srch)
-    results = sqs.filter(content=clean_query)
-    vendors = [SearchVendorViewModel(r.object.id, r.object.company_name, r.object.phone, r.object.address, r.object.webpage, r.object.photo.image_url) for r in results]
-    the_data = sjson.dumps(vendors, cls=JsonHelper)
-    return HttpResponse(the_data, content_type='application/json')    
+class SearchVendorView(generics.ListAPIView):
+    serializer_class = serializers.CustomerVendorSerializer
+
+    def get_queryset(self):
+        srch = self.request.GET.get('q', '')
+        sqs = SearchQuerySet().models(Vendor) #.filter(has_title=True)
+        clean_query = sqs.query.clean(srch)
+        results = sqs.filter(content=clean_query)
+
+        vendors = []
+
+        for vendor in [result.object for result in results]:
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote  
+            vendors.append(vendor)      
+        
+        return vendors
 
 @csrf_exempt
 def like(request, content_type, id):

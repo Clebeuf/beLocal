@@ -5,6 +5,7 @@ angular.module('clientApp')
         $scope.productResults = [];
         $scope.vendorResults = [];
         $scope.marketResults = [];
+        $scope.query = $stateParams.q;
 
         $scope.doProductSearch = function(query) {
             StateService.doProductSearch(query).then(function(response) {

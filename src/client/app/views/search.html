@@ -1,33 +1,64 @@
 <nav-bar></nav-bar>
 <div class="header top-nav-large row">
-  <div class="col-sm-2 logo">
-    <img src="/images/logo.png">
-  </div>
-  <div class="col-sm-10">
-      <br><br><br><br><br>
-      <ul class="list-inline">
-        <li class="active"><a href="/#trending" id="trendingTab">In Season Now</a></li>
-        <li><a href="/#vendors" id="vendorsTab">Farmers & Foodmakers</a></li>
-        <li><a href="/#markets" ng-click="marketMasonry()" id="marketsTab">Local Markets</a></li>  
-      </ul>
-  </div>
+    <div class="col-sm-2 logo">
+        <img src="/images/logo.png">
+    </div>
+    <div class="col-sm-10">
+        <br><br><br><br><br>
+        <ul class="list-inline">
+            <li class="active"><a href="/#trending" id="trendingTab">In Season Now</a></li>
+            <li><a href="/#vendors" id="vendorsTab">Farmers & Foodmakers</a></li>
+            <li><a href="/#markets" ng-click="marketMasonry()" id="marketsTab">Local Markets</a></li>
+        </ul>
+    </div>
 </div>
 
+<!-- Product Search Results -->
+<div ng-show="productResults.length > 0" class="container container-home-page">
+    <div class="row">
+        <!-- DISPLAY ITEMS -->
+        <div class="col-sm-10">
+            <div class="new-heading-style">
+                Search Results for "{{query}}"
+            </div>
+            <div class="row" style="padding-top:5px" id="masonry-container">
+                <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in productResults" >
+                    <product-card data="item"></product-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Vendor Search Results -->
+<div ng-show="vendorResults.length > 0" class="container container-home-page">
+    <div class="row">
+        <!-- DISPLAY ITEMS -->
+        <div class="col-sm-10">
+            <div class="new-heading-style">
+                Search Results for "{{query}}"
+            </div>
+            <div class="row" style="padding-top:5px">            
+                <div ng-repeat="vendor in vendorResults">
+                    <vendor-card data="vendor"></vendor-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- BE LOCAL FOOTER (TO BE INJECTED LATER) -->
 <div class="footer">
-  <div class="row">
-    <div class="col-xs-6">
-      logo & links here
+    <div class="row">
+        <div class="col-xs-6">
+            logo & links here
+        </div>
+        <div class="col-xs-6 pull-right">
+            Facebook | Pinterest | Twitter | beLocal@blah.com
+        </div>
     </div>
-    <div class="col-xs-6 pull-right">
-      Facebook | Pinterest | Twitter | beLocal@blah.com
-    </div>
-  </div>
 </div>
-
 <div class="footerCopyright">
-  <span class="glyphicon glyphicon-copyright-mark" style="font-size:12px;"></span>
-   2014 beLocal, Inc.
+    <span class="glyphicon glyphicon-copyright-mark" style="font-size:12px;"></span>
+    2014 beLocal, Inc.
 </div>

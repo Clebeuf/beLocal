@@ -9,34 +9,8 @@
         <span class="icon-bar"></span>
       </button>
     </div>
-      <!-- <a class="navbar-brand" href="#">be<span class="beLocal-highlight">Local</span></a> -->
-    <div class="pull-right">
-      <form class="navbar-form beLocal-search" role="search" >
-        <div class="form-group">
-          <div class="input-group">
-            <input type="text"  placeholder="Search for vendors or products" class="form-control">
-            <span class="input-group-btn">
-              <button class="btn beLocal-btn-filled" type="button">Search</button>
-            </span>
-          </div>    
-        </div>
-      </form>
-    </div>
 
-    <div class="navbar-collapse collapse">   
-
-<!--       <ul class="nav navbar-nav">
-        <li class="dropdown">
-          <a class="dropdown-toggle pointer">Browse <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#">Fruits</a></li>
-            <li><a href="#">Vegetables</a></li>            
-            <li><a href="#">Preserves</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Vendors</a></li>
-          </ul>
-        </li>
-      </ul>      -->
+    <div class="navbar-collapse collapse pull-right">
 
       <div ng-hide="AuthService.isAuthenticated()">
         <form name="loginForm" class="navbar-form navbar-right sign-in-form" role="form">      
@@ -56,7 +30,7 @@
       <div ng-show="AuthService.isAuthenticated()">
         <ul class="nav navbar-nav navbar-right">
           <li class="dropdown">
-            <a class="dropdown-toggle pointer white-text">My Account<span class="caret"></span></a>
+            <a class="dropdown-toggle pointer">My Account<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
               <li><a class="pointer" ng-click="displayAccountPage()">My Store</a></li>
               <li><a href="#">Account Settings</a></li>            
@@ -69,6 +43,18 @@
 
     </div>
 
+      <!-- <a class="navbar-brand" href="#">be<span class="beLocal-highlight">Local</span></a> -->
+      <form class="navbar-form beLocal-search pull-right" role="search" >
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text"  placeholder="Search for vendors or products" class="form-control">
+            <span class="input-group-btn">
+              <button class="btn beLocal-btn-filled" type="button">Search</button>
+            </span>
+          </div>    
+        </div>
+      </form>
+
   </div>
 
   <div class="row customer-nav top-nav-large">
@@ -77,7 +63,7 @@
     </div>
     <div class="col-sm-9">
         <ul class="list-inline nav-shadow">
-          <li class="active"><a href="#trending" id="trendingTab" data-toggle="tab">In Season Now<div ng-show="active" class="ng-hide">****</div></a></li>
+          <li class="active"><a href="#trending" id="trendingTab" data-toggle="tab">In Season Now</a></li>
           <li><a href="#vendors" id="vendorsTab" data-toggle="tab">Farmers & Foodmakers</a></li>
           <li><a href="#markets" ng-click="marketMasonry()" id="marketsTab" data-toggle="tab">Local Markets</a></li>  
         </ul>

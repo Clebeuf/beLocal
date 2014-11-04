@@ -1,5 +1,7 @@
 from be_local_server.models import *
 from datetime import *
+from django.core.files import File 
+import urllib
 
 # MARKET ONE
 
@@ -37,12 +39,20 @@ h2 = OpeningHours(
 # Save it
 h2.save()
 
+result = urllib.urlretrieve('https://goodeggs2.imgix.net/vendor_photo/WwyapviuSxOt5WK0dMt7_hidden_star_johann_2013_0.JPG?w=560&h=350&fm=jpg&q=41&fit=crop&crop=faces') # image_url is a URL to an image
+
+mp = MarketPhoto(
+		image=File(open(result[0]))
+)
+
+mp.save()
+
 # Create a market
 m = Market(
 	address=a, # Each Market object needs an address associated with it (this also associates hours)
 	name="Market", # Market name
 	description="Market description", # Market description
+	photo=mp
 )
 
-# Save it
 m.save()

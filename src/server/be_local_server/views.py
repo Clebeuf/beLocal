@@ -601,8 +601,9 @@ class VendorsView(generics.ListAPIView):
             #Fill vendor queryset with order based on their closest locations
             for location in locations: 
                 if(location.vendor not in vendors):
-                    location.vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=location.vendor.id).user_vote 
-                    vendors.append(location.vendor)
+                    vendor = Vendor.objects.get(pk=location.vendor.id)
+                    vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote 
+                    vendors.append(vendor)
                     
             serializer = serializers.CustomerVendorSerializer(vendors, many=True)
             return Response(serializer.data)

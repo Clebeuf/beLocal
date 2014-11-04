@@ -8,9 +8,16 @@
   color: #78be25 !important;
 }
 
-.header-font {
-  font-family: 'Libre Baskerville', serif !important;
+
+.medium-margin {
+  margin-left: 10px;
 }
+
+.header-font {
+  font-family: Graphik,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+
 
 .plain-text-font {
   font-family: 'Roboto', sans-serif !important;
@@ -72,10 +79,6 @@
 .location-tabs {
   margin-bottom:15px;
   border-bottom: 0px;
-}
-
-.hours-string {
-  color:#66667d;
 }
 
 .vendor-card-name {
@@ -310,9 +313,16 @@ body {
 }
 
 .full-width-tabs > ul.nav.nav-tabs > li.active > a {
-  color: #8ed41e;
   border-bottom: 0px;
+  color: #555555;
+  font-weight: normal;
 }
+
+.full-width-tabs > ul.nav.nav-tabs > li > a {
+  color: #8ed41e;
+  font-weight: bold;
+}
+
 
 .container-home-page {
   margin-top: 10px;

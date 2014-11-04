@@ -1,42 +1,32 @@
-<div class="thumbnail market-card">
-  <img data-src="holder.js/300x300" alt="..." holder-fix>
-  <div class="caption market-caption">
+<div class="thumbnail product-card">
+      <img src="http://media.treehugger.com/assets/images/2011/10/farmer-john-cornfield.jpg" alt="{{market.name}}" class="pointer vendor-card-name"/>
+      <div class="caption market-caption">
 
-    <div class="row">
-      <div class="col-sm-12 like-button-container">
-        <div data-toggle="tooltip" style="display:inline-block" data-placement="bottom" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
-          <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(market, 'market')" type="button" class="btn btn-default beLocal-btn-default">
-            <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : market.is_liked}"></span>
-            <span ng-hide="market.is_liked">Like</span>
-            <span ng-show="market.is_liked">Unlike</span>
-            <span class="like-container" ng-show="market.total_likes > 0">
-              {{market.total_likes}}
-            </span>
-          </button>
+        <div class="row">
+              <div class="col-sm-12 like-button-container">
+                <div data-toggle="tooltip" style="display:inline-block" data-placement="bottom" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
+                  <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(market, 'market')" type="button" class="btn btn-default beLocal-btn-default">
+                    <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : market.is_liked}"></span>
+                    <span ng-hide="market.is_liked">Like</span>
+                    <span ng-show="market.is_liked">Unlike</span>
+                    <span class="like-container" ng-show="market.total_likes > 0">
+                      {{market.total_likes}}
+                    </span>
+                  </button>
+                </div>
+              </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <h4 class="no-bottom-margin no-top-margin"><a class="pointer vendor-card-name">{{market.name}}</a></h4>
+          <div class="container-display-vendor-name">
+            <span class="glyphicon glyphicon-map-marker"></span>
+            {{market.address.addr_line1}}, {{market.address.city}}, {{market.address.state}}           
+            <div class="" ng-bind-html="openString"></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-sm-12">
-        <h4 class="vendor-card-name">{{market.name}}</h4>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <p class="market-card-text">
-          <span class="glyphicon glyphicon-map-marker"></span>
-            <span class="plain-text-font">
-              {{market.address.addr_line1}}, {{market.address.city}}, {{market.address.state}}
-            </span>
-        </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <p class="market-card-text no-bottom-margin plain-text-font" ng-bind-html="openString">
-        </p>
-      </div>
     </div>
   </div>
-</div>

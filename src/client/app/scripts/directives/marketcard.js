@@ -45,7 +45,7 @@ angular.module('clientApp')
             for(var j = 0; j < scope.market.address.hours.length; j++) {
                 var today = scope.getDate(new Date());
                 if(scope.market.address.hours[j].weekday == today) {
-                    scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open today</span></strong> &#183; " + scope.market.address.hours[0].from_hour + ' - ' + scope.market.address.hours[0].to_hour;
+                    scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open today:</span></strong> " + scope.market.address.hours[0].from_hour + ' - ' + scope.market.address.hours[0].to_hour;
                 }
             }
 
@@ -59,11 +59,11 @@ angular.module('clientApp')
                         nextDayOpen = j;
 
                         if(nextDayOpen < scope.market.address.hours.length) {
-                            scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open this " + scope.weekdays[scope.market.address.hours[nextDayOpen].weekday - 1] + "</span></strong> &#183; " +  scope.market.address.hours[nextDayOpen].from_hour + ' - ' + scope.market.address.hours[nextDayOpen].to_hour;
+                            scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open " + scope.weekdays[scope.market.address.hours[nextDayOpen].weekday - 1] + ":</span></strong> " +  scope.market.address.hours[nextDayOpen].from_hour + ' - ' + scope.market.address.hours[nextDayOpen].to_hour;
                             return;
                         }
                     }
-                    scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open next " + scope.weekdays[scope.market.address.hours[0].weekday - 1] + "</span></strong> &#183; " +  scope.market.address.hours[0].from_hour + ' - ' + scope.market.address.hours[0].to_hour;
+                    scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open " + scope.weekdays[scope.market.address.hours[0].weekday - 1] + "</span></strong>: " +  scope.market.address.hours[0].from_hour + ' - ' + scope.market.address.hours[0].to_hour;
                 }                    
             }
         }

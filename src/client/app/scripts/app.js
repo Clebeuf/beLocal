@@ -64,6 +64,10 @@ var app = angular.module('clientApp', [
       // This will be called every time we start to change state (navigate to a new URL)
       $rootScope.$on('$stateChangeStart', function(event, toState){
 
+        // Clear query parameter on navigation away from the search page
+        if(toState.name != 'search')
+          $location.search('q', null); 
+
         if(toState.url == '/' && ipCookie('beLocalBypass') === undefined) {
           $location.path('welcome');
           return;

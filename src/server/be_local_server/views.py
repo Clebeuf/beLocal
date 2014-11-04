@@ -645,16 +645,19 @@ class AddSellerLocationView(generics.CreateAPIView):
                             status=status.HTTP_400_BAD_REQUEST)  
 
 class JsonHelper(sjson.JSONEncoder):
-     """ simplejson.JSONEncoder extension: handle SearchProductViewModel"""
+     """ simplejson.JSONEncoder extension: handle Search view models"""
      def default(self, obj):
         return obj.__dict__
 
+class autocompleteViewModel():
+    def __init__(self, name):
+        self.name = name
+
 def autocomplete(request):
     prodSqs = SearchQuerySet().autocomplete(name_auto=request.GET.get('q', ''))[:5]
-    products = [result.name for result in prodSqs]
+    products = [autocompleteViewModel(result.name) for result in prodSqs]
     the_data = sjson.dumps({
-        'products': list(set(products))
-    })
+        'products': products}, cls=JsonHelper)
     return HttpResponse(the_data, content_type='application/json')
 
 class SearchProductViewModel():
@@ -665,15 +668,36 @@ class SearchProductViewModel():
         self.vendorId = vendorId
         self.imageUrl = imageUrl
 
+class SearchVendorViewModel():
+    def __init__(self,vendorId,companyName,phone,address,webpage,imageUrl):
+        self.id = vendorId
+        self.companyName = companyName
+        self.phone = phone
+        self.addr_line1 = address.addr_line1
+        self.city = address.city
+        self.state = address.state
+        self.zipcode = address.zipcode
+        self.country = address.country
+        self.webpage = webpage
+        self.imageUrl = imageUrl
+
 
 def searchProducts(request):
     srch = request.GET.get('q', '')
-    sqs = SearchQuerySet() #.filter(has_title=True)
+    sqs = SearchQuerySet().models(Product) #.filter(has_title=True)
     clean_query = sqs.query.clean(srch)
     results = sqs.filter(content=clean_query)
-    #not sure if below is the best way to do this
     products = [SearchProductViewModel(r.object.id, r.object.vendor.id, r.name,r.object.vendor.company_name, r.object.photo.image_url) for r in results]
     the_data = sjson.dumps(products, cls=JsonHelper)
+    return HttpResponse(the_data, content_type='application/json')
+
+def searchVendors(request):
+    srch = request.GET.get('q', '')
+    sqs = SearchQuerySet().models(Vendor) #.filter(has_title=True)
+    clean_query = sqs.query.clean(srch)
+    results = sqs.filter(content=clean_query)
+    vendors = [SearchVendorViewModel(r.object.id, r.object.company_name, r.object.phone, r.object.address, r.object.webpage, r.object.photo.image_url) for r in results]
+    the_data = sjson.dumps(vendors, cls=JsonHelper)
     return HttpResponse(the_data, content_type='application/json')    
 
 @csrf_exempt

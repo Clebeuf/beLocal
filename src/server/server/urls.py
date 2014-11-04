@@ -40,6 +40,7 @@ urlpatterns = patterns('',
     url(r'^vendors/$', views.VendorsView.as_view(), name='vendors-list'),
     url(r'^search/autocomplete', 'be_local_server.views.autocomplete'),
     url(r'^search/products', 'be_local_server.views.searchProducts'),    
+    url(r'^search/vendors', 'be_local_server.views.searchVendors'),    
     url(r'^like/(?P<content_type>[\w-]+)/(?P<id>[0-9-]+)/$', views.like, name='like'),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,6 +1,6 @@
 import datetime
 from haystack import indexes
-from be_local_server.models import Product
+from be_local_server.models import *
 
 class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
@@ -12,6 +12,23 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Product
+
+    def index_queryset(self, using=None):
+	    """Used when the entire index for model is updated."""
+	    return self.get_model().objects.all()
+
+class VendorIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, use_template=True)
+    company_name = indexes.CharField(model_attr='company_name')
+    address = indexes.CharField(model_attr='address')
+    phone = indexes.CharField(model_attr='phone')
+    webpage = indexes.CharField(model_attr='webpage', null=True)
+    photo = indexes.CharField(model_attr='photo')
+    # We add this for autocomplete.
+    company_name_auto = indexes.EdgeNgramField(model_attr='company_name')
+
+    def get_model(self):
+        return Vendor
 
     def index_queryset(self, using=None):
 	    """Used when the entire index for model is updated."""

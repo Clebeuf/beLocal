@@ -41,6 +41,20 @@ var app = angular.module('clientApp', [
       controller: 'DetailsCtrl',
       authenticate: false,
       css: 'styles/main.css'
+    })
+    .state('search/vendors', {
+      url: '/search/vendors?q',
+      templateUrl: 'views/vendorsearch.html',
+      controller: 'VendorsearchCtrl',
+      authenticate: false,
+      css: 'styles/main.css'
+    })
+    .state('search/products', {
+      url: '/search/products?q',
+      templateUrl: 'views/productsearch.html',
+      controller: 'ProductsearchCtrl',
+      authenticate: false,
+      css: 'styles/main.css'
     });
 
     $httpProvider.defaults.headers.patch = {

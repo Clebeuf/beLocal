@@ -8,27 +8,28 @@
  * Controller of the clientApp
  */
 var app = angular.module('clientApp')
-app.controller('TypeaheadCtrl', function ($scope, $http, StateService) {
+app.controller('TypeaheadCtrl', function ($scope, $http, StateService, $sce) {
 	$scope.productSuggestions = [];
   	$scope.updateProductSuggestions = function(val) {
   		return $http.get(StateService.getServerAddress() + "search/autocomplete?q=" + val
   			).then(function(response){
-  				return response.data.products;
+  				var products = response.data.products;
+  				products.push({
+  					name: $sce.trustAsHtml('Look for <b>' + val + '</b> in vendors'),
+  					vendorSearch: val
+  				});
+  				return products;
   		});
   	}
   	$scope.onSelect = function($item,$model,$label){
-  		window.location.href='search/products/q=' + $item;
+
+  		if($item.vendorSearch != null) {
+  			window.location.href='#/search/vendors?q=' + $item.vendorSearch;
+  		} else {
+  			window.location.href='#/search/products?q=' + $item.name;
+  		}
+
+  		
+  		
   	}
   });
-
-app.filter('finalAppend', function($sce){
-  return function(array, value){
-  	
-	  	if(!(array && value))
-            return array;
-	    array.push(
-	    	$sce.trustAsHtml('Look for <b>' + value + '</b> in other shops')
-	    ); 
-	    return array;
-	  }
-});

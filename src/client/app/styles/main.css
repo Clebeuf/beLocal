@@ -1169,6 +1169,11 @@ hr{
   padding: 0px;
 }
 
-.tag-list > li > a{
-  color: #403e3b;  
+.tag-list > li > a {
+  color: #403e3b;
+  cursor: pointer;
+}
+
+.tag-list > li > .active {
+  text-decoration: underline;
 }

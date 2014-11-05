@@ -352,14 +352,20 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="form-group btn-group" dropdown>
+                                <!-- <div dropdown-select="categoryList" dropdown-model="itemCategory" dropdown-item-label="name" >
+                                </div>   &nbsp; Selected Category : {{itemCategory}} -->
+                                <dropdown-button data-menu-type="button" select-val="itemCategory = selectedVal" preselected-item="itemCategory" data-dropdown-data="categoryList">
+                                </dropdown-button>  &nbsp; Selected Category : {{itemCategory}}
+                                <!-- <div class="form-group btn-group" dropdown>
                                     <button type="button" class="btn btn-primary dropdown-toggle">
-                                        Select Category  <span class="caret"></span>
+                                       Select Category <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Action</a></li>
+                                        <li ng-repeat="category in categoryList">
+                                           <a tabindex="-1" data-ng-click="selectVal(item)">{{category.name}}</a>
+                                        </li>
                                     </ul>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </form>

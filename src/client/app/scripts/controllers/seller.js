@@ -306,6 +306,7 @@ angular.module('clientApp')
         $scope.newImageID = undefined; 
         $scope.displayItemThumbnail = false;
         $scope.newItemStock = "IS";
+        $scope.itemCategory = "1";
 
         var e = angular.element('#item-image');
         e.wrap('<form>').closest('form').get(0).reset();
@@ -448,7 +449,8 @@ angular.module('clientApp')
                 "name" : $scope.itemName,
                 "description" : $scope.itemDescription,
                 "photo" : $scope.newImageID,
-                "stock" : $scope.newItemStock
+                "stock" : $scope.newItemStock,
+                "cateogry" : $scope.itemCategory
             };
 
             StateService.createItem(item, $scope.isEditingItem).then(function() {

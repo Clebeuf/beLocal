@@ -516,7 +516,7 @@ class TrendingProductView(generics.ListAPIView):
     """   
     permission_classes = (AllowAny,)
     serializer_class = serializers.ProductDisplaySerializer
-
+    
     def post(self, request):
         if ('user_position' in request.DATA.keys() and request.DATA['user_position'] is not None):
             lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))
@@ -545,6 +545,7 @@ class TrendingProductView(generics.ListAPIView):
             return Response(serializer.data)
 
         else:
+            print "trending: ...."
             products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True)
             if products is not None:
                 for product in products:

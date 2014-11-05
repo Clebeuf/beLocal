@@ -338,7 +338,7 @@ angular.module('clientApp')
         $scope.newImageID = undefined; 
         $scope.displayItemThumbnail = false;
         $scope.newItemStock = "IS";
-        $scope.itemCategory = undefined;
+        $scope.itemCategory = $scope.categoryList[0].id;
 
         var e = angular.element('#item-image');
         e.wrap('<form>').closest('form').get(0).reset();

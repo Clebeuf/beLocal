@@ -4,7 +4,7 @@ angular.module('clientApp')
   .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q) {
 
     $scope.showCategory = false;
-    $scope.selectedCategory = 'all';
+    $scope.selectedCategory = 'All Products';
     
     $scope.displayVendor = function (id) {
       $location.path('vendor/details/'+id).replace();
@@ -89,7 +89,7 @@ angular.module('clientApp')
   }
   
   $scope.getAllProducts = function() {
-    $scope.selectedCategory = 'all';
+    $scope.selectedCategory = 'All Products';
     $scope.showCategory = false;
     $scope.selectedCategoryProducts = undefined;
   }

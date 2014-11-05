@@ -48,11 +48,12 @@
 
             <!-- DISPLAY SIDE BAR OF ALL CATEGORIES -->
             <div class="col-sm-2">
-                <h3>Category</h3>
-                <ul class="" role="">
-                    <li><a ng-click="getAllProducts()">All Products</a></li>
+                <hr>
+                <p class="small-header">Categories</p>
+                <ul class="tag-list" role="">
+                    <li><a class="plain-text-font" ng-class="{'active' : selectedCategory === 'all'}" ng-click="getAllProducts()">All Products</a></li>
                     <li class="" ng-repeat="category in categoryList">
-                      <a ng-click="getProductsWithCategory(category)">{{category.name}}</a>
+                      <a class="plain-text-font" ng-class="{'active' : selectedCategory === category.name}" ng-click="getProductsWithCategory(category)">{{category.name}}</a>
                     </li>
                 </ul>
             </div>

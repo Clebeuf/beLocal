@@ -4,6 +4,7 @@ angular.module('clientApp')
   .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q) {
 
     $scope.showCategory = false;
+    $scope.selectedCategory = 'all';
     
     $scope.displayVendor = function (id) {
       $location.path('vendor/details/'+id).replace();
@@ -79,6 +80,7 @@ angular.module('clientApp')
   $scope.marketMasonry();
   
   $scope.getProductsWithCategory = function(category) {
+    $scope.selectedCategory = category.name;
     $scope.selectedCategoryProducts = undefined;
     $scope.showCategory = true;
     StateService.getSelectedCategoryProducts(category).then(function() {
@@ -87,6 +89,7 @@ angular.module('clientApp')
   }
   
   $scope.getAllProducts = function() {
+    $scope.selectedCategory = 'all';
     $scope.showCategory = false;
     $scope.selectedCategoryProducts = undefined;
   }

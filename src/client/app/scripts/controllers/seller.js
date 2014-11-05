@@ -23,8 +23,14 @@ angular.module('clientApp')
     $scope.sellingToday = false;
     $scope.currentUser = {};
     angular.copy(StateService.getCurrentUser(), $scope.currentUser);
+    $scope.isCreatingCustomLocation = false;
 
     var geocoder = new google.maps.Geocoder();
+
+    StateService.getAvailableMarkets().then(function() {
+        if(StateService.getAvailableMarketList().length > 0)
+            $scope.newLocationMarket = StateService.getAvailableMarketList()[0].id;
+    });
 
     $scope.isTwitterAuth = OAuth.create('twitter');
     $scope.hashtag = ' #beLocal';
@@ -57,6 +63,31 @@ angular.module('clientApp')
     StateService.getCategories().then(function() {
       $scope.categoryList = StateService.getCategoryList();
     });
+
+    $scope.doCustomLocation = function() {
+        $scope.isCreatingCustomLocation = true;
+        $scope.submitLocationButtonText = "Add Location";
+    }
+
+    $scope.manuallyTriggerCustomLocation = function() {
+        $scope.doCustomLocation();
+        $timeout(function() {
+            angular.element('#customLocationTab').trigger('click');            
+        });        
+    }
+
+    $scope.doMarketLocation = function() {
+        $scope.isCreatingCustomLocation = false;
+        $scope.submitLocationButtonText = "Join Market";
+    }
+
+    $scope.manuallyTriggerMarketLocation = function() {
+        $scope.isCreatingCustomLocation = false;
+        $scope.submitLocationButtonText = "Join Market";        
+        $timeout(function() {
+            angular.element('#marketLocationTab').trigger('click');            
+        });        
+    }
 
     $scope.doTwitterSignIn = function() {
         OAuth.popup('twitter', {cache : true})
@@ -205,10 +236,10 @@ angular.module('clientApp')
     } 
 
     $scope.resetLocationModal = function() {
+        $scope.manuallyTriggerMarketLocation();
         $scope.addressSearchText = undefined;
         $scope.newLocationSubmitted = false;
-        $scope.isEditingLocation = false;       
-        $scope.submitLocationButtonText = "Add Location";
+        $scope.isEditingLocation = false;
 
         var tempDate = new Date();
         tempDate.setHours(tempDate.getHours() + 1);
@@ -242,6 +273,7 @@ angular.module('clientApp')
     }
 
     $scope.editLocation = function(location) {
+        $scope.manuallyTriggerCustomLocation();
 
         if(location.date == null) {
             var hours = $scope.buildHoursObject();
@@ -297,7 +329,7 @@ angular.module('clientApp')
         $scope.locationDescription  = location.description;
     }
 
-    $scope.resetItemModal = function() {
+    $scope.resetItemModal = function() {       
         $scope.submitItemButtonText = "Add Item"; 
         $scope.isEditingItem = false;
         $scope.newItemSubmitted = false;
@@ -439,6 +471,32 @@ angular.module('clientApp')
         })
     }
 
+    function compareWeekday(a,b) {
+      return a.weekday - b.weekday;
+    }
+
+    $scope.getMarketLocations = function() {
+        StateService.getMarketLocations().then(function(response) {
+            for(var i = 0; i < response.data.length; i++) {
+              response.data[i].address.hours.sort(compareWeekday);
+            }            
+            $scope.marketLocations = response.data;
+        })
+    }
+
+    $scope.leaveMarket = function(market) {
+        var data = {
+            'market_id' : market.id,
+        };
+        StateService.leaveMarket(data).then(function() {
+            StateService.getAvailableMarkets().then(function() {
+                if(StateService.getAvailableMarketList().length > 0)
+                    $scope.newLocationMarket = StateService.getAvailableMarketList()[0].id;
+            });
+            $scope.getMarketLocations();
+        })
+    }        
+
     $scope.newItemSubmit = function() {
         $scope.newItemSubmitted = true;
         if($scope.itemForm.$valid) {
@@ -461,57 +519,73 @@ angular.module('clientApp')
 
     $scope.newLocationSubmit = function() {       
         $scope.newLocationSubmitted = true;
-        if($scope.locationForm.$valid) {
-            angular.element('#locationModal').modal('hide');                 
-            var hours = [];
 
-            var address = {
-                "addr_line1" : $scope.locationAddress,
-                "city" : $scope.locationCity,
-                "state" : $scope.locationProvince,
-                "country" : $scope.locationCountry,
-                "zipcode" : $scope.locationPostalCode,
-                "latitude" : $scope.latitude,
-                "longitude" : $scope.longitude
-            }
-
-            // If we are a one time location...
-            if($scope.locationType == 'true') {
-                hours = [{
-                    "weekday" : 8,
-                    "from_hour" : $scope.startTime.getHours() + ':' + $scope.startTime.getMinutes(),
-                    "to_hour" : $scope.endTime.getHours() + ':' + $scope.endTime.getMinutes()
-                }];
-            } else {
+        if($scope.isCreatingCustomLocation) {
+            if($scope.locationForm.$valid) {  
+                angular.element('#locationModal').modal('hide'); 
                 var hours = [];
-                $scope.locationDate = null;
-                for(var i = 0; i < $scope.locationHours.length; i++) {
-                    if($scope.locationHours[i].checked) {
-                        hours.push({
-                            "weekday" : $scope.locationHours[i].weekday,
-                            "from_hour" : $scope.locationHours[i].from_hour.getHours() + ':' + $scope.locationHours[i].from_hour.getMinutes(),
-                            "to_hour" : $scope.locationHours[i].to_hour.getHours() + ':' + $scope.locationHours[i].to_hour.getMinutes()
-                        });
-                    }
-                }             
+
+                var address = {
+                    "addr_line1" : $scope.locationAddress,
+                    "city" : $scope.locationCity,
+                    "state" : $scope.locationProvince,
+                    "country" : $scope.locationCountry,
+                    "zipcode" : $scope.locationPostalCode,
+                    "latitude" : $scope.latitude,
+                    "longitude" : $scope.longitude
+                }
+
+                // If we are a one time location...
+                if($scope.locationType == 'true') {
+                    hours = [{
+                        "weekday" : 8,
+                        "from_hour" : $scope.startTime.getHours() + ':' + $scope.startTime.getMinutes(),
+                        "to_hour" : $scope.endTime.getHours() + ':' + $scope.endTime.getMinutes()
+                    }];
+                } else {
+                    var hours = [];
+                    $scope.locationDate = null;
+                    for(var i = 0; i < $scope.locationHours.length; i++) {
+                        if($scope.locationHours[i].checked) {
+                            hours.push({
+                                "weekday" : $scope.locationHours[i].weekday,
+                                "from_hour" : $scope.locationHours[i].from_hour.getHours() + ':' + $scope.locationHours[i].from_hour.getMinutes(),
+                                "to_hour" : $scope.locationHours[i].to_hour.getHours() + ':' + $scope.locationHours[i].to_hour.getMinutes()
+                            });
+                        }
+                    }             
+                }
+
+                address.hours = hours;             
+
+                var sellerLocation = {
+                    "id" : $scope.locationId,
+                    "date" : $scope.locationDate instanceof Date ? $scope.locationDate.getFullYear() + '-' + ($scope.locationDate.getMonth() + 1) + '-' + $scope.locationDate.getDate() : $scope.locationDate,
+                    "address" : address,
+                    "name" : $scope.locationName,
+                    'email' : $scope.emailAtLocation,
+                    'phone' : $scope.phoneAtLocation,
+                    'description' : $scope.locationDescription,
+                };
+
+                StateService.createSellerLocation(sellerLocation, $scope.isEditingLocation).then(function() {
+                    $scope.getSellerLocations();
+                    $scope.getSellerItems();
+                });
             }
-
-            address.hours = hours;             
-
-            var sellerLocation = {
-                "id" : $scope.locationId,
-                "date" : $scope.locationDate instanceof Date ? $scope.locationDate.getFullYear() + '-' + ($scope.locationDate.getMonth() + 1) + '-' + $scope.locationDate.getDate() : $scope.locationDate,
-                "address" : address,
-                "name" : $scope.locationName,
-                'email' : $scope.emailAtLocation,
-                'phone' : $scope.phoneAtLocation,
-                'description' : $scope.locationDescription,
+        } else {
+            angular.element('#locationModal').modal('hide');             
+            var data = {
+                'market_id' : $scope.newLocationMarket,
             };
 
-            StateService.createSellerLocation(sellerLocation, $scope.isEditingLocation).then(function() {
-                $scope.getSellerLocations();
-                $scope.getSellerItems();
-            });
+            StateService.joinMarket(data).then(function() {
+                StateService.getAvailableMarkets().then(function() {
+                    if(StateService.getAvailableMarketList().length > 0)
+                        $scope.newLocationMarket = StateService.getAvailableMarketList()[0].id;
+                });                
+                $scope.getMarketLocations();
+            })
         }
     }
 
@@ -582,11 +656,12 @@ angular.module('clientApp')
     $scope.init = function() {
         $scope.getSellerLocations();
         $scope.getSellerItems();
+        $scope.getMarketLocations();
         $timeout(function(){
             angular.element("[data-toggle='tooltip']").tooltip();
         }, 1000)
 
-        $scope.resetLocationModal();3
+        $scope.resetLocationModal();
     }  
 
     $scope.init();   

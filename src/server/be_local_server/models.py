@@ -109,7 +109,15 @@ class SellerLocation(TrashableMixin, models.Model):
     phone = models.CharField(max_length=25)
     description = models.CharField(max_length=800)
 
+class MarketPhoto(models.Model):
+    image = models.ImageField(storage = fs, upload_to='markets', blank=True)
+    
+    def get_image_abs_path(self):
+        return os.path.join(settings.MEDIA_URL, self.image.name)        
+    image_url = property(get_image_abs_path)    
+
 class Market(models.Model):
+    photo = models.ForeignKey(MarketPhoto, blank=True, null=True)    
     name = models.CharField(max_length=100)
     address = models.ForeignKey(Address)
     description = models.CharField(max_length=400)

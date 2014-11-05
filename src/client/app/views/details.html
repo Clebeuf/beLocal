@@ -50,7 +50,40 @@
             Market Locations
     </div>
     <!-- repeating for each location that seller has in the db -->
-    <div ng-repeat="location in sellerLocations" class="container-for-cards">
+    <div ng-repeat="location in vendorDetails.markets" class="container-for-cards">
+        <div class="card-formatting">
+            <div class="row">
+
+                <!-- Display the locations name -->
+                <div class="col-xs-12 card-lable-style">
+                    {{location.name}}
+                </div>
+
+            </div>
+
+            <div class="location-details">
+                <div>
+                <p><b>HOURS:</b>
+                        <ul class="list-inline store-hours">&nbsp
+                        <li ng-repeat="day in location.address.hours">
+                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                        </li>
+
+                        </ul>
+                </p>
+                </div>
+                <p><b>LOCATION:</b>
+                    {{location.address.addr_line1}},
+                    {{location.address.city}}, 
+                    {{location.address.state}}, 
+                    {{location.address.zipcode}}
+                </p>
+
+                <p class="indent-after-first-line"><b>DETAILS:</b>
+                    {{location.description}}
+                </p>
+            </div>
+        </div>    
     </div>
     <!-- end of repeating for each market that seller has in the db -->
 

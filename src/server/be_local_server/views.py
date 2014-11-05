@@ -1,3 +1,4 @@
+import simplejson as sjson
 from rest_framework import generics, status, viewsets, mixins, parsers, renderers, status, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -21,10 +22,12 @@ from secretballot import views
 from secretballot.models import Vote
 from be_local_server import serializers
 from be_local_server.models import *
+from haystack.query import SearchQuerySet
+import datetime, json
 from geopy.distance import vincenty
 from operator import itemgetter, attrgetter, methodcaller
-import datetime, json
 from taggit.models import Tag
+
 
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
     user = (user_lat, user_lng)
@@ -173,14 +176,20 @@ class VendorDetailsView(generics.CreateAPIView):
         if(vendor.is_active == True):
             locations = SellerLocation.objects.filter(vendor=vendor)
             products = Product.objects.filter(vendor=vendor, stock="IS")
+            markets = Market.objects.filter(vendors=vendor)
             vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
 
             if products is not None:
                 for product in products:
                     product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
 
+            if markets is not None:
+                for market in markets:
+                    market.is_liked = Market.objects.from_request(self.request).get(pk=market.id).user_vote                    
+
             return Response({"vendor":serializers.VendorSerializer(vendor).data, 
-                             "locations":serializers.SellerLocationSerializer(locations, many=True).data, 
+                             "locations":serializers.SellerLocationSerializer(locations, many=True).data,
+                             "markets":serializers.MarketDisplaySerializer(markets, many=True).data,
                              "products":serializers.ProductDisplaySerializer(products, many=True).data
                             }, 
                             status=status.HTTP_200_OK
@@ -574,8 +583,6 @@ class MarketView(generics.ListAPIView):
 
         return SellerLocation.objects.filter(address = market_address)
 
-
-
 class VendorsView(generics.ListAPIView):
     """
     This view provides an endpoint for customers to view
@@ -610,10 +617,11 @@ class VendorsView(generics.ListAPIView):
             #Fill vendor queryset with order based on their closest locations
             for location in locations: 
                 if(location.vendor not in vendors):
-                    location.vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=location.vendor.id).user_vote 
-                    vendors.append(location.vendor)
+                    vendor = Vendor.objects.get(pk=location.vendor.id)
+                    vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote 
+                    vendors.append(vendor)
                     
-            serializer = serializers.VendorSerializer(vendors, many=True)
+            serializer = serializers.CustomerVendorSerializer(vendors, many=True)
             return Response(serializer.data)
 
         else: 
@@ -623,7 +631,7 @@ class VendorsView(generics.ListAPIView):
                 for vendor in vendors:
                     vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
             
-            serializer = serializers.VendorSerializer(vendors, many=True)
+            serializer = serializers.CustomerVendorSerializer(vendors, many=True)
             return Response(serializer.data)
 
 class ListVendorLocations(generics.ListAPIView):
@@ -636,6 +644,56 @@ class ListVendorLocations(generics.ListAPIView):
         vendor = Vendor.objects.get(user=self.request.user)
 
         return SellerLocation.objects.filter(vendor=vendor)
+
+class ListVendorMarkets(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    serializer_class = serializers.VendorMarketDisplaySerializer
+
+    def get_queryset(self):
+        vendor = Vendor.objects.get(user=self.request.user)
+
+        return Market.objects.filter(vendors=vendor) 
+
+class ListAvailableVendorMarkets(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    serializer_class = serializers.VendorMarketDisplaySerializer
+
+    def get_queryset(self):
+        vendor = Vendor.objects.get(user=self.request.user)
+
+        return Market.objects.exclude(vendors=vendor)              
+
+class JoinMarketView(generics.CreateAPIView):
+
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        vendor = Vendor.objects.get(user=request.user)
+
+        market = Market.objects.get(pk=request.DATA['market_id'])
+        market.vendors.add(vendor)
+        market.save()
+
+        return HttpResponse(status=status.HTTP_200_OK)
+
+class LeaveMarketView(generics.CreateAPIView):
+
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        vendor = Vendor.objects.get(user=request.user)
+
+        market = Market.objects.get(pk=request.DATA['market_id'])
+        market.vendors.remove(vendor)
+        market.save()
+
+        return HttpResponse(status=status.HTTP_200_OK)        
 
 class AddSellerLocationView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -656,6 +714,65 @@ class AddSellerLocationView(generics.CreateAPIView):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)  
+
+class JsonHelper(sjson.JSONEncoder):
+     """ simplejson.JSONEncoder extension: handle Search view models"""
+     def default(self, obj):
+        return obj.__dict__
+
+class autocompleteViewModel():
+    def __init__(self, name):
+        self.name = name
+
+def autocomplete(request):
+    prodSqs = SearchQuerySet().models(Product).autocomplete(name_auto=request.GET.get('q', ''))[:5]
+    products = [autocompleteViewModel(result.name) for result in prodSqs]
+    the_data = sjson.dumps({
+        'products': products}, cls=JsonHelper)
+    return HttpResponse(the_data, content_type='application/json')
+
+class SearchProductView(generics.ListAPIView):
+    serializer_class = serializers.ProductDisplaySerializer
+
+    def get_queryset(self):
+        srch = self.request.GET.get('q', '')
+        sqs = SearchQuerySet().models(Product) #.filter(has_title=True)
+        clean_query = sqs.query.clean(srch)
+        results = sqs.filter(content=clean_query)
+
+        products = []
+
+        for product in [result.object for result in results]:
+            product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote  
+            products.append(product)      
+        
+        return products
+
+class SearchVendorView(generics.ListAPIView):
+    serializer_class = serializers.CustomerVendorSerializer
+
+    def get_queryset(self):
+        srch = self.request.GET.get('q', '')
+        sqs = SearchQuerySet().models(Vendor)
+        company = sqs.filter(company_name=srch)
+        phone = sqs.filter(phone=srch)
+        webpage = sqs.filter(webpage=srch)
+        city = sqs.filter(city=srch)
+        state = sqs.filter(state=srch)
+        zipcode = sqs.filter(zipcode=srch)
+        addr = sqs.filter(addr_line1=srch)
+        country = sqs.filter(country=srch)
+        country_code = sqs.filter(country_code=srch)
+
+        results = company | phone | webpage | city | state | zipcode | addr | country | country_code
+        
+        vendors = []
+
+        for vendor in [result.object for result in results]:
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote  
+            vendors.append(vendor)      
+        
+        return vendors
 
 @csrf_exempt
 def like(request, content_type, id):

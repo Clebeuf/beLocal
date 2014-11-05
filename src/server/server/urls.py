@@ -22,7 +22,10 @@ urlpatterns = patterns('',
     url(r'^vendor/location/add/$', views.AddSellerLocationView.as_view(), name='vendor-location-add'),
     url(r'^vendor/location/list/$', views.ListVendorLocations.as_view(), name='vendor-location-list'), 
     url(r'^vendor/location/(?P<location_id>[0-9-]+)/$', views.RWDSellerLocationView.as_view(), name='vendor-location-details'),
-    url(r'^vendor/location/delete/$', views.DeleteSellerLocationView.as_view(), name='vendors-location-delete'),    
+    url(r'^vendor/location/delete/$', views.DeleteSellerLocationView.as_view(), name='vendors-location-delete'),  
+
+    url(r'^vendor/markets/list/$', views.ListVendorMarkets.as_view(), name='vendor-location-list'),
+    url(r'^vendor/markets/available/$', views.ListAvailableVendorMarkets.as_view(), name='vendor-location-list'),    
        
     url(r'^vendor/products/add/$', views.AddProductView.as_view(), name='vendor-products-add'),
     url(r'^vendor/products/photo/add/$', views.AddProductPhotoView.as_view(), name='vendor-products-photo-add'),
@@ -35,8 +38,13 @@ urlpatterns = patterns('',
     url(r'^products/trending/$', views.TrendingProductView.as_view(), name='product-trending-list'),
     url(r'^vendors/$', views.VendorsView.as_view(), name='vendors-list'),    
     url(r'^markets/$', views.ListMarketsView.as_view(), name='market-list'),
-    
     url(r'^markets/(?P<market_id>[0-9-]+)/$', views.MarketView.as_view(), name='market-details'),
+    url(r'^markets/join/$', views.JoinMarketView.as_view(), name='market-join'),
+    url(r'^markets/leave/$', views.LeaveMarketView.as_view(), name='market-join'),       
+
+    url(r'^search/autocomplete', 'be_local_server.views.autocomplete'),
+    url(r'^search/products', views.SearchProductView.as_view(), name="product-search"),    
+    url(r'^search/vendors', views.SearchVendorView.as_view(), name="vendor-search"),
     
     url(r'^like/(?P<content_type>[\w-]+)/(?P<id>[0-9-]+)/$', views.like, name='like'),
     

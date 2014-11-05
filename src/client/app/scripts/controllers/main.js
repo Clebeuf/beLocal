@@ -5,7 +5,7 @@ angular.module('clientApp')
 
     $scope.showCategory = false;
     $scope.showTag = false;
-    $scope.selectedCategory = 'all';
+    $scope.selectedCategory = 'All Products';
     
     $scope.displayVendor = function (id) {
       $location.path('vendor/details/'+id).replace();
@@ -104,9 +104,9 @@ angular.module('clientApp')
     });
   }
   
-  $scope.getAllProducts = function() {
-    $scope.selectedCategory = 'all';    
+  $scope.getAllProducts = function() {  
     $scope.resetProductLists();
+    $scope.selectedCategory = 'All Products';
   }
 
 });

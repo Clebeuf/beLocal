@@ -180,11 +180,6 @@ angular.module('clientApp')
       return $http.get(this.getServerAddress() + 'tag/list/')
       .success(function(data) { 
         taglist = data;
-        /*var counter = 0;
-        while (counter < data.length) {
-          taglist.push(data[counter].name);
-          counter++;
-        } console.log("taglist: %o", taglist);*/
       })
       .error(function(data) {
         console.log('Error retrieving tags');

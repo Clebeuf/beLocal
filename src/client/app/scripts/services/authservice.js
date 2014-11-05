@@ -1,7 +1,6 @@
 'use strict';
 
 angular.module('clientApp')
-<<<<<<< HEAD
   .service('AuthService', function AuthService($http, $location, ipCookie, StateService, $q) {
     var self = this;    
 
@@ -9,7 +8,7 @@ angular.module('clientApp')
     	var loggedIn = false;
     	var backend = 'facebook';
   		var token = "Token " + result.access_token;
-  		var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/login/' + backend + '/', headers: {'Authorization': token}});
+  		var loginPromise = $http({method:'POST', url: 'http://54.69.172.241:8000/login/' + backend + '/', headers: {'Authorization': token}});
 
   		// loginService.loginUser(loginPromise);
   		loginPromise.then(function (result) {
@@ -25,35 +24,13 @@ angular.module('clientApp')
   		});
 
   		return loginPromise;
-=======
-  .service('AuthService', function AuthService($http, $location, ipCookie, StateService) {
-  	this.processLogin = function(result) {
-
-  	var loggedIn = false;
-  	var backend = 'facebook';
-		var token = "Token " + result.access_token;
-		var loginPromise = $http({method:'POST', url: 'http://54.69.172.241:8000/login/' + backend + '/', headers: {'Authorization': token}});
-
-		// loginService.loginUser(loginPromise);
-		loginPromise.then(function (result) {
-		  loggedIn = true;
-		  if(result.data.token) {
-		  	ipCookie('beLocalToken', result.data.token, {expires: 14});
-        ipCookie('beLocalUser', result.data, {expires: 14});
-			$http.defaults.headers.common.Authorization = 'Token ' + result.token;		  	
-		  }
-          StateService.setProfile(result.data);		  
-		});
-
-		return loginPromise;
->>>>>>> 086558bc83ec82b6b8b299cc07c3365d7e7cd770
   	}
 
     this.createVendorRequest = function(result) {
       var loggedIn = false;
       var backend = 'facebook';
       var token = "Token " + result.access_token;
-      var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/vendor/' + backend + '/create/', headers: {'Authorization': token}});
+      var loginPromise = $http({method:'POST', url: 'http://54.69.172.241:8000/vendor/' + backend + '/create/', headers: {'Authorization': token}});
 
       // loginService.loginUser(loginPromise);
       loginPromise.then(function (result) {
@@ -74,7 +51,7 @@ angular.module('clientApp')
       var loggedIn = false;
       var backend = 'facebook';
       var token = "Token " + result.access_token;
-      var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/customer/' + backend + '/create/', headers: {'Authorization': token}});
+      var loginPromise = $http({method:'POST', url: 'http://54.69.172.241:8000/customer/' + backend + '/create/', headers: {'Authorization': token}});
 
       // loginService.loginUser(loginPromise);
       loginPromise.then(function (result) {        

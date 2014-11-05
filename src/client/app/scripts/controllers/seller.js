@@ -338,11 +338,20 @@ angular.module('clientApp')
         $scope.newImageID = undefined; 
         $scope.displayItemThumbnail = false;
         $scope.newItemStock = "IS";
-        $scope.itemCategory = "1";
+        $scope.itemCategory = undefined;
 
         var e = angular.element('#item-image');
         e.wrap('<form>').closest('form').get(0).reset();
         e.unwrap();
+        
+        /* clear checked tags */
+        var len = $scope.tagList.length;
+        var counter = 0;
+        for (; counter < len; counter++) {
+          if ($scope.tagList[counter].checked) {
+            $scope.tagList[counter].checked = undefined;
+          } 
+        }
     }
 
     $scope.editItem = function(item) {
@@ -363,6 +372,29 @@ angular.module('clientApp')
         $scope.itemDescription = item.description;
         $scope.itemID = item.id;
         $scope.newImageID = item.photo ? item.photo.id : undefined;
+        $scope.itemCategory = item.category ? item.category.id : undefined;
+        
+        /* clear checked tags */
+        var len = $scope.tagList.length;
+        var counter = 0;
+        for (; counter < len; counter++) {
+          if ($scope.tagList[counter].checked) {
+            $scope.tagList[counter].checked = undefined;
+          } 
+        }
+        
+        /* check item's tags */
+        var len1 = item.tags.length; 
+        var len2 = $scope.tagList.length;
+        var counter1 = 0, counter2=0;
+        for (; counter1 < len1; counter1++) { 
+          for(; counter2 < len2; counter2++) { 
+            if ($scope.tagList[counter2].name == item.tags[counter1]) { 
+              $scope.tagList[counter2].checked = true;
+              break;
+            }
+          }
+        }
 
     }
 
@@ -461,7 +493,7 @@ angular.module('clientApp')
 
     $scope.getSellerItems = function() {
         StateService.getSellerItems().then(function(response) {
-            $scope.sellerItems = response.data;
+            $scope.sellerItems = response.data; console.log("Data %o", response.data);
         })
     }
 
@@ -502,13 +534,25 @@ angular.module('clientApp')
         if($scope.itemForm.$valid) {
             angular.element('#itemModal').modal('hide');
 
+            /* tags*/
+            var tags = [];
+            var len = $scope.tagList.length;
+            var counter = 0;
+            for (; counter < len; counter++) {
+              if ($scope.tagList[counter].checked) {
+                tags.push($scope.tagList[counter].slug);
+              }
+            }
+            console.log("tags: "+ tags);
+            
             var item = {
                 "id" : $scope.itemID,
                 "name" : $scope.itemName,
                 "description" : $scope.itemDescription,
                 "photo" : $scope.newImageID,
                 "stock" : $scope.newItemStock,
-                "cateogry" : $scope.itemCategory
+                "category" : $scope.itemCategory,
+                "tags" : tags
             };
 
             StateService.createItem(item, $scope.isEditingItem).then(function() {

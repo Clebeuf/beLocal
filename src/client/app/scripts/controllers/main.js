@@ -3,7 +3,8 @@
 angular.module('clientApp')
   .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q) {
 
-
+    $scope.showCategory = false;
+    
     $scope.displayVendor = function (id) {
       $location.path('vendor/details/'+id).replace();
     };   
@@ -16,10 +17,18 @@ angular.module('clientApp')
     	$scope.product = {};    		
     };
     
+    StateService.getTags().then(function() {
+      $scope.tagList = StateService.getTagList();
+    });
+    
+    StateService.getCategories().then(function() {
+      $scope.categoryList = StateService.getCategoryList();
+    });
+    
     $scope.goToVendorDetails = function(vendorID){
     	$scope.hideProductDetailsModal();
 
-
+    	
       angular.element('#productDetailsModal').on('hidden.bs.modal', function(e) {
         $timeout(function() {
       	 $location.path('vendor/details/'+ vendorID).replace();
@@ -68,6 +77,19 @@ angular.module('clientApp')
 
   $scope.trendingMasonry();
   $scope.marketMasonry();
+  
+  $scope.getProductsWithCategory = function(category) {
+    $scope.selectedCategoryProducts = undefined;
+    $scope.showCategory = true;
+    StateService.getSelectedCategoryProducts(category).then(function() {
+      $scope.selectedCategoryProducts = StateService.getSelectedCategoryProductsList();
+    });
+  }
+  
+  $scope.getAllProducts = function() {
+    $scope.showCategory = false;
+    $scope.selectedCategoryProducts = undefined;
+  }
 
 });
 

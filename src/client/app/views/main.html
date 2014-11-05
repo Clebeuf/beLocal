@@ -37,7 +37,10 @@
                 Sample Category
               </div>
               <div class="row" style="padding-top:5px" id="masonry-container">
-                <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts" >
+                <div ng-hide="showCategory" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts" >
+                  <product-card data="item"></product-card>
+                </div>
+                <div ng-show="showCategory" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in selectedCategoryProducts" >
                   <product-card data="item"></product-card>
                 </div>
               </div>
@@ -45,7 +48,13 @@
 
             <!-- DISPLAY SIDE BAR OF ALL CATEGORIES -->
             <div class="col-sm-2">
-              categories go here
+                <h3>Category</h3>
+                <ul class="" role="">
+                    <li><a ng-click="getAllProducts()">All Products</a></li>
+                    <li class="" ng-repeat="category in categoryList">
+                      <a ng-click="getProductsWithCategory(category)">{{category.name}}</a>
+                    </li>
+                </ul>
             </div>
 
         </div>

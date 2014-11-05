@@ -287,9 +287,10 @@ class AddProductView(generics.CreateAPIView):
         request.DATA['vendor'] = vendor.id
         
         serializer = serializers.AddProductSerializer(data=request.DATA, partial=True)
-
+       
         if serializer.is_valid():
             current_product = serializer.save()
+            
             # Save tags if they are provided in the request.
             if type(serializer.data['tags']) is list:                
                 saved_product = Product.objects.get(pk=current_product.pk)
@@ -334,13 +335,13 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     
     def patch(self, request, product_id):         
         product = Product.objects.get(pk=product_id) 
-   
+        print "product edit: ", request.DATA, product, product.category
         if product is not None:
             serializer = serializers.AddProductSerializer(product, data=request.DATA, partial=True)
            
             if serializer.is_valid():
-                serializer.save()
-                
+                curr = serializer.save()
+                print "saved:", curr, curr.category
                 # Save tags if they are provided in the request.
                 if type(serializer.data['tags']) is list:                
                     saved_product = Product.objects.get(pk=product_id)

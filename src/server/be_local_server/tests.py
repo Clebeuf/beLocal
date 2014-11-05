@@ -111,7 +111,7 @@ class ProductTestCase(APITestCase):
                 'category' : 1,
                 } 
         response = self.client.post(url, data)
-        #print "Add Vendor's product : \n", response
+        print "Add Vendor's product : \n", response
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
         url = reverse('vendor-products-details', kwargs={'product_id': '3'})
@@ -323,8 +323,7 @@ class VendorTestCase(APITestCase):
         response = self.client.get(url)
         #print "\nVendors list: \n", response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.content, "[{\"id\": 2, \"company_name\": \"amazon\", \"webpage\": \"www.amazon.com\", \"country_code\": \"1\", \"phone\": \"7777777777\", \"extension\": \"123\", \"products\": [{\"id\": 2, \"name\": \"tomato\", \"description\": \"test product\", \"vendor\": 2, \"photo\": null, \"stock\": \"IS\", \"tags\": [], \"category\": null}], \"address\": 1, \"total_likes\": 0, \"is_liked\": null}]")
-    
+        
     # read vendor    
     def test_read_vendor(self):             
         url = reverse('vendor')

@@ -152,17 +152,18 @@ class TagListSerializer(serializers.WritableField):
     def to_native(self, obj):
         if type(obj) is not list:
             return [tag.name for tag in obj.all()]
+            return tags
         return obj
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'slug')
     
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = be_local_server.models.Category
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'slug')
             
 class AddProductSerializer(serializers.ModelSerializer):
     tags = TagListSerializer(blank=True)

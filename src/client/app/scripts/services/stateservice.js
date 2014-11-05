@@ -8,6 +8,7 @@ angular.module('clientApp')
     var marketlist = [];
     var categorylist = [];
     var taglist = [];
+    var categoryProductList = [];
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
     var likedUnlikedItem = undefined;
@@ -177,8 +178,13 @@ angular.module('clientApp')
     
     this.getTags = function() {
       return $http.get(this.getServerAddress() + 'tag/list/')
-      .success(function(data) {
+      .success(function(data) { 
         taglist = data;
+        /*var counter = 0;
+        while (counter < data.length) {
+          taglist.push(data[counter].name);
+          counter++;
+        } console.log("taglist: %o", taglist);*/
       })
       .error(function(data) {
         console.log('Error retrieving tags');
@@ -251,7 +257,7 @@ angular.module('clientApp')
       })
     };    
 
-    this.createItem = function(item, isEditing) {
+    this.createItem = function(item, isEditing) { 
       if(isEditing) {
         var url = this.getServerAddress() + 'vendor/products/' + item.id + '/';        
         return $http({method: 'PATCH', url: url, data: item})
@@ -264,6 +270,16 @@ angular.module('clientApp')
           console.log("Created a new item!");
         });
       }
+    };
+    
+    this.getSelectedCategoryProducts = function(category) {
+      return $http.get(this.getServerAddress() + 'products/category/' + category.slug + '/')
+      .success(function(data) {
+        categoryProductList = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving products of given category!');
+      });
     };
 
     this.getTrendingProductsList = function() {
@@ -278,12 +294,16 @@ angular.module('clientApp')
       return marketlist;
     };
     
-    this.getTagList = function() {
+    this.getTagList = function() { 
       return taglist;
     }
     
     this.getCategoryList = function() {
       return categorylist;
+    }
+    
+    this.getSelectedCategoryProductsList = function() {
+      return categoryProductList;
     }
 
     this.setProfileFromCookie = function() {

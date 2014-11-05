@@ -65,9 +65,6 @@ class Category(models.Model):
 
     def __unicode__(self):
         return '%s' % self.name
-
-    class Meta:
-        verbose_name_plural = 'categories'
   
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)
@@ -94,7 +91,7 @@ class Product(TrashableMixin, models.Model):
     vendor = models.ForeignKey(Vendor, related_name='products')
     photo = models.ForeignKey(ProductPhoto, blank=True, null=True)
     tags = TaggableManager(blank=True)
-    category = models.ForeignKey('Category', blank=True, null=True)
+    category = models.ForeignKey(Category, blank=True, null=True)
     
 secretballot.enable_voting_on(Product)
 

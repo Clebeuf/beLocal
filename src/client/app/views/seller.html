@@ -185,8 +185,8 @@
                         <div class="card-lable-style">{{product.name}}</div>
                         <div class="location-details">
                             <p><b>PRODUCT DETAILS:</b> {{product.description}}</p>
-                            <p><b>CATEGORY:</b> </p>
-                            <p><b>TAGS:</b> </p>
+                            <p><b>CATEGORY:</b> {{product.category.name}} </p>
+                            <p><b>TAGS:</b><span ng-repeat="tag in product.tags"> {{tag}} &nbsp; </span></p>
                         </div>
                     </div>
 
@@ -390,20 +390,24 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <!-- <div dropdown-select="categoryList" dropdown-model="itemCategory" dropdown-item-label="name" >
-                                </div>   &nbsp; Selected Category : {{itemCategory}} -->
-                                <dropdown-button data-menu-type="button" select-val="itemCategory = selectedVal" preselected-item="itemCategory" data-dropdown-data="categoryList">
-                                </dropdown-button>  &nbsp; Selected Category : {{itemCategory}}
-                                <!-- <div class="form-group btn-group" dropdown>
-                                    <button type="button" class="btn btn-primary dropdown-toggle">
-                                       Select Category <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li ng-repeat="category in categoryList">
-                                           <a tabindex="-1" data-ng-click="selectVal(item)">{{category.name}}</a>
-                                        </li>
-                                    </ul>
-                                </div> -->
+                                <label for="item-name">Item Category<br></label>
+                                <div class="form-group"  ng-class="{ 'has-error' : newItemSubmitted && itemForm.itemCategory.$invalid }">
+                                    <select ng-options="category.id as category.name for category in categoryList" ng-model="itemCategory">
+                                        <option value="">  Select a Cateogry </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="item-name">Tags<br></label>
+                                <div class="row form-group">
+                                    <div class="col-sm-4" ng-repeat="tag in tagList">
+                                        <label class="checkbox">
+                                            <input type="checkbox" ng-model="tag.checked"> &nbsp; {{tag.name}} &nbsp; 
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>

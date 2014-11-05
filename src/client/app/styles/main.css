@@ -6,22 +6,42 @@
 
 /*NAV BAR RESPONSIVENESS*/
 
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
+
+  .navbar-form {
+    padding-left: 0px !important;
+  }
 
   .beLocal-search {
-    width:400px !important;
+    width:500px !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  .beLocal-search {
+    width: 350px !important;
   }
 
-  .navbar-collapse {
-    padding-left: 0px;
-    padding-right: 0px;
+  .logo-header {
+    margin-top: -90px;
   }
+
+  .logo-header img{
+    width:250px !important;
+  } 
 
 }
+/* END OF NAV BAR RESPONSIVENESS*/
+
+
 
 
 ul {
   display: inline-block;
+}
+
+.beLocal-search {
+  width:600px;
 }
 
 .header-container {
@@ -34,6 +54,9 @@ ul {
   margin-left: auto;
   margin-right: auto;   
   max-width: 1300px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 0px !important;
 }
 
 .nav-shadow {
@@ -47,8 +70,11 @@ ul {
 .navbar {
   background-color: #FFFFFF !important;
   height: 140px !important;
-  margin-bottom: 50px;
   -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3) !important;
+}
+
+.navbar-nav > li {
+
 }
 
 .nav-bar-top {
@@ -265,9 +291,6 @@ body {
 }
 
 @media (max-width: 768px) {
-  .beLocal-header {
-    height: 215px !important;
-  }
 
   .navbar-form {
     width: auto;
@@ -278,9 +301,6 @@ body {
     border: 0;
     -webkit-box-shadow: none;
     box-shadow: none;
-  }
-  .navbar-toggle {
-    margin-left: 15px;
   }
 }
 
@@ -387,7 +407,6 @@ body {
 
 .container-home-page {
   margin-top: 175px;
-
   width: 100% !important;
   max-width: 100% !important;
 }
@@ -418,9 +437,6 @@ body {
   font-weight: bold;
 }
 
-.beLocal-search {
-  width:600px;
-}
 
 .pointer {
   cursor: pointer;
@@ -637,43 +653,7 @@ body {
   }
 }
 
-/* NAVBAR COLLAPSE */
-@media (max-width: 970px) {
-    .sign-in-form {
-        float: none !important;      
-    }
-    .navbar-header {
-        float: none;
-    }
-    .navbar-toggle {
-        display: block;
-    }
-    .navbar-collapse {
-        border-top: 1px solid transparent;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-    }
-/*    .navbar-fixed-top {
-        top: 0;
-        border-width: 0 0 1px;
-    }*/
-    .navbar-collapse.collapse {
-        display: none!important;
-    }
-    .navbar-nav {
-        float: none!important;
-        margin-top: 7.5px;
-    }
-    .navbar-nav>li {
-        float: none;
-    }
-    .navbar-nav>li>a {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-    .collapse.in{
-        display:block !important;
-    }
-}
+
 
 /* SELLER UI STARTS */
 

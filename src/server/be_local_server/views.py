@@ -1,3 +1,4 @@
+import simplejson as sjson
 from rest_framework import generics, status, viewsets, mixins, parsers, renderers, status, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -20,11 +21,11 @@ from secretballot import views
 from secretballot.models import Vote
 from be_local_server import serializers
 from be_local_server.models import *
+from haystack.query import SearchQuerySet
+import json
 from geopy.distance import vincenty
 from operator import itemgetter, attrgetter, methodcaller
 import datetime
-from django.forms.models import model_to_dict
-import json
 
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
     user = (user_lat, user_lng)
@@ -565,8 +566,6 @@ class MarketView(generics.ListAPIView):
 
         return SellerLocation.objects.filter(address = market_address)
 
-
-
 class VendorsView(generics.ListAPIView):
     """
     This view provides an endpoint for customers to view
@@ -699,6 +698,65 @@ class AddSellerLocationView(generics.CreateAPIView):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)  
 
+class JsonHelper(sjson.JSONEncoder):
+     """ simplejson.JSONEncoder extension: handle Search view models"""
+     def default(self, obj):
+        return obj.__dict__
+
+class autocompleteViewModel():
+    def __init__(self, name):
+        self.name = name
+
+def autocomplete(request):
+    prodSqs = SearchQuerySet().models(Product).autocomplete(name_auto=request.GET.get('q', ''))[:5]
+    products = [autocompleteViewModel(result.name) for result in prodSqs]
+    the_data = sjson.dumps({
+        'products': products}, cls=JsonHelper)
+    return HttpResponse(the_data, content_type='application/json')
+
+class SearchProductView(generics.ListAPIView):
+    serializer_class = serializers.ProductDisplaySerializer
+
+    def get_queryset(self):
+        srch = self.request.GET.get('q', '')
+        sqs = SearchQuerySet().models(Product) #.filter(has_title=True)
+        clean_query = sqs.query.clean(srch)
+        results = sqs.filter(content=clean_query)
+
+        products = []
+
+        for product in [result.object for result in results]:
+            product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote  
+            products.append(product)      
+        
+        return products
+
+class SearchVendorView(generics.ListAPIView):
+    serializer_class = serializers.CustomerVendorSerializer
+
+    def get_queryset(self):
+        srch = self.request.GET.get('q', '')
+        sqs = SearchQuerySet().models(Vendor)
+        company = sqs.filter(company_name=srch)
+        phone = sqs.filter(phone=srch)
+        webpage = sqs.filter(webpage=srch)
+        city = sqs.filter(city=srch)
+        state = sqs.filter(state=srch)
+        zipcode = sqs.filter(zipcode=srch)
+        addr = sqs.filter(addr_line1=srch)
+        country = sqs.filter(country=srch)
+        country_code = sqs.filter(country_code=srch)
+
+        results = company | phone | webpage | city | state | zipcode | addr | country | country_code
+        
+        vendors = []
+
+        for vendor in [result.object for result in results]:
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote  
+            vendors.append(vendor)      
+        
+        return vendors
+
 @csrf_exempt
 def like(request, content_type, id):
     """ 
@@ -750,4 +808,3 @@ def like(request, content_type, id):
             body = '{"is_liked": false}'
             return HttpResponse(body, status=status.HTTP_404_NOT_FOUND, content_type='application/json') 
         
-    

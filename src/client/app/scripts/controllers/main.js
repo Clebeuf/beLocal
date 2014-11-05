@@ -4,6 +4,7 @@ angular.module('clientApp')
   .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q) {
 
     $scope.showCategory = false;
+    $scope.showTag = false;
     
     $scope.displayVendor = function (id) {
       $location.path('vendor/details/'+id).replace();
@@ -78,17 +79,31 @@ angular.module('clientApp')
   $scope.trendingMasonry();
   $scope.marketMasonry();
   
-  $scope.getProductsWithCategory = function(category) {
+  $scope.resetProductLists = function() {
     $scope.selectedCategoryProducts = undefined;
+    $scope.selectedTagProducts = undefined;
+  }
+  
+  $scope.getProductsWithCategory = function(category) {
+    $scope.resetProductLists();
     $scope.showCategory = true;
     StateService.getSelectedCategoryProducts(category).then(function() {
       $scope.selectedCategoryProducts = StateService.getSelectedCategoryProductsList();
     });
   }
   
+  $scope.getProductsWithTag = function(tag) {
+    $scope.resetProductLists();
+    $scope.showTag = true;
+    StateService.getSelectedTagProducts(tag).then(function() {
+      $scope.selectedTagProducts = StateService.getSelectedTagProductsList();
+    });
+  }
+  
   $scope.getAllProducts = function() {
     $scope.showCategory = false;
-    $scope.selectedCategoryProducts = undefined;
+    $scope.showTag = false;
+    $scope.resetProductLists();
   }
 
 });

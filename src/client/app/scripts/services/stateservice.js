@@ -9,6 +9,7 @@ angular.module('clientApp')
     var categorylist = [];
     var taglist = [];
     var categoryProductList = [];
+    var tagProductList = [];
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
     var likedUnlikedItem = undefined;
@@ -276,6 +277,16 @@ angular.module('clientApp')
         console.log('Error retrieving products of given category!');
       });
     };
+    
+    this.getSelectedTagProducts = function(tag) {
+      return $http.get(this.getServerAddress() + 'products/tag/' + tag.slug + '/')
+      .success(function(data) {
+        tagProductList = data; 
+      })
+      .error(function(data) {
+        console.log('Error retrieving products of given tag!');
+      });
+    };
 
     this.getTrendingProductsList = function() {
       return trendingProducts;
@@ -299,6 +310,10 @@ angular.module('clientApp')
     
     this.getSelectedCategoryProductsList = function() {
       return categoryProductList;
+    }
+    
+    this.getSelectedTagProductsList = function() {
+      return tagProductList;
     }
 
     this.setProfileFromCookie = function() {

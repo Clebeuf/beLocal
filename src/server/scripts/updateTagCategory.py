@@ -35,7 +35,7 @@ t2 = Tag(
 )
 t3 = Tag(
 	name="winter only",
-	slug="winter only"
+	slug="winter-only"
 )
 t4 = Tag(
 	name="local",

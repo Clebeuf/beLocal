@@ -389,12 +389,12 @@ angular.module('clientApp')
         var counter1 = 0, counter2=0;
         for (; counter1 < len1; counter1++) { 
           for(; counter2 < len2; counter2++) { 
-            if ($scope.tagList[counter2].name == item.tags[counter1]) { 
+            if ($scope.tagList[counter2].name.match(item.tags[counter1])) { 
               $scope.tagList[counter2].checked = true;
               break;
             }
           }
-        }
+        } 
 
     }
 
@@ -540,7 +540,7 @@ angular.module('clientApp')
             var counter = 0;
             for (; counter < len; counter++) {
               if ($scope.tagList[counter].checked) {
-                tags.push($scope.tagList[counter].slug);
+                tags.push($scope.tagList[counter].name);
               }
             }
             console.log("tags: "+ tags);

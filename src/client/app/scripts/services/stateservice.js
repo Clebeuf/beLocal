@@ -116,7 +116,7 @@ angular.module('clientApp')
     this.getTrendingProducts = function() {
       return $http.post(this.getServerAddress() + 'products/trending/', {'user_position':currentLocation})
       .success(function(data) {
-        trendingProducts = data;
+        trendingProducts = data; 
       })
       .error(function(data) {
         console.log('Error retrieving trending products');

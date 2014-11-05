@@ -5,6 +5,7 @@ angular.module('clientApp')
 
     $scope.showCategory = false;
     $scope.showTag = false;
+    $scope.selectedCategory = 'all';
     
     $scope.displayVendor = function (id) {
       $location.path('vendor/details/'+id).replace();
@@ -82,11 +83,14 @@ angular.module('clientApp')
   $scope.resetProductLists = function() {
     $scope.selectedCategoryProducts = undefined;
     $scope.selectedTagProducts = undefined;
+    $scope.showCategory = false;
+    $scope.showTag = false;
   }
   
   $scope.getProductsWithCategory = function(category) {
     $scope.resetProductLists();
     $scope.showCategory = true;
+    $scope.selectedCategory = category.name;
     StateService.getSelectedCategoryProducts(category).then(function() {
       $scope.selectedCategoryProducts = StateService.getSelectedCategoryProductsList();
     });
@@ -101,8 +105,7 @@ angular.module('clientApp')
   }
   
   $scope.getAllProducts = function() {
-    $scope.showCategory = false;
-    $scope.showTag = false;
+    $scope.selectedCategory = 'all';    
     $scope.resetProductLists();
   }
 

@@ -8,14 +8,19 @@ from taggit.models import Tag
 
 # Create Categories
 c1 = Category(
+	name="Uncategorized",
+	slug="uncategorized"
+)
+
+c2 = Category(
 	name="Fruits",
 	slug="fruits"
 )
-c2 = Category(
+c3 = Category(
 	name="Vegetables",
 	slug="vegetables"
 )
-c3 = Category(
+c4 = Category(
 	name="Preserves",
 	slug="preserves"
 )
@@ -23,6 +28,7 @@ c3 = Category(
 c1.save()
 c2.save()
 c3.save()
+c4.save()
 
 # Create Tags
 t1 = Tag(

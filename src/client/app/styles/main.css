@@ -8,6 +8,9 @@
   color: #78be25 !important;
 }
 
+.first-modal-row {
+  margin-bottom: 15px;
+}
 
 .medium-margin {
   margin-left: 10px;
@@ -17,7 +20,15 @@
   font-family: Graphik,"Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
-
+.small-header {
+  font-family: 'Roboto', sans-serif !important;
+  color: #403E3B;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0px;
+  margin-bottom: 10px;
+}
 
 .plain-text-font {
   font-family: 'Roboto', sans-serif !important;
@@ -1151,4 +1162,13 @@ hr{
     padding-bottom: 15px;
   }
 
+}
+
+.tag-list{
+  list-style: none;
+  padding: 0px;
+}
+
+.tag-list > li > a{
+  color: #403e3b;  
 }

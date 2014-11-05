@@ -392,8 +392,7 @@
                             <div class="col-sm-12">
                                 <label for="item-name">Item Category<br></label>
                                 <div class="form-group"  ng-class="{ 'has-error' : newItemSubmitted && itemForm.itemCategory.$invalid }">
-                                    <select ng-options="category.id as category.name for category in categoryList" ng-model="itemCategory">
-                                        <option value="">  Select a Cateogry </option>
+                                    <select class="form-control" ng-options="category.id as category.name for category in categoryList" ng-model="itemCategory">
                                     </select>
                                 </div>
                             </div>

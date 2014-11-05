@@ -550,6 +550,7 @@ class TrendingProductView(generics.ListAPIView):
                 for product in products:
                     product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
             serializer = serializers.ProductDisplaySerializer(products, many=True)
+            print "trending: ", serializer.data
             return Response(serializer.data)
 
 class ListMarketsView(generics.ListAPIView):

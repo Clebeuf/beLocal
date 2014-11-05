@@ -1,34 +1,30 @@
-<div class="navbar navbar-fixed-top navbar-default white-text" role="navigation">
-  <div class="container-fluid nav-padding nav-bar-top">
-    
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
+<div class="navbar navbar-default" role="navigation">
 
-    <div class="navbar-collapse collapse pull-right">
+
+<!-- TOP PART OF NAVBAR -->
+  <div class="container-fluid nav-bar-top">
+    <div class="pull-right" style="float:left">
 
       <div ng-hide="AuthService.isAuthenticated()">
-        <form name="loginForm" class="navbar-form navbar-right sign-in-form" role="form">      
+        <form name="loginForm" class="navbar-form sign-in-form" role="form" style="float:right">      
           <button type="submit" ng-click="showLogin()" class="btn btn-primary beLocal-btn">Sign In</button>
         </form>
-        <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown">
-            <a class="dropdown-toggle pointer white-text">Register <span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a class="pointer white-text" ng-click="showCustomerSignUp()">As a Customer</a></li>
-              <li><a class="pointer white-text" ng-click="showFarmerSignUp()">As a Farmer or Foodmaker</a></li>
-            </ul>
-          </li>
-        </ul> 
+        <div style="float:right">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle pointer white-text">Register <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a class="pointer white-text" ng-click="showCustomerSignUp()">As a Customer</a></li>
+                <li><a class="pointer white-text" ng-click="showFarmerSignUp()">As a Farmer or Foodmaker</a></li>
+              </ul>
+            </li>
+          </ul> 
+        </div> 
+        <div style="clear:both"/>
       </div> 
 
       <div ng-show="AuthService.isAuthenticated()">
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav ">
           <li class="dropdown">
             <a class="dropdown-toggle pointer">My Account<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
@@ -43,7 +39,6 @@
 
     </div>
 
-      <!-- <a class="navbar-brand" href="#">be<span class="beLocal-highlight">Local</span></a> -->
       <form class="navbar-form beLocal-search pull-right" role="search" >
         <div class="form-group">
           <div class="input-group">
@@ -57,24 +52,26 @@
 
   </div>
 
+
+
+<!-- BOTTOM PART OF HEADER -->
   <div class="row customer-nav top-nav-large">
-    <div class="col-sm-3 logo">
-      <img src="/images/logo.png">
-    </div>
-    <div class="col-sm-9">
-        <ul class="list-inline nav-shadow">
-          <li class="active"><a href="#trending" id="trendingTab" data-toggle="tab">In Season Now</a></li>
+    <div class="header-container">
+      <div class="logo-header" style="float:left">
+        <img src="/images/logo.png">
+      </div>
+      <div style="float:left">
+        <ul class="list-inline nav-shadow" >
+          <li class="active"><a href="#trending" id="trendingTab" data-toggle="tab">In Season Now.</a></li>
           <li><a href="#vendors" id="vendorsTab" data-toggle="tab">Farmers & Foodmakers</a></li>
           <li><a href="#markets" ng-click="marketMasonry()" id="marketsTab" data-toggle="tab">Local Markets</a></li>  
         </ul>
+      </div>
+      <div style="clear:both"/>
     </div>
   </div>
 
 </div>
-
-
-
-
 
 
 

@@ -202,7 +202,7 @@ angular.module('clientApp')
     };
 
     this.getServerAddress = function() {
-      return 'http://localhost:8000/';
+      return 'http://54.69.172.241:8000/';
     };
 
     this.uploadFile = function(file) {

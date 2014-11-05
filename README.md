@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 beLocal
 ======
+=======
+Startup Programming - [beLocal](http://belocalvictoria.me)
+=======
+>>>>>>> 086558bc83ec82b6b8b299cc07c3365d7e7cd770
 
 ![beLocal Logo](http://drive.google.com/uc?id=0B5qWf9vc8yiRRFhhMENsRS11RUk)
 

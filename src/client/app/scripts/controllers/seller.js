@@ -98,7 +98,7 @@ angular.module('clientApp')
     }
 
     $scope.generateVendorURL = function(id) {
-        var serverAddress = 'http://127.0.0.1:9000';
+        var serverAddress = 'http://54.69.172.241:9000';
         return  serverAddress + '/vendor/details/1'; 
     }
 

@@ -8,7 +8,37 @@ angular.module('clientApp')
     $scope.selectedCategory = 'All Products';
     $scope.selectedTags = 'All Products';
     $scope.productFilterExpr = {};
-    
+
+    $scope.tagToDisplay = StateService.readTagToDisplay();
+
+    $scope.instantTrendingMasonry = function() {
+      $timeout(function() {
+      var container = document.querySelector('#masonry-container');
+      var msnry = new Masonry(container, {
+        itemSelector: '.ms-item',
+        columnWidth: '.ms-item'
+      });    
+      })
+    };
+
+    $scope.trendingMasonry = function() {
+      $timeout(function() {
+      var container = document.querySelector('#masonry-container');
+      var msnry = new Masonry(container, {
+        itemSelector: '.ms-item',
+        columnWidth: '.ms-item'
+      });    
+      }, 1000)
+    };
+
+    $scope.marketMasonry = function() {
+      var container = document.querySelector('#masonry-market-container');
+      var msnry = new Masonry(container, {
+        itemSelector: '.ms-market-item',
+        columnWidth: '.ms-market-item'
+      });    
+    };    
+
     $scope.setProductFilter = function() {
       if (!$scope.showCategory && !$scope.showTag) {
         $scope.productFilterExpr = {};
@@ -59,18 +89,19 @@ angular.module('clientApp')
       }
       
       $scope.setProductFilter();
+      $scope.instantTrendingMasonry();
     }
     
     $scope.displayVendor = function (id) {
       $location.path('vendor/details/'+id).replace();
     };   
-	    
+      
     $scope.showProductDetailsModal = function(item) {
-    	$scope.product = item;   	
+      $scope.product = item;    
     };
 
     $scope.hideProductDetailsModal = function() {   
-    	$scope.product = {};    		
+      $scope.product = {};        
     };
     
     StateService.getTags().then(function() {
@@ -82,12 +113,12 @@ angular.module('clientApp')
     });
     
     $scope.goToVendorDetails = function(vendorID){
-    	$scope.hideProductDetailsModal();
+      $scope.hideProductDetailsModal();
 
-    	
+      
       angular.element('#productDetailsModal').on('hidden.bs.modal', function(e) {
         $timeout(function() {
-      	 $location.path('vendor/details/'+ vendorID).replace();
+         $location.path('vendor/details/'+ vendorID).replace();
         });
       });
       angular.element('#productDetailsModal').modal('hide');
@@ -103,32 +134,14 @@ angular.module('clientApp')
         });        
     });
 
-    $scope.trendingMasonry = function() {
-	    $timeout(function() {
-			var container = document.querySelector('#masonry-container');
-			var msnry = new Masonry(container, {
-			  itemSelector: '.ms-item',
-			  columnWidth: '.ms-item'
-			});    
-	    }, 1000)
-	};
-
-    $scope.marketMasonry = function() {
-		var container = document.querySelector('#masonry-market-container');
-		var msnry = new Masonry(container, {
-		  itemSelector: '.ms-market-item',
-		  columnWidth: '.ms-market-item'
-		});    
-	};
-
-	/* Magic! This is a hacky way of ensuring that masonry rebuilds itself while the proper tab content pane is visible
-	   (it won't work otherwise) */
-	angular.element('a[data-toggle="tab"]').on('shown.bs.tab', function (e) { 
-		angular.element(e.target).triggerHandler('click');
-	})
+  /* Magic! This is a hacky way of ensuring that masonry rebuilds itself while the proper tab content pane is visible
+     (it won't work otherwise) */
+  angular.element('a[data-toggle="tab"]').on('shown.bs.tab', function (e) { 
+    angular.element(e.target).triggerHandler('click');
+  })
 
   StateService.getMarkets().then(function() {
-  	$scope.marketList = StateService.getMarketList();
+    $scope.marketList = StateService.getMarketList();
   });
 
   $scope.trendingMasonry();
@@ -151,6 +164,10 @@ angular.module('clientApp')
     }
     $scope.setProductFilter();
   }
+
+  if($scope.tagToDisplay != undefined) {
+    $scope.doTagFilter($scope.tagToDisplay);
+  }  
 
 });
 

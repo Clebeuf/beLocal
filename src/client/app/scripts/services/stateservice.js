@@ -16,6 +16,17 @@ angular.module('clientApp')
     var currentLocation = undefined;
     var availableMarkets = undefined;
     var likedUnlikedProduct = undefined;
+    var tagToDisplay = undefined;
+
+    this.setTagToDisplay = function(tagName) {
+      tagToDisplay = tagName;
+    }
+
+    this.readTagToDisplay = function() {
+      var tempTag = tagToDisplay;
+      tagToDisplay = undefined;
+      return tempTag;
+    }
 
     this.getUserPosition = function() {
 

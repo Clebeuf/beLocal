@@ -879,4 +879,3 @@ class CategorizedProductView(generics.ListAPIView):
                 product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
         
         return products   
-    

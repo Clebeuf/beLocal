@@ -6,7 +6,7 @@ angular.module('clientApp')
     $scope.showCategory = false;
     $scope.showTag = false;
     $scope.selectedCategory = 'All Products';
-    $scope.selectedTag = 'All Products';
+    $scope.selectedTags = [];
     
     $scope.displayVendor = function (id) {
       $location.path('vendor/details/'+id).replace();
@@ -95,13 +95,26 @@ angular.module('clientApp')
   $scope.getProductsWithTag = function(tag) {
     $scope.resetProductLists();
     $scope.showTag = true;
-    $scope.selectedTag = tag.name;
+    
+    if (tag.checked) {
+      $scope.selectedTags.push(tag.name);
+    } else {
+      var index = $scope.selectedTags.indexOf(tag.name);
+      if (index > -1) {
+        $scope.selectedTags.splice(index, 1);
+      }
+    }    
+    
+    // If no tag is selected, disable tags
+    if ($scope.selectedTags.length < 1) {
+      console.log("reset tags");
+      $scope.showTag = false;
+    }
   }
   
   $scope.getAllProducts = function() {  
     $scope.resetProductLists();
     $scope.selectedCategory = 'All Products';
-    $scope.selectedTag = 'All Products';
   }
 
 });

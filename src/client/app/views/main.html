@@ -4,7 +4,7 @@
 <!-- EACH OF THE TABS -->
 <div class="tab-content">
   <div class="tab-pane" id="markets">
-    <div class="container container-home-page">
+    <div class="customer-container">
       <div class="row" id="masonry-market-container">
         <div class="col-trending ms-market-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="market in marketList" >
           <market-card data="market"></market-card>
@@ -41,7 +41,7 @@
 
   <!-- VENDORS TAB -->
   <div class="tab-pane" id="vendors">
-    <div class="container container-home-page">
+    <div class="customer-container">
       <div ng-repeat="vendor in vendors">
       	   <vendor-card data="vendor"></vendor-card>
       </div>

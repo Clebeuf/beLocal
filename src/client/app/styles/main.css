@@ -35,7 +35,6 @@
     margin-left: 5px;
   }
 
-
 }
 
 @media (max-width: 1000px){
@@ -93,7 +92,14 @@
   max-width: 1300px;
   padding-left: 15px;
   padding-right: 15px;
-  padding-top: 0px !important;
+  padding-top: 15px;
+}
+
+@media (max-width: 768px){
+  .customer-container{
+    padding-top: 60px !important;
+  }
+
 }
 
 .nav-shadow {

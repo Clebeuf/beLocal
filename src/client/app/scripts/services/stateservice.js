@@ -16,6 +16,7 @@ angular.module('clientApp')
     var currentLocation = undefined;
     var availableMarkets = undefined;
     var likedUnlikedProduct = undefined;
+    var marketDetails = undefined;
 
     this.getUserPosition = function() {
 
@@ -73,6 +74,21 @@ angular.module('clientApp')
       vendorToDisplay = vendorID;
     };
 
+    this.getMarketDetails = function() {
+      return marketDetails;
+    }
+
+    this.getMarketToDisplay = function(marketID) {
+      return $http.post(this.getServerAddress() + 'market/details/', {"id":marketID})
+      .success(function(data) {
+        data.address.hours.sort(compareWeekday);  
+        marketDetails = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving market info');
+        $location.path('/');
+      });
+    }
 
     this.getVendorDetails = function(){
       return vendorDetails;

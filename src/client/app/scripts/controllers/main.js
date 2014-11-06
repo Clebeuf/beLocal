@@ -29,8 +29,8 @@ angular.module('clientApp')
     $scope.selectedTag = 'All Products';
     
     $scope.displayVendor = function (id) {
-      $location.path('vendor/details/'+id).replace();
-    };   
+      $location.path('vendor/details/'+id);
+    };       
 	    
     $scope.showProductDetailsModal = function(item) {
     	$scope.product = item;   	

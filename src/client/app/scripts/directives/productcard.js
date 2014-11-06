@@ -20,7 +20,7 @@ angular.module('clientApp')
         };        
 
       	scope.displayVendor = function (id) {
-      		$location.path('vendor/details/'+id).replace();
+      		$location.path('vendor/details/'+id);
       	}   
 
         $timeout(function(){

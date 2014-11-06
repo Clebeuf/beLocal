@@ -197,6 +197,23 @@ class ProductSerializer(serializers.ModelSerializer):
                   'category'
         )
 
+class MarketDetailsProductSerializer(serializers.ModelSerializer):
+    photo = PhotoPathSerializer()    
+    tags = TagListSerializer(blank=True)
+    vendor = BusinessVendorSerializer()
+    
+    class Meta:
+        model = be_local_server.models.Product
+        fields = ('id', 
+                  'name',
+                  'description',   
+                  'vendor',
+                  'photo',
+                  'stock',
+                  'tags',
+                  'category'
+        )        
+
 class VoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vote
@@ -255,7 +272,30 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
                   'address',
                   'total_likes',
                   'is_liked',
-      )      
+      ) 
+
+class MarketDetailsVendorSerializer(serializers.ModelSerializer):
+  products = serializers.SerializerMethodField('get_in_stock_products')
+  photo = VendorPhotoPathSerializer()
+  address = AddressSerializer()
+
+  def get_in_stock_products(self, obj):
+    products = be_local_server.models.Product.objects.filter(vendor=obj, stock="IS")
+    serializer = MarketDetailsProductSerializer(products, many=True)
+    return serializer.data
+
+  class Meta:
+      model = be_local_server.models.Vendor
+      fields = (  'id',   
+                  'company_name',
+                  'webpage',
+                  'country_code',
+                  'phone',
+                  'extension',
+                  'products',
+                  'photo',
+                  'address',
+      )           
 
 class MarketDisplaySerializer(serializers.ModelSerializer):
     vendors = BusinessVendorSerializer(many=True)
@@ -275,6 +315,25 @@ class MarketDisplaySerializer(serializers.ModelSerializer):
                     'is_liked',
                     'photo',
         )
+
+class MarketDetailsSerializer(serializers.ModelSerializer):
+    vendors = MarketDetailsVendorSerializer(many=True)
+    address = AddAddressSerializer()
+    total_likes = serializers.IntegerField(source='vote_total') 
+    is_liked = serializers.IntegerField()
+    photo = MarketPhotoPathSerializer()
+  
+    class Meta:
+        model = be_local_server.models.Market
+        fields = (  'id',
+                    'vendors',
+                    'address',
+                    'name',
+                    'description',
+                    'total_likes',
+                    'is_liked',
+                    'photo',
+        )        
 
 class VendorMarketDisplaySerializer(serializers.ModelSerializer):
     vendors = BusinessVendorSerializer(many=True)

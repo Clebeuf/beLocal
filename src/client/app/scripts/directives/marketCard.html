@@ -1,5 +1,5 @@
 <div class="thumbnail product-card">
-      <img ng-src="{{market.photo.image_url}}" alt="{{market.name}}" class="pointer vendor-card-name"/>
+      <img ng-src="{{market.photo.image_url}}" alt="{{market.name}}" class="pointer vendor-card-name" ng-click="displayMarket(market.id)"/>
       <div class="caption market-caption">
 
         <div class="row">
@@ -19,7 +19,7 @@
 
       <div class="row">
         <div class="col-sm-12">
-          <h4 class="no-bottom-margin no-top-margin"><a class="pointer vendor-card-name">{{market.name}}</a></h4>
+          <h4 class="no-bottom-margin no-top-margin"><a ng-click="displayMarket(market.id)" class="pointer vendor-card-name">{{market.name}}</a></h4>
           <div class="container-display-vendor-name">
             <span class="glyphicon glyphicon-map-marker"></span>
             {{market.address.addr_line1}}, {{market.address.city}}, {{market.address.state}}           

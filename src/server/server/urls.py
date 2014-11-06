@@ -40,7 +40,9 @@ urlpatterns = patterns('',
     url(r'^markets/$', views.ListMarketsView.as_view(), name='market-list'),
     url(r'^markets/(?P<market_id>[0-9-]+)/$', views.MarketView.as_view(), name='market-details'),
     url(r'^markets/join/$', views.JoinMarketView.as_view(), name='market-join'),
-    url(r'^markets/leave/$', views.LeaveMarketView.as_view(), name='market-join'),       
+    url(r'^markets/leave/$', views.LeaveMarketView.as_view(), name='market-join'),
+    url(r'^market/details/$', views.MarketDetailsView.as_view(), name='market-details'),     
+
 
     url(r'^search/autocomplete', 'be_local_server.views.autocomplete'),
     url(r'^search/products', views.SearchProductView.as_view(), name="product-search"),    

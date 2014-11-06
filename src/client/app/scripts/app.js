@@ -35,7 +35,7 @@ var app = angular.module('clientApp', [
       authenticate: true,
       css: 'styles/main.css' 
     })
-    .state('vendor/details', {
+    .state('vendorDetails', {
       url: '/vendor/details/{vendorid:[0-9]{1,8}}',
       templateUrl: 'views/details.html',
       controller: 'DetailsCtrl',
@@ -46,6 +46,13 @@ var app = angular.module('clientApp', [
       url: '/search/{search_type}?q',
       templateUrl: 'views/search.html',
       controller: 'SearchCtrl',
+      authenticate: false,
+      css: 'styles/main.css'
+    })
+    .state('marketDetails', {
+      url: '/market/details/{marketid:[0-9]{1,8}}',
+      templateUrl: 'views/marketdetails.html',
+      controller: 'MarketDetailsCtrl',
       authenticate: false,
       css: 'styles/main.css'
     });

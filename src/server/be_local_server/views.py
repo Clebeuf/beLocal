@@ -168,6 +168,18 @@ def register_by_access_token(request, backend):
 
     return user
 
+class MarketDetailsView(generics.CreateAPIView):
+    permission_classes = (AllowAny,)   
+
+    def post(self, request, *args, **kwargs):
+        market = Market.objects.get(pk=request.DATA["id"])
+
+        if(market != None):
+            market.is_liked = Market.objects.from_request(self.request).get(pk=market.id).user_vote
+            return Response(serializers.MarketDetailsSerializer(market).data, status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
 class VendorDetailsView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
 

@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('clientApp')
-  .directive('navBar', function (StateService, AuthService, $location, $timeout) {
+  .directive('navbarXS', function (StateService, AuthService, $location, $timeout) {
     return {
       restrict: 'E',
-      templateUrl: 'scripts/directives/navbar.html',
+      templateUrl: 'scripts/directives/navbarxs.html',
       controller: ['$scope', function($scope) {
         $scope.AuthService = AuthService;
         $scope.loginError = false;

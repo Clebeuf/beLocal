@@ -1,23 +1,10 @@
-<nav-bar></nav-bar>
-<div class="header top-nav-large row">
-  <div class="col-sm-2 logo">
-    <img src="/images/logo.png">
-  </div>
-  <div class="col-sm-10">
-      <br><br><br><br><br>
-      <ul class="list-inline">
-        <li class="active"><a href="#trending" id="trendingTab" data-toggle="tab">In Season Now</a></li>
-        <li><a href="#vendors" id="vendorsTab" data-toggle="tab">Farmers & Foodmakers</a></li>
-        <li><a href="#markets" ng-click="marketMasonry()" id="marketsTab" data-toggle="tab">Local Markets</a></li>  
-      </ul>
-  </div>
-</div>
-
+<div class="hidden-xs"><nav-bar></nav-bar></div>
+<div class="visible-xs"><navbar-x-s></navbar-x-s></div>
 
 <!-- EACH OF THE TABS -->
 <div class="tab-content">
   <div class="tab-pane" id="markets">
-    <div class="container container-home-page">
+    <div class="customer-container">
       <div class="row" id="masonry-market-container">
         <div class="col-trending ms-market-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="market in marketList" >
           <market-card data="market"></market-card>
@@ -28,7 +15,7 @@
   
   <!-- TRENDING TAB -->
   <div class="tab-pane active" id="trending">
-    <div class="container container-home-page">
+    <div class="customer-container">
         <div class="row">
 
             <!-- DISPLAY ITEMS FOR EACH CATEGORY -->
@@ -83,7 +70,7 @@
 
   <!-- VENDORS TAB -->
   <div class="tab-pane" id="vendors">
-    <div class="container container-home-page">
+    <div class="customer-container">
       <div ng-repeat="vendor in vendors">
       	   <vendor-card data="vendor"></vendor-card>
       </div>
@@ -91,22 +78,7 @@
   </div>    
 </div> 	
 
-
-<!-- BE LOCAL FOOTER (TO BE INJECTED LATER) -->
-<div class="footer">
-  <div class="row">
-    <div class="col-xs-6">
-      logo & links here
-    </div>
-    <div class="col-xs-6 pull-right">
-      Facebook | Pinterest | Twitter | beLocal@blah.com
-    </div>
-  </div>
-</div>
-
-<div class="footerCopyright">
-  <span class="glyphicon glyphicon-copyright-mark" style="font-size:12px;"></span>
-   2014 beLocal, Inc.
-</div>
+<!-- INJECTING FOOTER.HTML -->
+<footer></footer>
 
 <product-details-modal product="product"></product-details-modal>

@@ -184,6 +184,7 @@ class AddProductSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     photo = PhotoPathSerializer()    
     tags = TagListSerializer(blank=True)
+    vendor = BusinessVendorSerializer()
     
     class Meta:
         model = be_local_server.models.Product

@@ -93,7 +93,12 @@ angular.module('clientApp')
     }
     
     $scope.displayVendor = function (id) {
-      $location.path('vendor/details/'+id);
+      var user = StateService.getCurrentUser();
+      if(user && user.userType === 'VEN' && user.vendor.id === id) {
+        $location.path('/vendor');
+      } else {            
+        $location.path('vendor/details/'+ id);
+      }
     };       
 
     $scope.showProductDetailsModal = function(item) {

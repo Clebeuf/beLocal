@@ -23,16 +23,18 @@ angular.module('clientApp')
       	}
 
 	    scope.goToVendorDetails = function(vendorID){
-	    	
 	      angular.element('#productDetailsModal').on('hidden.bs.modal', function(e) {
 	        $timeout(function() {
-	      	 $location.path('vendor/details/'+ vendorID).replace();
+            var user = StateService.getCurrentUser();
+            if(user && user.userType === 'VEN' && user.vendor.id === vendorID) {
+              $location.path('/vendor');
+            } else {            
+	      	    $location.path('vendor/details/'+ vendorID);
+            }
 	        });
 	      });
 	      angular.element('#productDetailsModal').modal('hide');
-
-	    }
-
       }
-    };
-  });
+    }
+  }
+});

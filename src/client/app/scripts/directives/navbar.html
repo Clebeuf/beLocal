@@ -11,9 +11,9 @@
           <button type="submit" ng-click="showLogin()" class="btn btn-primary beLocal-btn">Sign In</button>
         </form>
         <div style="float:right">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-              <a class="dropdown-toggle pointer white-text">Register <span class="caret"></span></a>
+              <a class="dropdown-toggle pointer">Register <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li><a class="pointer white-text" ng-click="showCustomerSignUp()">As a Customer</a></li>
                 <li><a class="pointer white-text" ng-click="showFarmerSignUp()">As a Farmer or Foodmaker</a></li>
@@ -25,10 +25,10 @@
       </div> 
 
       <div ng-show="AuthService.isAuthenticated()">
-        <ul class="nav navbar-nav ">
+        <ul class="nav navbar-nav navbar-right">
           <li class="dropdown">
             <a class="dropdown-toggle pointer">My Account<span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
               <li><a class="pointer" ng-click="displayAccountPage()">My Store</a></li>
               <li><a href="#">Account Settings</a></li>            
               <li class="divider"></li>
@@ -39,7 +39,7 @@
       </div>
 
     </div>
-
+    
       <form class="navbar-form beLocal-search pull-right" role="search" >
         <div class="form-group">
           <div class="input-group">
@@ -58,21 +58,25 @@
 <!-- BOTTOM PART OF HEADER -->
   <div class="row customer-nav top-nav-large">
     <div class="header-container">
-      <div class="logo-header hidden-xs" style="float:left">
-        <a href="#"><img src="/images/logo.png"></a>
+      <div class="logo-header" style="float:left">
+        <a class="pointer" ng-click="reloadMainPage()"><img src="/images/logo.png"></a>
       </div>
-      <div style="float:left">
-        <!-- HIDDEN AT SMALL -->
-        <ul class="list-inline nav-shadow hidden-sm hidden-xs">
-          <li class="active"><a href="#trending" id="trendingTab" data-toggle="tab">In Season Now</a></li>
-          <li><a href="#vendors" id="vendorsTab" data-toggle="tab">Farmers & Foodmakers</a></li>
-          <li><a href="#markets" ng-click="marketMasonry()" id="marketsTab" data-toggle="tab">Local Markets</a></li>  
+      <div style="float:left" class="">
+        <ul class="list-inline nav-shadow">
+          <li class="active"><a href="#trending" id="trendingTab" data-toggle="tab">
+            <span class="hidden-sm hidden-xs no-block">In Season Now</span>
+            <span class="hidden-md hidden-lg no-block">In Season</span>
+          </a></li>
+          <li><a href="#vendors" id="vendorsTab" data-toggle="tab">
+            <span class="hidden-sm hidden-xs no-block">Farmers & Foodmakers</span>
+            <span class="hidden-md hidden-lg no-block">Local Producers</span>
+          </a></li>
+          <li><a href="#markets" ng-click="marketMasonry()" id="marketsTab" data-toggle="tab">
+            <span class="hidden-sm hidden-xs no-block">Local Markets</span>
+            <span class="hidden-md hidden-lg no-block">Markets</span>
+          </a></li>  
         </ul>
-        <!-- VISABLE AT SMALL -->
-        <ul class="list-inline nav-shadow visable-sm-*">
-          <li class="active"><a href="#trending" id="trendingTab" data-toggle="tab">In Season</a></li>
-          <li><a href="#vendors" id="vendorsTab" data-toggle="tab">Local Producers</a></li>
-          <li><a href="#markets" ng-click="marketMasonry()" id="marketsTab" data-toggle="tab">Markets</a></li>  
+      <div>  
         </ul>
       </div>
       <div style="clear:both"/>

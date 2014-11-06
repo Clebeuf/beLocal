@@ -335,7 +335,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     
     def patch(self, request, product_id):         
         product = Product.objects.get(pk=product_id) 
-        print "product edit: ", request.DATA, product, product.category
+        
         if product is not None:
             serializer = serializers.AddProductSerializer(product, data=request.DATA, partial=True)
            

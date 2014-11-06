@@ -37,16 +37,7 @@
                 {{selectedCategory}}
               </div>
               <div class="row" style="padding-top:5px" id="masonry-container">
-                <div ng-hide="showCategory || showTag" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts" >
-                  <product-card data="item"></product-card>
-                </div>
-                <div ng-show="showCategory && showTag" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts | filterMultiple:{category:selectedCategory, tags:selectedTags} | unique:id" >
-                  <product-card data="item"></product-card>
-                </div>
-                <div ng-show="showCategory && !showTag" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts | filter: {category:selectedCategory}" >
-                  <product-card data="item"></product-card>
-                </div>
-                <div ng-show="showTag && !showCategory" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts | filterMultiple:{tags:selectedTags} | unique:id" >
+                <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts | filterMultiple:productFilterExpr | unique:id" >
                   <product-card data="item"></product-card>
                 </div>
               </div>
@@ -61,14 +52,6 @@
                     <li class="" ng-repeat="category in categoryList">
                       <a class="plain-text-font" ng-class="{'active' : selectedCategory === category.name}" ng-click="getProductsWithCategory(category)">{{category.name}}</a>
                     </li>
-               <!-- </ul><br>
-                <h3>Tags</h3>
-                <ul class="tag-list">
-                    <li ng-repeat="tag in tagList">
-                        <label class="checkbox"> 
-                           <input type="checkbox" ng-model="tag.checked" ng-change="getProductsWithTag(tag)"> &nbsp; {{tag.name}}
-                        </label>
-                    </li>  -->
                 </ul>
                 <hr>
                 <p class="small-header">Filter By</p>

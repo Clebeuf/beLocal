@@ -137,44 +137,50 @@ app.directive('head', ['$rootScope','$compile',
 
 /* Filter Multiple fields */
 app.filter('filterMultiple',['$filter',function ($filter) {
-  return function (items, keyObj) {
+  return function (items, keyObj) { 
     var filterObj = {
-      data:items,
-      filteredData:[],
+      filteredData:items,
+      
       applyFilter : function(obj,key){
-        var fData = [];
-        if(this.filteredData.length == 0)
-          this.filteredData = this.data;
+        var fData = [];        
         if(obj){
           var fObj = {};
           if(angular.isString(obj)){
-                  fObj[key] = obj;
-                  fData = fData.concat($filter('filter')(this.filteredData,fObj));
-          }else if(angular.isArray(obj)){
+            fObj[key] = obj; 
+            this.filteredData = $filter('filter')(this.filteredData,fObj); 
+          } 
+          else if(angular.isArray(obj)){
             if(obj.length > 0){     
               for(var i=0;i<obj.length;i++){
                 if(angular.isString(obj[i])){
-                        fObj[key] = obj[i];
-                        fData = fData.concat($filter('filter')(this.filteredData,fObj));        
+                  fObj[key] = obj[i]; 
+                  this.filteredData = $filter('filter')(this.filteredData,fObj);        
                 }
-              }
-                    
+              }    
             }
-          }
-          if(fData.length > 0){
-                  this.filteredData = fData;
           }
         }
        }
     };
-
-    if(keyObj){
-      angular.forEach(keyObj,function(obj,key){
+    
+    var isEmpty = function(obj){
+      for(var i in obj){ return false;}
+      return true;
+    };
+    
+    if (isEmpty(keyObj)) { 
+      return items;        
+    }
+    else if(keyObj){               
+      angular.forEach(keyObj,function(obj,key){ 
         filterObj.applyFilter(obj,key);
-      });                     
+      });      
+      return filterObj.filteredData;
+    } 
+    else { 
+      return items;
     }
     
-    return filterObj.filteredData;
   }
 }]); 
 

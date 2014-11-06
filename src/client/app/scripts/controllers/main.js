@@ -7,9 +7,25 @@ angular.module('clientApp')
     $scope.showTag = false;
     $scope.selectedCategory = 'All Products';
     $scope.selectedTags = 'All Products';
-
+    $scope.productFilterExpr = {};
+    
+    $scope.setProductFilter = function() {
+      if (!$scope.showCategory && !$scope.showTag) {
+        $scope.productFilterExpr = {};
+      }
+      else if ($scope.showCategory && !$scope.showTag) {
+        $scope.productFilterExpr = {category : $scope.selectedCategory};
+      }
+      else if (!$scope.showCategory && $scope.showTag) {
+        $scope.productFilterExpr = {tags : $scope.selectedTags};
+      }
+      else {
+        $scope.productFilterExpr = {category : $scope.selectedCategory, tags : $scope.selectedTags};
+      }
+    }
+    
     $scope.tagSelected = function(tagName) {
-      if (typeof($scope.selectedTags) === 'string' && tagName.match('All Products')){
+      if (angular.isString($scope.selectedTags) && tagName.match('All Products')){
         return true;
       }
       
@@ -24,25 +40,25 @@ angular.module('clientApp')
     $scope.doTagFilter = function(tagName) {
       if (tagName.match('All Products')){
         $scope.getAllProducts('tag');
-      } else {
-        var index = $scope.selectedTags.indexOf(tagName); 
-        
+      } 
+      else {
+        var index = $scope.selectedTags.indexOf(tagName);         
         if(index !== -1) {
-            $scope.selectedTags.splice(index, 1);
-        } else { 
-          if (typeof($scope.selectedTags) === 'string'){
+            $scope.selectedTags.splice(index, 1); 
+            if ($scope.selectedTags.length == 0) { 
+              $scope.getAllProducts('tag');
+            }
+        } 
+        else { 
+          if (angular.isString($scope.selectedTags)) { 
             $scope.selectedTags = [];
           }
           $scope.selectedTags.push(tagName);
-        }
-        
-        // If no tag is selected, disable tags
-        if ($scope.selectedTags.length < 1) {
-          $scope.getAllProducts('tag');
-        } else {
           $scope.showTag = true;
         }
       }
+      
+      $scope.setProductFilter();
     }
     
     $scope.displayVendor = function (id) {
@@ -117,27 +133,23 @@ angular.module('clientApp')
 
   $scope.trendingMasonry();
   $scope.marketMasonry();
-  
-  $scope.resetProductLists = function() {
-    $scope.showCategory = false;
-    $scope.showTag = false;
-  }
-  
+    
   $scope.getProductsWithCategory = function(category) {
-    //$scope.resetProductLists();
     $scope.showCategory = true;
     $scope.selectedCategory = category.name;
+    $scope.setProductFilter();
   }
   
   $scope.getAllProducts = function(resetSelection) {  
-   // $scope.resetProductLists();
     if (resetSelection.match('category')) {
       $scope.showCategory = false;
-      $scope.selectedCategory = 'All Products';
-    } else if (resetSelection.match('tag')) {
+      $scope.selectedCategory = 'All Products';      
+    } 
+    else if (resetSelection.match('tag')) {
       $scope.showTag = false;
       $scope.selectedTags = 'All Products';
     }
+    $scope.setProductFilter();
   }
 
 });

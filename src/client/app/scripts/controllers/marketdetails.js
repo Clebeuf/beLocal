@@ -5,7 +5,6 @@ angular.module('clientApp')
 
     StateService.getMarketToDisplay($stateParams.marketid).then(function() {
     	$scope.marketDetails = StateService.getMarketDetails();
-    	console.log($scope.marketDetails);
     });
 
     $scope.weekdays = [

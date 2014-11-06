@@ -352,6 +352,7 @@ angular.module('clientApp')
             $scope.tagList[counter].checked = undefined;
           } 
         }
+        console.log("clear tags: %o", $scope.tagList);
     }
 
     $scope.editItem = function(item) {
@@ -383,7 +384,6 @@ angular.module('clientApp')
           } 
         }
         
-        /* check item's tags */
         var len1 = item.tags.length; 
         var len2 = $scope.tagList.length;
         var counter1 = 0, counter2=0;
@@ -493,7 +493,7 @@ angular.module('clientApp')
 
     $scope.getSellerItems = function() {
         StateService.getSellerItems().then(function(response) {
-            $scope.sellerItems = response.data; console.log("Data %o", response.data);
+            $scope.sellerItems = response.data; 
         })
     }
 
@@ -543,7 +543,6 @@ angular.module('clientApp')
                 tags.push($scope.tagList[counter].name);
               }
             }
-            console.log("tags: "+ tags);
             
             var item = {
                 "id" : $scope.itemID,

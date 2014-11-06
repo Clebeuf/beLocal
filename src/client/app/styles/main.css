@@ -1185,3 +1185,28 @@ hr{
 .tag-check:hover {
   color: #000;
 }
+
+.tag-chevron {
+  padding-left: 10px;
+  font-size: 10px;
+}
+
+.tag-pill-container {
+  display: inline;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.tag-pill {
+  padding: 5px 10px 5px 10px;
+  border-radius: 15px;
+  border: 1px solid #8ed41e;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: #333;
+}
+
+.tag-pill:hover {
+  color: white;
+  background-color: #8ed41e;
+}

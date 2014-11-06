@@ -347,7 +347,7 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     
     def patch(self, request, product_id):         
         product = Product.objects.get(pk=product_id) 
-        print "product edit: ", request.DATA, product, product.category
+        
         if product is not None:
             serializer = serializers.AddProductSerializer(product, data=request.DATA, partial=True)
            
@@ -557,13 +557,13 @@ class TrendingProductView(generics.ListAPIView):
             return Response(serializer.data)
 
         else:
-            print "trending: ...."
+            
             products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True)
             if products is not None:
                 for product in products:
                     product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
             serializer = serializers.ProductDisplaySerializer(products, many=True)
-            print "trending: ", serializer.data
+           
             return Response(serializer.data)
 
 class ListMarketsView(generics.ListAPIView):

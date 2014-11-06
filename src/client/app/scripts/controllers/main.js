@@ -6,6 +6,7 @@ angular.module('clientApp')
     $scope.showCategory = false;
     $scope.showTag = false;
     $scope.selectedCategory = 'All Products';
+    $scope.selectedTag = 'All Products';
     
     $scope.displayVendor = function (id) {
       $location.path('vendor/details/'+id).replace();
@@ -81,8 +82,6 @@ angular.module('clientApp')
   $scope.marketMasonry();
   
   $scope.resetProductLists = function() {
-    $scope.selectedCategoryProducts = undefined;
-    $scope.selectedTagProducts = undefined;
     $scope.showCategory = false;
     $scope.showTag = false;
   }
@@ -91,22 +90,18 @@ angular.module('clientApp')
     $scope.resetProductLists();
     $scope.showCategory = true;
     $scope.selectedCategory = category.name;
-    StateService.getSelectedCategoryProducts(category).then(function() {
-      $scope.selectedCategoryProducts = StateService.getSelectedCategoryProductsList();
-    });
   }
   
   $scope.getProductsWithTag = function(tag) {
     $scope.resetProductLists();
     $scope.showTag = true;
-    StateService.getSelectedTagProducts(tag).then(function() {
-      $scope.selectedTagProducts = StateService.getSelectedTagProductsList();
-    });
+    $scope.selectedTag = tag.name;
   }
   
   $scope.getAllProducts = function() {  
     $scope.resetProductLists();
     $scope.selectedCategory = 'All Products';
+    $scope.selectedTag = 'All Products';
   }
 
 });

@@ -40,10 +40,10 @@
                 <div ng-hide="showCategory || showTag" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts" >
                   <product-card data="item"></product-card>
                 </div>
-                <div ng-show="showCategory" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in selectedCategoryProducts" >
+                <div ng-show="showCategory" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts | filter: {category:selectedCategory}" >
                   <product-card data="item"></product-card>
                 </div>
-                <div ng-show="showTag" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in selectedTagProducts" >
+                <div ng-show="showTag" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts | filter: {tags:selectedTag}" >
                   <product-card data="item"></product-card>
                 </div>
               </div>

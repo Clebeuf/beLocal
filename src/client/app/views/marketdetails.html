@@ -27,10 +27,17 @@
                 </span>
               </button>
             </div>
-            <hr>
+            <hr>         
             <div class="description-container">
-                {{marketDetails.description}}
-            </div>          
+		        <ul style="margin-bottom:0px" class="list-inline store-hours">
+			        <li ng-repeat="day in marketDetails.address.hours">
+			            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+			        </li>
+		        </ul> 
+	        </div>
+            <hr>
+            <p class="small-header">Market Description</p>
+            {{marketDetails.description}}
         </div>
     </div>
 

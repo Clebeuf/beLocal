@@ -8,6 +8,16 @@ angular.module('clientApp')
     	console.log($scope.marketDetails);
     });
 
+    $scope.weekdays = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+    ];    
+
     $scope.likeUnlikeItem = function(item, itemName) {
       StateService.likeUnlikeItem(item, itemName).then(function() {
         item = StateService.getLikedUnlikedItem();

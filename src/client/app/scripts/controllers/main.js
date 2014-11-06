@@ -156,6 +156,7 @@ angular.module('clientApp')
     $scope.showCategory = true;
     $scope.selectedCategory = category.name;
     $scope.setProductFilter();
+    $scope.instantTrendingMasonry();
   }
   
   $scope.getAllProducts = function(resetSelection) {  
@@ -168,6 +169,7 @@ angular.module('clientApp')
       $scope.selectedTags = 'All Products';
     }
     $scope.setProductFilter();
+    $scope.instantTrendingMasonry();
   }
 
   if($scope.tagToDisplay != undefined) {

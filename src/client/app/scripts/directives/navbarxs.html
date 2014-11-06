@@ -23,7 +23,7 @@
         </div>
       </form>
     </div>
-    <div class="navbar-collapse collapse">    
+    <div class="navbar-collapse collapse navbar-right">    
 
       <div ng-hide="AuthService.isAuthenticated()">
         <form name="loginForm" class="navbar-form navbar-right sign-in-form" role="form">      
@@ -39,6 +39,16 @@
           </li>
         </ul> 
       </div> 
+
+      <div class="visible-xs">
+        <ul class="nav navbar-nav">
+          <li><a href="#trending" id="trendingTab" data-toggle="tab">In Season Now</a></li>
+          <li><a href="#vendors" id="vendorsTab" data-toggle="tab">Farmers & Foodmakers</a></li>
+          <li><a href="#markets" ng-click="marketMasonry()" id="marketsTab" data-toggle="tab">Local Markets</a></li>  
+        </ul>
+      </div>
+
+
       <div ng-show="AuthService.isAuthenticated()">
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">

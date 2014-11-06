@@ -4,8 +4,7 @@
 </div>
 <navbar-x-s></navbar-x-s>
 
-<div class="container-fluid new-formatting-container">  
-    <br><br>
+<div class="container-fluid new-formatting-container customer-container">  
     <div class="row vendor-profile-header">
         <div class="col-md-5 new-vendor-avatar">
             <img ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}">
@@ -219,9 +218,11 @@
     <!--  end of repeat for each item the seller sells-->
 
 </div>
-<div class="footer">
-  <p>♥ from the beLocal team</p>
-</div>
+
+<!-- INJECTING FOOTER.HTML -->
+<footer></footer>
+
+
 <!-- END OF CONTAINTER-SELLER -->
 
 

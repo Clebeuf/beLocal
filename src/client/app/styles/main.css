@@ -63,9 +63,15 @@
   width: 500px;
 }
 
+.navbar-collapse {
+  background-color: #FFFFFF;
+  border: 1px solid #DDDDDD !important;
+}
 
 .navbar-xs {
   height: auto !important;
+  max-height: 50px !important;
+  border-bottom: 3px solid #78be25 !important;
 }
 
 .navbar-brand {
@@ -93,6 +99,7 @@
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 15px;
+  padding-bottom: 35px;
 }
 
 @media (max-width: 768px){
@@ -314,17 +321,21 @@ body {
   padding-bottom: 40px;
 }
 
+.footer img{
+  height: 50px;
+
+}
+
 .footerCopyright {
   position: absolute;
   bottom: 0;
   height: 30px;
   width: 100%;
-  /* Set the fixed height of the footer here */
-/*  height: 60px;*/
-  background-color: #403e3b;
+  background-color: #343333;
   color: #FFFFFF;
   text-align: center;
   padding: 5px;
+  border-top: 3px solid #FFFFFF !important;
 }
 
 @media (max-width: 598px) {
@@ -1056,7 +1067,7 @@ color: #000 !important;
 
 
 .new-formatting-container{
-  padding: 5px 15px 5px 15px !important;
+  padding: 60px 15px 5px 15px !important;
 }
 
 .new-heading-style {

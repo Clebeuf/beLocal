@@ -33,6 +33,7 @@
   .navbar-toggle {
     margin-right:5px;
     margin-left: 5px;
+    margin-bottom: 0px !import;
   }
 
 }
@@ -61,6 +62,7 @@
 
 .search-nav-xs {
   width: 500px;
+  margin-bottom: 0px !important;
 }
 
 .navbar-xs {
@@ -69,7 +71,10 @@
 }
 
 .navbar-brand {
-  padding: 5px !important;
+  padding-top: 5px !important;
+  padding-left: 5px !important;
+  padding-bottom: 0px !important;
+  padding-right: 5px;
 }
 
 .navbar-brand img{

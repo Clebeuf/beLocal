@@ -6,7 +6,44 @@ angular.module('clientApp')
     $scope.showCategory = false;
     $scope.showTag = false;
     $scope.selectedCategory = 'All Products';
-    $scope.selectedTags = [];
+    $scope.selectedTags = 'All Products';
+
+    $scope.tagSelected = function(tagName) {
+      if (typeof($scope.selectedTags) === 'string' && tagName.match('All Products')){
+        return true;
+      }
+      
+      for(var i = 0; i < $scope.selectedTags.length; i++) {
+        if(tagName == $scope.selectedTags[i]) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    $scope.doTagFilter = function(tagName) {
+      if (tagName.match('All Products')){
+        $scope.getAllProducts('tag');
+      } else {
+        var index = $scope.selectedTags.indexOf(tagName); 
+        
+        if(index !== -1) {
+            $scope.selectedTags.splice(index, 1);
+        } else { 
+          if (typeof($scope.selectedTags) === 'string'){
+            $scope.selectedTags = [];
+          }
+          $scope.selectedTags.push(tagName);
+        }
+        
+        // If no tag is selected, disable tags
+        if ($scope.selectedTags.length < 1) {
+          $scope.getAllProducts('tag');
+        } else {
+          $scope.showTag = true;
+        }
+      }
+    }
     
     $scope.displayVendor = function (id) {
       $location.path('vendor/details/'+id).replace();
@@ -87,34 +124,20 @@ angular.module('clientApp')
   }
   
   $scope.getProductsWithCategory = function(category) {
-    $scope.resetProductLists();
+    //$scope.resetProductLists();
     $scope.showCategory = true;
     $scope.selectedCategory = category.name;
   }
   
-  $scope.getProductsWithTag = function(tag) {
-    $scope.resetProductLists();
-    $scope.showTag = true;
-    
-    if (tag.checked) {
-      $scope.selectedTags.push(tag.name);
-    } else {
-      var index = $scope.selectedTags.indexOf(tag.name);
-      if (index > -1) {
-        $scope.selectedTags.splice(index, 1);
-      }
-    }    
-    
-    // If no tag is selected, disable tags
-    if ($scope.selectedTags.length < 1) {
-      console.log("reset tags");
+  $scope.getAllProducts = function(resetSelection) {  
+   // $scope.resetProductLists();
+    if (resetSelection.match('category')) {
+      $scope.showCategory = false;
+      $scope.selectedCategory = 'All Products';
+    } else if (resetSelection.match('tag')) {
       $scope.showTag = false;
+      $scope.selectedTags = 'All Products';
     }
-  }
-  
-  $scope.getAllProducts = function() {  
-    $scope.resetProductLists();
-    $scope.selectedCategory = 'All Products';
   }
 
 });

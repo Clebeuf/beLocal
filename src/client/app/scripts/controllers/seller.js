@@ -345,12 +345,6 @@ angular.module('clientApp')
         e.unwrap();
         
         /* clear checked tags */
-        /*for (var tag in $scope.tagList){
-          if (tag.checked) {
-            tag.checked = undefined;
-          }
-        }
-        */
         var len = $scope.tagList.length;
         var counter = 0;
         for (; counter < len; counter++) {
@@ -358,6 +352,7 @@ angular.module('clientApp')
             $scope.tagList[counter].checked = undefined;
           } 
         }
+        console.log("clear tags: %o", $scope.tagList);
     }
 
     $scope.editItem = function(item) {
@@ -381,21 +376,13 @@ angular.module('clientApp')
         $scope.itemCategory = item.category ? item.category.id : undefined;
         
         /* clear checked tags */
-        for (var tag in $scope.tagList){
-          if (tag.checked) {
-            tag.checked = undefined;
-          }
+        var len = $scope.tagList.length;
+        var counter = 0;
+        for (; counter < len; counter++) {
+          if ($scope.tagList[counter].checked) {
+            $scope.tagList[counter].checked = undefined;
+          } 
         }
-        
-        /* check item's tags */
-        /*for (var item_tag in item.tags) {
-          for (var tag in $scope.tagList) {
-            if (tag.name.match(item_tag)) {
-              tag.checked = true;
-              break;
-            }
-          }
-        }*/
         
         var len1 = item.tags.length; 
         var len2 = $scope.tagList.length;
@@ -506,7 +493,7 @@ angular.module('clientApp')
 
     $scope.getSellerItems = function() {
         StateService.getSellerItems().then(function(response) {
-            $scope.sellerItems = response.data; console.log("Data %o", response.data);
+            $scope.sellerItems = response.data; 
         })
     }
 
@@ -556,7 +543,6 @@ angular.module('clientApp')
                 tags.push($scope.tagList[counter].name);
               }
             }
-            console.log("tags: "+ tags);
             
             var item = {
                 "id" : $scope.itemID,

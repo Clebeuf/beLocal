@@ -40,10 +40,13 @@
                 <div ng-hide="showCategory || showTag" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts" >
                   <product-card data="item"></product-card>
                 </div>
-                <div ng-show="showCategory" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts | filter: {category:selectedCategory}" >
+                <div ng-show="showCategory && showTag" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts | filterMultiple:{category:selectedCategory, tags:selectedTags} | unique:id" >
                   <product-card data="item"></product-card>
                 </div>
-                <div ng-show="showTag" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts | filterMultiple:{tags:selectedTags} | unique:id" >
+                <div ng-show="showCategory && !showTag" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts | filter: {category:selectedCategory}" >
+                  <product-card data="item"></product-card>
+                </div>
+                <div ng-show="showTag && !showCategory" class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts | filterMultiple:{tags:selectedTags} | unique:id" >
                   <product-card data="item"></product-card>
                 </div>
               </div>
@@ -54,23 +57,40 @@
                 <hr>
                 <p class="small-header">Categories</p>
                 <ul class="tag-list" role="">
-                    <li><a class="plain-text-font" ng-class="{'active' : selectedCategory === 'All Products'}" ng-click="getAllProducts()">All Products</a></li>
+                    <li><a class="plain-text-font" ng-class="{'active' : selectedCategory === 'All Products'}" ng-click="getAllProducts('category')">All Products</a></li>
                     <li class="" ng-repeat="category in categoryList">
                       <a class="plain-text-font" ng-class="{'active' : selectedCategory === category.name}" ng-click="getProductsWithCategory(category)">{{category.name}}</a>
                     </li>
-                </ul><br>
+               <!-- </ul><br>
                 <h3>Tags</h3>
                 <ul class="tag-list">
                     <li ng-repeat="tag in tagList">
                         <label class="checkbox"> 
                            <input type="checkbox" ng-model="tag.checked" ng-change="getProductsWithTag(tag)"> &nbsp; {{tag.name}}
                         </label>
+                    </li>  -->
+                </ul>
+                <hr>
+                <p class="small-header">Filter By</p>
+                <ul class="tag-list" role="">
+                    <li>
+                        <span ng-hide="tagSelected('All Products')">
+                            <a class="pointer tag-check" ng-click="doTagFilter('All Products')" ><i class="fa fa-circle-o"></i></a>
+                          </span>
+                          <span ng-show="tagSelected('All Products')">
+                            <a class="pointer tag-check" ng-click="doTagFilter('All Products')" ><i class="fa fa-check-circle"></i></a>
+                          </span>                      
+                          <a class="plain-text-font" ng-click="doTagFilter('All Products')">All Products</a>
                     </li>
-                    <!--                
-                    <li><a ng-click="getAllProducts()">All Products</a></li>
                     <li class="" ng-repeat="tag in tagList">
-                      <a ng-click="getProductsWithTag(tag)">{{tag.name}}</a>
-                    </li> -->
+                      <span ng-hide="tagSelected(tag.name)">
+                        <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-circle-o"></i></a>
+                      </span>
+                      <span ng-show="tagSelected(tag.name)">
+                        <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-check-circle"></i></a>
+                      </span>                      
+                      <a class="plain-text-font" ng-click="doTagFilter(tag.name)">{{tag.name}}</a>
+                    </li>
                 </ul>
             </div>
 

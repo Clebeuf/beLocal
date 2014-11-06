@@ -23,7 +23,7 @@
 .small-header {
   font-family: 'Roboto', sans-serif !important;
   color: #403E3B;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1px;
   text-transform: uppercase;
   padding: 0px;
@@ -1176,4 +1176,12 @@ hr{
 
 .tag-list > li > .active {
   text-decoration: underline;
+}
+
+.tag-check {
+  color: #403e3b;
+}
+
+.tag-check:hover {
+  color: #000;
 }

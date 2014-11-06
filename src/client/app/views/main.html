@@ -58,12 +58,18 @@
                     <li class="" ng-repeat="category in categoryList">
                       <a class="plain-text-font" ng-class="{'active' : selectedCategory === category.name}" ng-click="getProductsWithCategory(category)">{{category.name}}</a>
                     </li>
-                </ul><br>
-                <h3>Tags</h3>
-                <ul class="" role="">
-                    <li><a ng-click="getAllProducts()">All Products</a></li>
+                </ul>
+                <hr>
+                <p class="small-header">Filter By</p>
+                <ul class="tag-list" role="">
                     <li class="" ng-repeat="tag in tagList">
-                      <a ng-click="getProductsWithTag(tag)">{{tag.name}}</a>
+                      <span ng-hide="tagSelected(tag.name).result">
+                        <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-circle-o"></i></a>
+                      </span>
+                      <span ng-show="tagSelected(tag.name).result">
+                        <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-check-circle"></i></a>
+                      </span>                      
+                      <a class="plain-text-font" ng-click="doTagFilter(tag.name)">{{tag.name}}</a>
                     </li>
                 </ul>
             </div>

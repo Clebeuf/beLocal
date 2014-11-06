@@ -6,6 +6,25 @@ angular.module('clientApp')
     $scope.showCategory = false;
     $scope.showTag = false;
     $scope.selectedCategory = 'All Products';
+    $scope.selectedTags = [];
+
+    $scope.tagSelected = function(tagName) {
+      for(var i = 0; i < $scope.selectedTags.length; i++) {
+        if(tagName == $scope.selectedTags[i]) {
+          return {'index' : i, 'result' : true};
+        }
+      }
+      return {'index' : -1, 'result' : false};
+    }
+
+    $scope.doTagFilter = function(tagName) {
+      var index = $scope.tagSelected(tagName).index;
+      if(index !== -1) {
+          $scope.selectedTags.splice(index, 1);
+      } else {
+        $scope.selectedTags.push(tagName);
+      }
+    }
     
     $scope.displayVendor = function (id) {
       $location.path('vendor/details/'+id).replace();

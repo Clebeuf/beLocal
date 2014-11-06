@@ -38,10 +38,14 @@ urlpatterns = patterns('',
     url(r'^products/trending/$', views.TrendingProductView.as_view(), name='product-trending-list'),
     url(r'^vendors/$', views.VendorsView.as_view(), name='vendors-list'),    
     url(r'^markets/$', views.ListMarketsView.as_view(), name='market-list'),
-    
     url(r'^markets/(?P<market_id>[0-9-]+)/$', views.MarketView.as_view(), name='market-details'),
     url(r'^markets/join/$', views.JoinMarketView.as_view(), name='market-join'),
     url(r'^markets/leave/$', views.LeaveMarketView.as_view(), name='market-join'),       
+
+    url(r'^search/autocomplete', 'be_local_server.views.autocomplete'),
+    url(r'^search/products', views.SearchProductView.as_view(), name="product-search"),    
+    url(r'^search/vendors', views.SearchVendorView.as_view(), name="vendor-search"),
     
     url(r'^like/(?P<content_type>[\w-]+)/(?P<id>[0-9-]+)/$', views.like, name='like'),
+
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

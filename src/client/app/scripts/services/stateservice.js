@@ -333,5 +333,20 @@ angular.module('clientApp')
     this.getLikedUnlikedItem = function() {
       return likedUnlikedItem;
     };
+
+    // Searching Functions
+    this.doProductSearch = function(query) {
+      return $http.get(this.getServerAddress() + "search/products/?q=" + query)
+        .error(function(){
+            console.log('Error retrieving product search results!');
+        });      
+    };
+
+    this.doVendorSearch = function(query) {
+      return $http.get(this.getServerAddress() + "search/vendors/?q=" + query)
+        .error(function(){
+            console.log('Error retrieving vendor search results!');
+        });      
+    };       
     
   });

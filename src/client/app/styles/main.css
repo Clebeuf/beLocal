@@ -63,14 +63,8 @@
   width: 500px;
 }
 
-.navbar-collapse {
-  background-color: #FFFFFF;
-  border: 1px solid #DDDDDD !important;
-}
-
 .navbar-xs {
   height: auto !important;
-  max-height: 50px !important;
   border-bottom: 3px solid #78be25 !important;
 }
 
@@ -349,7 +343,7 @@ body {
   .navbar-form {
     width: auto;
     padding-top: 0px;
-    padding-bottom: 5px;
+    padding-bottom: 0px;
     margin-right: 10px;
     margin-left: 5px;
     border: 0;

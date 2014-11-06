@@ -1,19 +1,7 @@
-<nav-bar></nav-bar>
-<div class="header top-nav-large row">
-    <div class="col-sm-2 logo">
-        <img src="/images/logo.png">
-    </div>
-    <div class="col-sm-10">
-        <br><br><br><br><br>
-        <ul class="list-inline">
-            <li class="active"><a href="/#trending" id="trendingTab">In Season Now</a></li>
-            <li><a href="/#vendors" id="vendorsTab">Farmers & Foodmakers</a></li>
-            <li><a href="/#markets" ng-click="marketMasonry()" id="marketsTab">Local Markets</a></li>
-        </ul>
-    </div>
-</div>
+<div class="hidden-xs"><nav-bar></nav-bar></div>
+<div class="visible-xs"><navbar-x-s></navbar-x-s></div>
 
-<div class="container container-home-page">
+<div class="customer-container">
     <div ng-show="productResults.length == 0 && marketResults.length == 0 && vendorResults.length == 0" class="row">
         <!-- DISPLAY ITEMS -->
         <div class="col-sm-10">
@@ -56,21 +44,8 @@
     </div>
 </div>
 
-<!-- BE LOCAL FOOTER (TO BE INJECTED LATER) -->
-<div class="footer">
-    <div class="row">
-        <div class="col-xs-6">
-            logo & links here
-        </div>
-        <div class="col-xs-6 pull-right">
-            Facebook | Pinterest | Twitter | beLocal@blah.com
-        </div>
-    </div>
-</div>
-<div class="footerCopyright">
-    <span class="glyphicon glyphicon-copyright-mark" style="font-size:12px;"></span>
-    2014 beLocal, Inc.
-</div>
+<!-- INJECTING FOOTER -->
+<footer></footer>
 
 <!-- Product Details Modal -->
 <div class="modal fade product-details-model" tabindex="-1" id="productDetailsModal" role="dialog" aria-labelledby="productDetailsLabel" aria-hidden="true">

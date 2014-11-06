@@ -1,14 +1,46 @@
-<div class="navbar navbar-fixed-top navbar-default" role="navigation">
-  <div class="container-fluid nav-padding">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">be<span class="beLocal-highlight">Local</span></a>
-      <form class="navbar-form navbar-left beLocal-search" role="search">
+<div class="navbar navbar-default" role="navigation">
+
+
+<!-- TOP PART OF NAVBAR -->
+  <div class="container-fluid nav-bar-top">
+
+
+    <div class="pull-right" style="float:left">
+      <div ng-hide="AuthService.isAuthenticated()">
+        <form name="loginForm" class="navbar-form sign-in-form" role="form" style="float:right">      
+          <button type="submit" ng-click="showLogin()" class="btn btn-primary beLocal-btn">Sign In</button>
+        </form>
+        <div style="float:right">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a class="dropdown-toggle pointer">Register <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a class="pointer white-text" ng-click="showCustomerSignUp()">As a Customer</a></li>
+                <li><a class="pointer white-text" ng-click="showFarmerSignUp()">As a Farmer or Foodmaker</a></li>
+              </ul>
+            </li>
+          </ul> 
+        </div> 
+        <div style="clear:both"/>
+      </div> 
+
+      <div ng-show="AuthService.isAuthenticated()">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a class="dropdown-toggle pointer">My Account<span class="caret"></span></a>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+              <li><a class="pointer" ng-click="displayAccountPage()">My Store</a></li>
+              <li><a href="#">Account Settings</a></li>            
+              <li class="divider"></li>
+              <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+            </ul>
+          </li>
+        </ul>  
+      </div>
+
+    </div>
+    
+      <form class="navbar-form beLocal-search pull-right" role="search" >
         <div class="form-group">
           <div class="input-group" ng-controller="TypeaheadCtrl">
             <input type="text" ng-model="search" placeholder="Search for vendors or products" class="form-control"
@@ -22,45 +54,42 @@
           </div>    
         </div>
       </form>
-    </div>
-    <div class="navbar-collapse collapse">   
 
-      <ul class="nav navbar-nav">
-        <li class="dropdown">
-          <a class="dropdown-toggle pointer">Browse <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#">Fruits</a></li>
-            <li><a href="#">Vegetables</a></li>            
-            <li><a href="#">Preserves</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Vendors</a></li>
-          </ul>
-        </li>
-      </ul>    
+  </div>
 
-      <div ng-hide="AuthService.isAuthenticated()">
-        <form name="loginForm" class="navbar-form navbar-right sign-in-form" role="form">      
-          <button type="submit" ng-click="showLogin()" class="btn btn-primary beLocal-btn">Sign In</button>
-        </form>
-        <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown">
-            <a class="dropdown-toggle pointer">Register <span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a class="pointer" ng-click="showCustomerSignUp()">As a Customer</a></li>
-              <li><a class="pointer" ng-click="showFarmerSignUp()">As a Farmer or Foodmaker</a></li>
-            </ul>
-          </li>
-        </ul> 
-      </div> 
-      <div ng-show="AuthService.isAuthenticated()">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a class="pointer" ng-click="displayAccountPage()">My Account</a></li>        
-          <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+
+
+<!-- BOTTOM PART OF HEADER -->
+  <div class="row customer-nav top-nav-large">
+    <div class="header-container">
+      <div class="logo-header" style="float:left">
+        <a class="pointer" ng-click="reloadMainPage()"><img src="/images/logo.png"></a>
+      </div>
+      <div style="float:left" class="">
+        <ul class="list-inline nav-shadow">
+          <li class="active"><a href="#trending" id="trendingTab" data-toggle="tab">
+            <span class="hidden-sm hidden-xs no-block">In Season Now</span>
+            <span class="hidden-md hidden-lg no-block">In Season</span>
+          </a></li>
+          <li><a href="#vendors" id="vendorsTab" data-toggle="tab">
+            <span class="hidden-sm hidden-xs no-block">Farmers & Foodmakers</span>
+            <span class="hidden-md hidden-lg no-block">Local Producers</span>
+          </a></li>
+          <li><a href="#markets" ng-click="marketMasonry()" id="marketsTab" data-toggle="tab">
+            <span class="hidden-sm hidden-xs no-block">Local Markets</span>
+            <span class="hidden-md hidden-lg no-block">Markets</span>
+          </a></li>  
+        </ul>
+      <div>  
         </ul>
       </div>
+      <div style="clear:both"/>
     </div>
   </div>
+
 </div>
+
+
 
 <div class="modal fade" id="noValidAccountModal">
   <div class="modal-dialog">

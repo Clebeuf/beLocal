@@ -805,7 +805,6 @@ body {
   }
 
   .thumbnail {
-    text-align: center !important;
     float: none !important;
     display: inline-block;
   }
@@ -1317,3 +1316,7 @@ hr{
   padding: 10px;
   margin-left: 20px;
 }
+
+.tag-bar {
+  margin-top: 45px;
+}  

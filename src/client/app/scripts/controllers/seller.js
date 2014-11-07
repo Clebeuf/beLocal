@@ -19,7 +19,7 @@ angular.module('clientApp')
     $scope.locationType = 'true';
     $scope.currentUser = StateService.getCurrentUser();
     $scope.facebookChecked = true;
-    $scope.twitterChecked = true;
+    $scope.twitterChecked = false;
     $scope.sellingToday = false;
     $scope.currentUser = {};
     angular.copy(StateService.getCurrentUser(), $scope.currentUser);
@@ -94,6 +94,7 @@ angular.module('clientApp')
         .done(function (twitter) {  
             $scope.safeApply(function() {
                 $scope.isTwitterAuth = true;
+                $scope.twitterChecked = true;
             });
         });
     }
@@ -188,14 +189,14 @@ angular.module('clientApp')
             });
         } 
 
-        if($scope.twitterChecked) {
-            angular.element('#shareModal').modal('hide');            
+        if($scope.twitterChecked) {         
             OAuth.popup('twitter', {cache : true}).done(function(twitter) {
                 twitter.post({
                     url: '/1.1/statuses/update.json' + '?status=' + escape($scope.twitterString + $scope.hashtag)
                 });      
             });
         }
+        angular.element('#shareModal').modal('hide');           
     }      
 
     $scope.vendorProfileUpdate = function() {

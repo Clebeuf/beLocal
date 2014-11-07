@@ -32,11 +32,13 @@ angular.module('clientApp')
     };
 
     $scope.marketMasonry = function() {
-      var container = document.querySelector('#masonry-market-container');
-      var msnry = new Masonry(container, {
-        itemSelector: '.ms-market-item',
-        columnWidth: '.ms-market-item'
-      });    
+      $timeout(function() {        
+        var container = document.querySelector('#masonry-market-container');
+        var msnry = new Masonry(container, {
+          itemSelector: '.ms-market-item',
+          columnWidth: '.ms-market-item'
+        });    
+      });
     };    
 
     $scope.setProductFilter = function() {

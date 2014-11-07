@@ -97,6 +97,11 @@
   padding-bottom: 35px;
 }
 
+.tag-formatting {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+
 @media (max-width: 768px){
   .customer-container{
     padding-top: 60px !important;
@@ -336,11 +341,6 @@ body {
   padding-bottom: 40px;
 }
 
-.footer img{
-  height: 50px;
-
-}
-
 .footerCopyright {
   position: absolute;
   bottom: 0;
@@ -349,7 +349,7 @@ body {
   background-color: #343333;
   color: #FFFFFF;
   text-align: center;
-  padding: 5px;
+  padding: 5px 0px 5px 0px;
   border-top: 3px solid #FFFFFF !important;
 }
 

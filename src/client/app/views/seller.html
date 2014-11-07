@@ -15,8 +15,10 @@
                 {{StateService.getCurrentUser().vendor.company_name}}<br>
             </span>
             <span class="new-hr-heading-style">
-                <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
-                | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
+                <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
+                    <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}} |
+                </span>
+                <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
             </span>
             <span class="pull-right">
                     <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>

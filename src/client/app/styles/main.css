@@ -127,6 +127,8 @@
 
 .customer-nav .active{
   text-decoration: underline;
+  -moz-text-decoration-color: #403E3B;
+  text-decoration-color: #403E3B;  
 }
 
 .navbar {

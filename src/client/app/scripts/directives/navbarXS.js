@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('clientApp')
-  .directive('navbarXS', function (StateService, AuthService, $location, $timeout) {
+  .directive('navbarXS', function (StateService, AuthService, $location, $timeout, $window, $http, $sce) {
     return {
       restrict: 'E',
       templateUrl: 'scripts/directives/navbarxs.html',
       controller: ['$scope', function($scope) {
         $scope.AuthService = AuthService;
         $scope.loginError = false;
+        $scope.productSuggestions = [];        
 
         $scope.showLogin = function() {
             AuthService.showLogin().then(function(status) {
@@ -16,6 +17,26 @@ angular.module('clientApp')
                 };
             });
         }
+
+        $scope.updateProductSuggestions = function(val) {
+            return $http.get(StateService.getServerAddress() + "search/autocomplete?q=" + val
+                ).then(function(response){
+                    var products = response.data.products;
+                    products.push({
+                        name: $sce.trustAsHtml('Search for <b>' + val + '</b> in vendors'),
+                        vendorSearch: val
+                    });
+                    return products;
+            });
+        }
+        $scope.onSelect = function($item,$model,$label){
+
+            if($item.vendorSearch != null) {
+                $window.location.href='#/search/vendors?q=' + $item.vendorSearch;
+            } else {
+                $window.location.href='#/search/products?q=' + $item.name;
+            }
+        }         
 
         $scope.reloadMainPage = function() {
             $location.path('/');
@@ -48,6 +69,10 @@ angular.module('clientApp')
                 $location.path('/vendor');
             }
         }
+
+        $scope.doSearch = function(value){
+          $window.location.href='#/search/products?q=' + value;
+        }         
       }],
     };
   });

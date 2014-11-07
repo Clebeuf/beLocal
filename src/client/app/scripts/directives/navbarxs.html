@@ -12,12 +12,15 @@
       </button>
       
 
-      <form class="navbar-form navbar-right search-nav-xs pull-right" role="search">
+      <form class="navbar-form navbar-right search-nav-xs pull-right" ng-submit="doSearch(search)" role="search">
         <div class="form-group">
           <div class="input-group">
-            <input type="text"  placeholder="Search for vendors or products" class="form-control">
+            <input type="text" ng-model="search" placeholder="Search for vendors or products" class="form-control"
+              ng-bind-html="match.label | typeaheadHighlight:query" 
+              typeahead-on-select='onSelect($item, $model, $label)' 
+              typeahead="product.name for product in updateProductSuggestions($viewValue)">
             <span class="input-group-btn">
-              <button class="btn beLocal-btn-filled" type="button">Search</button>
+              <button class="btn beLocal-btn-filled" type="submit">Search</button>
             </span>
           </div>    
         </div>

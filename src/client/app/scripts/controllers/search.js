@@ -13,6 +13,15 @@ angular.module('clientApp')
             });
         }
 
+        $scope.displayVendor = function (id) {
+          var user = StateService.getCurrentUser();
+          if(user && user.userType === 'VEN' && user.vendor.id === id) {
+            $location.path('/vendor');
+          } else {            
+            $location.path('vendor/details/'+ id);
+          }
+        };         
+
         $scope.doVendorSearch = function(query) {
             StateService.doVendorSearch(query).then(function(response) {
                 $scope.vendorResults = response.data;
@@ -35,20 +44,7 @@ angular.module('clientApp')
 
         $scope.hideProductDetailsModal = function() {   
             $scope.product = {};            
-        }; 
-        
-        $scope.goToVendorDetails = function(vendorID){
-            $scope.hideProductDetailsModal();
-
-
-          angular.element('#productDetailsModal').on('hidden.bs.modal', function(e) {
-            $timeout(function() {
-             $location.path('vendor/details/'+ vendorID).replace();
-            });
-          });
-          angular.element('#productDetailsModal').modal('hide');
-
-        }               
+        };           
 
         $scope.doSearch();                      
   });

@@ -5,7 +5,9 @@ from django.conf import settings
 import os
 from undelete.models import TrashableMixin
 from taggit.managers import TaggableManager
+from taggit.models import GenericTaggedItemBase, TagBase
 import secretballot
+
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -54,16 +56,26 @@ class Vendor(models.Model):
     address = models.ForeignKey(Address, null=True, blank=True)
     description = models.CharField(max_length=900)
     is_active = models.BooleanField(default=False)
+    facebook_url = models.CharField(max_length=400, null=True, blank=True)   
+    twitter_url = models.CharField(max_length=400, null=True, blank=True)
+    preferred_email = models.CharField(max_length=400, null=True, blank=True)
 
 secretballot.enable_voting_on(Vendor)
 
+class Category(models.Model):
+    name = models.CharField(max_length=100, db_index=True)
+    slug = models.SlugField(max_length=100, db_index=True)
+
+    def __unicode__(self):
+        return '%s' % self.name
+  
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)
     
     def get_image_abs_path(self):
         return os.path.join(settings.MEDIA_URL, self.image.name)        
     image_url = property(get_image_abs_path)   
-    
+
 class Product(TrashableMixin, models.Model):
     IN_STOCK = 'IS'
     OUT_OF_STOCK = 'OOS'
@@ -81,7 +93,8 @@ class Product(TrashableMixin, models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     vendor = models.ForeignKey(Vendor, related_name='products')
     photo = models.ForeignKey(ProductPhoto, blank=True, null=True)
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
+    category = models.ForeignKey(Category, blank=True, null=True)
     
 secretballot.enable_voting_on(Product)
 
@@ -109,6 +122,9 @@ class Market(models.Model):
     address = models.ForeignKey(Address)
     description = models.CharField(max_length=400)
     vendors = models.ManyToManyField(Vendor, related_name='vendors', blank=True)
+    webpage = models.CharField(max_length=400, null=True, blank=True)
+    facebook_url = models.CharField(max_length=400, null=True, blank=True)   
+    twitter_url = models.CharField(max_length=400, null=True, blank=True)    
     
 secretballot.enable_voting_on(Market)
 

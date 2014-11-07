@@ -15,8 +15,10 @@
                 {{StateService.getCurrentUser().vendor.company_name}}<br>
             </span>
             <span class="new-hr-heading-style">
-                <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
-                | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
+                <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
+                    <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}} |
+                </span>
+                <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
             </span>
             <span class="pull-right">
                     <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
@@ -47,6 +49,9 @@
 <!-- NG-REPEAT FOR MARKETS -->
     <div class="new-heading-style">
             Market Locations
+    </div>
+    <div class="vendor-placeholder-text" ng-show="marketLocations.length == 0">
+        <p class="no-bottom-margin">You're not selling at any markets right now! Try joining one by clicking the Create Location button.</p>
     </div>
     <!-- repeating for each location that seller has in the db -->
     <div ng-repeat="location in marketLocations" class="container-for-cards">
@@ -96,6 +101,9 @@
     <div class="new-heading-style">
             Custom Locations
     </div>
+    <div class="vendor-placeholder-text" ng-show="sellerLocations.length == 0">
+        <p class="no-bottom-margin">You haven't created any custom locations yet! Try making one by clicking the Create Location button.</p>
+    </div>    
     <!-- repeating for each location that seller has in the db -->
     <div ng-repeat="location in sellerLocations" class="container-for-cards">
         <div class="card-formatting">
@@ -166,7 +174,9 @@
         </div>
     </div>
     <hr>
-
+    <div class="vendor-placeholder-text" ng-show="sellerItems.length == 0">
+        <p class="no-bottom-margin">You haven't added any items yet! Try adding one by clicking the Create New Item button.</p>
+    </div>     
 
     <!-- repeating for each item that seller has in the db -->
      <div ng-repeat="product in sellerItems | orderBy:'name'" class="container-for-cards">
@@ -184,8 +194,8 @@
                         <div class="card-lable-style">{{product.name}}</div>
                         <div class="location-details">
                             <p><b>PRODUCT DETAILS:</b> {{product.description}}</p>
-                            <p><b>CATEGORY:</b> </p>
-                            <p><b>TAGS:</b> </p>
+                            <p><b>CATEGORY:</b> {{product.category.name}} </p>
+                            <p><b>TAGS:</b><span ng-repeat="tag in product.tags"> {{tag}} &nbsp; </span></p>
                         </div>
                     </div>
 
@@ -255,7 +265,7 @@
                             <div class="col-xs-12">
                                 <div class="form-group" ng-class="{ 'has-error' : profileForm.companyName.$invalid }">
                                     <label for="company-name">Company Name</label> 
-                                    <input required ng-model="currentUser.vendor.company_name" type="text" name="companyName" class="form-control" id="company-name" placeholder="Company Name"/>
+                                    <input required ng-model="currentUser.vendor.company_name" type="text" name="companyName" class="form-control" id="company-name" placeholder="Company Name" maxlength="30"/>
                                 </div>
                             </div>
                         </div>
@@ -263,14 +273,14 @@
                             <div class="col-xs-12">
                                 <div class="form-group" ng-class="{ 'has-error' : profileForm.number.$invalid }">
                                     <label for="company-description">Company Phone Number</label>
-                                    <input required ng-model="currentUser.vendor.phone" type="text" name="number" class="form-control" id="company-description" placeholder="Phone Number"/>
+                                    <input required ng-model="currentUser.vendor.phone" type="text" name="number" class="form-control" id="company-description" placeholder="Phone Number" maxlength="20"/>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
                                 <label for="company-description">Company Website</label>
-                                <input ng-model="currentUser.vendor.webpage" type="text" name="website" class="form-control" id="company-description" placeholder="Optional Website URL"/>
+                                <input ng-model="currentUser.vendor.webpage" type="text" name="website" class="form-control" id="company-description" placeholder="Optional Website URL" maxlength="400"/>
                             </div>
                         </div>
                         <div class="row">
@@ -283,7 +293,7 @@
                                 <div class="col-xs-12">
                                     <div class="form-group" ng-class="{ 'has-error' : profileForm.address.$invalid }">
                                         <label for="item-name">Street Address</label>
-                                        <input required ng-model="currentUser.vendor.address.addr_line1" type="text" name="address" class="form-control" id="item-name" placeholder="Street Address"/>
+                                        <input required ng-model="currentUser.vendor.address.addr_line1" type="text" name="address" class="form-control" id="item-name" placeholder="Street Address" maxlength="50"/>
                                     </div>
                                 </div>
                             </div>
@@ -291,7 +301,7 @@
                                 <div class="col-xs-6">
                                     <div class="form-group" ng-class="{ 'has-error' : profileForm.city.$invalid }">
                                         <label for="item-name">City</label>
-                                        <input required ng-model="currentUser.vendor.address.city" type="text" name="city" class="form-control" id="item-name" placeholder="City"/>
+                                        <input required ng-model="currentUser.vendor.address.city" type="text" name="city" class="form-control" id="item-name" placeholder="City" maxlength="20"/>
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
@@ -305,7 +315,7 @@
                                 <div class="col-xs-6">
                                     <div class="form-group" ng-class="{ 'has-error' : profileForm.country.$invalid }">
                                         <label for="item-name">Country</label>
-                                        <input required ng-model="currentUser.vendor.address.country" type="text" name="country" class="form-control" id="item-name" placeholder="Country"/>
+                                        <input required ng-model="currentUser.vendor.address.country" type="text" name="country" class="form-control" id="item-name" placeholder="Country" maxlength="36"/>
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
@@ -366,7 +376,7 @@
                             <div class="col-xs-12 col-md-12">
                                 <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.itemField.$invalid }">
                                     <label for="item-name">Item Name</label>
-                                    <input required ng-model="itemName" type="text" name="itemField" class="form-control" id="item-name" placeholder="Item Name"/>
+                                    <input required ng-model="itemName" type="text" name="itemField" class="form-control" id="item-name" placeholder="Item Name" maxlength="40"/>
                                 </div>
                             </div>
                         </div>
@@ -374,13 +384,13 @@
                             <div class="col-xs-12 col-md-12">
                                 <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.descriptionField.$invalid }">
                                     <label for="item-name">Item Description</label>
-                                    <textarea required ng-model="itemDescription" type="text" name="descriptionField" class="form-control" id="item-name" placeholder="Item Description"/>
+                                    <textarea required ng-model="itemDescription" type="text" name="descriptionField" class="form-control" id="item-name" placeholder="Item Description" maxlength="400"/>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <div ng-hide="isEditingItem" class="form-group no-bottom-margin">
+                                <div ng-hide="isEditingItem" class="form-group">
                                     <label for="item-name">Item Stock<br></label>
                                     <div>
                                         <input type="radio" ng-model="newItemStock" name="newItemStock" value="IS"><span class="radio-padding-right"> In Stock</span>
@@ -388,6 +398,27 @@
                                     </div>
                                 </div>
                             </div>                        
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="item-name">Item Category<br></label>
+                                <div class="form-group"  ng-class="{ 'has-error' : newItemSubmitted && itemForm.itemCategory.$invalid }">
+                                    <select class="form-control" ng-options="category.id as category.name for category in categoryList" ng-model="itemCategory">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="item-name">Tags<br></label>
+                                <div class="row form-group">
+                                    <div class="col-sm-4" ng-repeat="tag in tagList">
+                                        <label class="checkbox tag-formattingpro">
+                                            <input type="checkbox" ng-model="tag.checked"> &nbsp; {{tag.name}} &nbsp; 
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -428,7 +459,7 @@
                                     <div class="col-xs-6 col-md-6">
                                         <div class="form-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationField.$invalid }">
                                             <label class="control-label">Location Name</label>
-                                            <input required ng-model="locationName" type="text" name="locationField" class="form-control" id="item-name" placeholder="Location Name"/>
+                                            <input required ng-model="locationName" type="text" name="locationField" class="form-control" id="item-name" placeholder="Location Name" maxlength="35"/>
                                         </div>
                                     </div>                        
                                     <div class="col-xs-6 col-md-6">
@@ -522,13 +553,13 @@
                                     <div class="col-xs-6 col-md-6" ng-class="{'has-error': newLocationSubmitted && locationForm.phoneField.$invalid}">
                                         <div class="form-group">
                                             <label class="control-label">Phone Number</label>
-                                            <input required ng-model="phoneAtLocation" type="text" class="form-control" id="item-name" name="phoneField" placeholder="Phone Number"/>
+                                            <input required ng-model="phoneAtLocation" type="text" class="form-control" id="item-name" name="phoneField" placeholder="Phone Number" maxlength="20"/>
                                         </div>
                                     </div>
                                     <div class="col-xs-6 col-md-6">
                                         <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.emailField.$invalid}">
                                             <label class="control-label">Email</label>
-                                            <input required type="text" ng-model="emailAtLocation" class="form-control" id="item-name" name="emailField" placeholder="Email"/>
+                                            <input required type="text" ng-model="emailAtLocation" class="form-control" id="item-name" name="emailField" placeholder="Email" maxlength="40"/>
                                         </div>
                                     </div>                                                                   
                                 </div>
@@ -536,7 +567,7 @@
                                     <div class="col-xs-12 col-md-12">
                                         <div class="form-group no-bottom-margin" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationDescriptionField.$invalid }">
                                             <label class="control-label">Location Details</label>
-                                            <textarea required ng-model="locationDescription" type="text" name="locationDescriptionField" class="form-control" placeholder="Location Details"/>
+                                            <textarea required ng-model="locationDescription" type="text" name="locationDescriptionField" class="form-control" placeholder="Location Details" maxlength="300"/>
                                         </div>
                                     </div>                        
                                 </div>                                                          

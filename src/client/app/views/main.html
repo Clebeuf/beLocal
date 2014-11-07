@@ -19,20 +19,49 @@
         <div class="row">
 
             <!-- DISPLAY ITEMS FOR EACH CATEGORY -->
-            <div class="col-sm-10">
+            <div class="col-sm-10 col-xs-6">
               <div class="new-heading-style">
-                Sample Category
+                {{selectedCategory}}
               </div>
               <div class="row" style="padding-top:5px" id="masonry-container">
-                <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in trendingProducts" >
+                <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-12" ng-repeat="item in trendingProducts | filterMultiple:productFilterExpr | unique:id" >
                   <product-card data="item"></product-card>
                 </div>
               </div>
             </div>
 
-            <!-- DISPLAY SIDE BAR OF ALL CATEGORIES -->
-            <div class="col-sm-2">
-              categories go here
+            <!-- DISPLAY SIDE BAR OF ALL CATEGORIES & TAGS-->
+            <div class="col-sm-2 col-xs-6 tag-bar">
+                <hr>
+                <p class="small-header">Categories</p>
+                <ul class="tag-list" role="">
+                    <li><a class="plain-text-font" ng-class="{'active' : selectedCategory === 'All Products'}" ng-click="getAllProducts('category')">All Products</a></li>
+                    <li class="" ng-repeat="category in categoryList">
+                      <a class="plain-text-font" ng-class="{'active' : selectedCategory === category.name}" ng-click="getProductsWithCategory(category)">{{category.name}}</a>
+                    </li>
+                </ul>
+                <hr>
+                <p class="small-header">Filter By</p>
+                <ul class="tag-list" role="">
+                    <li>
+                        <span ng-hide="tagSelected('All Products')">
+                            <a class="pointer tag-check" ng-click="doTagFilter('All Products')" ><i class="fa fa-circle-o"></i></a>
+                          </span>
+                          <span ng-show="tagSelected('All Products')">
+                            <a class="pointer tag-check" ng-click="doTagFilter('All Products')" ><i class="fa fa-check-circle"></i></a>
+                          </span>                      
+                          <a class="plain-text-font" ng-click="doTagFilter('All Products')">All Products</a>
+                    </li>
+                    <li class="" ng-repeat="tag in tagList">
+                      <span ng-hide="tagSelected(tag.name)">
+                        <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-circle-o"></i></a>
+                      </span>
+                      <span ng-show="tagSelected(tag.name)">
+                        <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-check-circle"></i></a>
+                      </span>                      
+                      <a class="plain-text-font" ng-click="doTagFilter(tag.name)">{{tag.name}}</a>
+                    </li>
+                </ul>
             </div>
 
         </div>
@@ -52,36 +81,4 @@
 <!-- INJECTING FOOTER.HTML -->
 <footer></footer>
 
-<!-- Product Details Modal -->
-<div class="modal fade product-details-model" tabindex="-1" id="productDetailsModal" role="dialog" aria-labelledby="productDetailsLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-sm-5 responsive-center">
-                  <div class="thumbnail vendor-card-photo">
-                     <img class="" ng-src="{{product.photo.image_url}}" />
-                  </div>
-                </div>
-                <div class="col-sm-7">
-                  <div class="responsive-center">
-                    <h2 class="vendor-card-name product-details-header">{{product.name}}</h2>
-                    <p class="product-details-text no-bottom-margin">
-                      <a class="plain-text-font pointer product-detail-vendor" ng-click="goToVendorDetails(product.vendor.id)">{{product.vendor.company_name}}</a>         
-                    </p>
-                  </div>
-                  <p>
-                    {{product.description}}
-                  </p>
-                </div>
-              </div>            
-            </div>
-
-            <div class="modal-footer no-top-margin">
-                <button type="button" class="btn beLocal-btn-filled" data-dismiss="modal" ng-click="hideProductDetailsModal()">Close</button>
-            </div>
-        <!-- /.modal-content -->
-        </div>
-    <!-- /.modal-dialog -->
-    </div>
-</div>
+<product-details-modal product="product"></product-details-modal>

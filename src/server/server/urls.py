@@ -40,12 +40,19 @@ urlpatterns = patterns('',
     url(r'^markets/$', views.ListMarketsView.as_view(), name='market-list'),
     url(r'^markets/(?P<market_id>[0-9-]+)/$', views.MarketView.as_view(), name='market-details'),
     url(r'^markets/join/$', views.JoinMarketView.as_view(), name='market-join'),
-    url(r'^markets/leave/$', views.LeaveMarketView.as_view(), name='market-join'),       
+    url(r'^markets/leave/$', views.LeaveMarketView.as_view(), name='market-join'),
+    url(r'^market/details/$', views.MarketDetailsView.as_view(), name='market-details'),     
+
 
     url(r'^search/autocomplete', 'be_local_server.views.autocomplete'),
     url(r'^search/products', views.SearchProductView.as_view(), name="product-search"),    
     url(r'^search/vendors', views.SearchVendorView.as_view(), name="vendor-search"),
     
     url(r'^like/(?P<content_type>[\w-]+)/(?P<id>[0-9-]+)/$', views.like, name='like'),
-
+    
+    url(r'^tag/list/$', views.ListProductTags.as_view(), name='tag-list'),
+    url(r'^products/tag/(?P<tag_slug>[\w-]+)/$', views.TaggedProductView.as_view(), name='tagged-products-list'),
+    url(r'^category/list/$', views.ListProductCategories.as_view(), name='category-list'),
+    url(r'^products/category/(?P<category_slug>[\w-]+)/$', views.CategorizedProductView.as_view(), name='categorized-products-list'),
+    
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

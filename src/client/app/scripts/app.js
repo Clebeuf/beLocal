@@ -35,7 +35,7 @@ var app = angular.module('clientApp', [
       authenticate: true,
       css: 'styles/main.css' 
     })
-    .state('vendor/details', {
+    .state('vendorDetails', {
       url: '/vendor/details/{vendorid:[0-9]{1,8}}',
       templateUrl: 'views/details.html',
       controller: 'DetailsCtrl',
@@ -46,6 +46,13 @@ var app = angular.module('clientApp', [
       url: '/search/{search_type}?q',
       templateUrl: 'views/search.html',
       controller: 'SearchCtrl',
+      authenticate: false,
+      css: 'styles/main.css'
+    })
+    .state('marketDetails', {
+      url: '/market/details/{marketid:[0-9]{1,8}}',
+      templateUrl: 'views/marketdetails.html',
+      controller: 'MarketDetailsCtrl',
       authenticate: false,
       css: 'styles/main.css'
     });
@@ -132,3 +139,56 @@ app.directive('head', ['$rootScope','$compile',
         };
     }
 ]);
+
+/* FILTERS */
+
+/* Filter Multiple fields */
+app.filter('filterMultiple',['$filter',function ($filter) {
+  return function (items, keyObj) { 
+    var filterObj = {
+      filteredData:items,
+      
+      applyFilter : function(obj,key){
+        var fData = [];        
+        if(obj){
+          var fObj = {};
+          if(angular.isString(obj)){
+            fObj[key] = obj; 
+            this.filteredData = $filter('filter')(this.filteredData,fObj); 
+          } 
+          else if(angular.isArray(obj)){
+            if(obj.length > 0){     
+              for(var i=0;i<obj.length;i++){
+                if(angular.isString(obj[i])){
+                  fObj[key] = obj[i]; 
+                  this.filteredData = $filter('filter')(this.filteredData,fObj);        
+                }
+              }    
+            }
+          }
+        }
+       }
+    };
+    
+    var isEmpty = function(obj){
+      for(var i in obj){ return false;}
+      return true;
+    };
+    
+    if (isEmpty(keyObj)) { 
+      return items;        
+    }
+    else if(keyObj){               
+      angular.forEach(keyObj,function(obj,key){ 
+        filterObj.applyFilter(obj,key);
+      });      
+      return filterObj.filteredData;
+    } 
+    else { 
+      return items;
+    }
+    
+  }
+}]); 
+
+

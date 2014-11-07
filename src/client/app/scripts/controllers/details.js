@@ -29,6 +29,14 @@ angular.module('clientApp')
         'Sunday'
     ];
 
+    $scope.showProductDetailsModal = function(item) {
+        $scope.product = item;      
+    };
+
+    $scope.hideProductDetailsModal = function() {   
+        $scope.product = {};            
+    };    
+
     $scope.likeUnlikeItem = function(item, itemName) {
       StateService.likeUnlikeItem(item, itemName).then(function() {
         item = StateService.getLikedUnlikedItem();

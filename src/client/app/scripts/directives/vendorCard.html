@@ -19,6 +19,7 @@
           <br><span ng-show="vendor.phone != null" class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}
         </div>
     </div>
+    <div ng-show="vendor.products.length < 5" class="col-sm-{{5 - vendor.products.length}}"></div>
     <div class="col-sm-1 no-padding" ng-repeat="product in vendor.products | limitTo:5">
       <div class="vendor-image-container pointer" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(product)">
         <div class="vendor-images" style="background-image:url({{product.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
@@ -53,6 +54,7 @@
           <br><span ng-show="vendor.phone != null" class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}
         </div>
     </div>
+    <div ng-show="vendor.products.length < 5" class="col-sm-{{5 - vendor.products.length}}"></div>    
     <div class="col-xs-1 no-padding" ng-repeat="product in vendor.products | limitTo:5">
       <div class="vendor-image-container pointer" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(product)">
         <div class="vendor-images" style="background-image:url({{product.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">

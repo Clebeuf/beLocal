@@ -8,10 +8,6 @@
 
 @media (max-width: 1100px) and (min-width: 1001px){
 
-  .navbar-form {
-    padding-left: 0px !important;
-  }
-
   .beLocal-search {
     width:500px !important;
   }
@@ -26,14 +22,14 @@
   }
 
   .search-nav-xs {
-    width: 60% !important;
+    width: 55% !important;
     float:left;
   }
 
   .navbar-toggle {
     margin-right:5px;
     margin-left: 5px;
-    margin-bottom: 0px !import;
+    margin-bottom: 0px !important;
   }
 
 }
@@ -360,8 +356,10 @@ body {
     width: auto;
     padding-top: 0px;
     padding-bottom: 0px;
-    margin-right: 10px;
-    margin-left: 5px;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
     border: 0;
     -webkit-box-shadow: none;
     box-shadow: none;

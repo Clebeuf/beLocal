@@ -6,12 +6,28 @@ angular.module('clientApp')
     var trendingProducts = []; // Currently trending products
     var vendors = [];
     var marketlist = [];
+    var categorylist = [];
+    var taglist = [];
+    var categoryProductList = [];
+    var tagProductList = [];
     var vendorToDisplay = undefined;
     var vendorDetails = undefined;
     var likedUnlikedItem = undefined;
     var currentLocation = undefined;
     var availableMarkets = undefined;
     var likedUnlikedProduct = undefined;
+    var marketDetails = undefined;
+    var tagToDisplay = undefined;
+
+    this.setTagToDisplay = function(tagName) {
+      tagToDisplay = tagName;
+    }
+
+    this.readTagToDisplay = function() {
+      var tempTag = tagToDisplay;
+      tagToDisplay = undefined;
+      return tempTag;
+    }
 
     this.getUserPosition = function() {
 
@@ -69,6 +85,21 @@ angular.module('clientApp')
       vendorToDisplay = vendorID;
     };
 
+    this.getMarketDetails = function() {
+      return marketDetails;
+    }
+
+    this.getMarketToDisplay = function(marketID) {
+      return $http.post(this.getServerAddress() + 'market/details/', {"id":marketID})
+      .success(function(data) {
+        data.address.hours.sort(compareWeekday);  
+        marketDetails = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving market info');
+        $location.path('/');
+      });
+    }
 
     this.getVendorDetails = function(){
       return vendorDetails;
@@ -112,7 +143,7 @@ angular.module('clientApp')
     this.getTrendingProducts = function() {
       return $http.post(this.getServerAddress() + 'products/trending/', {'user_position':currentLocation})
       .success(function(data) {
-        trendingProducts = data;
+        trendingProducts = data; 
       })
       .error(function(data) {
         console.log('Error retrieving trending products');
@@ -172,7 +203,27 @@ angular.module('clientApp')
         console.log('Error retrieving seller locations');
       }); 
     };
+    
+    this.getTags = function() {
+      return $http.get(this.getServerAddress() + 'tag/list/')
+      .success(function(data) { 
+        taglist = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving tags');
+      });
+    };
 
+    this.getCategories = function() {
+      return $http.get(this.getServerAddress() + 'category/list/')
+      .success(function(data) {
+        categorylist = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving categories');
+      });
+    };
+    
     this.trashOrRestoreLocation = function(id, action) {
       return $http.post(this.getServerAddress() + 'vendor/location/delete/', {'id' : id, 'action' : action})
       .error(function(data) {
@@ -229,7 +280,7 @@ angular.module('clientApp')
       })
     };    
 
-    this.createItem = function(item, isEditing) {
+    this.createItem = function(item, isEditing) { 
       if(isEditing) {
         var url = this.getServerAddress() + 'vendor/products/' + item.id + '/';        
         return $http({method: 'PATCH', url: url, data: item})
@@ -243,6 +294,26 @@ angular.module('clientApp')
         });
       }
     };
+    
+    this.getSelectedCategoryProducts = function(category) {
+      return $http.get(this.getServerAddress() + 'products/category/' + category.slug + '/')
+      .success(function(data) {
+        categoryProductList = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving products of given category!');
+      });
+    };
+    
+    this.getSelectedTagProducts = function(tag) {
+      return $http.get(this.getServerAddress() + 'products/tag/' + tag.slug + '/')
+      .success(function(data) {
+        tagProductList = data; 
+      })
+      .error(function(data) {
+        console.log('Error retrieving products of given tag!');
+      });
+    };
 
     this.getTrendingProductsList = function() {
       return trendingProducts;
@@ -255,6 +326,22 @@ angular.module('clientApp')
     this.getMarketList = function() {
       return marketlist;
     };
+    
+    this.getTagList = function() { 
+      return taglist;
+    }
+    
+    this.getCategoryList = function() {
+      return categorylist;
+    }
+    
+    this.getSelectedCategoryProductsList = function() {
+      return categoryProductList;
+    }
+    
+    this.getSelectedTagProductsList = function() {
+      return tagProductList;
+    }
 
     this.setProfileFromCookie = function() {
       this.setProfile(ipCookie('beLocalUser'));

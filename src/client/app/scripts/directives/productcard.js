@@ -20,7 +20,12 @@ angular.module('clientApp')
         };        
 
       	scope.displayVendor = function (id) {
-      		$location.path('vendor/details/'+id).replace();
+          var user = StateService.getCurrentUser();
+          if(user && user.userType === 'VEN' && user.vendor.id === id) {
+            $location.path('/vendor');
+          } else {            
+            $location.path('vendor/details/'+ id);
+          }
       	}   
 
         $timeout(function(){

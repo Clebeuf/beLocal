@@ -2,10 +2,9 @@
   <button type="button" class="close" ng-click="resetWarning()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
   <html-comp content="warningHTML"></html-comp>
 </div>
-<nav-bar></nav-bar>
+<navbar-x-s></navbar-x-s>
 
-<div class="container-fluid new-formatting-container">  
-    <br><br>
+<div class="container-fluid new-formatting-container customer-container">  
     <div class="row vendor-profile-header">
         <div class="col-md-5 new-vendor-avatar">
             <img ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}">
@@ -16,8 +15,10 @@
                 {{StateService.getCurrentUser().vendor.company_name}}<br>
             </span>
             <span class="new-hr-heading-style">
-                <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
-                | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
+                <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
+                    <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}} |
+                </span>
+                <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
             </span>
             <span class="pull-right">
                     <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
@@ -48,6 +49,9 @@
 <!-- NG-REPEAT FOR MARKETS -->
     <div class="new-heading-style">
             Market Locations
+    </div>
+    <div class="vendor-placeholder-text" ng-show="marketLocations.length == 0">
+        <p class="no-bottom-margin">You're not selling at any markets right now! Try joining one by clicking the Create Location button.</p>
     </div>
     <!-- repeating for each location that seller has in the db -->
     <div ng-repeat="location in marketLocations" class="container-for-cards">
@@ -97,6 +101,9 @@
     <div class="new-heading-style">
             Custom Locations
     </div>
+    <div class="vendor-placeholder-text" ng-show="sellerLocations.length == 0">
+        <p class="no-bottom-margin">You haven't created any custom locations yet! Try making one by clicking the Create Location button.</p>
+    </div>    
     <!-- repeating for each location that seller has in the db -->
     <div ng-repeat="location in sellerLocations" class="container-for-cards">
         <div class="card-formatting">
@@ -167,7 +174,9 @@
         </div>
     </div>
     <hr>
-
+    <div class="vendor-placeholder-text" ng-show="sellerItems.length == 0">
+        <p class="no-bottom-margin">You haven't added any items yet! Try adding one by clicking the Create New Item button.</p>
+    </div>     
 
     <!-- repeating for each item that seller has in the db -->
      <div ng-repeat="product in sellerItems | orderBy:'name'" class="container-for-cards">
@@ -185,8 +194,8 @@
                         <div class="card-lable-style">{{product.name}}</div>
                         <div class="location-details">
                             <p><b>PRODUCT DETAILS:</b> {{product.description}}</p>
-                            <p><b>CATEGORY:</b> </p>
-                            <p><b>TAGS:</b> </p>
+                            <p><b>CATEGORY:</b> {{product.category.name}} </p>
+                            <p><b>TAGS:</b><span ng-repeat="tag in product.tags"> {{tag}} &nbsp; </span></p>
                         </div>
                     </div>
 
@@ -219,9 +228,11 @@
     <!--  end of repeat for each item the seller sells-->
 
 </div>
-<div class="footer">
-  <p>♥ from the beLocal team</p>
-</div>
+
+<!-- INJECTING FOOTER.HTML -->
+<footer></footer>
+
+
 <!-- END OF CONTAINTER-SELLER -->
 
 
@@ -379,7 +390,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <div ng-hide="isEditingItem" class="form-group no-bottom-margin">
+                                <div ng-hide="isEditingItem" class="form-group">
                                     <label for="item-name">Item Stock<br></label>
                                     <div>
                                         <input type="radio" ng-model="newItemStock" name="newItemStock" value="IS"><span class="radio-padding-right"> In Stock</span>
@@ -387,6 +398,27 @@
                                     </div>
                                 </div>
                             </div>                        
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="item-name">Item Category<br></label>
+                                <div class="form-group"  ng-class="{ 'has-error' : newItemSubmitted && itemForm.itemCategory.$invalid }">
+                                    <select class="form-control" ng-options="category.id as category.name for category in categoryList" ng-model="itemCategory">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="item-name">Tags<br></label>
+                                <div class="row form-group">
+                                    <div class="col-sm-4" ng-repeat="tag in tagList">
+                                        <label class="checkbox">
+                                            <input type="checkbox" ng-model="tag.checked"> &nbsp; {{tag.name}} &nbsp; 
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -407,12 +439,12 @@
 <div class="modal fade" id="locationModal">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header edit-location-modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 ng-hide="isEditingLocation" class="modal-title">Add New Location<br /><small>Please complete the following fields to add a new location</small></h4>
                 <h4 ng-show="isEditingLocation" class="modal-title">Edit Location<br /><small>Please change any of the fields below to update an existing location</small></h4>                
             </div>
-            <div class="modal-body">  
+            <div class="modal-body edit-location-modal-body">  
                 <div class="container-fluid">
                     <div class="full-width-tabs" ng-show="isEditingLocation == false">
                         <ul class="nav nav-tabs location-tabs" role="tablist">

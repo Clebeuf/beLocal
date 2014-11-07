@@ -1,19 +1,7 @@
-<nav-bar></nav-bar>
-<div class="header top-nav-large row">
-    <div class="col-sm-2 logo">
-        <img src="/images/logo.png">
-    </div>
-    <div class="col-sm-10">
-        <br><br><br><br><br>
-        <ul class="list-inline">
-            <li class="active"><a href="/#trending" id="trendingTab">In Season Now</a></li>
-            <li><a href="/#vendors" id="vendorsTab">Farmers & Foodmakers</a></li>
-            <li><a href="/#markets" ng-click="marketMasonry()" id="marketsTab">Local Markets</a></li>
-        </ul>
-    </div>
-</div>
+<div class="hidden-xs"><nav-bar></nav-bar></div>
+<div class="visible-xs"><navbar-x-s></navbar-x-s></div>
 
-<div class="container container-home-page">
+<div class="customer-container">
     <div ng-show="productResults.length == 0 && marketResults.length == 0 && vendorResults.length == 0" class="row">
         <!-- DISPLAY ITEMS -->
         <div class="col-sm-10">
@@ -56,52 +44,7 @@
     </div>
 </div>
 
-<!-- BE LOCAL FOOTER (TO BE INJECTED LATER) -->
-<div class="footer">
-    <div class="row">
-        <div class="col-xs-6">
-            logo & links here
-        </div>
-        <div class="col-xs-6 pull-right">
-            Facebook | Pinterest | Twitter | beLocal@blah.com
-        </div>
-    </div>
-</div>
-<div class="footerCopyright">
-    <span class="glyphicon glyphicon-copyright-mark" style="font-size:12px;"></span>
-    2014 beLocal, Inc.
-</div>
+<!-- INJECTING FOOTER -->
+<footer></footer>
 
-<!-- Product Details Modal -->
-<div class="modal fade product-details-model" tabindex="-1" id="productDetailsModal" role="dialog" aria-labelledby="productDetailsLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-sm-5 responsive-center">
-                  <div class="thumbnail vendor-card-photo">
-                     <img class="" ng-src="{{product.photo.image_url}}" />
-                  </div>
-                </div>
-                <div class="col-sm-7">
-                  <div class="responsive-center">
-                    <h2 class="vendor-card-name product-details-header">{{product.name}}</h2>
-                    <p class="product-details-text no-bottom-margin">
-                      <a class="plain-text-font pointer product-detail-vendor" ng-click="goToVendorDetails(product.vendor.id)">{{product.vendor.company_name}}</a>         
-                    </p>
-                  </div>
-                  <p>
-                    {{product.description}}
-                  </p>
-                </div>
-              </div>            
-            </div>
-            
-            <div class="modal-footer no-top-margin">
-                <button type="button" class="btn beLocal-btn-filled" data-dismiss="modal" ng-click="hideProductDetailsModal()">Close</button>
-            </div>
-        <!-- /.modal-content -->
-        </div>
-    <!-- /.modal-dialog -->
-    </div>
-</div>
+<product-details-modal product="product"></product-details-modal>

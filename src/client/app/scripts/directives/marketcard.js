@@ -1,6 +1,6 @@
 'use strict';
 angular.module('clientApp')
-  .directive('marketCard', function (StateService, $timeout, $compile) {
+  .directive('marketCard', function (StateService, $timeout, $compile, $location) {
     return {
       templateUrl: 'scripts/directives/marketCard.html',
       restrict: 'E',
@@ -19,6 +19,10 @@ angular.module('clientApp')
             'Saturday',
             'Sunday'
         ];
+
+        scope.displayMarket = function (id) {
+          $location.path('market/details/'+id).replace();
+        };        
 
         scope.likeUnlikeItem = function(item, itemName) {
           StateService.likeUnlikeItem(item, itemName).then(function() {

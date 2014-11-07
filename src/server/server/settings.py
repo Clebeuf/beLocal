@@ -43,7 +43,6 @@ INSTALLED_APPS = (
     'corsheaders',
     'social.apps.django_app.default',
     #'account',
-    #'photologue',
     #'sortedm2m',
     #'south',   # Only if you're relying on South for migrations.
     'be_local_server',

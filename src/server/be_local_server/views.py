@@ -16,16 +16,18 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models.base import ModelBase
+from django.forms.models import model_to_dict
 from social.apps.django_app.utils import psa
 from secretballot import views
 from secretballot.models import Vote
 from be_local_server import serializers
 from be_local_server.models import *
 from haystack.query import SearchQuerySet
-import json
+import datetime, json
 from geopy.distance import vincenty
 from operator import itemgetter, attrgetter, methodcaller
-import datetime
+from taggit.models import Tag
+
 
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
     user = (user_lat, user_lng)
@@ -166,6 +168,18 @@ def register_by_access_token(request, backend):
 
     return user
 
+class MarketDetailsView(generics.CreateAPIView):
+    permission_classes = (AllowAny,)   
+
+    def post(self, request, *args, **kwargs):
+        market = Market.objects.get(pk=request.DATA["id"])
+
+        if(market != None):
+            market.is_liked = Market.objects.from_request(self.request).get(pk=market.id).user_vote
+            return Response(serializers.MarketDetailsSerializer(market).data, status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
 class VendorDetailsView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
 
@@ -277,22 +291,31 @@ class AddProductView(generics.CreateAPIView):
     add a product to their products list.
     """         
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)     
+    permission_classes = (IsAuthenticated,)   
+    serializer_class = serializers.AddProductSerializer  
 
     def post(self, request, *args, **kwargs):
         vendor = Vendor.objects.get(user=request.user)
         request.DATA['vendor'] = vendor.id
         
         serializer = serializers.AddProductSerializer(data=request.DATA, partial=True)
-
+       
         if serializer.is_valid():
             current_product = serializer.save()
-
+            
+            # Save tags if they are provided in the request.
+            if type(serializer.data['tags']) is list:                
+                saved_product = Product.objects.get(pk=current_product.pk)
+                saved_product.tags.clear()
+                for tag in serializer.data['tags']:
+                    saved_product.tags.add(tag)
+            
             return Response(status=status.HTTP_201_CREATED)
 
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+    
 
 class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -324,12 +347,19 @@ class RWDProductView(generics.RetrieveUpdateDestroyAPIView):
     
     def patch(self, request, product_id):         
         product = Product.objects.get(pk=product_id) 
-   
+        
         if product is not None:
             serializer = serializers.AddProductSerializer(product, data=request.DATA, partial=True)
            
             if serializer.is_valid():
-                serializer.save()
+                curr = serializer.save()
+                print "saved:", curr, curr.category
+                # Save tags if they are provided in the request.
+                if type(serializer.data['tags']) is list:                
+                    saved_product = Product.objects.get(pk=product_id)
+                    saved_product.tags.clear()
+                    for tag in serializer.data['tags']:
+                        saved_product.tags.add(tag)
 
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
@@ -498,7 +528,7 @@ class TrendingProductView(generics.ListAPIView):
     """   
     permission_classes = (AllowAny,)
     serializer_class = serializers.ProductDisplaySerializer
-
+    
     def post(self, request):
         if ('user_position' in request.DATA.keys() and request.DATA['user_position'] is not None):
             lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))
@@ -527,11 +557,13 @@ class TrendingProductView(generics.ListAPIView):
             return Response(serializer.data)
 
         else:
+            
             products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True)
             if products is not None:
                 for product in products:
                     product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
             serializer = serializers.ProductDisplaySerializer(products, many=True)
+           
             return Response(serializer.data)
 
 class ListMarketsView(generics.ListAPIView):
@@ -808,3 +840,54 @@ def like(request, content_type, id):
             body = '{"is_liked": false}'
             return HttpResponse(body, status=status.HTTP_404_NOT_FOUND, content_type='application/json') 
         
+class ListProductTags(generics.ListAPIView):
+    """ 
+    This view provides an endpoint to list available tags.
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.TagSerializer
+
+    def get_queryset(self):
+        return Tag.objects.all()
+
+class TaggedProductView(generics.ListAPIView):
+    """ 
+    This view provides an endpoint to list products having a given tag.
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.ProductDisplaySerializer
+
+    def get_queryset(self):
+        products = Product.objects.filter(tags__slug=self.kwargs.get('tag_slug')).filter(stock=Product.IN_STOCK).filter(vendor__is_active=True)
+       
+        if products is not None:
+            for product in products:
+                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
+        
+        return products
+       
+class ListProductCategories(generics.ListAPIView):
+    """ 
+    This view provides an endpoint to list available categories.
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.CategorySerializer
+
+    def get_queryset(self):
+        return Category.objects.all() 
+
+class CategorizedProductView(generics.ListAPIView):
+    """ 
+    This view provides an endpoint to list products of a given cateogry.
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.ProductDisplaySerializer
+
+    def get_queryset(self):
+        products = Product.objects.filter(category__slug=self.kwargs.get('category_slug')).filter(stock=Product.IN_STOCK).filter(vendor__is_active=True)
+       
+        if products is not None:
+            for product in products:
+                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote 
+        
+        return products   

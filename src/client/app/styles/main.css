@@ -153,7 +153,16 @@
 }
 
 .header-font {
-  font-family: Graphik,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.modal-title {
+  font-family: 'Libre Baskerville', serif;
+  font-weight: bold;
+}
+
+.modal-title > small {
+  font-family: 'Roboto', sans-serif !important;
 }
 
 .small-header {
@@ -164,7 +173,6 @@
   text-transform: uppercase;
   padding: 0px;
   margin-bottom: 10px;
-  padding:10px;
 }
 
 .edit-location-modal-header {
@@ -312,7 +320,8 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 40px;
-  background-color: #EEEEEE;  
+  background-color: #EEEEEE;
+  font-family: 'Roboto', sans-serif !important;;
 }
 
 .footer {
@@ -794,7 +803,6 @@ body {
   }
 
   .thumbnail {
-    text-align: center !important;
     float: none !important;
     display: inline-block;
   }
@@ -1152,7 +1160,7 @@ hr{
   padding-top: 10px;
   padding-bottom: 10px;
   font-size: 14px;
-  font-family: Graphik,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
   line-height: normal;
 }
 
@@ -1301,3 +1309,12 @@ hr{
   color: white;
   background-color: #8ed41e;
 }
+
+.vendor-placeholder-text {
+  padding: 10px;
+  margin-left: 20px;
+}
+
+.tag-bar {
+  margin-top: 45px;
+}  

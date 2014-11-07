@@ -15,8 +15,10 @@
                 {{StateService.getCurrentUser().vendor.company_name}}<br>
             </span>
             <span class="new-hr-heading-style">
-                <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
-                | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
+                <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
+                    <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}} |
+                </span>
+                <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
             </span>
             <span class="pull-right">
                     <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
@@ -47,6 +49,9 @@
 <!-- NG-REPEAT FOR MARKETS -->
     <div class="new-heading-style">
             Market Locations
+    </div>
+    <div class="vendor-placeholder-text" ng-show="marketLocations.length == 0">
+        <p class="no-bottom-margin">You're not selling at any markets right now! Try joining one by clicking the Create Location button.</p>
     </div>
     <!-- repeating for each location that seller has in the db -->
     <div ng-repeat="location in marketLocations" class="container-for-cards">
@@ -96,6 +101,9 @@
     <div class="new-heading-style">
             Custom Locations
     </div>
+    <div class="vendor-placeholder-text" ng-show="sellerLocations.length == 0">
+        <p class="no-bottom-margin">You haven't created any custom locations yet! Try making one by clicking the Create Location button.</p>
+    </div>    
     <!-- repeating for each location that seller has in the db -->
     <div ng-repeat="location in sellerLocations" class="container-for-cards">
         <div class="card-formatting">
@@ -166,7 +174,9 @@
         </div>
     </div>
     <hr>
-
+    <div class="vendor-placeholder-text" ng-show="sellerItems.length == 0">
+        <p class="no-bottom-margin">You haven't added any items yet! Try adding one by clicking the Create New Item button.</p>
+    </div>     
 
     <!-- repeating for each item that seller has in the db -->
      <div ng-repeat="product in sellerItems | orderBy:'name'" class="container-for-cards">

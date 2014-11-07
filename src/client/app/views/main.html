@@ -5,6 +5,21 @@
 <div class="tab-content">
   <div class="tab-pane" id="markets">
     <div class="customer-container">
+
+      <div class="row">
+        <div class="col-xs-12 hr-description-style">
+          <div>
+            Explore {{marketList.length}} local markets found in your area.
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <hr>
+        </div>
+      </div>
+
+      <br>
       <div class="row" id="masonry-market-container">
         <div class="col-trending ms-market-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="market in marketList" >
           <market-card data="market"></market-card>
@@ -16,9 +31,22 @@
   <!-- TRENDING TAB -->
   <div class="tab-pane active" id="trending">
     <div class="customer-container">
-        <div class="row">
 
             <!-- DISPLAY ITEMS FOR EACH CATEGORY -->
+            <div class="row">
+              <div class="col-xs-12 hr-description-style">
+                <div>
+                  Browse products currently being sold by local farmers and foodmakers in your area.
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <hr>
+              </div>
+            </div>
+
+            <div class="row">
             <div class="col-sm-10 col-xs-6">
               <div class="new-heading-style">
                 {{selectedCategory}}
@@ -71,6 +99,20 @@
   <!-- VENDORS TAB -->
   <div class="tab-pane" id="vendors">
     <div class="customer-container">
+
+      <div class="row">
+        <div class="col-xs-12 hr-description-style">
+          <div>
+            Explore {{vendors.length}} local farmers and foodmakers found in your area.
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <hr>
+        </div>
+      </div>
+
       <div ng-repeat="vendor in vendors">
       	   <vendor-card data="vendor"></vendor-card>
       </div>

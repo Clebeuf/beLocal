@@ -73,6 +73,10 @@
   padding-right: 5px;
 }
 
+.longDesciption {
+  display: -webkit-box;
+}
+
 .navbar-brand img{
   height: 35px;
 }

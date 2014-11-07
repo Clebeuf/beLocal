@@ -1,9 +1,9 @@
 <!-- NAVBAR -->
-<nav-bar></nav-bar>
+<div class="hidden-xs"><nav-bar></nav-bar></div>
+<div class="visible-xs"><navbar-x-s></navbar-x-s></div>
 
 <!-- SELLER DETAILS -->
-<div class="container-fluid new-formatting-container">  
-    <br><br>
+<div class="customer-container">  
     <div class="row vendor-profile-header">
         <div class="col-md-5 new-vendor-avatar">
             <img ng-src="{{marketDetails.photo.image_url}}">
@@ -37,7 +37,9 @@
 	        </div>
             <hr>
             <p class="small-header">Market Description</p>
-            {{marketDetails.description}}
+            <div class="longDesciption">
+                {{marketDetails.description}}
+            </div>
         </div>
     </div>
 
@@ -57,9 +59,7 @@
   </div>
 
 </div>
-<div class="footer">
-  <p>♥ from the beLocal team</p>
-</div>
+<footer></footer>
 <!-- END OF CONTAINTER-SELLER -->
 
 <product-details-modal produt="product"></product-details-modal>

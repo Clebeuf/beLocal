@@ -119,6 +119,7 @@ class BusinessVendorSerializer(serializers.ModelSerializer):
 
 class ManageVendorSerializer(serializers.ModelSerializer):
     photo = VendorPhotoPathSerializer()
+    address = AddressSerializer()
     class Meta:
         model = be_local_server.models.Vendor
         fields = (  'id',   
@@ -129,6 +130,7 @@ class ManageVendorSerializer(serializers.ModelSerializer):
                     'extension',
                     'photo',
                     'is_active',
+                    'address',
         )        
 
 class PhotoPathSerializer(serializers.ModelSerializer):

@@ -73,6 +73,10 @@
   padding-right: 5px;
 }
 
+.longDesciption {
+  display: -webkit-box;
+}
+
 .navbar-brand img{
   height: 35px;
 }
@@ -87,13 +91,21 @@
   margin-right: auto; 
 }
 
+.hr-description-style {
+  font-size: 16px;
+  display: inline-block;
+  font-family: 'Roboto', sans-serif;
+  color: #9c9795;
+  padding-top: 7px;
+}
+
 .customer-container {
   margin-left: auto;
   margin-right: auto;   
   max-width: 1300px;
   padding-left: 15px;
   padding-right: 15px;
-  padding-top: 15px;
+  padding-top: 30px;
   padding-bottom: 35px;
 }
 
@@ -115,6 +127,8 @@
 
 .customer-nav .active{
   text-decoration: underline;
+  -moz-text-decoration-color: #403E3B;
+  text-decoration-color: #403E3B;  
 }
 
 .navbar {
@@ -319,13 +333,14 @@ textarea {
 html {
   position: relative;
   min-height: 100%;
-  background-color: #EEEEEE;
+  background-color: #DDDDDD;
+  /*background-color: #EEEEEE;*/
 }
 
 body {
   /* Margin bottom by footer height */
   margin-bottom: 40px;
-  background-color: #EEEEEE;
+  background-color: #DDDDDD;
   font-family: 'Roboto', sans-serif !important;;
 }
 

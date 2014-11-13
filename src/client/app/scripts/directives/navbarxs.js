@@ -7,8 +7,13 @@ angular.module('clientApp')
       templateUrl: 'scripts/directives/navbarxs.html',
       controller: ['$scope', function($scope) {
         $scope.AuthService = AuthService;
+        $scope.StateService = StateService;
         $scope.loginError = false;
-        $scope.productSuggestions = [];        
+        $scope.productSuggestions = [];     
+
+        $scope.goToManage = function() {
+            $location.path('/manage');
+        }           
 
         $scope.showLogin = function() {
             AuthService.showLogin().then(function(status) {

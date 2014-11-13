@@ -4,7 +4,7 @@
 </div>
 <navbar-x-s></navbar-x-s>
 
-<div class="container-fluid new-formatting-container customer-container">  
+<div class="new-formatting-container customer-container">  
     <div class="row vendor-profile-header">
         <div class="col-md-5 new-vendor-avatar">
             <img ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}">
@@ -413,7 +413,7 @@
                                 <label for="item-name">Tags<br></label>
                                 <div class="row form-group">
                                     <div class="col-sm-4" ng-repeat="tag in tagList">
-                                        <label class="checkbox tag-formattingpro">
+                                        <label class="checkbox tag-formatting">
                                             <input type="checkbox" ng-model="tag.checked"> &nbsp; {{tag.name}} &nbsp; 
                                         </label>
                                     </div>

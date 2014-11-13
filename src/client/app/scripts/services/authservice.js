@@ -159,6 +159,9 @@ angular.module('clientApp')
                 } else if(StateService.getUserType() === 'VEN') {
                     $location.path('/vendor');
                 }
+                else if(StateService.getUserType() === 'SUP') {
+                    $location.path('/manage');
+                }                
               }         
             });             
         })

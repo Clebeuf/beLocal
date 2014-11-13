@@ -55,6 +55,13 @@ var app = angular.module('clientApp', [
       controller: 'MarketDetailsCtrl',
       authenticate: false,
       css: 'styles/main.css'
+    })
+    .state('manage', {
+      url: '/manage',
+      templateUrl: 'views/manage.html',
+      controller: 'ManageCtrl',
+      authenticate: true,
+      css: 'styles/main.css'
     });
 
     $httpProvider.defaults.headers.patch = {
@@ -86,10 +93,15 @@ var app = angular.module('clientApp', [
           }
         }
 
-        if (toState.url === '/seller' && (StateService.getCurrentUser() == undefined || StateService.getUserType() !== 'VEN')) {
+        if (toState.name === 'vendor' && (StateService.getCurrentUser() == undefined || StateService.getUserType() !== 'VEN')) {
           $state.transitionTo('main', null, {location: 'replace'});
           event.preventDefault();
           return;
+        }
+
+        if(toState.name === 'manage' && (StateService.getCurrentUser() == undefined || StateService.getUserType() !== 'SUP')) {
+          $state.transitionTo('main', null, {location: 'replace'});
+          event.preventDefault();          
         }
 
         if (toState.authenticate && !AuthService.isAuthenticated()){

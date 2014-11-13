@@ -8,7 +8,12 @@ angular.module('clientApp')
       controller: ['$scope', function($scope) {
         $scope.AuthService = AuthService;
         $scope.loginError = false;
-        $scope.productSuggestions = [];        
+        $scope.productSuggestions = [];
+        $scope.StateService = StateService;
+
+        $scope.goToManage = function() {
+            $location.path('/manage');
+        }
 
         $scope.showLogin = function() {
             AuthService.showLogin().then(function(status) {

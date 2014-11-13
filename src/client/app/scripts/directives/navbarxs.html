@@ -52,7 +52,7 @@
       </div>
 
 
-      <div ng-show="AuthService.isAuthenticated()">
+      <div ng-show="AuthService.isAuthenticated() && StateService.getUserType() === 'VEN'">
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
               <a class="dropdown-toggle pointer">My Account<span class="caret"></span></a>
@@ -65,6 +65,25 @@
             </li>
           </ul>  
       </div>
+
+      <div ng-show="AuthService.isAuthenticated() && StateService.getUserType() === 'CUS'">
+          <ul class="nav navbar-nav navbar-right">
+              <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+          </ul>  
+      </div>      
+
+      <div ng-show="AuthService.isAuthenticated() && StateService.getUserType() === 'SUP'">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a class="dropdown-toggle pointer">My Account<span class="caret"></span></a>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+              <li><a class="pointer" ng-click="goToManage()">Manage Vendors</a></li>        
+              <li class="divider"></li>
+              <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+            </ul>
+          </li>
+        </ul>  
+      </div>        
 
     </div>
 

@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^vendor/add/$', views.AddVendorView.as_view(), name='vendor-add'),    
     url(r'^vendor/?$', views.RWDVendorView.as_view(), name='vendor'), 
     url(r'^vendor/details/?$', views.VendorDetailsView.as_view(), name='vendor-details'),
-    url(r'^vendor/photo/add/$',views.AddVendorPhotoView.as_view(), name='vendor-photo-add'),    
+    url(r'^vendor/photo/add/$',views.AddVendorPhotoView.as_view(), name='vendor-photo-add'),
 
     url(r'^vendor/location/add/$', views.AddSellerLocationView.as_view(), name='vendor-location-add'),
     url(r'^vendor/location/list/$', views.ListVendorLocations.as_view(), name='vendor-location-list'), 
@@ -54,5 +54,8 @@ urlpatterns = patterns('',
     url(r'^products/tag/(?P<tag_slug>[\w-]+)/$', views.TaggedProductView.as_view(), name='tagged-products-list'),
     url(r'^category/list/$', views.ListProductCategories.as_view(), name='category-list'),
     url(r'^products/category/(?P<category_slug>[\w-]+)/$', views.CategorizedProductView.as_view(), name='categorized-products-list'),
+
+    url(r'^manage/vendors/list/$',views.ManageVendorsView.as_view(), name='inactive-vendors'),
+    url(r'^manage/vendors/activate/$',views.ActivateVendorView.as_view(), name='activate-vendor'),     
     
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

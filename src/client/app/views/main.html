@@ -9,7 +9,7 @@
       <div class="row">
         <div class="col-xs-12 hr-description-style">
           <div>
-            Explore {{marketList.length}} local markets found in your area.
+            Explore {{marketList.length}} local market<span ng-hide="marketList.length === 1">s</span> found in your area.
           </div>
         </div>
       </div>
@@ -113,7 +113,7 @@
       <div class="row">
         <div class="col-xs-12 hr-description-style">
           <div>
-            Explore {{vendors.length}} local farmers and foodmakers found in your area.
+            Explore {{vendors.length}} local farmer<span ng-hide="vendors.length === 1">s</span> and foodmaker<span ng-hide="vendors.length === 1">s</span> found in your area.
           </div>
         </div>
       </div>

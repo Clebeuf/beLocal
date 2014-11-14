@@ -66,7 +66,10 @@ angular.module('clientApp')
 
     $scope.doCustomLocation = function() {
         $scope.isCreatingCustomLocation = true;
-        $scope.submitLocationButtonText = "Add Location";
+        if($scope.isEditingLocation)
+            $scope.submitLocationButtonText = 'Save Changes';
+        else
+            $scope.submitLocationButtonText = "Add Location";
     }
 
     $scope.manuallyTriggerCustomLocation = function() {

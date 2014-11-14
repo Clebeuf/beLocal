@@ -113,10 +113,17 @@
         </div>
       </div>
 
-      <div ng-repeat="vendor in vendors">
-      	   <vendor-card data="vendor"></vendor-card>
+      <div class="row">
+          <div class="col-sm-4">
+            <div class="map-container">
+              <div class="bl-map" be-local-map data="vendors"></div>
+            </div>
+          </div>
+          <div class="col-sm-8" ng-repeat="vendor in vendors">
+          	   <vendor-card data="vendor"></vendor-card>
+          </div>
       </div>
-    </div> 
+    </div>
   </div>    
 </div> 	
 

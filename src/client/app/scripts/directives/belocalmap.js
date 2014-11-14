@@ -1,0 +1,145 @@
+'use strict';
+
+angular.module('clientApp')
+  .directive('beLocalMap', function ($timeout, $compile, StateService, $location) {
+    return {
+      scope: {
+        lat: '=', // latitude of the map
+        long: '=', // longitude of the map
+        zoom: '=', // zoom level of the map
+        data: '=', // list of objects to display on map
+      },  
+      link: function ($scope, elem, attrs) {
+
+        console.log($scope.data);
+
+        var style = [{"featureType":"landscape","stylers":[{"hue":"#FFA800"},{"saturation":0},{"lightness":0},{"gamma":1}]},{"featureType":"road.highway","stylers":[{"hue":"#53FF00"},{"saturation":-73},{"lightness":40},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FBFF00"},{"saturation":0},{"lightness":0},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#00FFFD"},{"saturation":0},{"lightness":30},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#00BFFF"},{"saturation":6},{"lightness":8},{"gamma":1}]},{"featureType":"poi","stylers":[{"hue":"#679714"},{"saturation":33.4},{"lightness":-25.4},{"gamma":1}]}]
+
+        var mapOptions,
+          latitude = $scope.lat,
+          longitude = $scope.long,
+          zoom = $scope.zoom,
+          markers = [],
+          bubbles = [],
+          map;
+
+        latitude = latitude && parseFloat(latitude, 10) || 48.4630959;
+        longitude = longitude && parseFloat(longitude, 10) || -123.3121053;
+        zoom = zoom && parseInt(zoom) || 10;
+
+        mapOptions = {
+          panControl: false,
+          streetViewControl: false,
+          mapTypeControl: false,
+          zoom: zoom,
+          center: new google.maps.LatLng(latitude, longitude),
+          styles: style,
+        };
+
+        map = new google.maps.Map(elem[0], mapOptions);
+
+        google.maps.event.addListener(map, 'click', function() {
+          $scope.closeAllBubbles();
+        });        
+
+        $scope.$on('generateMapPins', function() {
+          $timeout(function() {
+            // Initialize map
+            for(var i = 0; i < $scope.data.length; i++) {
+                var object = $scope.data[i];
+
+                if(object.selling_locations) {
+                    for(var j = 0; j < object.selling_locations.length; j++) {
+                        var sellingLocation = object.selling_locations[j];
+
+                        var infoTemplate = $scope.getInfoTemplate(sellingLocation, object);
+                        var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
+                        $scope.createMarker(center, infoTemplate);                  
+                    }
+                }
+            }
+          });
+        });
+
+        // Close all bubbles on the map
+        $scope.closeAllBubbles = function() {
+          for(var i = 0; i < bubbles.length; i++) {
+            bubbles[i].close(map, markers[i]);
+          }
+        }
+
+        // Close all bubbles except for the one that's already open
+        $scope.closeAllBubblesExcept = function() {
+          for(var i = 0; i < bubbles.length; i++) {
+            if(!bubbles[i].opened) {
+              bubbles[i].close(map, markers[i]);              
+            }
+          }
+        }        
+
+        $scope.createMarker = function(center, infoTemplate) {
+            var marker = new google.maps.Marker({
+              position: center,
+              map: map
+            });
+            markers.push(marker);
+
+            var infowindow = new google.maps.InfoWindow();
+            infowindow.setContent(infoTemplate); 
+            var compiled = ($compile(infowindow.content)($scope));
+            infowindow.setContent(compiled[0]); 
+
+            google.maps.event.addListener(marker, 'click', function() {
+              $scope.closeAllBubblesExcept();
+              infowindow.open(map, marker); 
+            }); 
+
+            bubbles.push(infowindow);                                 
+        }
+
+        $scope.getInfoTemplate = function(object, parent) {
+            var infoTemplate = '' + 
+            '<div class="info-window-content">' + 
+            '<div id="bodyContent">' +
+            '<h5 class="no-bottom-margin">' + 
+            '<a class="vendor-card-name pointer" ng-click="displayVendor(' + parent.id + ')">' +
+             parent.company_name + 
+             '</a>' + 
+             '</h5>' +
+             '<p class="plain-text info-window-text">' + 
+             '<span style="color: black !important">' + 
+             object.name + '<br>' +
+             '</span>' +  
+             '<span class="info-window-text">' + 
+             object.address.addr_line1 + ', ' + object.address.state + ', ' + object.address.country +  
+             '</span>' +  
+             '</p><br>' +
+             '</div>' + 
+            '</div>';
+
+            return infoTemplate;           
+        }
+
+        $scope.$on('forceRefreshMap', function() {
+            $timeout(function() {
+                google.maps.event.trigger(map, 'resize');                
+                var bounds = new google.maps.LatLngBounds();
+                for(var i=0;i<markers.length;i++) {
+                 bounds.extend(markers[i].getPosition());
+                }
+                map.fitBounds(bounds);                
+            });
+        });
+
+        $scope.displayVendor = function (id) {
+          var user = StateService.getCurrentUser();
+          if(user && user.userType === 'VEN' && user.vendor.id === id) {
+            $location.path('/vendor');
+          } else {            
+            $location.path('vendor/details/'+ id);
+          }
+        };
+
+      }     
+    };
+  });

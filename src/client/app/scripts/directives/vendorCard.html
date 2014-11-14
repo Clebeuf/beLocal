@@ -4,7 +4,7 @@
 
   <!-- LARGE/MEDIUM SCREEN VIEW -->
   <div class="row vendor-card hidden-sm hidden-xs">
-    <div class="col-sm-1 no-padding">
+    <div class="col-sm-2 no-padding">
       <div class="vendor-image-container">
         <div class="vendor-images pointer" style="background-image:url({{vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;" ng-click="displayVendor(vendor.id)">
         </div>
@@ -19,12 +19,12 @@
           <br><span ng-show="vendor.phone != null" class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}
         </div>
     </div>
-    <div ng-show="StateService.getUserType() === 'SUP'" class="col-sm-6" style="text-align:right;">
+    <div ng-show="StateService.getUserType() === 'SUP'" class="col-sm-5" style="text-align:right;">
       <button class="btn btn-danger" ng-show="vendor.is_active" ng-click="activateVendor(vendor)">Deactivate</button>
       <button class="btn btn-success" ng-hide="vendor.is_active" ng-click="activateVendor(vendor)">Activate</button>      
     </div>
-    <div ng-show="vendor.products.length < 5" class="col-sm-{{5 - vendor.products.length}}"></div>
-    <div class="col-sm-1 no-padding" ng-repeat="product in vendor.products | limitTo:5">
+    <div ng-show="vendor.products.length < 4" class="col-sm-{{4 - vendor.products.length}}"></div>
+    <div class="col-sm-1 no-padding" ng-repeat="product in vendor.products | limitTo:4">
       <div class="vendor-image-container pointer" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(product)">
         <div class="vendor-images" style="background-image:url({{product.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
         </div>

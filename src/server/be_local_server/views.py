@@ -612,7 +612,7 @@ class VendorsView(generics.ListAPIView):
     vendors.
     """
     permission_classes = (AllowAny,)
-    serializer_class = serializers.CustomerVendorSerializer
+    serializer_class = serializers.VendorTabSerializer
 
     def get_queryset(self):
         vendors = Vendor.objects.filter(is_active=True)
@@ -644,7 +644,7 @@ class VendorsView(generics.ListAPIView):
                     vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote 
                     vendors.append(vendor)
                     
-            serializer = serializers.CustomerVendorSerializer(vendors, many=True)
+            serializer = serializers.VendorTabSerializer(vendors, many=True)
             return Response(serializer.data)
 
         else: 
@@ -654,7 +654,7 @@ class VendorsView(generics.ListAPIView):
                 for vendor in vendors:
                     vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
             
-            serializer = serializers.CustomerVendorSerializer(vendors, many=True)
+            serializer = serializers.VendorTabSerializer(vendors, many=True)
             return Response(serializer.data)
 
 class ListVendorLocations(generics.ListAPIView):

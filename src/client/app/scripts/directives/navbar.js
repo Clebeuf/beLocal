@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .directive('navBar', function (StateService, AuthService, $location, $timeout, $window, $http, $sce) {
+  .directive('navBar', function (StateService, AuthService, $location, $timeout, $window, $http, $sce, $rootScope) {
     return {
       restrict: 'E',
       templateUrl: 'scripts/directives/navbar.html',
@@ -15,6 +15,11 @@ angular.module('clientApp')
             $location.path('/manage');
         }
 
+        angular.element('a[data-toggle="tab"]').on('shown.bs.tab', function (e) { 
+            $rootScope.$broadcast('forceRefreshMap');
+            angular.element(e.target).triggerHandler('click');
+        });
+
         $scope.showLogin = function() {
             AuthService.showLogin().then(function(status) {
                 if(status === 500) {
@@ -22,6 +27,10 @@ angular.module('clientApp')
                 };
             });
         }
+
+        $scope.refreshMap = function() {
+            $rootScope.$broadcast('forceRefreshMap');    
+        }        
 
         $scope.updateProductSuggestions = function(val) {
             return $http.get(StateService.getServerAddress() + "search/autocomplete?q=" + val

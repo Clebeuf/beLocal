@@ -2,13 +2,20 @@
  * Globals
  */
 
-body {
+html {
   background:
     linear-gradient(
       rgba(0, 0, 0, 0.5), 
       rgba(0, 0, 0, 0.5)
     ), 
-    url('../images/sellerbanner-peas.jpg') !important;
+    url('http://inn2thewoods.com/Images/Gallery/Hi-Res/Gallery__Fresh_Produce_at_the_Seasonal_Farmers_Market.jpg') !important;
+/*    url('../images/sellerbanner-peas.jpg') !important;*/
+    background-size: cover !important;
+
+}
+
+p{
+  color: #696969 !important;
 }
 
 .facebook-button{
@@ -38,6 +45,7 @@ body {
 
  .how-it-works {
   text-transform: uppercase;
+  color: #696969;
  }
 
  .welcome-sign-in {
@@ -71,7 +79,7 @@ a:hover {
   color: #333;
   text-shadow: none; /* Prevent inheritence from `body` */
   background-color: #fff;
-  border: 1px solid #fff;
+  border: 1px solid #DDDDDD;
 }
 
 /*
@@ -90,17 +98,21 @@ a:hover {
   text-shadow: none;
  }
 
-html,
-body {
+html{
   height: 100%;
   background-color: #333;
   padding: 0px !important;
   margin: 0px !important;
 }
+
 body {
-  color: #fff;
+  margin: 30px !important;
+  height: 90%;
+  text-shadow: 0 1px 3px rgba(255,255,255,0.5);
+  border-radius: 25px;
   text-align: center;
-  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  max-width: 1100px;
+  background:rgba(255,255,255,0.8) !important;
 }
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
@@ -109,9 +121,10 @@ body {
   width: 100%;
   height: 100%; /* For at least Firefox */
   min-height: 100%;
-  -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
-          box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+/*  -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+          box-shadow: inset 0 0 100px rgba(0,0,0,.5);*/
 }
+
 .site-wrapper-inner {
   display: table-cell;
   vertical-align: top;
@@ -123,7 +136,7 @@ body {
 
 /* Padding for spacing */
 .inner {
-  padding: 30px;
+  padding: 30px 10px 10px 10px;
 }
 
 
@@ -146,21 +159,21 @@ body {
   padding-left: 0;
   font-size: 16px;
   font-weight: bold;
-  color: #fff; /* IE8 proofing */
-  color: rgba(255,255,255,.75);
+  color: #000; /* IE8 proofing */
+  color: rgba(0,0,0,.75);
   border-bottom: 2px solid transparent;
 }
 .masthead-nav > li > a:hover,
 .masthead-nav > li > a:focus {
   background-color: transparent !important;
   border-bottom-color: #a9a9a9;
-  border-bottom-color: rgba(255,255,255,.25);
+  border-bottom-color: rgba(0,0,0,.25);
 }
 .masthead-nav > .active > a,
 .masthead-nav > .active > a:hover,
 .masthead-nav > .active > a:focus {
-  color: #fff;
-  border-bottom-color: #fff;
+  color: #000;
+  border-bottom-color: #000;
 }
 
 @media (min-width: 768px) {
@@ -190,10 +203,24 @@ body {
  */
 
 .mastfoot {
-  color: #999; /* IE8 proofing */
-  color: rgba(255,255,255,.5);
+  color: #FFF; /* IE8 proofing */
+  color: rgba(255,255,255,0.3) !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
 }
 
+/*
+ * BeLocal Button
+ */
+
+.beLocal-btn-filled {
+  background-color: #8ed41e !important;
+  color: white !important;
+}
+
+.beLocal-btn-filled:hover {
+  background-color: #89cc1d !important;
+  color: white;
+}
 
 /*
  * Affix and center
@@ -228,3 +255,4 @@ body {
     width: 992px;
   }
 }
+

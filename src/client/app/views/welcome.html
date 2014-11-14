@@ -1,9 +1,12 @@
+<body align="center">
 <div class="site-wrapper">
+<div class="white-background"></div>
     <div class="site-wrapper-inner">
         <div class="cover-container">
             <div class="masthead clearfix">
                 <div class="inner">
-                    <h3 class="masthead-brand">be<span class="beLocal-highlight">Local</span></h3>
+                    <!-- <h3 class="masthead-brand">be<span class="beLocal-highlight">Local</span></h3> -->
+                    <img src="/images/logo.png" class="masthead-brand" style="width:250px;">
                     <ul class="nav masthead-nav" role="tablist">
                         <li class="active"><a href="/welcome/#home" role="tab" data-toggle="tab">Home</a></li>
                         <li><a href="/welcome/#customers" role="tab" data-toggle="tab">For Customers</a></li>
@@ -16,10 +19,10 @@
                 <div class="tab-pane active" id="home">
                     <div class="inner cover">
                         <h1 class="cover-heading">Discover Victoria's Local Food Scene</h1>
-                        <p class="lead">be<span class="beLocal-highlight">Local</span> connects you with the food grown around you. <br>To begin browsing without creating an account, click Get Started below.</p>
+                        <p class="lead">beLocal connects you with the food grown around you. <br>To begin browsing without creating an account, click Get Started below.</p>
 
                         <p class="lead">
-                            <a ng-click="getStarted()" class="btn btn-lg btn-default-welcome">Get Started</a>
+                            <a ng-click="getStarted()" class="btn btn-lg beLocal-btn-filled">Get Started</a>
                         </p>
                     </div>
                 </div>
@@ -33,15 +36,15 @@
                             <!-- Example row of columns -->
                             <div class="row">
                                 <div class="col-md-4">
-                                    <h2>Search</h2>
+                                    <h2>1. Search</h2>
                                     <p>Search for products, markets and local foodmakers in your area.</p>
                                 </div>
                                 <div class="col-md-4">
-                                    <h2>Browse</h2>
+                                    <h2>2. Browse</h2>
                                     <p>Browse individual products at farm stands, markets and stores.</p>
                                 </div>
                                 <div class="col-md-4">
-                                    <h2>Discover</h2>
+                                    <h2>3. Discover</h2>
                                     <p>Discover new foodmakers and sources of local food from the comfort of your home.</p>
                                 </div>
                             </div>
@@ -76,7 +79,7 @@
                             </div>
                             <br><br>
                             <p class="lead">
-                                <a ng-click="signUpAsVendor()" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square" style="font-size:30px;"></i> Sign Up as a Farmer</a>
+                                <a ng-click="signUpAsVendor()" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square"></i> Sign Up as a Farmer</a>
                             </p>
                         </div>
                     </div>
@@ -84,7 +87,7 @@
             </div>
             <div class="mastfoot">
                 <div class="inner">
-                    <p>&copy; 2014 beLocal</p>
+                    &copy; 2014 beLocal Victoria
                 </div>
             </div>
         </div>
@@ -124,3 +127,4 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+</body>

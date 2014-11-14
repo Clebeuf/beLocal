@@ -3,7 +3,7 @@
 <!--       <img ng-src="{{vendor.photo.image_url}}" /> -->
 
   <!-- LARGE/MEDIUM SCREEN VIEW -->
-  <div class="row vendor-card hidden-sm hidden-xs">
+  <div ng-mouseenter="highlightPins(vendor)" ng-mouseleave="unHighlightPins(vendor)" class="row vendor-card hidden-sm hidden-xs">
     <div class="col-sm-2 no-padding">
       <div class="vendor-image-container">
         <div class="vendor-images pointer" style="background-image:url({{vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;" ng-click="displayVendor(vendor.id)">

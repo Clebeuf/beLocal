@@ -7,11 +7,11 @@ angular.module('clientApp')
         lat: '=', // latitude of the map
         long: '=', // longitude of the map
         zoom: '=', // zoom level of the map
-        data: '=', // list of objects to display on map
+        vendors: '=', // list of objects to display on map
       },  
       link: function ($scope, elem, attrs) {
 
-        console.log($scope.data);
+        console.log($scope.vendors);
 
         var style = [{"featureType":"landscape","stylers":[{"hue":"#FFA800"},{"saturation":0},{"lightness":0},{"gamma":1}]},{"featureType":"road.highway","stylers":[{"hue":"#53FF00"},{"saturation":-73},{"lightness":40},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FBFF00"},{"saturation":0},{"lightness":0},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#00FFFD"},{"saturation":0},{"lightness":30},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#00BFFF"},{"saturation":6},{"lightness":8},{"gamma":1}]},{"featureType":"poi","stylers":[{"hue":"#679714"},{"saturation":33.4},{"lightness":-25.4},{"gamma":1}]}]
 
@@ -44,9 +44,11 @@ angular.module('clientApp')
 
         $scope.$on('generateMapPins', function() {
           $timeout(function() {
+
             // Initialize map
-            for(var i = 0; i < $scope.data.length; i++) {
-                var object = $scope.data[i];
+            for(var i = 0; i < $scope.vendors.length; i++) {
+                var object = $scope.vendors[i];
+                object.markers = [];
 
                 if(object.selling_locations) {
                     for(var j = 0; j < object.selling_locations.length; j++) {
@@ -54,7 +56,7 @@ angular.module('clientApp')
 
                         var infoTemplate = $scope.getInfoTemplate(sellingLocation, object);
                         var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
-                        $scope.createMarker(center, infoTemplate);                  
+                        object.markers.push($scope.createMarker(center, infoTemplate));
                     }
                 }
             }
@@ -94,7 +96,9 @@ angular.module('clientApp')
               infowindow.open(map, marker); 
             }); 
 
-            bubbles.push(infowindow);                                 
+            bubbles.push(infowindow);
+
+            return marker;                               
         }
 
         $scope.getInfoTemplate = function(object, parent) {

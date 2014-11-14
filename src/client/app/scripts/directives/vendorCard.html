@@ -42,7 +42,7 @@
 
 
   <!-- SMALL SCREEN VIEW -->
-  <div class="row vendor-card hidden-md hidden-lg hidden-xs">
+  <div ng-mouseenter="highlightPins(vendor)" ng-mouseleave="unHighlightPins(vendor)" class="row vendor-card hidden-md hidden-lg hidden-xs">
     <div class="col-xs-2 no-padding">
       <div class="vendor-image-container">
         <div class="vendor-images pointer" style="background-image:url({{vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;" ng-click="displayVendor(vendor.id)">
@@ -78,7 +78,7 @@
 
   <!-- XS SCREEN VIEW -->
 
-    <div class="row vendor-card hidden-md hidden-lg hidden-sm">
+    <div ng-mouseenter="highlightPins(vendor)" ng-mouseleave="unHighlightPins(vendor)" class="row vendor-card hidden-md hidden-lg hidden-sm">
     <div class="col-xs-3 no-padding">
       <div class="vendor-image-container">
         <div class="vendor-images pointer" style="background-image:url({{vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;" ng-click="displayVendor(vendor.id)">

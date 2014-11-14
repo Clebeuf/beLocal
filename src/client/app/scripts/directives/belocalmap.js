@@ -8,10 +8,9 @@ angular.module('clientApp')
         long: '=', // longitude of the map
         zoom: '=', // zoom level of the map
         vendors: '=', // list of objects to display on map
+        markets: '=', // list of markets to display on map
       },  
       link: function ($scope, elem, attrs) {
-
-        console.log($scope.vendors);
 
         var style = [{"featureType":"landscape","stylers":[{"hue":"#FFA800"},{"saturation":0},{"lightness":0},{"gamma":1}]},{"featureType":"road.highway","stylers":[{"hue":"#53FF00"},{"saturation":-73},{"lightness":40},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FBFF00"},{"saturation":0},{"lightness":0},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#00FFFD"},{"saturation":0},{"lightness":30},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#00BFFF"},{"saturation":6},{"lightness":8},{"gamma":1}]},{"featureType":"poi","stylers":[{"hue":"#679714"},{"saturation":33.4},{"lightness":-25.4},{"gamma":1}]}]
 
@@ -46,19 +45,29 @@ angular.module('clientApp')
           $timeout(function() {
 
             // Initialize map
-            for(var i = 0; i < $scope.vendors.length; i++) {
-                var object = $scope.vendors[i];
-                object.markers = [];
+            if($scope.vendors != undefined) {
+              for(var i = 0; i < $scope.vendors.length; i++) {
+                  var vendor = $scope.vendors[i];
+                  vendor.markers = [];
 
-                if(object.selling_locations) {
-                    for(var j = 0; j < object.selling_locations.length; j++) {
-                        var sellingLocation = object.selling_locations[j];
+                  if(vendor.selling_locations) {
+                      for(var j = 0; j < vendor.selling_locations.length; j++) {
+                          var sellingLocation = vendor.selling_locations[j];
 
-                        var infoTemplate = $scope.getInfoTemplate(sellingLocation, object);
-                        var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
-                        object.markers.push($scope.createMarker(center, infoTemplate));
-                    }
-                }
+                          var infoTemplate = $scope.getVendorInfoTemplate(sellingLocation, vendor);
+                          var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
+                          vendor.markers.push($scope.createMarker(center, infoTemplate));
+                      }
+                  }
+              }
+            } else if($scope.markets != undefined) {
+              for(var i = 0; i < $scope.markets.length; i++) {
+                  var market = $scope.markets[i];
+
+                  var infoTemplate = $scope.getMarketInfoTemplate(market);
+                  var center = new google.maps.LatLng(market.address.latitude, market.address.longitude);
+                  market.marker = $scope.createMarker(center, infoTemplate);
+              }
             }
           });
         });
@@ -101,10 +110,30 @@ angular.module('clientApp')
             return marker;                               
         }
 
-        $scope.getInfoTemplate = function(object, parent) {
+        $scope.getMarketInfoTemplate = function(market) {
             var infoTemplate = '' + 
             '<div class="info-window-content">' + 
-            '<div id="bodyContent">' +
+            '<div>' +
+            '<h5 class="no-bottom-margin">' + 
+            '<a class="vendor-card-name pointer" ng-click="displayMarket(' + market.id + ')">' +
+             market.name + 
+             '</a>' + 
+             '</h5>' +
+             '<p class="plain-text info-window-text">' +   
+             '<span class="info-window-text">' + 
+             market.address.addr_line1 + ', ' + market.address.state + ', ' + market.address.country +  
+             '</span>' +  
+             '</p><br>' +
+             '</div>' + 
+            '</div>';
+
+            return infoTemplate;           
+        }
+
+        $scope.getVendorInfoTemplate = function(object, parent) {
+            var infoTemplate = '' + 
+            '<div class="info-window-content">' + 
+            '<div>' +
             '<h5 class="no-bottom-margin">' + 
             '<a class="vendor-card-name pointer" ng-click="displayVendor(' + parent.id + ')">' +
              parent.company_name + 
@@ -143,6 +172,10 @@ angular.module('clientApp')
             $location.path('vendor/details/'+ id);
           }
         };
+
+        $scope.displayMarket = function (id) {
+          $location.path('market/details/'+id).replace();
+        };        
 
       }     
     };

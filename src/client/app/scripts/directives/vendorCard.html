@@ -19,7 +19,7 @@
           <br><span ng-show="vendor.phone != null" class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}
         </div>
     </div>
-    <div ng-show="StateService.getUserType() === 'SUP'" class="col-sm-5" style="text-align:right;">
+    <div ng-show="currentState.name === 'manage'" class="col-sm-5" style="text-align:right;">
       <button class="btn btn-danger" ng-show="vendor.is_active" ng-click="activateVendor(vendor)">Deactivate</button>
       <button class="btn btn-success" ng-hide="vendor.is_active" ng-click="activateVendor(vendor)">Activate</button>      
     </div>

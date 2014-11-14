@@ -1,10 +1,12 @@
 'use strict';
 angular.module('clientApp')
-  .directive('vendorCard', function (StateService, $timeout) {
+  .directive('vendorCard', function (StateService, $timeout, $state) {
     return {
       templateUrl: 'scripts/directives/vendorCard.html',
       restrict: 'E',
-      link: function postLink(scope, $state, element, attrs) {
+      link: function postLink(scope, element, attrs) {   
+
+        scope.currentState = $state.current;
         
         if (StateService.getCurrentUser() === undefined) {
           scope.likeDisabled = true;

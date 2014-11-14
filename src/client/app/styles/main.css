@@ -333,14 +333,14 @@ textarea {
 html {
   position: relative;
   min-height: 100%;
-  background-color: #DDDDDD;
-  /*background-color: #EEEEEE;*/
+  /*background-color: #DDDDDD;*/
+  background-color: #EEEEEE;
 }
 
 body {
   /* Margin bottom by footer height */
   margin-bottom: 40px;
-  background-color: #DDDDDD;
+  background-color: #EEEEEE;
   font-family: 'Roboto', sans-serif !important;;
 }
 
@@ -403,7 +403,7 @@ body {
 }
 
 .no-top-margin {
-  margin-top: 0px;
+  margin-top: 0px !important;
 }
 
 .container-md {
@@ -1334,4 +1334,27 @@ hr{
 
 .tag-bar {
   margin-top: 45px;
-}  
+}
+
+/* MAP STYLES */
+
+.bl-map {
+  margin-right: 20px;
+  width: 100%;
+  height: 600px;
+}
+
+.map-container {
+  background-color: white;
+  padding: 3px;
+  margin-top:15px;
+  border: 1px solid #DDD;  
+}
+
+.info-window-content {
+  width: 200px;
+}
+
+.info-window-text {
+  font-size: 12px !important;
+}

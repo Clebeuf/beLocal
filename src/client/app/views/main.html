@@ -9,7 +9,7 @@
       <div class="row">
         <div class="col-xs-12 hr-description-style">
           <div>
-            Explore {{marketList.length}} local markets found in your area.
+            Explore {{marketList.length}} local market<span ng-hide="marketList.length === 1">s</span> found in your area.
           </div>
         </div>
       </div>
@@ -20,9 +20,19 @@
       </div>
 
       <br>
-      <div class="row" id="masonry-market-container">
-        <div class="col-trending ms-market-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="market in marketList" >
-          <market-card data="market"></market-card>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="no-top-margin map-container" style="margin-bottom:15px">
+            <div class="bl-map" be-local-map markets="marketList"></div>
+          </div>
+        </div> 
+
+        <div class="col-sm-8">
+          <div class="row" id="masonry-market-container">
+            <div class="col-trending ms-market-item col-md-4 col-sm-6" ng-repeat="market in marketList" >
+              <market-card data="market"></market-card>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -103,7 +113,7 @@
       <div class="row">
         <div class="col-xs-12 hr-description-style">
           <div>
-            Explore {{vendors.length}} local farmers and foodmakers found in your area.
+            Explore {{vendors.length}} local farmer<span ng-hide="vendors.length === 1">s</span> and foodmaker<span ng-hide="vendors.length === 1">s</span> found in your area.
           </div>
         </div>
       </div>
@@ -113,10 +123,17 @@
         </div>
       </div>
 
-      <div ng-repeat="vendor in vendors">
-      	   <vendor-card data="vendor"></vendor-card>
+      <div class="row">
+          <div class="col-sm-4">
+            <div class="map-container">
+              <div class="bl-map" be-local-map vendors="vendors"></div>
+            </div>
+          </div>
+          <div class="col-sm-8" ng-repeat="vendor in vendors">
+          	   <vendor-card data="vendor"></vendor-card>
+          </div>
       </div>
-    </div> 
+    </div>
   </div>    
 </div> 	
 

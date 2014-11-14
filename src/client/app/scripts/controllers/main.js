@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q) {
+  .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q, $rootScope) {
 
     $scope.showCategory = false;
     $scope.showTag = false;
@@ -101,7 +101,7 @@ angular.module('clientApp')
       } else {            
         $location.path('vendor/details/'+ id);
       }
-    };       
+    };
 
     $scope.showProductDetailsModal = function(item) {
       $scope.product = item;    
@@ -138,14 +138,9 @@ angular.module('clientApp')
         });
         StateService.getVendors().then(function() {
           $scope.vendors = StateService.getVendorsList();
+          $rootScope.$broadcast('generateMapPins');
         });        
     });
-
-  /* Magic! This is a hacky way of ensuring that masonry rebuilds itself while the proper tab content pane is visible
-     (it won't work otherwise) */
-  angular.element('a[data-toggle="tab"]').on('shown.bs.tab', function (e) { 
-    angular.element(e.target).triggerHandler('click');
-  })
 
   StateService.getMarkets().then(function() {
     $scope.marketList = StateService.getMarketList();

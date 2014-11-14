@@ -22,7 +22,15 @@ angular.module('clientApp')
 
         scope.displayMarket = function (id) {
           $location.path('market/details/'+id).replace();
-        };        
+        };
+
+        scope.highlightPins = function(market) {
+            market.marker.setAnimation(google.maps.Animation.BOUNCE);
+        };
+
+        scope.unHighlightPins = function(market) {
+            market.marker.setAnimation(null);
+        };              
 
         scope.likeUnlikeItem = function(item, itemName) {
           StateService.likeUnlikeItem(item, itemName).then(function() {

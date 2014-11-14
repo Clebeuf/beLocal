@@ -9,6 +9,7 @@ angular.module('clientApp')
         zoom: '=', // zoom level of the map
         vendors: '=', // list of objects to display on map
         markets: '=', // list of markets to display on map
+        locations: '=', // list of selling locations to display on map
       },  
       link: function ($scope, elem, attrs) {
 
@@ -45,30 +46,19 @@ angular.module('clientApp')
           $timeout(function() {
             // Initialize map
             if($scope.vendors != undefined) {
-              if($scope.vendors.constructor === Array) {
-                for(var i = 0; i < $scope.vendors.length; i++) {
-                    var vendor = $scope.vendors[i];
-                    vendor.markers = [];
+              for(var i = 0; i < $scope.vendors.length; i++) {
+                  var vendor = $scope.vendors[i];
+                  vendor.markers = [];
 
-                    if(vendor.selling_locations) {
-                        for(var j = 0; j < vendor.selling_locations.length; j++) {
-                            var sellingLocation = vendor.selling_locations[j];
+                  if(vendor.selling_locations) {
+                      for(var j = 0; j < vendor.selling_locations.length; j++) {
+                          var sellingLocation = vendor.selling_locations[j];
 
-                            var infoTemplate = $scope.getVendorInfoTemplate(sellingLocation, vendor);
-                            var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
-                            vendor.markers.push($scope.createMarker(center, infoTemplate));
-                        }
-                    }
-                }
-              } else {
-                var vendor = $scope.vendors;
-                for(var j = 0; j < vendor.selling_locations.length; j++) {
-                    var sellingLocation = vendor.selling_locations[j];
-
-                    var infoTemplate = $scope.getVendorInfoTemplate(sellingLocation, vendor);
-                    var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
-                    sellingLocation.marker = $scope.createMarker(center, infoTemplate);
-                }
+                          var infoTemplate = $scope.getVendorInfoTemplate(sellingLocation, vendor);
+                          var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
+                          vendor.markers.push($scope.createMarker(center, infoTemplate));
+                      }
+                  }
               }
             } 
 
@@ -81,6 +71,17 @@ angular.module('clientApp')
                   market.marker = $scope.createMarker(center, infoTemplate);
               }
             }
+
+            if($scope.locations != undefined) {
+              for(var i = 0; i < $scope.locations.length; i++) {
+                  var sellingLocation = $scope.locations[i];
+
+                  var infoTemplate = $scope.getLocationInfoTemplate(sellingLocation);
+                  var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
+                  sellingLocation.marker = $scope.createMarker(center, infoTemplate);
+              }              
+            }
+
           });
         });
 
@@ -164,6 +165,26 @@ angular.module('clientApp')
 
             return infoTemplate;           
         }
+
+        $scope.getLocationInfoTemplate = function(object) {
+            var infoTemplate = '' + 
+            '<div class="info-window-content">' + 
+            '<div>' +
+            '<h5 class="no-bottom-margin">' + 
+            '<a class="vendor-card-name pointer">' +
+             object.name  + 
+             '</a>' + 
+             '</h5>' +
+             '<p class="plain-text info-window-text">' + 
+             '<span class="info-window-text">' + 
+             object.address.addr_line1 + ', ' + object.address.state + ', ' + object.address.country +  
+             '</span>' +  
+             '</p><br>' +
+             '</div>' + 
+            '</div>';
+
+            return infoTemplate;           
+        }        
 
         $scope.$on('forceRefreshMap', function() {
             $timeout(function() {

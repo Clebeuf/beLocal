@@ -44,6 +44,7 @@ angular.module('clientApp')
 
         $scope.$on('generateMapPins', function() {
           $timeout(function() {
+            $scope.clearMarkers();            
             // Initialize map
             if($scope.vendors != undefined) {
               for(var i = 0; i < $scope.vendors.length; i++) {
@@ -84,6 +85,15 @@ angular.module('clientApp')
 
           });
         });
+
+        // Completely clear all markers on the map
+        $scope.clearMarkers = function() {
+          for(var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+          }
+          markers = [];
+          bubbles = [];
+        };
 
         // Close all bubbles on the map
         $scope.closeAllBubbles = function() {

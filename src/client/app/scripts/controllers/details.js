@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('DetailsCtrl', function ($scope, $timeout, $stateParams, StateService) {
+  .controller('DetailsCtrl', function ($scope, $timeout, $stateParams, StateService, $rootScope) {
 
     StateService.setVendorToDisplay($stateParams.vendorid);
 
@@ -17,6 +17,8 @@ angular.module('clientApp')
     
     StateService.getVendorInfo().then(function() {
     	$scope.vendorDetails = StateService.getVendorDetails();
+        $rootScope.$broadcast('generateMapPins');
+        $rootScope.$broadcast('forceRefreshMap');
     });
 
     $scope.weekdays = [
@@ -28,6 +30,14 @@ angular.module('clientApp')
         'Saturday',
         'Sunday'
     ];
+
+    $scope.highlightPins = function(object) {
+        object.marker.setAnimation(google.maps.Animation.BOUNCE);
+    };
+
+    $scope.unHighlightPins = function(object) {
+        object.marker.setAnimation(null);
+    };    
 
     $scope.showProductDetailsModal = function(item) {
         $scope.product = item;      

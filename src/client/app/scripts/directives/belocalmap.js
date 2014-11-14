@@ -43,24 +43,36 @@ angular.module('clientApp')
 
         $scope.$on('generateMapPins', function() {
           $timeout(function() {
-
             // Initialize map
             if($scope.vendors != undefined) {
-              for(var i = 0; i < $scope.vendors.length; i++) {
-                  var vendor = $scope.vendors[i];
-                  vendor.markers = [];
+              if($scope.vendors.constructor === Array) {
+                for(var i = 0; i < $scope.vendors.length; i++) {
+                    var vendor = $scope.vendors[i];
+                    vendor.markers = [];
 
-                  if(vendor.selling_locations) {
-                      for(var j = 0; j < vendor.selling_locations.length; j++) {
-                          var sellingLocation = vendor.selling_locations[j];
+                    if(vendor.selling_locations) {
+                        for(var j = 0; j < vendor.selling_locations.length; j++) {
+                            var sellingLocation = vendor.selling_locations[j];
 
-                          var infoTemplate = $scope.getVendorInfoTemplate(sellingLocation, vendor);
-                          var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
-                          vendor.markers.push($scope.createMarker(center, infoTemplate));
-                      }
-                  }
+                            var infoTemplate = $scope.getVendorInfoTemplate(sellingLocation, vendor);
+                            var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
+                            vendor.markers.push($scope.createMarker(center, infoTemplate));
+                        }
+                    }
+                }
+              } else {
+                var vendor = $scope.vendors;
+                for(var j = 0; j < vendor.selling_locations.length; j++) {
+                    var sellingLocation = vendor.selling_locations[j];
+
+                    var infoTemplate = $scope.getVendorInfoTemplate(sellingLocation, vendor);
+                    var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
+                    sellingLocation.marker = $scope.createMarker(center, infoTemplate);
+                }
               }
-            } else if($scope.markets != undefined) {
+            } 
+
+            if($scope.markets != undefined) {
               for(var i = 0; i < $scope.markets.length; i++) {
                   var market = $scope.markets[i];
 

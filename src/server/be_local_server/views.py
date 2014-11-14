@@ -208,7 +208,7 @@ class VendorDetailsView(generics.CreateAPIView):
                     market.is_liked = Market.objects.from_request(self.request).get(pk=market.id).user_vote                    
 
             return Response({"vendor":serializers.VendorSerializer(vendor).data, 
-                             "locations":serializers.SellerLocationSerializer(locations, many=True).data,
+                             "selling_locations":serializers.SellerLocationSerializer(locations, many=True).data,
                              "markets":serializers.MarketDisplaySerializer(markets, many=True).data,
                              "products":serializers.ProductDisplaySerializer(products, many=True).data
                             }, 

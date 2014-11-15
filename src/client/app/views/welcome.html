@@ -11,7 +11,8 @@
                         <li class="active"><a href="/welcome/#home" role="tab" data-toggle="tab">Home</a></li>
                         <li><a href="/welcome/#customers" role="tab" data-toggle="tab">For Customers</a></li>
                         <li><a href="/welcome/#vendors" role="tab" data-toggle="tab">For Farmers</a></li>
-                        <li><a class="pointer welcome-sign-in" ng-click="signIn()">Sign In</a></li>
+                        <!-- <li><a class="pointer welcome-sign-in" ng-click="signIn()">Sign In</a></li> -->
+                        <a ng-click="signIn()" class="btn btn-md beLocal-btn-filled" style="margin-left:10px;">Sign In</a>
                     </ul>
                 </div>
             </div>
@@ -48,9 +49,9 @@
                                     <p>Discover new foodmakers and sources of local food from the comfort of your home.</p>
                                 </div>
                             </div>
-                            <br><br>
+                            <br>
                             <p class="lead">
-                                <a ng-click="signUpAsCustomer()" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square"></i> Sign Up as a Customer</a>
+                                <a ng-click="signUpAsCustomer()" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square"></i> Sign Up Using Facebook</a>
                             </p>
                         </div>
                     </div>
@@ -77,9 +78,9 @@
                                     <p>Share your latest updates on social media and connect with local customers instantly.</p>
                                 </div>
                             </div>
-                            <br><br>
+                            <br>
                             <p class="lead">
-                                <a ng-click="signUpAsVendor()" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square"></i> Sign Up as a Farmer</a>
+                                <a ng-click="signUpAsVendor()" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square"></i> Sign Up Using Facebook</a>
                             </p>
                         </div>
                     </div>

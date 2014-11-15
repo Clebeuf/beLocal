@@ -180,6 +180,10 @@ body {
   .masthead-brand {
     float: left;
   }
+  .masthead-nav {
+    /*float: right;*/
+    margin-right: auto;
+  }
 }
 
 /*
@@ -228,23 +232,22 @@ body {
  */
 
 
-.mastfoot {
-    position: fixed;
-    bottom: 0;
-  }
-
 @media (min-width: 768px) {
   /* Pull out the header and footer */
   .masthead {
-    position: fixed;
+   position: fixed;
     top: 0;
   }
+
+
   /* Start the vertical centering */
   .site-wrapper-inner {
     vertical-align: middle;
   }
   /* Handle the widths */
-  .masthead,
+  .masthead {
+    width:90%;
+  }
   .mastfoot,
   .cover-container {
     width: 100%; /* Must be percentage or pixels for horizontal alignment */

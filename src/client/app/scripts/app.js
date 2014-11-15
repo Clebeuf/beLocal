@@ -77,7 +77,7 @@ var app = angular.module('clientApp', [
 
   .run(function ($rootScope, $state, $location, AuthService, StateService, ipCookie, $timeout) {
       OAuth.initialize('FFQwiNbZnNhnZMbxNeUWxjQVSjk');
-      $location.hash(null);
+      $location.hash('trending');
 
       $rootScope.$watch(function () {
           return $location.hash();

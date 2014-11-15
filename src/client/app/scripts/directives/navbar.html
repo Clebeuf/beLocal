@@ -81,7 +81,7 @@
       </div>
       <div style="float:left" class="">
         <ul class="list-inline nav-shadow">
-          <li class="active"><a class="pointer" data-target="#trending" data-toggle="tab" ng-click="setHash('trending'); trendingMasonry()" id="trendingTab">
+          <li ng-class="{active : state.$current.name === 'main'}"><a class="pointer" data-target="#trending" data-toggle="tab" ng-click="setHash('trending'); trendingMasonry()" id="trendingTab">
             <span class="hidden-sm hidden-xs no-block">In Season Now</span>
             <span class="hidden-md hidden-lg no-block">In Season</span>
           </a></li>

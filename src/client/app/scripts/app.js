@@ -11,7 +11,7 @@ var app = angular.module('clientApp', [
   'ui.bootstrap',
   'mgcrea.ngStrap.timepicker',
 ])
-  .config(function ($stateProvider, $httpProvider, $urlRouterProvider, $locationProvider) {
+  .config(function ($stateProvider, $httpProvider, $urlRouterProvider, $locationProvider, $anchorScrollProvider) {
 
     $stateProvider
     .state('welcome', {
@@ -70,6 +70,9 @@ var app = angular.module('clientApp', [
 
     // Define the default action to be taken if an unrecognized route is taken.
     $urlRouterProvider.otherwise('/');
+
+    // Disable scrolling when tabs are clicked
+    $anchorScrollProvider.disableAutoScrolling();
   })
 
   .run(function ($rootScope, $state, $location, AuthService, StateService, ipCookie, $timeout) {

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .directive('navBar', function (StateService, AuthService, $location, $timeout, $window, $http, $sce, $rootScope) {
+  .directive('navBar', function (StateService, AuthService, $location, $timeout, $window, $http, $sce, $rootScope, $state) {
     return {
       restrict: 'E',
       templateUrl: 'scripts/directives/navbar.html',
@@ -10,6 +10,7 @@ angular.module('clientApp')
         $scope.loginError = false;
         $scope.productSuggestions = [];
         $scope.StateService = StateService;
+        $scope.state = $state;
 
         $scope.goToManage = function() {
             $location.path('/manage');

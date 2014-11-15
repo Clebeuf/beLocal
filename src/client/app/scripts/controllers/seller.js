@@ -705,11 +705,13 @@ angular.module('clientApp')
     }
 
     $scope.highlightPins = function(object) {
-        object.marker.setAnimation(google.maps.Animation.BOUNCE);
+        if(object && object.marker)          
+            object.marker.setAnimation(google.maps.Animation.BOUNCE);
     };
 
     $scope.unHighlightPins = function(object) {
-        object.marker.setAnimation(null);
+        if(object && object.marker)          
+            object.marker.setAnimation(null);
     };    
 
     $scope.init = function() {

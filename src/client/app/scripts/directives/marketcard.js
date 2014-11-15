@@ -25,11 +25,13 @@ angular.module('clientApp')
         };
 
         scope.highlightPins = function(market) {
-            market.marker.setAnimation(google.maps.Animation.BOUNCE);
+            if(object && object.marker)             
+                market.marker.setAnimation(google.maps.Animation.BOUNCE);
         };
 
         scope.unHighlightPins = function(market) {
-            market.marker.setAnimation(null);
+            if(object && object.marker) 
+                market.marker.setAnimation(null);
         };              
 
         scope.likeUnlikeItem = function(item, itemName) {

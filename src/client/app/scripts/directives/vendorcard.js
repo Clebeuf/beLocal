@@ -7,15 +7,19 @@ angular.module('clientApp')
       link: function postLink(scope, element, attrs) { 
 
         scope.highlightPins = function(vendor) {
-          angular.forEach(vendor.markers, function(marker){
-              marker.setAnimation(google.maps.Animation.BOUNCE);
-          });
+          if(vendor) {
+            angular.forEach(vendor.markers, function(marker){
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+            });
+          }
         };
 
         scope.unHighlightPins = function(vendor) {
-          angular.forEach(vendor.markers, function(marker){
-              marker.setAnimation(null);
-          });
+          if(vendor) {
+            angular.forEach(vendor.markers, function(marker){
+                marker.setAnimation(null);
+            });
+          }
         };
 
         scope.currentState = $state.current;

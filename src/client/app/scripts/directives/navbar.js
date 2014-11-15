@@ -73,11 +73,7 @@ angular.module('clientApp')
         }         
 
         $scope.reloadMainPage = function() {
-            $location.path('/');
-
-            $timeout(function() {
-                angular.element('#trendingTab').trigger('click');
-            })
+            $scope.setHash('trending');
         }
 
         $scope.createVendor = function() {

@@ -1,15 +1,53 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q, $rootScope) {
+  .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q, $rootScope, $window) {
 
     $scope.showCategory = false;
     $scope.showTag = false;
     $scope.selectedCategory = 'All Products';
     $scope.selectedTags = 'All Products';
     $scope.productFilterExpr = {};
+    $scope.showXSNav = false;
 
     $scope.tagToDisplay = StateService.readTagToDisplay();
+
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };
+
+    $scope.checkNav = function() {
+      if(angular.element($window).scrollTop() > 140 || angular.element($window).width() < 768) {
+        $scope.safeApply(function() {
+          $scope.showXSNav = true;
+        });
+      } else {
+        $scope.safeApply(function() {
+          $scope.showXSNav = false;
+        })
+      }        
+    }
+
+    if(angular.element($window).width() < 768) {
+      $scope.safeApply(function() {
+        $scope.showXSNav = true;
+      });
+    }            
+
+    angular.element($window).resize(function() {
+        $scope.checkNav();
+    });    
+
+    angular.element($window).scroll(function(){
+        $scope.checkNav();        
+    });
 
     $scope.instantTrendingMasonry = function() {
       $timeout(function() {

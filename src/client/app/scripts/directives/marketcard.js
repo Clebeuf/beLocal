@@ -25,12 +25,12 @@ angular.module('clientApp')
         };
 
         scope.highlightPins = function(market) {
-            if(object && object.marker)             
+            if(market && market.marker)             
                 market.marker.setAnimation(google.maps.Animation.BOUNCE);
         };
 
         scope.unHighlightPins = function(market) {
-            if(object && object.marker) 
+            if(market && market.marker) 
                 market.marker.setAnimation(null);
         };              
 

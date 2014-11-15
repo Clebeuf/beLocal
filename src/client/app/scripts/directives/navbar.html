@@ -81,15 +81,15 @@
       </div>
       <div style="float:left" class="">
         <ul class="list-inline nav-shadow">
-          <li class="active"><a href="#trending" id="trendingTab" data-toggle="tab">
+          <li class="active"><a class="pointer" data-target="#trending" data-toggle="tab" ng-click="setHash('trending'); trendingMasonry()" id="trendingTab">
             <span class="hidden-sm hidden-xs no-block">In Season Now</span>
             <span class="hidden-md hidden-lg no-block">In Season</span>
           </a></li>
-          <li><a href="#vendors" id="vendorsTab" data-toggle="tab">
+          <li><a data-target="#vendors" class="pointer" data-toggle="tab" ng-click="setHash('vendors');" id="vendorsTab">
             <span class="hidden-sm hidden-xs no-block">Farmers & Foodmakers</span>
             <span class="hidden-md hidden-lg no-block">Local Producers</span>
           </a></li>
-          <li><a href="#markets" ng-click="marketMasonry()" id="marketsTab" data-toggle="tab">
+          <li><a data-target="#markets" class="pointer" data-toggle="tab" ng-click="setHash('markets'); marketMasonry()" id="marketsTab">
             <span class="hidden-sm hidden-xs no-block">Local Markets</span>
             <span class="hidden-md hidden-lg no-block">Markets</span>
           </a></li>  

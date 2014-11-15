@@ -21,7 +21,7 @@ angular.module('clientApp')
         ];
 
         scope.displayMarket = function (id) {
-          $location.path('market/details/'+id).replace();
+          $location.path('market/details/'+id);
         };
 
         scope.highlightPins = function(market) {

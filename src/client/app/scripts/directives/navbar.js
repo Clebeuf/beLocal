@@ -15,11 +15,6 @@ angular.module('clientApp')
             $location.path('/manage');
         }
 
-        angular.element('a[data-toggle="tab"]').on('shown.bs.tab', function (e) { 
-            $rootScope.$broadcast('forceRefreshMap');
-            angular.element(e.target).triggerHandler('click');
-        });
-
         $scope.showLogin = function() {
             AuthService.showLogin().then(function(status) {
                 if(status === 500) {
@@ -27,6 +22,30 @@ angular.module('clientApp')
                 };
             });
         }
+
+        $scope.safeApply = function(fn) {
+          var phase = this.$root.$$phase;
+          if(phase == '$apply' || phase == '$digest') {
+            if(fn && (typeof(fn) === 'function')) {
+              fn();
+            }
+          } else {
+            this.$apply(fn);
+          }
+        };          
+
+        $scope.setHash = function(hash) {
+            var oldPath = $location.path();           
+            $scope.safeApply(function(){
+                $location.path('/');
+            }); 
+            $timeout(function() {
+                if(oldPath != '/') {
+                    $location.replace();
+                }
+                $location.hash(hash);
+            });             
+        }      
 
         $scope.refreshMap = function() {
             $rootScope.$broadcast('forceRefreshMap');    

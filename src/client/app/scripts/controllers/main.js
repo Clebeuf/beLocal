@@ -28,7 +28,7 @@ angular.module('clientApp')
         itemSelector: '.ms-item',
         columnWidth: '.ms-item'
       });    
-      }, 1000)
+      }, 100)
     };
 
     $scope.marketMasonry = function() {
@@ -38,7 +38,7 @@ angular.module('clientApp')
           itemSelector: '.ms-market-item',
           columnWidth: '.ms-market-item'
         });    
-      });
+      }, 100);
     };    
 
     $scope.setProductFilter = function() {
@@ -139,11 +139,14 @@ angular.module('clientApp')
         StateService.getVendors().then(function() {
           $scope.vendors = StateService.getVendorsList();
           $rootScope.$broadcast('generateMapPins');
+          $rootScope.$broadcast('forceRefreshMap');
         });        
     });
 
   StateService.getMarkets().then(function() {
     $scope.marketList = StateService.getMarketList();
+    $rootScope.$broadcast('generateMapPins');
+    $rootScope.$broadcast('forceRefreshMap');    
   });
 
   $scope.trendingMasonry();

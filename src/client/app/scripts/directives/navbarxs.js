@@ -15,6 +15,30 @@ angular.module('clientApp')
             $location.path('/manage');
         }           
 
+        $scope.safeApply = function(fn) {
+          var phase = this.$root.$$phase;
+          if(phase == '$apply' || phase == '$digest') {
+            if(fn && (typeof(fn) === 'function')) {
+              fn();
+            }
+          } else {
+            this.$apply(fn);
+          }
+        };          
+
+        $scope.setHash = function(hash) {
+            var oldPath = $location.path();           
+            $scope.safeApply(function(){
+                $location.path('/');
+            }); 
+            $timeout(function() {
+                if(oldPath != '/') {
+                    $location.replace();
+                }
+                $location.hash(hash);
+            });             
+        }          
+
         $scope.showLogin = function() {
             AuthService.showLogin().then(function(status) {
                 if(status === 500) {

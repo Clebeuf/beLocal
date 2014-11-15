@@ -39,7 +39,7 @@ h2 {
   padding-right: 10px;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
+  text-align: justify;
 }
 
 .getting-started-font{
@@ -170,6 +170,7 @@ body {
 .inner {
   padding: 10px 15px 10px 15px;
 }
+
 
 /*
  * Header

@@ -138,7 +138,8 @@ html{
 
 body {
   margin: 30px !important;
-  min-height: 90%;
+  padding-bottom: 60px;
+  min-height: 700px;
   height:auto;
   text-shadow: 0 1px 3px rgba(255,255,255,0.5);
   border-radius: 10px;

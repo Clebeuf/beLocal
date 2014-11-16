@@ -49,7 +49,7 @@
         </div>
       </div>
     </div>
-    <div class="col-xs-4">
+    <div class="col-xs-5">
       <h4 class="no-bottom-margin no-top-margin"><a class="pointer vendor-card-name" ng-click="displayVendor(vendor.id)">{{vendor.company_name}}</a></h4>
         <div class="plain-text">
           <span ng-show="vendor.address.addr_line1 != null && vendor.address.city != null && vendor.address.state != null">
@@ -58,8 +58,8 @@
           <br><span ng-show="vendor.phone != null" class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}
         </div>
     </div>
-    <div ng-show="vendor.products.length < 5" class="col-sm-{{5 - vendor.products.length}}"></div>    
-    <div class="col-xs-1 no-padding" ng-repeat="product in vendor.products | limitTo:5">
+    <div ng-show="vendor.products.length < 4" class="col-sm-{{4 - vendor.products.length}}"></div>    
+    <div class="col-xs-1 no-padding" ng-repeat="product in vendor.products | limitTo:4">
       <div class="vendor-image-container pointer" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(product)">
         <div class="vendor-images" style="background-image:url({{product.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
         </div>

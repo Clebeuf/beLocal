@@ -1362,6 +1362,14 @@ hr {
   height: 600px;
 }
 
+@media (max-width: 768px){
+  .bl-map {
+  margin-right: 20px;
+  width: 100%;
+  height: 300px;
+}
+}
+
 .map-container {
   background-color: white;
   padding: 3px;

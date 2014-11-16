@@ -2,13 +2,70 @@
  * Globals
  */
 
-body {
+html {
   background:
     linear-gradient(
       rgba(0, 0, 0, 0.5), 
       rgba(0, 0, 0, 0.5)
     ), 
-    url('../images/sellerbanner-peas.jpg') !important;
+    url('/images/splashpage.jpg') 
+    no-repeat center center fixed !important;
+    background-size: cover !important;
+
+}
+
+p {
+  color: #696969 !important;
+  font-size: 15px;
+}
+
+h1 {
+  margin-top: 0px !important;
+}
+
+h2 {
+  margin-top: 0px !important;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 30px;
+}
+
+.fa-facebook-square {
+  padding-right:5px;
+}
+
+.content-container {
+  max-width: 630px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: justify;
+}
+
+.getting-started-font{
+  font-family: 'Libre Baskerville', serif;
+  color: #333333 !important;
+  font-size: 21px;
+  margin-bottom: 0px !important;
+}
+
+.facebook-button{
+  background: #4A65BB;
+  background-image: -webkit-linear-gradient(top, #4A65BB, #3b54A3);
+  background-image: -moz-linear-gradient(top, #4A65BB, #3b54A3);
+  background-image: -ms-linear-gradient(top, #4A65BB, #3b54A3);
+  background-image: -o-linear-gradient(top, #4A65BB, #3b54A3);
+  background-image: linear-gradient(to bottom, #4A65BB, #3b54A3);
+}
+
+.facebook-button:hover{
+  background: #5877D7;
+  background-image: -webkit-linear-gradient(top, #5877D7, #4863b6);
+  background-image: -moz-linear-gradient(top, #5877D7, #4863b6);
+  background-image: -ms-linear-gradient(top, #5877D7, #4863b6);
+  background-image: -o-linear-gradient(top, #5877D7, #4863b6);
+  background-image: linear-gradient(to bottom, #5877D7, #4863b6);
+  color: #FFFFFF !important;
 }
 
 .cover-heading{
@@ -19,6 +76,7 @@ body {
 
  .how-it-works {
   text-transform: uppercase;
+  color: #696969;
  }
 
  .welcome-sign-in {
@@ -52,7 +110,7 @@ a:hover {
   color: #333;
   text-shadow: none; /* Prevent inheritence from `body` */
   background-color: #fff;
-  border: 1px solid #fff;
+  border: 1px solid #DDDDDD;
 }
 
 /*
@@ -71,17 +129,23 @@ a:hover {
   text-shadow: none;
  }
 
-html,
-body {
+html{
   height: 100%;
   background-color: #333;
   padding: 0px !important;
   margin: 0px !important;
 }
+
 body {
-  color: #fff;
+  margin: 30px !important;
+  padding-bottom: 60px;
+  min-height: 700px;
+  height:auto;
+  text-shadow: 0 1px 3px rgba(255,255,255,0.5);
+  border-radius: 10px;
   text-align: center;
-  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  max-width: 1100px;
+  background:rgba(255,255,255,0.8) !important;
 }
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
@@ -90,9 +154,10 @@ body {
   width: 100%;
   height: 100%; /* For at least Firefox */
   min-height: 100%;
-  -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
-          box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+/*  -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+          box-shadow: inset 0 0 100px rgba(0,0,0,.5);*/
 }
+
 .site-wrapper-inner {
   display: table-cell;
   vertical-align: top;
@@ -104,7 +169,7 @@ body {
 
 /* Padding for spacing */
 .inner {
-  padding: 30px;
+  padding: 10px 15px 10px 15px;
 }
 
 
@@ -127,42 +192,32 @@ body {
   padding-left: 0;
   font-size: 16px;
   font-weight: bold;
-  color: #fff; /* IE8 proofing */
-  color: rgba(255,255,255,.75);
+  color: #000; /* IE8 proofing */
+  color: rgba(0,0,0,.75);
   border-bottom: 2px solid transparent;
 }
 .masthead-nav > li > a:hover,
 .masthead-nav > li > a:focus {
   background-color: transparent !important;
   border-bottom-color: #a9a9a9;
-  border-bottom-color: rgba(255,255,255,.25);
+  border-bottom-color: rgba(0,0,0,.25);
 }
 .masthead-nav > .active > a,
 .masthead-nav > .active > a:hover,
 .masthead-nav > .active > a:focus {
-  color: #fff;
-  border-bottom-color: #fff;
+  color: #000;
+  border-bottom-color: #000;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 820px) {
   .masthead-brand {
     float: left;
   }
+
   .masthead-nav {
     float: right;
+    margin-right: 0px;
   }
-}
-
-/*
- * Cover
- */
-
-.cover {
-  padding: 0 20px;
-}
-.cover .btn-lg {
-  padding: 10px 20px;
-  font-weight: bold;
 }
 
 
@@ -171,41 +226,104 @@ body {
  */
 
 .mastfoot {
-  color: #999; /* IE8 proofing */
-  color: rgba(255,255,255,.5);
+  color: #FFF; /* IE8 proofing */
+  color: rgba(255,255,255,0.3) !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
+  bottom: 0;
+  width: 100%;
+}
+
+/*
+ * BeLocal Button
+ */
+
+.btn {
+    text-shadow: 0 0px 0px rgba(0,0,0,0) !important;
+}
+
+.beLocal-btn-filled {
+  background-color: #78be25 !important;
+  color: white !important;
+  border: 1px solid #8BBD3B;
+}
+.beLocal-btn-filled:hover {
+  background-color: #89cc1d !important;
+  color: white;
 }
 
 
-/*
- * Affix and center
- */
-
 @media (min-width: 768px) {
-  /* Pull out the header and footer */
-  .masthead {
-    position: fixed;
-    top: 0;
-  }
-  .mastfoot {
-    position: fixed;
-    bottom: 0;
-  }
+
   /* Start the vertical centering */
   .site-wrapper-inner {
     vertical-align: middle;
   }
   /* Handle the widths */
-  .masthead,
-  .mastfoot,
   .cover-container {
     width: 100%; /* Must be percentage or pixels for horizontal alignment */
   }
 }
 
-@media (min-width: 992px) {
-  .masthead,
-  .mastfoot,
-  .cover-container {
-    width: 992px;
+@media (min-width: 1100px) {
+
+  body{
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
+
 }
+
+@media (max-width: 500px) {
+
+  body{
+    height: auto;
+  }
+
+  .masthead-nav > li > a {
+    border-bottom: 0px !important;
+  }
+  .masthead-nav > li > a:hover,
+  .masthead-nav > li > a:focus {
+    color:rgba(0,0,0,0.5) !important;
+    border-bottom: 0px !important;
+    text-decoration: underline;
+
+  }
+  .masthead-nav > .active > a,
+  .masthead-nav > .active > a:hover,
+  .masthead-nav > .active > a:focus {
+    border-bottom: 0px !important;
+    text-decoration: underline;
+
+  }
+
+
+}
+
+/*
+ * Number Circles
+ */
+
+
+
+.numberCircle {
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+
+    width: 50px;
+    height: 50px;
+    padding-top: 10px;
+    margin-top: 0px !important;
+
+    background: transparent;
+    border: 3px solid #333;
+    color: #333;
+    text-align: center;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    font-family: 'Libre Baskerville', serif;
+    font-size: 25px !important;
+}
+

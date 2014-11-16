@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q) {
+  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q, $rootScope) {
     $scope.StateService = StateService;
     $scope.opened = false;
     $scope.minDate = new Date();
@@ -66,7 +66,10 @@ angular.module('clientApp')
 
     $scope.doCustomLocation = function() {
         $scope.isCreatingCustomLocation = true;
-        $scope.submitLocationButtonText = "Add Location";
+        if($scope.isEditingLocation)
+            $scope.submitLocationButtonText = 'Save Changes';
+        else
+            $scope.submitLocationButtonText = "Add Location";
     }
 
     $scope.manuallyTriggerCustomLocation = function() {
@@ -504,6 +507,8 @@ angular.module('clientApp')
     $scope.getSellerLocations = function() {
         StateService.getSellerLocations().then(function(response) {
             $scope.sellerLocations = response.data;
+            $rootScope.$broadcast('generateMapPins');
+            $rootScope.$broadcast('forceRefreshMap');            
         })
     }
 
@@ -517,6 +522,8 @@ angular.module('clientApp')
               response.data[i].address.hours.sort(compareWeekday);
             }            
             $scope.marketLocations = response.data;
+            $rootScope.$broadcast('generateMapPins');
+            $rootScope.$broadcast('forceRefreshMap');            
         })
     }
 
@@ -699,6 +706,16 @@ angular.module('clientApp')
         $scope.latitude = item.geometry.location.k;
         $scope.longitude = item.geometry.location.B;   
     }
+
+    $scope.highlightPins = function(object) {
+        if(object && object.marker)          
+            object.marker.setAnimation(google.maps.Animation.BOUNCE);
+    };
+
+    $scope.unHighlightPins = function(object) {
+        if(object && object.marker)          
+            object.marker.setAnimation(null);
+    };    
 
     $scope.init = function() {
         $scope.getSellerLocations();

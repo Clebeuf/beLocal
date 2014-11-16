@@ -7,11 +7,13 @@ import urllib
 
 # Create an address
 a = Address(
-	addr_line1="1129 Moss Street", # Street number and street name
+	addr_line1="1330 Fairfield Road", # Street number and street name
 	city="Victoria", # City
-	state="British Columbia", # Province
+	state="BC", # Province
 	country="Canada", # Country
-	zipcode="V8M2H1" # Postal Code
+	zipcode="V8S 5J1", # Postal Code
+	latitude=48.414895, # Latitude
+	longitude=-123.347773, #Longitude
 )
 
 # Save it
@@ -62,11 +64,14 @@ m.save()
 
 # Create an address
 a = Address(
-	addr_line1="5671   Street", # Street number and street name
+	addr_line1="1701 Douglas Street", # Street number and street name
 	city="Victoria", # City
-	state="British Columbia", # Province
+	state="BC", # Province
 	country="Canada", # Country
-	zipcode="V8H2B5" # Postal Code
+	zipcode="V8W 0C1", # Postal Code
+	latitude=48.429456,
+	longitude=-123.36448,
+
 )
 
 # Save it
@@ -118,11 +123,13 @@ m.save()
 
 # Create an address
 a = Address(
-	addr_line1="345 Bastion Square", # Street number and street name
+	addr_line1="Bastion Square", # Street number and street name
 	city="Victoria", # City
-	state="British Columbia", # Province
+	state="BC", # Province
 	country="Canada", # Country
-	zipcode="V5H1G9" # Postal Code
+	zipcode="V5H1G9", # Postal Code
+	latitude=48.4257621,
+	longitude=-123.3684807,
 )
 
 # Save it
@@ -185,11 +192,13 @@ m.save()
 
 # Create an address
 a = Address(
-	addr_line1="6758 James Street", # Street number and street name
+	addr_line1="494 Superior St Victoria", # Street number and street name
 	city="Victoria", # City
-	state="British Columbia", # Province
+	state="BC", # Province
 	country="Canada", # Country
-	zipcode="V9H4N3" # Postal Code
+	zipcode="V8V 2G9", # Postal Code
+	latitude=48.418221,
+	longitude=-123.372516,
 )
 
 # Save it

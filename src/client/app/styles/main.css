@@ -133,11 +133,11 @@
 }
 
 .customer-nav .active > a:hover {
-  color: white !important;
+  color: #1a1918 !important;
 }
 
 .customer-nav .active > a {
-  color: white !important;
+  color: #1a1918 !important;
 }
 
 .navbar {
@@ -240,7 +240,7 @@
   font-size: 18px;
   line-height: normal;
   font-weight: bolder;
-  color: #403e3b !important;
+  color: #474541 !important;
   vertical-align: center;
 }
 

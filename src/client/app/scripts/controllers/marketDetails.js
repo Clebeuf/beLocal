@@ -1,11 +1,48 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('MarketDetailsCtrl', function ($scope, StateService, $stateParams, $location) {
+  .controller('MarketDetailsCtrl', function ($scope, StateService, $stateParams, $location, $window) {
 
     StateService.getMarketToDisplay($stateParams.marketid).then(function() {
     	$scope.marketDetails = StateService.getMarketDetails();
     });
+
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };
+
+    $scope.checkNav = function() {
+      if(angular.element($window).scrollTop() > 140 || angular.element($window).width() < 768) {
+        $scope.safeApply(function() {
+          $scope.showXSNav = true;
+        });
+      } else {
+        $scope.safeApply(function() {
+          $scope.showXSNav = false;
+        })
+      }        
+    }
+
+    if(angular.element($window).width() < 768) {
+      $scope.safeApply(function() {
+        $scope.showXSNav = true;
+      });
+    }            
+
+    angular.element($window).resize(function() {
+        $scope.checkNav();
+    });    
+
+    angular.element($window).scroll(function(){
+        $scope.checkNav();        
+    });   
 
     $scope.weekdays = [
         'Monday',

@@ -51,7 +51,7 @@ class LoginView(APIView):
         if user:
             token = Token.objects.get(user=user)
             response = {}
-            if user.is_staff:
+            if user.is_staff and not user.is_superuser:
                 vendor = Vendor.objects.get(user=user)
                 vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
                 response = {'id': user.id, 
@@ -64,7 +64,7 @@ class LoginView(APIView):
                             'vendor' : serializers.VendorSerializer(vendor).data, 
                             'token': token.key
                 }
-            else:
+            elif not user.is_superuser:
                 response = {'id': user.id, 
                             'name': user.username, 
                             'email' : user.email, 
@@ -73,6 +73,15 @@ class LoginView(APIView):
                             'userType': 'CUS', 
                             'token': token.key
                 }
+            else:
+                response = {'id': user.id, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'SUP', 
+                            'token': token.key
+                }                
             return Response(response)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)             
@@ -136,14 +145,13 @@ class CreateCustomerView(APIView):
 
         if user:
             token, created_token = Token.objects.get_or_create(user=user)
-            vendor, created_vendor = Vendor.objects.get_or_create(user=user)
 
             if(not created_token):
                 return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)            
 
             response = {}
             response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
-            
+
             return Response(response)    
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                               
@@ -200,7 +208,7 @@ class VendorDetailsView(generics.CreateAPIView):
                     market.is_liked = Market.objects.from_request(self.request).get(pk=market.id).user_vote                    
 
             return Response({"vendor":serializers.VendorSerializer(vendor).data, 
-                             "locations":serializers.SellerLocationSerializer(locations, many=True).data,
+                             "selling_locations":serializers.SellerLocationSerializer(locations, many=True).data,
                              "markets":serializers.MarketDisplaySerializer(markets, many=True).data,
                              "products":serializers.ProductDisplaySerializer(products, many=True).data
                             }, 
@@ -604,7 +612,7 @@ class VendorsView(generics.ListAPIView):
     vendors.
     """
     permission_classes = (AllowAny,)
-    serializer_class = serializers.CustomerVendorSerializer
+    serializer_class = serializers.VendorTabSerializer
 
     def get_queryset(self):
         vendors = Vendor.objects.filter(is_active=True)
@@ -636,7 +644,7 @@ class VendorsView(generics.ListAPIView):
                     vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote 
                     vendors.append(vendor)
                     
-            serializer = serializers.CustomerVendorSerializer(vendors, many=True)
+            serializer = serializers.VendorTabSerializer(vendors, many=True)
             return Response(serializer.data)
 
         else: 
@@ -646,7 +654,7 @@ class VendorsView(generics.ListAPIView):
                 for vendor in vendors:
                     vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
             
-            serializer = serializers.CustomerVendorSerializer(vendors, many=True)
+            serializer = serializers.VendorTabSerializer(vendors, many=True)
             return Response(serializer.data)
 
 class ListVendorLocations(generics.ListAPIView):
@@ -849,6 +857,29 @@ class ListProductTags(generics.ListAPIView):
 
     def get_queryset(self):
         return Tag.objects.all()
+
+class ManageVendorsView(generics.ListAPIView):
+    """ 
+    This view provides an endpoint to list available tags.
+    """
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.ManageVendorSerializer    
+
+    def get_queryset(self):
+        return Vendor.objects.filter(user__is_staff=True)
+
+class ActivateVendorView(generics.CreateAPIView):
+
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        vendor = Vendor.objects.get(pk=request.DATA["id"])
+        vendor.is_active = not vendor.is_active
+        vendor.save()
+
+        return HttpResponse(status=status.HTTP_200_OK)        
 
 class TaggedProductView(generics.ListAPIView):
     """ 

@@ -49,7 +49,7 @@ angular.module('clientApp')
         },
         function(pos){
           clearTimeout(location_timeout);          
-          console.log("Loation permission denied");
+          console.log("Location permission denied");
           position = undefined;
           $timeout(function(){
             currentLocation = null;
@@ -388,6 +388,20 @@ angular.module('clientApp')
         .error(function() {
           console.log("Error leaving market!");
         })
+    }
+
+    this.getManageVendors = function() {
+      return $http.get(this.getServerAddress() + "manage/vendors/list/")
+        .error(function(){
+            console.log('Error retrieving vendors');
+        });   
+    }
+
+    this.activateVendor = function(vendor) {
+      return $http.post(this.getServerAddress() + 'manage/vendors/activate/', {'id' : vendor.id})
+      .error(function() {
+        console.log('Error toggling vendor activation');
+      })
     }
     
     this.likeUnlikeItem = function(item, itemName) {

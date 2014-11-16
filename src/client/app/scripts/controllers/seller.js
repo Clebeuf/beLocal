@@ -341,9 +341,12 @@ angular.module('clientApp')
         $scope.newItemStock = "IS";
         $scope.itemCategory = $scope.categoryList[0].id;
 
+        $timeout(function() {
         var e = angular.element('#item-image');
+        console.log(e);
         e.wrap('<form>').closest('form').get(0).reset();
         e.unwrap();
+        })
         
         /* clear checked tags */
         var len = $scope.tagList.length;

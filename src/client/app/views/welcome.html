@@ -1,93 +1,109 @@
-<div class="site-wrapper">
-    <div class="site-wrapper-inner">
+
+<div class="body">
         <div class="cover-container">
             <div class="masthead clearfix">
                 <div class="inner">
-                    <h3 class="masthead-brand">be<span class="beLocal-highlight">Local</span></h3>
+                    <!-- <h3 class="masthead-brand">be<span class="beLocal-highlight">Local</span></h3> -->
+                    <img src="/images/logo.png" class="masthead-brand" style="width:250px;">
                     <ul class="nav masthead-nav" role="tablist">
                         <li class="active"><a href="/welcome/#home" role="tab" data-toggle="tab">Home</a></li>
-                        <li><a href="/welcome/#customers" role="tab" data-toggle="tab">For Customers</a></li>
+                        <li><a href="/welcome/#customers" role="tab" data-toggle="tab">For Foodies</a></li>
                         <li><a href="/welcome/#vendors" role="tab" data-toggle="tab">For Farmers</a></li>
-                        <li><a class="pointer welcome-sign-in" ng-click="signIn()">Sign In</a></li>
+                        <!-- <li><a class="pointer welcome-sign-in" ng-click="signIn()">Sign In</a></li> -->
+                        <a ng-click="signIn()" class="btn btn-md beLocal-btn-filled" style="margin-left:10px;">Sign In</a>
                     </ul>
                 </div>
             </div>
             <div class="tab-content">
                 <div class="tab-pane active" id="home">
-                    <div class="inner cover">
+                    <div class="inner">
                         <h1 class="cover-heading">Discover Victoria's Local Food Scene</h1>
-                        <p class="lead">be<span class="beLocal-highlight">Local</span> connects you with the food grown around you. <br>To begin browsing without creating an account, click Get Started below.</p>
-                        <p class="lead">
-                            <a ng-click="getStarted()" class="btn btn-lg btn-default-welcome">Get Started</a>
-                        </p>
+                        <p class="how-it-works">Our mission here at beLocal:<br> To connect you with locally sourced food.</p>
+                        <div align="center" class="content-container"><br>
+                            <p>
+                                Start tapping into Victoria’s rich local food scene by supporting farmers and foodmakers who are dedicated to producing the highest quality products using sustainable techniques. Join the beLocal community today to start exploring the freshest locally produced food available in your neighbourhood.
+                            </p>
+                        </div>
+                        <br><br>
+                        <p class="getting-started-font">To begin browsing without creating an account, click Get Started below.</p>
+                        <class style="font-size: 15px;">(or click on the links above to register as either a Foodie or Local Farmer)</class>
+                        <br><br><br>
+                            <a ng-click="getStarted()" class="btn btn-lg beLocal-btn-filled">Get Started</a>
+
+
                     </div>
                 </div>
                 <div class="tab-pane" id="customers">
-                    <div class="inner cover">
-                        <h1 class="cover-heading">For Customers</h1>
+                    <div class="inner">
+                        <h1 class="cover-heading">For Local Foodies</h1>
                         <span>
-                            <p class="how-it-works">How It Works</p>
+                            <p class="how-it-works">Interested in shopping locally? <br>Here's how beLocal works...</p>
                         </span>
+                        <br>
                         <div class="container">
                             <!-- Example row of columns -->
                             <div class="row">
                                 <div class="col-md-4">
+                                    <h2 class="numberCircle">1</h2>
                                     <h2>Search</h2>
-                                    <p>Search for products, markets and local foodmakers in your area.</p>
+                                    <p>Looking for something in particular? We make it easy to search for products, vendors and markets nearby.</p>
+                                    <br>
                                 </div>
                                 <div class="col-md-4">
+                                    <h2 class="numberCircle">2</h2>
                                     <h2>Browse</h2>
-                                    <p>Browse individual products at farm stands, markets and stores.</p>
+                                    <p>Want to know what's being sold in your area? Browse markets and vendor products from the comfort of your home.</p>
+                                    <br>
                                 </div>
                                 <div class="col-md-4">
+                                    <h2 class="numberCircle">3</h2>
                                     <h2>Discover</h2>
-                                    <p>Discover new foodmakers and sources of local food from the comfort of your home.</p>
+                                    <p>beLocal is designed to help you easily discover new products, markets, and vendors in your community.</p>
+                                    <br>
                                 </div>
                             </div>
-                            <br><br>
-                            <p class="lead">
-                                <a ng-click="signUpAsCustomer()" class="btn btn-lg btn-default-welcome"><i class="fa fa-facebook-square"></i> Sign Up as a Customer</a>
-                            </p>
+                            <br>
+                            <a ng-click="signUpAsCustomer()" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square"></i> Sign Up Using Facebook</a>
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane" id="vendors">
-                    <div class="inner cover">
-                        <h1 class="cover-heading">For Farmers and Local Foodmakers</h1>
+                    <div class="inner">
+                        <h1 class="cover-heading">For Farmers & Foodmakers</h1>
                         <span>
-                            <p class="how-it-works">How It Works</p>
+                            <p class="how-it-works">Want to increase your presence within the community? <br>Here's how belocal can help you...</p>
                         </span>
+                        <br>
                         <div class="container">
                             <!-- Example row of columns -->
                             <div class="row">
                                 <div class="col-md-4">
-                                    <h2>List Locations</h2>
-                                    <p>List the places where you sell products, including markets, storefronts and farm stands.</p>
+                                    <h2 class="numberCircle">1</h2>
+                                    <h2>Manage Your Locations</h2>
+                                    <p>Let your customers know where you're selling, including local markets, so they know where to find you.</p>
+                                    <br>
                                 </div>
                                 <div class="col-md-4">
-                                    <h2>List Products</h2>
-                                    <p>List the products you sell. beLocal makes it easy for you to add images and to keep stock up to date.</p>
+                                    <h2 class="numberCircle">2</h2>
+                                    <h2>Update Your Inventory</h2>
+                                    <p>Keep customers updated! We make it easy for you keep an up-to-date list of all the items you're currently selling.</p>
+                                    <br>
                                 </div>
                                 <div class="col-md-4">
-                                    <h2>Connect</h2>
-                                    <p>Share your latest updates on social media and connect with local customers instantly.</p>
+                                    <h2 class="numberCircle">3</h2>
+                                    <h2>Stay Connected</h2>
+                                    <p>Quickly share your latest updates, selling locations, and products on your pre-existing social media accounts.</p>
+                                    <br>
                                 </div>
                             </div>
-                            <br><br>
-                            <p class="lead">
-                                <a ng-click="signUpAsVendor()" class="btn btn-lg btn-default-welcome"><i class="fa fa-facebook-square"></i> Sign Up as a Farmer</a>
-                            </p>
+                            <br>
+                            <a ng-click="signUpAsVendor()" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square"></i> Sign Up Using Facebook</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="mastfoot">
-                <div class="inner">
-                    <p>&copy; 2014 beLocal</p>
-                </div>
-            </div>
+            
         </div>
-    </div>
 </div>
 
 <div class="modal fade" id="accountExistsModal">

@@ -1,15 +1,53 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q) {
+  .controller('MainCtrl', function ($scope, $location, $timeout, StateService, $q, $rootScope, $window) {
 
     $scope.showCategory = false;
     $scope.showTag = false;
     $scope.selectedCategory = 'All Products';
     $scope.selectedTags = 'All Products';
     $scope.productFilterExpr = {};
+    $scope.showXSNav = false;
 
     $scope.tagToDisplay = StateService.readTagToDisplay();
+
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };
+
+    $scope.checkNav = function() {
+      if(angular.element($window).scrollTop() > 140 || angular.element($window).width() < 768) {
+        $scope.safeApply(function() {
+          $scope.showXSNav = true;
+        });
+      } else {
+        $scope.safeApply(function() {
+          $scope.showXSNav = false;
+        })
+      }        
+    }
+
+    if(angular.element($window).width() < 768) {
+      $scope.safeApply(function() {
+        $scope.showXSNav = true;
+      });
+    }            
+
+    angular.element($window).resize(function() {
+        $scope.checkNav();
+    });    
+
+    angular.element($window).scroll(function(){
+        $scope.checkNav();        
+    });
 
     $scope.instantTrendingMasonry = function() {
       $timeout(function() {
@@ -28,7 +66,7 @@ angular.module('clientApp')
         itemSelector: '.ms-item',
         columnWidth: '.ms-item'
       });    
-      }, 1000)
+      }, 100)
     };
 
     $scope.marketMasonry = function() {
@@ -38,7 +76,7 @@ angular.module('clientApp')
           itemSelector: '.ms-market-item',
           columnWidth: '.ms-market-item'
         });    
-      });
+      }, 100);
     };    
 
     $scope.setProductFilter = function() {
@@ -101,7 +139,7 @@ angular.module('clientApp')
       } else {            
         $location.path('vendor/details/'+ id);
       }
-    };       
+    };
 
     $scope.showProductDetailsModal = function(item) {
       $scope.product = item;    
@@ -138,17 +176,15 @@ angular.module('clientApp')
         });
         StateService.getVendors().then(function() {
           $scope.vendors = StateService.getVendorsList();
+          $rootScope.$broadcast('generateMapPins');
+          $rootScope.$broadcast('forceRefreshMap');
         });        
     });
 
-  /* Magic! This is a hacky way of ensuring that masonry rebuilds itself while the proper tab content pane is visible
-     (it won't work otherwise) */
-  angular.element('a[data-toggle="tab"]').on('shown.bs.tab', function (e) { 
-    angular.element(e.target).triggerHandler('click');
-  })
-
   StateService.getMarkets().then(function() {
     $scope.marketList = StateService.getMarketList();
+    $rootScope.$broadcast('generateMapPins');
+    $rootScope.$broadcast('forceRefreshMap');    
   });
 
   $scope.trendingMasonry();

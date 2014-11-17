@@ -11,7 +11,7 @@ var app = angular.module('clientApp', [
   'ui.bootstrap',
   'mgcrea.ngStrap.timepicker',
 ])
-  .config(function ($stateProvider, $httpProvider, $urlRouterProvider, $locationProvider) {
+  .config(function ($stateProvider, $httpProvider, $urlRouterProvider, $locationProvider, $anchorScrollProvider) {
 
     $stateProvider
     .state('welcome', {
@@ -70,13 +70,35 @@ var app = angular.module('clientApp', [
 
     // Define the default action to be taken if an unrecognized route is taken.
     $urlRouterProvider.otherwise('/');
+
+    // Disable scrolling when tabs are clicked
+    $anchorScrollProvider.disableAutoScrolling();
   })
 
-  .run(function ($rootScope, $state, $location, AuthService, StateService, ipCookie) {
+  .run(function ($rootScope, $state, $location, AuthService, StateService, ipCookie, $timeout) {
       OAuth.initialize('FFQwiNbZnNhnZMbxNeUWxjQVSjk');
+      $location.hash('trending');
+
+      $rootScope.$watch(function () {
+          return $location.hash();
+      }, function (value) {
+          if($state.$current.name === 'main') {
+            $timeout(function() {
+              angular.element('a[data-target=#' + value + ']').tab('show');
+              $rootScope.$broadcast('forceRefreshMap');            
+            });
+          }
+      });
 
       // This will be called every time we start to change state (navigate to a new URL)
       $rootScope.$on('$stateChangeStart', function(event, toState){
+
+        if(toState.name !== 'main') {
+          if($location.hash() != null) {
+            $location.hash(null);
+            $location.replace();
+          }
+        }
 
         // Clear query parameter on navigation away from the search page
         if(toState.name != 'search')

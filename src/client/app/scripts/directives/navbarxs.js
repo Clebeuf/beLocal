@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .directive('navbarXS', function (StateService, AuthService, $location, $timeout, $window, $http, $sce) {
+  .directive('navbarXS', function (StateService, AuthService, $location, $timeout, $window, $http, $sce, $state) {
     return {
       restrict: 'E',
       templateUrl: 'scripts/directives/navbarxs.html',
@@ -9,11 +9,36 @@ angular.module('clientApp')
         $scope.AuthService = AuthService;
         $scope.StateService = StateService;
         $scope.loginError = false;
-        $scope.productSuggestions = [];     
+        $scope.productSuggestions = [];
+        $scope.state = $state;     
 
         $scope.goToManage = function() {
             $location.path('/manage');
         }           
+
+        $scope.safeApply = function(fn) {
+          var phase = this.$root.$$phase;
+          if(phase == '$apply' || phase == '$digest') {
+            if(fn && (typeof(fn) === 'function')) {
+              fn();
+            }
+          } else {
+            this.$apply(fn);
+          }
+        };          
+
+        $scope.setHash = function(hash) {
+            var oldPath = $location.path();           
+            $scope.safeApply(function(){
+                $location.path('/');
+            }); 
+            $timeout(function() {
+                if(oldPath != '/') {
+                    $location.replace();
+                }
+                $location.hash(hash);
+            });             
+        }          
 
         $scope.showLogin = function() {
             AuthService.showLogin().then(function(status) {
@@ -51,11 +76,7 @@ angular.module('clientApp')
         }         
    
         $scope.reloadMainPage = function() {
-            $location.path('/');
-
-            $timeout(function() {
-                angular.element('#trendingTab').trigger('click');
-            })
+            $scope.setHash('trending');
         }
 
         $scope.createVendor = function() {

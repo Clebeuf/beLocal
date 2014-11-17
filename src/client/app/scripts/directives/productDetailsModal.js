@@ -11,9 +11,11 @@ angular.module('clientApp')
       	  StateService.setTagToDisplay(tagName);
 	      	angular.element('#productDetailsModal').on('hidden.bs.modal', function(e) {
 	        $timeout(function() {
-            if($state.current.name === 'main') {
+            if(tagName && $state.current.name === 'main') {
+              $location.hash('trending');
               scope.selectedTags = [];
               scope.doTagFilter(tagName);
+              tagName = undefined;
             } else {
 	      	    $state.transitionTo('main', {reload: true});
             }

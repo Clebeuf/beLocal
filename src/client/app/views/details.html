@@ -1,9 +1,9 @@
 <!-- NAVBAR -->
 <div class="hidden-xs"><nav-bar></nav-bar></div>
-<div class="visible-xs"><navbar-x-s></navbar-x-s></div>
+<div ng-show="showXSNav"><navbar-x-s></navbar-x-s></div>
 
 <!-- SELLER DETAILS -->
-<div class=" new-formatting-container customer-container3">  
+<div class=" new-formatting-container customer-container">  
     <div class="row vendor-profile-header">
         <div class="col-md-5 new-vendor-avatar">
             <img ng-src="{{vendorDetails.vendor.photo.image_url}}">
@@ -46,100 +46,108 @@
     </div>
     <hr>
 
-
-<!-- NG-REPEAT FOR MARKETS -->
-    <div class="new-heading-style">
-            Market Locations
-    </div>
-    <!-- repeating for each location that seller has in the db -->
-    <div ng-repeat="location in vendorDetails.markets" class="container-for-cards">
-        <div class="card-formatting">
-            <div class="row">
-
-                <!-- Display the locations name -->
-                <div class="col-xs-12 card-lable-style">
-                    {{location.name}}
-                </div>
-
-            </div>
-
-            <div class="location-details">
-                <div>
-                <p><b>HOURS:</b>
-                        <ul class="list-inline store-hours">&nbsp
-                        <li ng-repeat="day in location.address.hours">
-                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                        </li>
-
-                        </ul>
-                </p>
-                </div>
-                <p><b>LOCATION:</b>
-                    {{location.address.addr_line1}},
-                    {{location.address.city}}, 
-                    {{location.address.state}}, 
-                    {{location.address.zipcode}}
-                </p>
-
-                <p class="indent-after-first-line"><b>DETAILS:</b>
-                    {{location.description}}
-                </p>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="map-container">
+                <div class="bl-map" be-local-map locations="vendorDetails.selling_locations" markets="vendorDetails.markets"></div>
             </div>
         </div>    
-    </div>
-    <!-- end of repeating for each market that seller has in the db -->
-
-
-<!-- NG-REPEAT FOR CUSTOM LOCATIONS -->
-    <div class="new-heading-style">
-            Custom Locations
-    </div>
-    <!-- repeating for each location that seller has in the db -->
-    <div ng-repeat="location in vendorDetails.locations | orderBy:'name'" class="container-for-cards">
-        <div class="card-formatting">
-            <div class="row">
-
-                <!-- Display the locations name -->
-                <div class="col-xs-12 card-lable-style">
-                    {{location.name}}
-                </div>
-
+        <div class="col-sm-8">
+            <!-- NG-REPEAT FOR MARKETS -->
+            <div class="new-heading-style">
+                    Market Locations
             </div>
+            <!-- repeating for each location that seller has in the db -->
+            <div ng-repeat="location in vendorDetails.markets" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)" class="container-for-cards">
+                <div class="card-formatting">
+                    <div class="row">
 
-            <div class="location-details">
-                <p ng-show="location.date"><b>DATE:</b>
-                    {{location.date | date:" EEEE',' MMMM d'"}},
-                    {{location.address.hours[0].from_hour}} - 
-                    {{location.address.hours[0].to_hour}}
-                </p>
-                <div ng-show="location.date == null" >
-                <p><b>HOURS:</b>
-                        <ul class="list-inline store-hours">&nbsp
-                        <li ng-repeat="day in location.address.hours">
-                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                        </li>
+                        <!-- Display the locations name -->
+                        <div class="col-xs-12 card-lable-style">
+                            {{location.name}}
+                        </div>
 
-                        </ul>
-                </p>
-                </div>
-                <p><b>LOCATION:</b>
-                    {{location.address.addr_line1}},
-                    {{location.address.city}}, 
-                    {{location.address.state}}, 
-                    {{location.address.zipcode}}
-                </p>
+                    </div>
 
-                <p><b>CONTACT INFORMATION:</b>
-                    {{location.phone}} | {{location.email}}
-                </p>
+                    <div class="location-details">
+                        <div>
+                        <p><b>HOURS:</b>
+                                <ul class="list-inline store-hours">&nbsp
+                                <li ng-repeat="day in location.address.hours">
+                                    <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                </li>
 
-                <p class="indent-after-first-line"><b>DETAILS:</b>
-                    {{location.description}}
-                </p>
+                                </ul>
+                        </p>
+                        </div>
+                        <p><b>LOCATION:</b>
+                            {{location.address.addr_line1}},
+                            {{location.address.city}}, 
+                            {{location.address.state}}, 
+                            {{location.address.zipcode}}
+                        </p>
+
+                        <p class="indent-after-first-line"><b>DETAILS:</b>
+                            {{location.description}}
+                        </p>
+                    </div>
+                </div>    
             </div>
+            <!-- end of repeating for each market that seller has in the db -->
+
+
+            <!-- NG-REPEAT FOR CUSTOM LOCATIONS -->
+            <div class="new-heading-style">
+                    Custom Locations
+            </div>
+            <!-- repeating for each location that seller has in the db -->
+            <div ng-repeat="location in vendorDetails.selling_locations | orderBy:'name'" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)" class="container-for-cards">
+                <div class="card-formatting">
+                    <div class="row">
+
+                        <!-- Display the locations name -->
+                        <div class="col-xs-12 card-lable-style">
+                            {{location.name}}
+                        </div>
+
+                    </div>
+
+                    <div class="location-details">
+                        <p ng-show="location.date"><b>DATE:</b>
+                            {{location.date | date:" EEEE',' MMMM d'"}},
+                            {{location.address.hours[0].from_hour}} - 
+                            {{location.address.hours[0].to_hour}}
+                        </p>
+                        <div ng-show="location.date == null" >
+                        <p><b>HOURS:</b>
+                                <ul class="list-inline store-hours">&nbsp
+                                <li ng-repeat="day in location.address.hours">
+                                    <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                </li>
+
+                                </ul>
+                        </p>
+                        </div>
+                        <p><b>LOCATION:</b>
+                            {{location.address.addr_line1}},
+                            {{location.address.city}}, 
+                            {{location.address.state}}, 
+                            {{location.address.zipcode}}
+                        </p>
+
+                        <p><b>CONTACT INFORMATION:</b>
+                            {{location.phone}} | {{location.email}}
+                        </p>
+
+                        <p class="indent-after-first-line"><b>DETAILS:</b>
+                            {{location.description}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- end of repeating for each custom location that seller has in the db -->
         </div>
     </div>
-<!-- end of repeating for each custom location that seller has in the db -->
 
 	<br>
 
@@ -147,37 +155,12 @@
     <hr>
     <div class="row">
         <div class="col-xs-9 new-hr-heading-style">
-            {{vendorDetails.products.length}} PRODUCTS
+            {{vendorDetails.products.length}} PRODUCT<span ng-hide="vendorDetails.products.length === 1">S</span>
         </div>
     </div>
     <hr>
 
-		<!-- <div class="row">
-			<div class=" col-md-7 col-sm-9 col-xs-7">
-				<form class="beLocal-searchProducts" role="search">
-			        <div class="form-group">
-			          <div class="input-group">
-			            <input type="text" placeholder="Search for a product" class="form-control">
-			            <span class="input-group-btn">
-			              <button class="btn beLocal-btn-filled" type="button">Search</button>
-			            </span>
-			          </div>    
-			        </div>
-			    </form>
-		  	</div>
 
-		  	<div class="col-md-5 col-sm-3 col-xs-5">
-			    <ul class="nav pull-right">
-			        <li class="dropdown dropdown-productFilter pointer">
-			          <span data-toggle="dropdown">Sort by:<span class="dropdown-productFilter"> Name <span class="caret"></span></span></span>
-			          <ul class="dropdown-menu" role="menu">
-			            <li><a href="#">Popular</a></li>
-			            <li><a href="#">New Items</a></li>
-			          </ul>
-			        </li>
-			    </ul>
-			</div>
-		</div> -->
     <div class="new-heading-style">
             Sample Heading
     </div>
@@ -189,7 +172,7 @@
 	        </div>
 	    </div>
 	</div>
-
+</div>
 <!-- INJECTING FOOTER.HTML -->
 <footer></footer>
 

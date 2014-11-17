@@ -289,7 +289,41 @@ class CustomerVendorSerializer(serializers.ModelSerializer):
                   'address',
                   'total_likes',
                   'is_liked',
-      ) 
+      )
+
+class VendorTabSerializer(serializers.ModelSerializer):
+  products = serializers.SerializerMethodField('get_in_stock_products')
+  selling_locations = serializers.SerializerMethodField('get_selling_locations')  
+  photo = VendorPhotoPathSerializer()
+  address = AddressSerializer()
+  total_likes = serializers.IntegerField(source='vote_total') 
+  is_liked = serializers.IntegerField()
+
+  def get_in_stock_products(self, obj):
+    products = be_local_server.models.Product.objects.filter(vendor=obj, stock="IS")
+    serializer = ProductSerializer(products, many=True)
+    return serializer.data
+
+  def get_selling_locations(self, obj):
+    locations = be_local_server.models.SellerLocation.objects.filter(vendor=obj)
+    serializer = SellerLocationSerializer(locations, many=True)
+    return serializer.data    
+
+  class Meta:
+      model = be_local_server.models.Vendor
+      fields = (  'id',   
+                  'company_name',
+                  'webpage',
+                  'country_code',
+                  'phone',
+                  'extension',
+                  'products',
+                  'photo',
+                  'address',
+                  'total_likes',
+                  'is_liked',
+                  'selling_locations'
+      )       
 
 class MarketDetailsVendorSerializer(serializers.ModelSerializer):
   products = serializers.SerializerMethodField('get_in_stock_products')

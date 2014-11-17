@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .directive('navBar', function (StateService, AuthService, $location, $timeout, $window, $http, $sce) {
+  .directive('navBar', function (StateService, AuthService, $location, $timeout, $window, $http, $sce, $rootScope, $state) {
     return {
       restrict: 'E',
       templateUrl: 'scripts/directives/navbar.html',
@@ -10,6 +10,7 @@ angular.module('clientApp')
         $scope.loginError = false;
         $scope.productSuggestions = [];
         $scope.StateService = StateService;
+        $scope.state = $state;
 
         $scope.goToManage = function() {
             $location.path('/manage');
@@ -22,6 +23,34 @@ angular.module('clientApp')
                 };
             });
         }
+
+        $scope.safeApply = function(fn) {
+          var phase = this.$root.$$phase;
+          if(phase == '$apply' || phase == '$digest') {
+            if(fn && (typeof(fn) === 'function')) {
+              fn();
+            }
+          } else {
+            this.$apply(fn);
+          }
+        };          
+
+        $scope.setHash = function(hash) {
+            var oldPath = $location.path();           
+            $scope.safeApply(function(){
+                $location.path('/');
+            }); 
+            $timeout(function() {
+                if(oldPath != '/') {
+                    $location.replace();
+                }
+                $location.hash(hash);
+            });             
+        }      
+
+        $scope.refreshMap = function() {
+            $rootScope.$broadcast('forceRefreshMap');    
+        }        
 
         $scope.updateProductSuggestions = function(val) {
             return $http.get(StateService.getServerAddress() + "search/autocomplete?q=" + val
@@ -50,11 +79,7 @@ angular.module('clientApp')
         }         
 
         $scope.reloadMainPage = function() {
-            $location.path('/');
-
-            $timeout(function() {
-                angular.element('#trendingTab').trigger('click');
-            })
+            $scope.setHash('trending');
         }
 
         $scope.createVendor = function() {

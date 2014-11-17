@@ -28,7 +28,11 @@
               </button>
             </div>
             <hr>         
-            <div class="description-container">
+            <div class="store-hours">
+                <div class="vendor-placeholder-text" ng-show="store-hours.length == 0">
+                    <p class="small-header">Hours</p>
+                    <p class="no-bottom-margin">The {{marketDetails.name}} is closed for the season.</p>
+                </div>
 		        <ul style="margin-bottom:0px" class="list-inline store-hours">
 			        <li ng-repeat="day in marketDetails.address.hours">
 			            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}

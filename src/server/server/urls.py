@@ -47,6 +47,7 @@ urlpatterns = patterns('',
     url(r'^search/autocomplete', 'be_local_server.views.autocomplete'),
     url(r'^search/products', views.SearchProductView.as_view(), name="product-search"),    
     url(r'^search/vendors', views.SearchVendorView.as_view(), name="vendor-search"),
+    url(r'^search/markets', views.SearchMarketView.as_view(), name="market-search"),
     
     url(r'^like/(?P<content_type>[\w-]+)/(?P<id>[0-9-]+)/$', views.like, name='like'),
     

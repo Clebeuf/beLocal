@@ -450,4 +450,11 @@ angular.module('clientApp')
         });      
     };       
     
+    this.doMarketSearch = function(query) {
+      return $http.get(this.getServerAddress() + "search/markets/?q=" + query)
+        .error(function(){
+            console.log('Error retrieving market search results!');
+        });      
+    };           
+
   });

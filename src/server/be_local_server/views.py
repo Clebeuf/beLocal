@@ -797,6 +797,29 @@ class SearchVendorView(generics.ListAPIView):
         
         return vendors
 
+class SearchMarketView(generics.ListAPIView):
+    serializer_class = serializers.MarketSearchSerializer
+
+    def get_queryset(self):
+        srch = self.request.GET.get('q', '')
+        sqs = SearchQuerySet().models(Market)
+        name = sqs.filter(name=srch)
+        webpage = sqs.filter(webpage=srch)
+        city = sqs.filter(city=srch)
+        state = sqs.filter(state=srch)
+        zipcode = sqs.filter(zipcode=srch)
+        addr = sqs.filter(addr_line1=srch)
+        country = sqs.filter(country=srch)
+
+        results = name | webpage | city | state | zipcode | addr | country
+        
+        markets = []
+
+        for market in [result.object for result in results]:
+            markets.append(market)      
+        
+        return markets
+
 @csrf_exempt
 def like(request, content_type, id):
     """ 

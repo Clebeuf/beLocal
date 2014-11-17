@@ -56,18 +56,25 @@ angular.module('clientApp')
                         name: $sce.trustAsHtml('Search for <b>' + val + '</b> in vendors'),
                         vendorSearch: val
                     });
+                    products.push({
+                        name: $sce.trustAsHtml('Search for <b>' + val + '</b> in markets'),
+                        marketSearch: val
+                    });                    
                     return products;
             });
         }
+
         $scope.onSelect = function($item,$model,$label){
 
             if($item.vendorSearch != null) {
                 $window.location.href='#/search/vendors?q=' + $item.vendorSearch;
-            } else {
+            } else if($item.marketSearch != null) {
+                $window.location.href='#/search/markets?q=' + $item.marketSearch;
+            }else {
                 $window.location.href='#/search/products?q=' + $item.name;
             }
         }         
-
+   
         $scope.reloadMainPage = function() {
             $scope.setHash('trending');
         }

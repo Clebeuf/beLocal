@@ -384,7 +384,24 @@ class MarketDetailsSerializer(serializers.ModelSerializer):
                     'total_likes',
                     'is_liked',
                     'photo',
-        )        
+                    'webpage'
+        )
+        
+class MarketSearchSerializer(serializers.ModelSerializer):
+    vendors = MarketDetailsVendorSerializer(many=True)
+    address = AddAddressSerializer()
+    photo = MarketPhotoPathSerializer()
+  
+    class Meta:
+        model = be_local_server.models.Market
+        fields = (  'id',
+                    'vendors',
+                    'address',
+                    'name',
+                    'description',
+                    'photo',
+                    'webpage'
+        )         
 
 class VendorMarketDisplaySerializer(serializers.ModelSerializer):
     vendors = BusinessVendorSerializer(many=True)

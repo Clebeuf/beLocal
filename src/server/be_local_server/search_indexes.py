@@ -8,6 +8,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     vendor = indexes.CharField(model_attr='vendor')
     # We add this for autocomplete.
     name_auto = indexes.EdgeNgramField(model_attr='name')
+    is_active = indexes.BooleanField(model_attr='vendor__is_active')
 
     def get_model(self):
         return Product

@@ -19,6 +19,10 @@ angular.module('clientApp')
     var marketDetails = undefined;
     var tagToDisplay = undefined;
 
+    this.getContactEmail = function() {
+      return 'belocalvictoria' + '@' + 'gmail.com';
+    }
+
     this.setTagToDisplay = function(tagName) {
       tagToDisplay = tagName;
     }
@@ -71,6 +75,14 @@ angular.module('clientApp')
     this.clearCurrentUser = function() {
       currentUser = undefined;
     }
+
+    this.retrieveUpdatedCurrentUser = function() {
+      var url = this.getServerAddress() + 'vendor/';        
+      return $http.get(url)
+      .error(function() {
+        console.log("Error retrieving vendor object!");
+      }); 
+    };    
 
     this.updateCurrentUser = function(user) {
       var url = this.getServerAddress() + 'vendor/';        

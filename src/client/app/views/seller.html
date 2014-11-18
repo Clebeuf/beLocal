@@ -1,10 +1,13 @@
+<div ng-show="isCurrentUserActive === false" class="alert alert-danger beLocal-alert" role="alert">
+  <span><strong>Your account is currently inactive!</strong> Until your account is activated, no one will be able to see your products or selling locations. After completing your profile, please email <a class="alert-link" href="mailto:{{StateService.getContactEmail()}}">{{StateService.getContactEmail()}}</a> to request activation!</span>
+</div>
 <div ng-show="showWarning" class="alert alert-warning alert-dismissible" role="alert">
   <button type="button" class="close" ng-click="resetWarning()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
   <html-comp content="warningHTML"></html-comp>
 </div>
 <navbar-x-s></navbar-x-s>
 
-<div class="new-formatting-container customer-container">  
+<div class="new-formatting-container customer-container" ng-class="{'is-inactive' : !isCurrentUserActive}">  
     <div class="row vendor-profile-header">
         <div class="col-md-5 new-vendor-avatar">
             <img ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}">

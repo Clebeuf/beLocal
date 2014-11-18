@@ -64,8 +64,8 @@
                 <p class="no-bottom-margin">You're not selling at any markets right now! Try joining one by clicking the Create Location button.</p>
             </div>
             <!-- repeating for each location that seller has in the db -->
-            <div ng-repeat="location in marketLocations" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)" class="container-for-cards">
-                <div class="card-formatting">
+            <div ng-repeat="location in marketLocations" class="container-for-cards">
+                <div class="card-formatting" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)">
                     <div class="row">
 
                         <!-- Display the locations name -->

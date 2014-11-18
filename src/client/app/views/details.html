@@ -58,8 +58,8 @@
                     Market Locations
             </div>
             <!-- repeating for each location that seller has in the db -->
-            <div ng-repeat="location in vendorDetails.markets" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)" class="container-for-cards">
-                <div class="card-formatting">
+            <div ng-repeat="location in vendorDetails.markets" class="container-for-cards">
+                <div class="card-formatting" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)">
                     <div class="row">
 
                         <!-- Display the locations name -->

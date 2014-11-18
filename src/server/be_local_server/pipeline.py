@@ -27,4 +27,13 @@ def save_profile_picture(strategy, user, response, details, backend,
                 vendorPhoto.save()
                 vendor.photo = vendorPhoto
                 vendor.save()
+
+def save_user_id(strategy, user, response, details, backend,*args,**kwargs):
+    if backend.name == 'facebook':
+        vendor = Vendor.objects.get(user=user)
+
+        if vendor is not None and 'link' in response.keys():
+            vendor.facebook_url = response['link']
+            vendor.save()
+
             

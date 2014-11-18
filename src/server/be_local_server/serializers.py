@@ -80,11 +80,13 @@ class VendorSerializer(serializers.ModelSerializer):
     					'country_code',
     					'phone',
     					'extension',
-                        'photo',
-                        'address',
-                        'description',
-                        'total_likes',
-                        'is_liked',
+              'photo',
+              'address',
+              'description',
+              'total_likes',
+              'is_liked',
+              'facebook_url',
+              'twitter_url',
     		)
 
 class EditVendorSerializer(serializers.ModelSerializer):

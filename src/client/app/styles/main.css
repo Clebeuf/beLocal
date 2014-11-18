@@ -133,20 +133,20 @@
 }
 
 .customer-nav .active > a:hover {
-  color: white !important;
+  color: #1a1918 !important;
 }
-
+ 
 .customer-nav .active > a {
-  color: white !important;
+  color: #1a1918 !important;
 }
-
+ 
 .navbar {
-  background-color: #FFFFFF !important;
-  height: 140px;
-  -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3) !important;
+   font-size: 18px;
+   line-height: normal;
+   font-weight: bolder;
+  color: #474541 !important;
+   vertical-align: center;
 }
-
-
 
 .nav-bar-top {
   padding-bottom: 50px;

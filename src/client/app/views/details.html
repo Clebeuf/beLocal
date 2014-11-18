@@ -3,7 +3,7 @@
 <div ng-show="showXSNav"><navbar-x-s></navbar-x-s></div>
 
 <!-- SELLER DETAILS -->
-<div class=" new-formatting-container customer-container3">  
+<div class=" new-formatting-container customer-container">  
     <div class="row vendor-profile-header">
         <div class="col-md-5 new-vendor-avatar">
             <img ng-src="{{vendorDetails.vendor.photo.image_url}}">
@@ -30,7 +30,7 @@
                 <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                     <span class="glyphicon glyphicon-map-marker"></span> {{vendorDetails.vendor.address.city}}, {{vendorDetails.vendor.address.state}} | 
                 </span>
-                <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook | {{vendorDetails.vendor.phone}} |
+                <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | <a href="{{vendorDetails.vendor.facebook_url}}"> Facebook</a> | {{vendorDetails.vendor.phone}} |
             </span>
             <hr>
             <div class="description-container">

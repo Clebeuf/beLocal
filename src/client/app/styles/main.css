@@ -139,14 +139,14 @@
 .customer-nav .active > a {
   color: #1a1918 !important;
 }
- 
+
 .navbar {
-   font-size: 18px;
-   line-height: normal;
-   font-weight: bolder;
-  color: #474541 !important;
-   vertical-align: center;
+  background-color: #FFFFFF !important;
+  height: 140px;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3) !important;
 }
+
+
 
 .nav-bar-top {
   padding-bottom: 50px;
@@ -240,7 +240,7 @@
   font-size: 18px;
   line-height: normal;
   font-weight: bolder;
-  color: #403e3b !important;
+  color: #474541 !important;
   vertical-align: center;
 }
 
@@ -1357,7 +1357,7 @@ hr {
 
 .markets-placeholder-text {
   padding-top: 10px;
-  padding-bottom: 10px;
+  padding-bottom: 
 }
 
 .tag-bar {

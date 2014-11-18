@@ -17,7 +17,7 @@
                 <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                     <span class="glyphicon glyphicon-map-marker"></span> {{vendorDetails.vendor.address.city}}, {{vendorDetails.vendor.address.state}} | 
                 </span>
-                <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook | {{vendorDetails.vendor.phone}} |
+                <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | <a href="{{vendorDetails.vendor.facebook_url}}"> Facebook</a> | {{vendorDetails.vendor.phone}} |
             </span>
             <div data-toggle="tooltip" style="display:inline-block" data-placement="bottom" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
               <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(vendorDetails.vendor, 'vendor')" type="button" class="btn btn-default beLocal-btn-default">

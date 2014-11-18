@@ -44,7 +44,7 @@ mp.save()
 m = Market(
 	address=a, # Each Market object needs an address associated with it (this also associates hours)
 	name="Moss Street Market", # Market name
-	description="Moss Street Market is a vibrant community market that features Victoria's largest selection of local and organic produce.  The market has over 25 farmers vending with there are over 70 additional vendors offering handmade crafts, cards, clothing, jewelry, purses, toys, glass works, pottery, bath products, preserves, chocolates, baked goods, pesto, salsa, honey, and much much more. The Moss Street Market also has an activity tent for kids and live music each week.", # Market description
+	description="Moss Street Market is a vibrant community market that features Victoria's largest selection of local and organic produce.  The market has over 25 farmers vending with there are over 70 additional vendors offering handmade crafts, cards, clothing, jewelry, purses, toys, glass works, pottery, bath products, preserves, chocolates, baked goods, pesto, salsa, honey, and much, much more. The Moss Street Market also has an activity tent for kids and live music each week.", # Market description
 	photo=mp,
 	webpage="http://www.mossstreetmarket.com/"
 )
@@ -425,7 +425,7 @@ mp.save()
 m = Market(
 	address=a, # Each Market object needs an address associated with it (this also associates hours)
 	name="North Saanich Farm Market", # Market name
-	description="Featuring food grown in the Saanich peninsula, the North Saanich Farm Market runs seasonally from May - September. The non-profit market aims to support local growers and farmers by providing them with a venue to sell their produce and products, while giving the community access to locally grown fruits, vegetables and products.  All the producers, at the North Saanich Farm Market, must show their commitment to organic and sustainable practices.", # Market description
+	description="Featuring food grown in the Saanich Peninsula, the North Saanich Farm Market runs seasonally from May - September. The non-profit market aims to support local growers and farmers by providing them with a venue to sell their produce and products, while giving the community access to locally grown fruits, vegetables and products.  All the producers at the North Saanich Farm Market must show their commitment to organic and sustainable practices.", # Market description
 	photo=mp,
 	webpage="http://www.northsaanichfarmmarket.ca/"
 )
@@ -523,7 +523,7 @@ mp.save()
 m = Market(
 	address=a, # Each Market object needs an address associated with it (this also associates hours)
 	name="Goldstream Station Market", # Market name
-	description="The Goldstream Station Market goal is to create a sustainable, self-supporting community market in the West Shore region. The market is based on a “you grow it, you make it, you bake, you sell it” philosophy, and features many local farmers and foodmakers.  The market runs seasonally from May - August.", # Market description
+	description="The Goldstream Station Market's goal is to create a sustainable, self-supporting community market in the West Shore region. The market is based on a “you grow it, you make it, you bake, you sell it” philosophy, and features many local farmers and foodmakers.  The market runs seasonally from May - August.", # Market description
 	photo=mp,
 	webpage="http://goldstreamstationmarket.ca/"
 )

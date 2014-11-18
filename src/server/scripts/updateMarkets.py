@@ -433,4 +433,101 @@ m = Market(
 m.save()
 
 
+#-----------------------------------------------------------------------------------------------------
+# Peninsula Country Market
+#-----------------------------------------------------------------------------------------------------
+
+# Create an address
+a = Address(
+	addr_line1="1528 Stelly’s Crossroad", # Street number and street name
+	city="Saanichton", # City
+	state="BC", # Province
+	country="Canada", # Country
+	zipcode="V8R 4B2", # Postal Code
+	latitude=48.5796898,
+	longitude=-123.4363087,
+)
+
+# Save it
+a.save()
+
+# Create hours for the address
+# h1 = OpeningHours(
+# 	address=a, # Each opening hour object has to have an address associated with it
+# 	weekday=6, # 1 = Monday, ..., 7 = Sunday
+# 	from_hour=datetime(2014, 10, 4, 16, 30, 0), # (year, month, day, hour, minute, second)
+# 	to_hour=datetime(2014, 10, 4, 10, 30, 0), # (year, month, day, hour, minute, second)
+# )
+
+# Save it
+# h1.save()
+
+
+mp = MarketPhoto(
+		image=File(open('../client/app/images/markets/PCM.jpg'))
+)
+
+mp.save()
+
+
+# Create a market
+m = Market(
+	address=a, # Each Market object needs an address associated with it (this also associates hours)
+	name="Peninsula Country Market", # Market name
+	description="The Peninsula Country Market is a vibrant community market that has 50 vendors weekly offering farm fresh products, jams and jellies, honey, homemade bread, cut flowers, assorted fresh meats, organic produce and a fine selection of arts and crafts. Enjoy a country morning among friends live music, hot coffee, great munchies and children’s activities. The market runs seasonally from June - October.", # Market description
+	photo=mp,
+	webpage="http://www.peninsulacountrymarket.ca/"
+)
+
+m.save()
+
+
+#-----------------------------------------------------------------------------------------------------
+# Goldstream Station Market
+#-----------------------------------------------------------------------------------------------------
+
+# Create an address
+a = Address(
+	addr_line1="2800 Bryn Maur Rd", # Street number and street name
+	city="Victoria", # City
+	state="BC", # Province
+	country="Canada", # Country
+	zipcode="VV9B 3T4", # Postal Code
+	latitude=48.448523,
+	longitude=-123.498528,
+)
+
+# Save it
+a.save()
+
+# Create hours for the address
+# h1 = OpeningHours(
+# 	address=a, # Each opening hour object has to have an address associated with it
+# 	weekday=6, # 1 = Monday, ..., 7 = Sunday
+# 	from_hour=datetime(2014, 10, 4, 16, 30, 0), # (year, month, day, hour, minute, second)
+# 	to_hour=datetime(2014, 10, 4, 10, 30, 0), # (year, month, day, hour, minute, second)
+# )
+
+# Save it
+# h1.save()
+
+
+mp = MarketPhoto(
+		image=File(open('../client/app/images/markets/GSSM.jpg'))
+)
+
+mp.save()
+
+
+# Create a market
+m = Market(
+	address=a, # Each Market object needs an address associated with it (this also associates hours)
+	name="Goldstream Station Market", # Market name
+	description="The Goldstream Station Market goal is to create a sustainable, self-supporting community market in the West Shore region. The market is based on a “you grow it, you make it, you bake, you sell it” philosophy, and features many local farmers and foodmakers.  The market runs seasonally from May - August.", # Market description
+	photo=mp,
+	webpage="http://goldstreamstationmarket.ca/"
+)
+
+m.save()
+
 

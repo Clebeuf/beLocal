@@ -367,6 +367,7 @@ class MarketDisplaySerializer(serializers.ModelSerializer):
                     'total_likes',
                     'is_liked',
                     'photo',
+                    'webpage',
         )
 
 class MarketDetailsSerializer(serializers.ModelSerializer):

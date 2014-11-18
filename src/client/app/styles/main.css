@@ -135,7 +135,7 @@
 .customer-nav .active > a:hover {
   color: #1a1918 !important;
 }
-
+ 
 .customer-nav .active > a {
   color: #1a1918 !important;
 }
@@ -280,6 +280,11 @@
 .like-button-container {
   top: -50px;
   height: 1px;
+  text-align: right;
+}
+
+.like-button-markets {
+  top: -50px;
   text-align: right;
 }
 
@@ -606,7 +611,6 @@ body {
 .beLocal-btn-filled:hover {
   background-color: #89cc1d;
   color: white;
-  text-shadow: 0 0px 0px rgba(255,255,255,0.5) !important;
 }
 
 /* VENDOR CARD STUFF */
@@ -1349,6 +1353,11 @@ hr {
 .vendor-placeholder-text {
   padding: 10px;
   margin-left: 20px;
+}
+
+.markets-placeholder-text {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .tag-bar {

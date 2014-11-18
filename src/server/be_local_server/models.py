@@ -124,7 +124,7 @@ class Market(models.Model):
     vendors = models.ManyToManyField(Vendor, related_name='vendors', blank=True)
     webpage = models.CharField(max_length=400, null=True, blank=True)
     facebook_url = models.CharField(max_length=400, null=True, blank=True)   
-    twitter_url = models.CharField(max_length=400, null=True, blank=True)    
+    twitter_url = models.CharField(max_length=400, null=True, blank=True)
     
 secretballot.enable_voting_on(Market)
 

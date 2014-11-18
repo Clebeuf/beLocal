@@ -80,6 +80,14 @@ angular.module('clientApp')
       }); 
     };
 
+    this.updateTwitterURL = function(data) {
+      var url = this.getServerAddress() + 'vendor/';        
+      return $http({method: 'PATCH', url: url, data: data})
+      .success(function() {
+        console.log("Edited User!");
+      }); 
+    };    
+
 
     this.setVendorToDisplay = function(vendorID) {
       vendorToDisplay = vendorID;

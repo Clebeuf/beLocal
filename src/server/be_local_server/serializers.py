@@ -103,7 +103,9 @@ class EditVendorSerializer(serializers.ModelSerializer):
               'extension',
               'photo',
               'address',
-              'description'
+              'description',
+              'twitter_url',
+              'facebook_url',
         )        
 
 class BusinessVendorSerializer(serializers.ModelSerializer):

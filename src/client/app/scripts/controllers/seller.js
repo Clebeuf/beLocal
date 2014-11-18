@@ -94,7 +94,13 @@ angular.module('clientApp')
 
     $scope.doTwitterSignIn = function() {
         OAuth.popup('twitter', {cache : true})
-        .done(function (twitter) {  
+        .done(function (twitter) {
+            twitter.me().done(function(me) {
+                var data = {'twitter_url' : 'http://www.twitter.com/' + me.alias};
+                StateService.updateTwitterURL(data).then(function(result) {
+                    StateService.setProfileVendor(result.data);
+                })
+            });
             $scope.safeApply(function() {
                 $scope.isTwitterAuth = true;
                 $scope.twitterChecked = true;

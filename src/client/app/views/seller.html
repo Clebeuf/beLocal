@@ -18,7 +18,7 @@
                 <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                     <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}} |
                 </span>
-                <span ng-hide="StateService.getCurrentUser().vendor.webpage == null"><a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> |</span><span ng-hide="StateService.getCurrentUser().vendor.twitter_url == null"> <a href="{{StateService.getCurrentUser().vendor.twitter_url">Twitter</a> |</span><span ng-hide="StateService.getCurrentUser().vendor.facebook_url == null"><a ng-hide="StateService.getCurrentUser().vendor.facebook_url == null" href="{{StateService.getCurrentUser().vendor.facebook_url}}"> Facebook</a> |</span>
+                <span ng-hide="StateService.getCurrentUser().vendor.webpage == null"><a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> |</span><span ng-hide="StateService.getCurrentUser().vendor.twitter_url == null"> <a href="{{StateService.getCurrentUser().vendor.twitter_url}}">Twitter</a> |</span><span ng-hide="StateService.getCurrentUser().vendor.facebook_url == null"><a ng-hide="StateService.getCurrentUser().vendor.facebook_url == null" href="{{StateService.getCurrentUser().vendor.facebook_url}}"> Facebook</a> |</span>
             </span>
             <span class="pull-right">
                     <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>

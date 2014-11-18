@@ -271,6 +271,7 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
         vendor = Vendor.objects.get(user=request.user) 
    
         if vendor is not None:
+            print request.DATA.keys()
             serializer = serializers.EditVendorSerializer(vendor, data=request.DATA, partial=True)
            
             if serializer.is_valid():

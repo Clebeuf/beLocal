@@ -31,6 +31,7 @@
 
             <hr>
             <div class="description-container">
+                <span ng-show="StateService.getCurrentUser().vendor.description == ''">Please enter a description for your business using the Edit Profile button above.</span>
                 {{StateService.getCurrentUser().vendor.description}}
             </div>
         </div>

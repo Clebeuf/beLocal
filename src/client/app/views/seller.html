@@ -1,10 +1,13 @@
+<div ng-show="isCurrentUserActive === false" class="alert alert-danger beLocal-alert" role="alert">
+  <span><strong>Your account is currently inactive!</strong> Until your account is activated, no one will be able to see your products or selling locations. After completing your profile, please email <a class="alert-link" href="mailto:{{StateService.getContactEmail()}}">{{StateService.getContactEmail()}}</a> to request activation!</span>
+</div>
 <div ng-show="showWarning" class="alert alert-warning alert-dismissible" role="alert">
   <button type="button" class="close" ng-click="resetWarning()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
   <html-comp content="warningHTML"></html-comp>
 </div>
 <navbar-x-s></navbar-x-s>
 
-<div class="new-formatting-container customer-container">  
+<div class="new-formatting-container customer-container" ng-class="{'is-inactive' : !isCurrentUserActive}">  
     <div class="row vendor-profile-header">
         <div class="col-md-5 new-vendor-avatar">
             <img ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}">
@@ -18,7 +21,7 @@
                 <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                     <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}} |
                 </span>
-                <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
+                <span ng-hide="StateService.getCurrentUser().vendor.webpage == null"><a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> |</span><span ng-hide="StateService.getCurrentUser().vendor.twitter_url == null"> <a href="{{StateService.getCurrentUser().vendor.twitter_url}}">Twitter</a> |</span><span ng-hide="StateService.getCurrentUser().vendor.facebook_url == null"><a ng-hide="StateService.getCurrentUser().vendor.facebook_url == null" href="{{StateService.getCurrentUser().vendor.facebook_url}}"> Facebook</a> |</span>
             </span>
             <span class="pull-right">
                     <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
@@ -28,6 +31,7 @@
 
             <hr>
             <div class="description-container">
+                <span ng-show="StateService.getCurrentUser().vendor.description == ''">Please enter a description for your business using the Edit Profile button above.</span>
                 {{StateService.getCurrentUser().vendor.description}}
             </div>
         </div>
@@ -61,8 +65,8 @@
                 <p class="no-bottom-margin">You're not selling at any markets right now! Try joining one by clicking the Create Location button.</p>
             </div>
             <!-- repeating for each location that seller has in the db -->
-            <div ng-repeat="location in marketLocations" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)" class="container-for-cards">
-                <div class="card-formatting">
+            <div ng-repeat="location in marketLocations" class="container-for-cards">
+                <div class="card-formatting" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)">
                     <div class="row">
 
                         <!-- Display the locations name -->

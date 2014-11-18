@@ -80,11 +80,14 @@ class VendorSerializer(serializers.ModelSerializer):
     					'country_code',
     					'phone',
     					'extension',
-                        'photo',
-                        'address',
-                        'description',
-                        'total_likes',
-                        'is_liked',
+              'photo',
+              'address',
+              'description',
+              'total_likes',
+              'is_liked',
+              'facebook_url',
+              'twitter_url',
+              'is_active',
     		)
 
 class EditVendorSerializer(serializers.ModelSerializer):
@@ -101,7 +104,9 @@ class EditVendorSerializer(serializers.ModelSerializer):
               'extension',
               'photo',
               'address',
-              'description'
+              'description',
+              'twitter_url',
+              'facebook_url',
         )        
 
 class BusinessVendorSerializer(serializers.ModelSerializer):
@@ -365,6 +370,7 @@ class MarketDisplaySerializer(serializers.ModelSerializer):
                     'total_likes',
                     'is_liked',
                     'photo',
+                    'webpage',
         )
 
 class MarketDetailsSerializer(serializers.ModelSerializer):

@@ -19,6 +19,10 @@ angular.module('clientApp')
     var marketDetails = undefined;
     var tagToDisplay = undefined;
 
+    this.getContactEmail = function() {
+      return 'belocalvictoria' + '@' + 'gmail.com';
+    }
+
     this.setTagToDisplay = function(tagName) {
       tagToDisplay = tagName;
     }
@@ -72,6 +76,14 @@ angular.module('clientApp')
       currentUser = undefined;
     }
 
+    this.retrieveUpdatedCurrentUser = function() {
+      var url = this.getServerAddress() + 'vendor/';        
+      return $http.get(url)
+      .error(function() {
+        console.log("Error retrieving vendor object!");
+      }); 
+    };    
+
     this.updateCurrentUser = function(user) {
       var url = this.getServerAddress() + 'vendor/';        
       return $http({method: 'PATCH', url: url, data: user.vendor})
@@ -79,6 +91,14 @@ angular.module('clientApp')
         console.log("Edited User!");
       }); 
     };
+
+    this.updateTwitterURL = function(data) {
+      var url = this.getServerAddress() + 'vendor/';        
+      return $http({method: 'PATCH', url: url, data: data})
+      .success(function() {
+        console.log("Edited User!");
+      }); 
+    };    
 
 
     this.setVendorToDisplay = function(vendorID) {

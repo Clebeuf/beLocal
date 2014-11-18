@@ -271,6 +271,7 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
         vendor = Vendor.objects.get(user=request.user) 
    
         if vendor is not None:
+            print request.DATA.keys()
             serializer = serializers.EditVendorSerializer(vendor, data=request.DATA, partial=True)
            
             if serializer.is_valid():
@@ -748,8 +749,8 @@ class autocompleteViewModel():
         self.name = name
 
 def autocomplete(request):
-    prodSqs = SearchQuerySet().models(Product).autocomplete(name_auto=request.GET.get('q', ''))[:5]
-    products = [autocompleteViewModel(result.name) for result in prodSqs]
+    prodSqs = SearchQuerySet().models(Product).autocomplete(name_auto=request.GET.get('q', ''))
+    products = [autocompleteViewModel(result.name) for result in (res for res in prodSqs if res.is_active == True)]
     the_data = sjson.dumps({
         'products': products}, cls=JsonHelper)
     return HttpResponse(the_data, content_type='application/json')
@@ -766,8 +767,9 @@ class SearchProductView(generics.ListAPIView):
         products = []
 
         for product in [result.object for result in results]:
-            product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote  
-            products.append(product)      
+            product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
+            if(product.vendor.is_active):  
+                products.append(product)      
         
         return products
 
@@ -792,8 +794,9 @@ class SearchVendorView(generics.ListAPIView):
         vendors = []
 
         for vendor in [result.object for result in results]:
-            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote  
-            vendors.append(vendor)      
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
+            if(vendor.is_active):  
+                vendors.append(vendor)
         
         return vendors
 

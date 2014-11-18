@@ -66,7 +66,7 @@ angular.module('clientApp')
         itemSelector: '.ms-item',
         columnWidth: '.ms-item'
       });    
-      }, 100)
+      }, 500)
     };
 
     $scope.marketMasonry = function() {
@@ -76,7 +76,7 @@ angular.module('clientApp')
           itemSelector: '.ms-market-item',
           columnWidth: '.ms-market-item'
         });    
-      }, 100);
+      }, 500);
     };    
 
     $scope.setProductFilter = function() {

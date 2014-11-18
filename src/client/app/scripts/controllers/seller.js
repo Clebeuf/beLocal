@@ -27,6 +27,23 @@ angular.module('clientApp')
 
     var geocoder = new google.maps.Geocoder();
 
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };    
+
+    StateService.retrieveUpdatedCurrentUser().then(function(response){
+        StateService.setProfileVendor(response.data);
+        console.log(response.data);
+        $scope.isCurrentUserActive = response.data.is_active;
+    });
+
     StateService.getAvailableMarkets().then(function() {
         if(StateService.getAvailableMarketList().length > 0)
             $scope.newLocationMarket = StateService.getAvailableMarketList()[0].id;
@@ -44,17 +61,6 @@ angular.module('clientApp')
         'Saturday',
         'Sunday'
     ];
-
-    $scope.safeApply = function(fn) {
-      var phase = this.$root.$$phase;
-      if(phase == '$apply' || phase == '$digest') {
-        if(fn && (typeof(fn) === 'function')) {
-          fn();
-        }
-      } else {
-        this.$apply(fn);
-      }
-    };
     
     StateService.getTags().then(function() {
       $scope.tagList = StateService.getTagList();
@@ -94,7 +100,13 @@ angular.module('clientApp')
 
     $scope.doTwitterSignIn = function() {
         OAuth.popup('twitter', {cache : true})
-        .done(function (twitter) {  
+        .done(function (twitter) {
+            twitter.me().done(function(me) {
+                var data = {'twitter_url' : 'http://www.twitter.com/' + me.alias};
+                StateService.updateTwitterURL(data).then(function(result) {
+                    StateService.setProfileVendor(result.data);
+                })
+            });
             $scope.safeApply(function() {
                 $scope.isTwitterAuth = true;
                 $scope.twitterChecked = true;

@@ -29,8 +29,7 @@
             </div>
             <hr>         
             <div class="store-hours">
-                <div class="vendor-placeholder-text" ng-show="store-hours.length == 0">
-                    <p class="small-header">Hours</p>
+                <div class="vendor-placeholder-text" ng-show="marketDetails.address.hours == 0">
                     <p class="no-bottom-margin">The {{marketDetails.name}} is closed for the season.</p>
                 </div>
 		        <ul style="margin-bottom:0px" class="list-inline store-hours">
@@ -56,6 +55,10 @@
         </div>
     </div>
     <hr>
+
+    <div class="vendor-placeholder-text" ng-show="marketDetails.vendors == 0">
+        <p class="no-bottom-margin">No local vendors have currently listed {{marketDetails.name}} as one of their selling locations.</p>
+    </div>
 
 
   <div ng-repeat="vendor in marketDetails.vendors">

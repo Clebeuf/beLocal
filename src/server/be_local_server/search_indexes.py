@@ -8,14 +8,14 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     vendor = indexes.CharField(model_attr='vendor')
     # We add this for autocomplete.
     name_auto = indexes.EdgeNgramField(model_attr='name')
-    is_active = indexes.BooleanField(model_attr='vendor__is_active')
+    is_active = indexes.NgramField(model_attr='vendor__is_active')
 
     def get_model(self):
         return Product
 
     def index_queryset(self, using=None):
 	    """Used when the entire index for model is updated."""
-	    return self.get_model().objects.all()
+	    return self.get_model().objects.filter(vendor__is_active=True)
 
 class VendorIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
@@ -28,13 +28,14 @@ class VendorIndex(indexes.SearchIndex, indexes.Indexable):
     webpage = indexes.NgramField(model_attr='webpage', null=True)
     country_code = indexes.NgramField(model_attr='country_code', null=True)
     phone = indexes.NgramField(model_attr='phone', null=True)
+    is_active = indexes.NgramField(model_attr='is_active')
 
     def get_model(self):
         return Vendor
 
     def index_queryset(self, using=None):
 	    """Used when the entire index for model is updated."""
-	    return self.get_model().objects.all()
+	    return self.get_model().objects.filter(is_active=True)
 
 class MarketIndex(indexes.SearchIndex, indexes.Indexable):
 	text = indexes.CharField(document=True, use_template=True)

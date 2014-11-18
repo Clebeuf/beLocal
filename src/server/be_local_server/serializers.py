@@ -87,6 +87,7 @@ class VendorSerializer(serializers.ModelSerializer):
               'is_liked',
               'facebook_url',
               'twitter_url',
+              'is_active',
     		)
 
 class EditVendorSerializer(serializers.ModelSerializer):
@@ -103,7 +104,9 @@ class EditVendorSerializer(serializers.ModelSerializer):
               'extension',
               'photo',
               'address',
-              'description'
+              'description',
+              'twitter_url',
+              'facebook_url',
         )        
 
 class BusinessVendorSerializer(serializers.ModelSerializer):

@@ -15,7 +15,7 @@ urlpatterns = patterns('',
     url(r'^customer/(?P<backend>.+)/create/$', views.CreateCustomerView.as_view(), name='create-customer'),     
     
     url(r'^vendor/add/$', views.AddVendorView.as_view(), name='vendor-add'),    
-    url(r'^vendor/?$', views.RWDVendorView.as_view(), name='vendor'), 
+    url(r'^vendor/?$', views.RWDVendorView.as_view(), name='vendor'),   
     url(r'^vendor/details/?$', views.VendorDetailsView.as_view(), name='vendor-details'),
     url(r'^vendor/photo/add/$',views.AddVendorPhotoView.as_view(), name='vendor-photo-add'),
 

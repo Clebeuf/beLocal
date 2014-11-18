@@ -365,6 +365,7 @@ class MarketDisplaySerializer(serializers.ModelSerializer):
                     'total_likes',
                     'is_liked',
                     'photo',
+                    'webpage',
         )
 
 class MarketDetailsSerializer(serializers.ModelSerializer):
@@ -384,6 +385,7 @@ class MarketDetailsSerializer(serializers.ModelSerializer):
                     'total_likes',
                     'is_liked',
                     'photo',
+                    'webpage',
         )        
 
 class VendorMarketDisplaySerializer(serializers.ModelSerializer):

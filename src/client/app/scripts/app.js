@@ -62,6 +62,13 @@ var app = angular.module('clientApp', [
       controller: 'ManageCtrl',
       authenticate: true,
       css: 'styles/main.css'
+    })
+    .state('contactUs', {
+      url: '/contact-us',
+      templateUrl: 'views/contactus.html',
+      controller: 'ContactusCtrl',
+      authenticate: false,
+      css: 'styles/main.css'
     });
 
     $httpProvider.defaults.headers.patch = {

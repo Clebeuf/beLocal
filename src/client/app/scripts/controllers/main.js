@@ -173,6 +173,7 @@ angular.module('clientApp')
     StateService.getUserPosition().then(function() {
         StateService.getTrendingProducts().then(function() {
           $scope.trendingProducts = StateService.getTrendingProductsList();
+          $scope.trendingMasonry();
         });
         StateService.getVendors().then(function() {
           $scope.vendors = StateService.getVendorsList();
@@ -184,11 +185,9 @@ angular.module('clientApp')
   StateService.getMarkets().then(function() {
     $scope.marketList = StateService.getMarketList();
     $rootScope.$broadcast('generateMapPins');
-    $rootScope.$broadcast('forceRefreshMap');    
+    $rootScope.$broadcast('forceRefreshMap'); 
+    $scope.marketMasonry();
   });
-
-  $scope.trendingMasonry();
-  $scope.marketMasonry();
     
   $scope.getProductsWithCategory = function(category) {
     $scope.showCategory = true;

@@ -7,6 +7,12 @@ angular.module('clientApp')
     	$scope.marketDetails = StateService.getMarketDetails();
     });
 
+    if (StateService.getCurrentUser() === undefined) {
+      $scope.likeDisabled = true;
+    } else {
+      $scope.likeDisabled = false;
+    }    
+
     $scope.safeApply = function(fn) {
       var phase = this.$root.$$phase;
       if(phase == '$apply' || phase == '$digest') {

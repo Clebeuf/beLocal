@@ -165,7 +165,7 @@ STATIC_URL = '/static/'
 # User-uploaded images
 # https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user
 MEDIA_ROOT = os.path.join(BASE_DIR, 'be_local_server/static/media/')
-MEDIA_URL = 'http://54.69.172.241:8000/static/media/'
+MEDIA_URL = 'http://54.69.172.241:80/static/media/'
 ADMIN_MEDIA_PREFIX = '/admin-media/'
 
 # site id for sites framework

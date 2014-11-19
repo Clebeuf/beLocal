@@ -20,7 +20,7 @@ describe('The beLocal Start Page', function() {
     });
 
     it('should not allow sing in without first creating an account', function(){
-        element(by.linkText('Sign In')).click();
+        element(by.css('.facebook-button')).click();
 
         //Wait for Facebook pop-up to load
         //We cannot use waitForAngular() here since Facebook popup is not angular
@@ -90,7 +90,7 @@ describe('The Vendor Page', function(){
 */
 
     it('should allow the creation a product', function(){
-        element(by.linkText('Sign In')).click();
+        element(by.css('.facebook-button')).click();
 
         browser.sleep(1000);
         var path = require('path');
@@ -114,9 +114,9 @@ describe('The Vendor Page', function(){
 
     it('should allow the deletion of a product', function(){
         browser.wait(function() {
-            return browser.isElementPresent(element(by.linkText('Sign In'))); 
+            return browser.isElementPresent(element(by.css('.facebook-button'))); 
         })
-        element(by.linkText('Sign In')).click();
+        element(by.css('.facebook-button')).click();
 
         browser.wait(function() {
             return browser.isElementPresent(element(by.css('[ng-click="deleteProduct(product)"]')));
@@ -134,7 +134,7 @@ describe('The Vendor Page', function(){
     });
 
     it('should allow the creation of multiple products', function(){
-        element(by.linkText('Sign In')).click();
+        element(by.css('.facebook-button')).click();
 
         browser.sleep(500);
         var path = require('path');

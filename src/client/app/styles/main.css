@@ -1395,3 +1395,7 @@ hr {
 .info-window-text {
   font-size: 12px !important;
 }
+
+.is-inactive {
+  margin-top: 50px;
+}

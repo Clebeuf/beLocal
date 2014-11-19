@@ -749,8 +749,11 @@ class autocompleteViewModel():
         self.name = name
 
 def autocomplete(request):
+    products = []
     prodSqs = SearchQuerySet().models(Product).autocomplete(name_auto=request.GET.get('q', ''))
-    products = [autocompleteViewModel(result.name) for result in (res for res in prodSqs if res.is_active == True)]
+    for product in [result.object for result in prodSqs]:
+        if product is not None and product.vendor.is_active:
+            products.append(autocompleteViewModel(product.name))
     the_data = sjson.dumps({
         'products': products}, cls=JsonHelper)
     return HttpResponse(the_data, content_type='application/json')
@@ -767,8 +770,8 @@ class SearchProductView(generics.ListAPIView):
         products = []
 
         for product in [result.object for result in results]:
-            product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
-            if(product.vendor.is_active):  
+            if product is not None:
+                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
                 products.append(product)      
         
         return products
@@ -794,8 +797,8 @@ class SearchVendorView(generics.ListAPIView):
         vendors = []
 
         for vendor in [result.object for result in results]:
-            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
-            if(vendor.is_active):  
+            if vendor is not None:
+                vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
                 vendors.append(vendor)
         
         return vendors

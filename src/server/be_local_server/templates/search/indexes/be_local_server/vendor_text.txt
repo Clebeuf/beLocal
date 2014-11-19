@@ -7,3 +7,4 @@
 {{object.address.zipcode}}
 {{object.address.country}}
 {{object.country_code}}
+{{object.is_active}}

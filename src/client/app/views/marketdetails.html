@@ -65,10 +65,7 @@
         <p class="no-bottom-margin">No local vendors have currently listed {{marketDetails.name}} as one of their selling locations.</p>
     </div>
 
-
-  <div ng-repeat="vendor in marketDetails.vendors">
-  	   <vendor-card data="vendor"></vendor-card>
-  </div>
+  	<vendor-card ng-repeat="vendor in marketDetails.vendors" data="vendor"></vendor-card>
 
 </div>
 <footer></footer>

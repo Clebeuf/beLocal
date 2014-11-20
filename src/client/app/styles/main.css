@@ -4,6 +4,18 @@
 
 */
 
+@media screen and (max-width: 400px) {
+    .hidden-mobile{
+        display: none !important;
+    }
+}
+
+@media screen and (min-width: 401px) {
+    .show-mobile {
+        display: none !important;
+    }
+}
+
 
 .vendor-avatar-img{
   width: 100%;
@@ -11,6 +23,7 @@
   height: 100%;
   overflow: hidden;
   vertical-align: middle;
+  margin-bottom: 5px !important;
 
 }
 
@@ -1267,6 +1280,7 @@ hr {
   padding: 3px;
   border: 1px solid #d3d3d3;
   width: 100%;
+  max-width: 200px;
 }
 
 .seller-stock-formatting input[type="radio"] {
@@ -1418,6 +1432,12 @@ hr {
     margin-right: 20px;
     width: 100%;
     height: 300px;
+  }
+}
+
+@media (max-width: 400px){
+  .bl-map {
+    height: 200px;
   }
 }
 

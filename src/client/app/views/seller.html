@@ -12,7 +12,7 @@
     <div class="row vendor-profile-header">
 
 
-        <div class="col-sm-5 vendor-avatar">
+        <div class="col-sm-5 vendor-avatar ">
             <img ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}" class="vendor-avatar-img">
         </div>
         <div class="col-sm-7 vendor-header-content">
@@ -57,21 +57,28 @@
 <!--Display Seller's Locations-->
     <hr>
     <div class="row">
-        <div class="col-xs-9 new-hr-heading-style">
-            YOUR SELLING LOCATIONS
-        </div>
-        <div class="col-xs-3">
-            <button class="btn beLocal-btn-filled pull-right" data-toggle="modal" ng-click="resetLocationModal()" data-target="#locationModal">Create New Location</button>
+        <div class="col-xs-12">
+             <span class="new-hr-heading-style">
+                YOUR SELLING LOCATIONS
+            </span>
+            <span class="pull-right">
+                <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="resetLocationModal()" data-target="#locationModal">
+                    <div class="hidden-mobile">Create New Location</div>
+                    <div class="show-mobile">+</div>
+                </button>
+            </span>
         </div>
     </div>
     <hr>
 
     <div class="row">
-        <div class="col-sm-4">
-            <div class="map-container">
-                <div class="bl-map" be-local-map locations="sellerLocations" markets="marketLocations"></div>
+        <div ng-hide="marketLocations.length == 0 && sellerLocations.length == 0">
+            <div class="col-sm-4">
+                <div class="map-container">
+                    <div class="bl-map" be-local-map locations="sellerLocations" markets="marketLocations"></div>
+                </div>
             </div>
-        </div>       
+        </div>   
         <div class="col-sm-8">
             <!-- NG-REPEAT FOR MARKETS -->
             <div class="new-heading-style">
@@ -199,7 +206,10 @@
             YOUR INVENTORY
         </div>
         <div class="col-xs-3">
-            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" data-target="#itemModal" ng-click="resetItemModal()">Create New Item</button>
+            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" data-target="#itemModal" ng-click="resetItemModal()">
+                <div class="hidden-mobile">Create New Item</div>
+                <div class="show-mobile">+</div>
+            </button>
         </div>
     </div>
     <hr>

@@ -41,7 +41,6 @@ angular.module('clientApp')
 
     StateService.retrieveUpdatedCurrentUser().then(function(response){
         StateService.setProfileVendor(response.data);
-        console.log(response.data);
         $scope.isCurrentUserActive = response.data.is_active;
     });
 

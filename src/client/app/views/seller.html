@@ -617,7 +617,7 @@
                                 <div class="form-group">
                                     <label>Select the Market You're Selling At:</label>
                                     <select ng-show="StateService.getAvailableMarketList().length > 0" ng-model="newLocationMarket" id="modalMarketPicker" class="form-control" ng-options="market.id as market.name for market in StateService.getAvailableMarketList()"></select>
-                                    <p ng-hide="StateService.getAvailableMarketList().length > 0" class="medium-margin">You're already selling at all the markets in town! 
+                                    <p ng-hide="StateService.getAvailableMarketList().length > 0" class="medium-margin">You're already selling at all the running markets in town! 
                                     <br>Try <a class="pointer beLocal-a" ng-click="manuallyTriggerCustomLocation()">creating</a> a new custom location instead.</p> 
                                 </div>   
                             </form>

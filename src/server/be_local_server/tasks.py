@@ -26,6 +26,18 @@ def empty_trashcans(*args):
     print "Count of SellerLocations to be deleted: ", old_sellerLocations.Count()
     old_sellerLocations.delete()
     
- 
+# this will run every Saturday
+@periodic_task(run_every=crontab(day_of_week="6"))  
+def delete_expired_seller_locations(*args): 
+
+    print "Job has started to remove expired SellerLocations."
+    given_date = datetime.now() - datetime.timedelta(weeks=1) 
+    
+    # Expired Seller Locations
+    expired_locations = SellerLocation.filter(date__lte=given_date)
+    print "Total expired seller locations: ", expired_locations.Count()    
+    expired_locations.delete()
+    
+    
     
  

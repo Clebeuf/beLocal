@@ -45,9 +45,9 @@
 
       <div class="visible-xs">
         <ul class="nav navbar-nav">
-          <li><a href="#trending" id="trendingTab" data-toggle="tab">In Season Now</a></li>
-          <li><a href="#vendors" id="vendorsTab" data-toggle="tab">Farmers & Foodmakers</a></li>
-          <li><a href="#markets" ng-click="marketMasonry()" id="marketsTab" data-toggle="tab">Local Markets</a></li>  
+          <li ng-class="{active : state.$current.name === 'main'}"><a class="pointer" data-target="#trending" data-toggle="tab" ng-click="setHash('trending'); trendingMasonry()" id="trendingTab">In Season Now</a></li>
+          <li><a data-target="#vendors" class="pointer" data-toggle="tab" ng-click="setHash('vendors');" id="vendorsTab">Farmers & Foodmakers</a></li>
+          <li><a data-target="#markets" class="pointer" data-toggle="tab" ng-click="setHash('markets'); marketMasonry()" id="marketsTab">Local Markets</a></li>  
         </ul>
       </div>
 

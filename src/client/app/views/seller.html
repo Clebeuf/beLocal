@@ -1,10 +1,13 @@
+<div ng-show="isCurrentUserActive === false" class="alert alert-danger beLocal-alert" role="alert">
+  <span><strong>Your account is currently inactive!</strong> Until your account is activated, no one will be able to see your products or selling locations. After completing your profile, please email <a class="alert-link" href="mailto:{{StateService.getContactEmail()}}">{{StateService.getContactEmail()}}</a> to request activation!</span>
+</div>
 <div ng-show="showWarning" class="alert alert-warning alert-dismissible" role="alert">
   <button type="button" class="close" ng-click="resetWarning()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
   <html-comp content="warningHTML"></html-comp>
 </div>
 <navbar-x-s></navbar-x-s>
 
-<div class="new-formatting-container customer-container">  
+<div class="new-formatting-container customer-container" ng-class="{'is-inactive' : !isCurrentUserActive}">  
     <div class="row vendor-profile-header">
         <div class="col-md-5 new-vendor-avatar">
             <img ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}">
@@ -18,7 +21,7 @@
                 <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                     <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}} |
                 </span>
-                <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> | Twitter | Facebook
+                <span ng-hide="StateService.getCurrentUser().vendor.webpage == null"><a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> |</span><span ng-hide="StateService.getCurrentUser().vendor.twitter_url == null"> <a href="{{StateService.getCurrentUser().vendor.twitter_url}}">Twitter</a> |</span><span ng-hide="StateService.getCurrentUser().vendor.facebook_url == null"><a ng-hide="StateService.getCurrentUser().vendor.facebook_url == null" href="{{StateService.getCurrentUser().vendor.facebook_url}}"> Facebook</a> |</span>
             </span>
             <span class="pull-right">
                     <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
@@ -28,6 +31,7 @@
 
             <hr>
             <div class="description-container">
+                <span ng-show="StateService.getCurrentUser().vendor.description == ''">Please enter a description for your business using the Edit Profile button above.</span>
                 {{StateService.getCurrentUser().vendor.description}}
             </div>
         </div>
@@ -46,120 +50,129 @@
     </div>
     <hr>
 
-<!-- NG-REPEAT FOR MARKETS -->
-    <div class="new-heading-style">
-            Market Locations
-    </div>
-    <div class="vendor-placeholder-text" ng-show="marketLocations.length == 0">
-        <p class="no-bottom-margin">You're not selling at any markets right now! Try joining one by clicking the Create Location button.</p>
-    </div>
-    <!-- repeating for each location that seller has in the db -->
-    <div ng-repeat="location in marketLocations" class="container-for-cards">
-        <div class="card-formatting">
-            <div class="row">
-
-                <!-- Display the locations name -->
-                <div class="col-xs-9 card-lable-style">
-                    {{location.name}}
-                </div>
-
-                <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
-                <div class="col-xs-3 edit-delete-buttons">
-                    <span data-toggle="tooltip" data-placement="bottom" title="Leave Market">
-                        <span class="edit-text glyphicon glyphicon-trash" ng-click="leaveMarket(location)" data-toggle="modal" data-target="TBA"></span>
-                    </span>
-                </div> 
-
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="map-container">
+                <div class="bl-map" be-local-map locations="sellerLocations" markets="marketLocations"></div>
             </div>
+        </div>       
+        <div class="col-sm-8">
+            <!-- NG-REPEAT FOR MARKETS -->
+            <div class="new-heading-style">
+                    Market Locations
+            </div>
+            <div class="vendor-placeholder-text" ng-show="marketLocations.length == 0">
+                <p class="no-bottom-margin">You're not selling at any markets right now! Try joining one by clicking the Create Location button.</p>
+            </div>
+            <!-- repeating for each location that seller has in the db -->
+            <div ng-repeat="location in marketLocations" class="container-for-cards">
+                <div class="card-formatting" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)">
+                    <div class="row">
 
-            <div class="location-details">
-                <p><b>HOURS:</b>
-                        <ul class="list-inline store-hours">&nbsp
-                        <li ng-repeat="day in location.address.hours">
-                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                        </li>
+                        <!-- Display the locations name -->
+                        <div class="col-xs-9 card-lable-style">
+                            {{location.name}}
+                        </div>
 
-                        </ul>
-                </p>
-                <p><b>LOCATION:</b>
-                    {{location.address.addr_line1}},
-                    {{location.address.city}}, 
-                    {{location.address.state}}, 
-                    {{location.address.zipcode}}
-                </p>
+                        <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
+                        <div class="col-xs-3 edit-delete-buttons">
+                            <span data-toggle="tooltip" data-placement="bottom" title="Leave Market">
+                                <span class="edit-text glyphicon glyphicon-trash" ng-click="leaveMarket(location)" data-toggle="modal" data-target="TBA"></span>
+                            </span>
+                        </div> 
 
-                <p><b>DETAILS:</b>
-                    {{location.description}}
-                </p>
+                    </div>
+
+                    <div class="location-details">
+                        <p><b>HOURS:</b>
+                                <ul class="list-inline store-hours">&nbsp
+                                <li ng-repeat="day in location.address.hours">
+                                    <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                </li>
+
+                                </ul>
+                        </p>
+                        <p><b>LOCATION:</b>
+                            {{location.address.addr_line1}},
+                            {{location.address.city}}, 
+                            {{location.address.state}}, 
+                            {{location.address.zipcode}}
+                        </p>
+
+                        <p><b>DETAILS:</b>
+                            {{location.description}}
+                        </p>
+                    </div>    
+                </div>
+            </div>
+            <!-- end of repeating for each market that seller has in the db -->
+
+
+            <!-- NG-REPEAT FOR CUSTOM LOCATIONS -->
+            <div class="new-heading-style">
+                    Custom Locations
+            </div>
+            <div class="vendor-placeholder-text" ng-show="sellerLocations.length == 0">
+                <p class="no-bottom-margin">You haven't created any custom locations yet! Try making one by clicking the Create Location button.</p>
             </div>    
+            <!-- repeating for each location that seller has in the db -->
+            <div ng-repeat="location in sellerLocations" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)" class="container-for-cards">
+                <div class="card-formatting">
+                    <div class="row">
+
+                        <!-- Display the locations name -->
+                        <div class="col-xs-9 card-lable-style">
+                            {{location.name}}
+                        </div>
+
+                        <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
+                        <div class="col-xs-3 edit-delete-buttons">
+                            <span data-toggle="tooltip" data-placement="bottom" title="Edit Location">
+                            <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
+                            </span>
+                            <span data-toggle="tooltip" data-placement="bottom" title="Delete Location">
+                            <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
+                            </span>
+                        </div> 
+
+                    </div>
+
+                    <div class="location-details">
+                        <p ng-show="location.date"><b>DATE:</b>
+                            {{location.date | date:" EEEE',' MMMM d'"}},
+                            {{location.address.hours[0].from_hour}} - 
+                            {{location.address.hours[0].to_hour}}
+                        </p>
+                        <div ng-show="location.date == null" >
+                        <p><b>HOURS:</b>
+                                <ul class="list-inline store-hours">&nbsp
+                                <li ng-repeat="day in location.address.hours">
+                                    <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                </li>
+
+                                </ul>
+                        </p>
+                        </div>
+                        <p><b>LOCATION:</b>
+                            {{location.address.addr_line1}},
+                            {{location.address.city}}, 
+                            {{location.address.state}}, 
+                            {{location.address.zipcode}}
+                        </p>
+
+                        <p><b>CONTACT INFORMATION:</b>
+                            {{location.phone}} | {{location.email}}
+                        </p>
+
+                        <p><b>DETAILS:</b>
+                            {{location.description}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- end of repeating for each custom location that seller has in the db -->
         </div>
     </div>
-    <!-- end of repeating for each market that seller has in the db -->
-
-
-<!-- NG-REPEAT FOR CUSTOM LOCATIONS -->
-    <div class="new-heading-style">
-            Custom Locations
-    </div>
-    <div class="vendor-placeholder-text" ng-show="sellerLocations.length == 0">
-        <p class="no-bottom-margin">You haven't created any custom locations yet! Try making one by clicking the Create Location button.</p>
-    </div>    
-    <!-- repeating for each location that seller has in the db -->
-    <div ng-repeat="location in sellerLocations" class="container-for-cards">
-        <div class="card-formatting">
-            <div class="row">
-
-                <!-- Display the locations name -->
-                <div class="col-xs-9 card-lable-style">
-                    {{location.name}}
-                </div>
-
-                <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
-                <div class="col-xs-3 edit-delete-buttons">
-                    <span data-toggle="tooltip" data-placement="bottom" title="Edit Location">
-                    <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
-                    </span>
-                    <span data-toggle="tooltip" data-placement="bottom" title="Delete Location">
-                    <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
-                    </span>
-                </div> 
-
-            </div>
-
-            <div class="location-details">
-                <p ng-show="location.date"><b>DATE:</b>
-                    {{location.date | date:" EEEE',' MMMM d'"}},
-                    {{location.address.hours[0].from_hour}} - 
-                    {{location.address.hours[0].to_hour}}
-                </p>
-                <div ng-show="location.date == null" >
-                <p><b>HOURS:</b>
-                        <ul class="list-inline store-hours">&nbsp
-                        <li ng-repeat="day in location.address.hours">
-                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                        </li>
-
-                        </ul>
-                </p>
-                </div>
-                <p><b>LOCATION:</b>
-                    {{location.address.addr_line1}},
-                    {{location.address.city}}, 
-                    {{location.address.state}}, 
-                    {{location.address.zipcode}}
-                </p>
-
-                <p><b>CONTACT INFORMATION:</b>
-                    {{location.phone}} | {{location.email}}
-                </p>
-
-                <p><b>DETAILS:</b>
-                    {{location.description}}
-                </p>
-            </div>
-        </div>
-    </div>
-<!-- end of repeating for each custom location that seller has in the db -->
 
 
 <br>

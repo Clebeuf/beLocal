@@ -208,7 +208,7 @@ class VendorDetailsView(generics.CreateAPIView):
                     market.is_liked = Market.objects.from_request(self.request).get(pk=market.id).user_vote                    
 
             return Response({"vendor":serializers.VendorSerializer(vendor).data, 
-                             "locations":serializers.SellerLocationSerializer(locations, many=True).data,
+                             "selling_locations":serializers.SellerLocationSerializer(locations, many=True).data,
                              "markets":serializers.MarketDisplaySerializer(markets, many=True).data,
                              "products":serializers.ProductDisplaySerializer(products, many=True).data
                             }, 
@@ -271,6 +271,7 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
         vendor = Vendor.objects.get(user=request.user) 
    
         if vendor is not None:
+            print request.DATA.keys()
             serializer = serializers.EditVendorSerializer(vendor, data=request.DATA, partial=True)
            
             if serializer.is_valid():
@@ -612,7 +613,7 @@ class VendorsView(generics.ListAPIView):
     vendors.
     """
     permission_classes = (AllowAny,)
-    serializer_class = serializers.CustomerVendorSerializer
+    serializer_class = serializers.VendorTabSerializer
 
     def get_queryset(self):
         vendors = Vendor.objects.filter(is_active=True)
@@ -644,7 +645,7 @@ class VendorsView(generics.ListAPIView):
                     vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote 
                     vendors.append(vendor)
                     
-            serializer = serializers.CustomerVendorSerializer(vendors, many=True)
+            serializer = serializers.VendorTabSerializer(vendors, many=True)
             return Response(serializer.data)
 
         else: 
@@ -654,7 +655,7 @@ class VendorsView(generics.ListAPIView):
                 for vendor in vendors:
                     vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
             
-            serializer = serializers.CustomerVendorSerializer(vendors, many=True)
+            serializer = serializers.VendorTabSerializer(vendors, many=True)
             return Response(serializer.data)
 
 class ListVendorLocations(generics.ListAPIView):
@@ -748,8 +749,11 @@ class autocompleteViewModel():
         self.name = name
 
 def autocomplete(request):
-    prodSqs = SearchQuerySet().models(Product).autocomplete(name_auto=request.GET.get('q', ''))[:5]
-    products = [autocompleteViewModel(result.name) for result in prodSqs]
+    products = []
+    prodSqs = SearchQuerySet().models(Product).autocomplete(name_auto=request.GET.get('q', ''))
+    for product in [result.object for result in prodSqs]:
+        if product is not None and product.vendor.is_active:
+            products.append(autocompleteViewModel(product.name))
     the_data = sjson.dumps({
         'products': products}, cls=JsonHelper)
     return HttpResponse(the_data, content_type='application/json')
@@ -766,8 +770,9 @@ class SearchProductView(generics.ListAPIView):
         products = []
 
         for product in [result.object for result in results]:
-            product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote  
-            products.append(product)      
+            if product is not None:
+                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
+                products.append(product)      
         
         return products
 
@@ -792,10 +797,34 @@ class SearchVendorView(generics.ListAPIView):
         vendors = []
 
         for vendor in [result.object for result in results]:
-            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote  
-            vendors.append(vendor)      
+            if vendor is not None:
+                vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
+                vendors.append(vendor)
         
         return vendors
+
+class SearchMarketView(generics.ListAPIView):
+    serializer_class = serializers.MarketSearchSerializer
+
+    def get_queryset(self):
+        srch = self.request.GET.get('q', '')
+        sqs = SearchQuerySet().models(Market)
+        name = sqs.filter(name=srch)
+        webpage = sqs.filter(webpage=srch)
+        city = sqs.filter(city=srch)
+        state = sqs.filter(state=srch)
+        zipcode = sqs.filter(zipcode=srch)
+        addr = sqs.filter(addr_line1=srch)
+        country = sqs.filter(country=srch)
+
+        results = name | webpage | city | state | zipcode | addr | country
+        
+        markets = []
+
+        for market in [result.object for result in results]:
+            markets.append(market)      
+        
+        return markets
 
 @csrf_exempt
 def like(request, content_type, id):

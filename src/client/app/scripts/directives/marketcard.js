@@ -21,8 +21,18 @@ angular.module('clientApp')
         ];
 
         scope.displayMarket = function (id) {
-          $location.path('market/details/'+id).replace();
-        };        
+          $location.path('market/details/'+id);
+        };
+
+        scope.highlightPins = function(market) {
+            if(market && market.marker)             
+                market.marker.setAnimation(google.maps.Animation.BOUNCE);
+        };
+
+        scope.unHighlightPins = function(market) {
+            if(market && market.marker) 
+                market.marker.setAnimation(null);
+        };              
 
         scope.likeUnlikeItem = function(item, itemName) {
           StateService.likeUnlikeItem(item, itemName).then(function() {

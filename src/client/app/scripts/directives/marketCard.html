@@ -1,4 +1,4 @@
-<div class="thumbnail product-card">
+<div ng-mouseenter="highlightPins(market)" ng-mouseleave="unHighlightPins(market)" class="thumbnail product-card">
       <img ng-src="{{market.photo.image_url}}" alt="{{market.name}}" class="pointer vendor-card-name" ng-click="displayMarket(market.id)"/>
       <div class="caption market-caption">
 

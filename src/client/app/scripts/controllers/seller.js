@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q) {
+  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q, $rootScope) {
     $scope.StateService = StateService;
     $scope.opened = false;
     $scope.minDate = new Date();
@@ -27,6 +27,23 @@ angular.module('clientApp')
 
     var geocoder = new google.maps.Geocoder();
 
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };    
+
+    StateService.retrieveUpdatedCurrentUser().then(function(response){
+        StateService.setProfileVendor(response.data);
+        console.log(response.data);
+        $scope.isCurrentUserActive = response.data.is_active;
+    });
+
     StateService.getAvailableMarkets().then(function() {
         if(StateService.getAvailableMarketList().length > 0)
             $scope.newLocationMarket = StateService.getAvailableMarketList()[0].id;
@@ -44,17 +61,6 @@ angular.module('clientApp')
         'Saturday',
         'Sunday'
     ];
-
-    $scope.safeApply = function(fn) {
-      var phase = this.$root.$$phase;
-      if(phase == '$apply' || phase == '$digest') {
-        if(fn && (typeof(fn) === 'function')) {
-          fn();
-        }
-      } else {
-        this.$apply(fn);
-      }
-    };
     
     StateService.getTags().then(function() {
       $scope.tagList = StateService.getTagList();
@@ -66,7 +72,10 @@ angular.module('clientApp')
 
     $scope.doCustomLocation = function() {
         $scope.isCreatingCustomLocation = true;
-        $scope.submitLocationButtonText = "Add Location";
+        if($scope.isEditingLocation)
+            $scope.submitLocationButtonText = 'Save Changes';
+        else
+            $scope.submitLocationButtonText = "Add Location";
     }
 
     $scope.manuallyTriggerCustomLocation = function() {
@@ -91,7 +100,13 @@ angular.module('clientApp')
 
     $scope.doTwitterSignIn = function() {
         OAuth.popup('twitter', {cache : true})
-        .done(function (twitter) {  
+        .done(function (twitter) {
+            twitter.me().done(function(me) {
+                var data = {'twitter_url' : 'http://www.twitter.com/' + me.alias};
+                StateService.updateTwitterURL(data).then(function(result) {
+                    StateService.setProfileVendor(result.data);
+                })
+            });
             $scope.safeApply(function() {
                 $scope.isTwitterAuth = true;
                 $scope.twitterChecked = true;
@@ -341,9 +356,12 @@ angular.module('clientApp')
         $scope.newItemStock = "IS";
         $scope.itemCategory = $scope.categoryList[0].id;
 
+        $timeout(function() {
         var e = angular.element('#item-image');
+        console.log(e);
         e.wrap('<form>').closest('form').get(0).reset();
         e.unwrap();
+        })
         
         /* clear checked tags */
         var len = $scope.tagList.length;
@@ -501,6 +519,8 @@ angular.module('clientApp')
     $scope.getSellerLocations = function() {
         StateService.getSellerLocations().then(function(response) {
             $scope.sellerLocations = response.data;
+            $rootScope.$broadcast('generateMapPins');
+            $rootScope.$broadcast('forceRefreshMap');            
         })
     }
 
@@ -514,6 +534,8 @@ angular.module('clientApp')
               response.data[i].address.hours.sort(compareWeekday);
             }            
             $scope.marketLocations = response.data;
+            $rootScope.$broadcast('generateMapPins');
+            $rootScope.$broadcast('forceRefreshMap');            
         })
     }
 
@@ -696,6 +718,16 @@ angular.module('clientApp')
         $scope.latitude = item.geometry.location.k;
         $scope.longitude = item.geometry.location.B;   
     }
+
+    $scope.highlightPins = function(object) {
+        if(object && object.marker)          
+            object.marker.setAnimation(google.maps.Animation.BOUNCE);
+    };
+
+    $scope.unHighlightPins = function(object) {
+        if(object && object.marker)          
+            object.marker.setAnimation(null);
+    };    
 
     $scope.init = function() {
         $scope.getSellerLocations();

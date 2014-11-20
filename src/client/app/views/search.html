@@ -1,5 +1,5 @@
 <div class="hidden-xs"><nav-bar></nav-bar></div>
-<div class="visible-xs"><navbar-x-s></navbar-x-s></div>
+<div ng-show="showXSNav"><navbar-x-s></navbar-x-s></div>
 
 <div class="customer-container">
     <div ng-show="productResults.length == 0 && marketResults.length == 0 && vendorResults.length == 0" class="row">
@@ -15,20 +15,53 @@
     <div ng-show="productResults.length > 0">
         <div class="row">
             <!-- DISPLAY ITEMS -->
-            <div class="col-sm-12">
+            <div class="col-sm-10 col-xs-6">
                 <div class="new-heading-style">
-                    Search Results for "{{query}}"
+                    Search Results for "{{query}}" in {{selectedCategory}}
                 </div>
                 <div class="row" style="padding-top:5px" id="masonry-container">
-                    <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in productResults" >
+                    <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in productResults | filterMultiple:productFilterExpr | unique:id" >
                         <product-card data="item"></product-card>
                     </div>
                 </div>
             </div>
+            <!-- DISPLAY SIDE BAR OF ALL CATEGORIES & TAGS-->
+            <div class="col-sm-2 col-xs-6 tag-bar">
+                <hr>
+                <p class="small-header">Categories</p>
+                <ul class="tag-list" role="">
+                    <li><a class="plain-text-font" ng-class="{'active' : selectedCategory === 'All Products'}" ng-click="getAllProducts('category')">All Products</a></li>
+                    <li class="" ng-repeat="category in categoryList">
+                      <a class="plain-text-font" ng-class="{'active' : selectedCategory === category.name}" ng-click="getProductsWithCategory(category)">{{category.name}}</a>
+                    </li>
+                </ul>
+                <hr>
+                <p class="small-header">Filter By</p>
+                <ul class="tag-list" role="">
+                    <li>
+                        <span ng-hide="tagSelected('All Products')">
+                            <a class="pointer tag-check" ng-click="doTagFilter('All Products')" ><i class="fa fa-circle-o"></i></a>
+                          </span>
+                          <span ng-show="tagSelected('All Products')">
+                            <a class="pointer tag-check" ng-click="doTagFilter('All Products')" ><i class="fa fa-check-circle"></i></a>
+                          </span>                      
+                          <a class="plain-text-font" ng-click="doTagFilter('All Products')">All Products</a>
+                    </li>
+                    <li class="" ng-repeat="tag in tagList">
+                      <span ng-hide="tagSelected(tag.name)">
+                        <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-circle-o"></i></a>
+                      </span>
+                      <span ng-show="tagSelected(tag.name)">
+                        <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-check-circle"></i></a>
+                      </span>                      
+                      <a class="plain-text-font" ng-click="doTagFilter(tag.name)">{{tag.name}}</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 
-    <!-- Vendor Search Results -->
+    <!-- market Search Results -->
     <div ng-show="vendorResults.length > 0">
         <div class="row">
             <!-- DISPLAY VENDOR CARDS -->
@@ -39,6 +72,23 @@
                 <div ng-repeat="vendor in vendorResults">
                     <vendor-card data="vendor"></vendor-card>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor Search Results -->
+    <div ng-show="marketResults.length > 0">
+        <div class="row">
+            <!-- DISPLAY MARKET CARDS -->
+            <div class="col-sm-12">
+                <div class="new-heading-style">
+                    Search Results for "{{query}}"
+                </div>         
+                <div class="row" id="masonry-market-container">
+                    <div class="col-trending ms-market-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="market in marketResults" >
+                      <market-card data="market"></market-card>
+                    </div>
+              </div>
             </div>
         </div>
     </div>

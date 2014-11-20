@@ -417,6 +417,13 @@ angular.module('clientApp')
         });   
     }
 
+    this.getManageUsers = function() {
+      return $http.get(this.getServerAddress() + "manage/users/list/")
+        .error(function(){
+            console.log('Error retrieving users');
+        });   
+    }
+
     this.activateVendor = function(vendor) {
       return $http.post(this.getServerAddress() + 'manage/vendors/activate/', {'id' : vendor.id})
       .error(function() {

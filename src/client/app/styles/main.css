@@ -8,7 +8,16 @@
 .vendor-avatar-img{
   width: 100%;
   max-width: 500px;
+  height: 100%;
+  overflow: hidden;
+  vertical-align: middle;
 
+}
+
+.vendor-avatar {
+  max-height: 300px;
+  overflow: hidden;
+  vertical-align: middle;
 }
 
 .update-profile-sm-buttons {
@@ -1226,6 +1235,7 @@ hr {
 
 .new-vendor-avatar img {
   width: 100%;
+
 }
 
 .description-container {

@@ -4,6 +4,14 @@
 
 */
 
+
+@media (max-width: 460px) {
+  .seller-stock-formatting input[type="radio"] {
+    margin-left: 5px !important;
+    text-align: left !important;
+  }
+}
+
 /*NAV BAR RESPONSIVENESS*/
 
 @media (max-width: 1100px) and (min-width: 1001px) {
@@ -1125,7 +1133,7 @@ a:focus {
 /*NEW UI STYLES (OCT 21st)*/
 
 .new-formatting-container {
-  padding: 60px 15px 5px 15px !important;
+  padding: 80px 15px 5px 15px !important;
 }
 
 .new-heading-style {

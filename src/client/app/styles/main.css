@@ -5,6 +5,17 @@
 */
 
 
+.vendor-avatar-img{
+  width: 100%;
+  max-width: 500px;
+
+}
+
+.update-profile-sm-buttons {
+  float: right !important;
+}
+
+
 @media (max-width: 460px) {
   .seller-stock-formatting input[type="radio"] {
     margin-left: 5px !important;
@@ -83,6 +94,18 @@
 
 .navbar-brand img {
   height: 35px;
+}
+
+@media screen and (max-width: 325px) {
+    .full-logo {
+        display: none !important;
+    }
+}
+
+@media screen and (min-width: 326px) {
+    .small-logo {
+        display: none !important;
+    }
 }
 
 .beLocal-search {

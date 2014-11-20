@@ -10,25 +10,40 @@
 
 <div class="new-formatting-container customer-container" ng-class="{'is-inactive' : !isCurrentUserActive}">  
     <div class="row vendor-profile-header">
-        <div class="col-md-5 new-vendor-avatar">
-            <img ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}">
-        </div>
-        <div class="vendor-header-content">
 
-            <span class="new-vendor-name-style">
-                {{StateService.getCurrentUser().vendor.company_name}}<br>
-            </span>
-            <span class="new-hr-heading-style">
-                <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
-                    <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}} |
-                </span>
-                <span ng-hide="StateService.getCurrentUser().vendor.webpage == null"><a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> |</span><span ng-hide="StateService.getCurrentUser().vendor.twitter_url == null"> <a href="{{StateService.getCurrentUser().vendor.twitter_url}}">Twitter</a> |</span><span ng-hide="StateService.getCurrentUser().vendor.facebook_url == null"><a ng-hide="StateService.getCurrentUser().vendor.facebook_url == null" href="{{StateService.getCurrentUser().vendor.facebook_url}}"> Facebook</a> |</span>
-            </span>
-            <span class="pull-right">
-                    <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
-                    &nbsp;
-                    <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Update Social Media</button>
-            </span>
+
+        <div class="col-sm-5 vendor-avatar">
+            <img ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}" class="vendor-avatar-img">
+        </div>
+        <div class="col-sm-7 vendor-header-content">
+
+            <div class="row new-vendor-name-style">
+                <div class="col-sm-12">
+                    {{StateService.getCurrentUser().vendor.company_name}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <span class="new-hr-heading-style">
+                        <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
+                            <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
+                        </span>
+                        <span ng-hide="StateService.getCurrentUser().vendor.webpage == null">
+                             | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a>
+                        </span>
+                        <span ng-hide="StateService.getCurrentUser().vendor.twitter_url == null"> 
+                             | <a href="{{StateService.getCurrentUser().vendor.twitter_url}}">Twitter</a> </span>
+                        <span ng-hide="StateService.getCurrentUser().vendor.facebook_url == null">
+                             | <a ng-hide="StateService.getCurrentUser().vendor.facebook_url == null" href="{{StateService.getCurrentUser().vendor.facebook_url}}">Facebook</a>
+                        </span>
+                    </span>
+                    <span class="update-profile-sm-buttons pull-right">
+                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
+                        &nbsp;
+                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Update Social Media</button>
+                    </span>
+                </div>
+            </div>
 
             <hr>
             <div class="description-container">

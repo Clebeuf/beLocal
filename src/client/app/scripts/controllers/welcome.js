@@ -39,4 +39,18 @@ angular.module('clientApp')
   		$location.path('/');
   	}
 
+    $scope.signUpAsCustomerModal = function() {
+      angular.element('#noValidAccountModal').on('hidden.bs.modal', function(e) {
+        $scope.signUpAsCustomer();
+      })
+      angular.element('#noValidAccountModal').modal('hide');
+    }
+
+    $scope.signUpAsVendorModal = function() {
+      angular.element('#noValidAccountModal').on('hidden.bs.modal', function(e) {
+        $scope.signUpAsVendor();
+      })
+      angular.element('#noValidAccountModal').modal('hide');
+    }    
+
   });

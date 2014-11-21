@@ -1,8 +1,15 @@
+
+# -*- coding: utf-8 -*-
+
 from be_local_server.models import *
 from datetime import *
 from django.core.files import File 
 from PIL import Image
 import urllib
+
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 
 #-----------------------------------------------------------------------------------------------------

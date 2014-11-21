@@ -117,10 +117,14 @@ class MarketPhoto(models.Model):
     image_url = property(get_image_abs_path)    
 
 class Market(models.Model):
+
+    class Meta:
+        managed = True
+
     photo = models.ForeignKey(MarketPhoto, blank=True, null=True)    
     name = models.CharField(max_length=100)
     address = models.ForeignKey(Address)
-    description = models.CharField(max_length=400)
+    description = models.CharField(max_length=1000)
     vendors = models.ManyToManyField(Vendor, related_name='vendors', blank=True)
     webpage = models.CharField(max_length=400, null=True, blank=True)
     facebook_url = models.CharField(max_length=400, null=True, blank=True)   

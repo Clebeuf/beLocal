@@ -22,7 +22,7 @@ SECRET_KEY = 'fy=c#^1m+x38z=(5pb6i3a_8v(bhv)$#2a7h!1*dv))jby0xh4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -83,7 +83,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 ROOT_URLCONF = 'server.urls'
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = None
 
 WSGI_APPLICATION = 'server.wsgi.application'
 
@@ -101,6 +100,9 @@ REST_FRAMEWORK = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+	'NAME': 'belocal',
+	'USER': 'root',
+	'PASSWORD': 'belocal',
     }
 }
 
@@ -164,7 +166,7 @@ STATIC_URL = '/static/'
 # User-uploaded images
 # https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user
 MEDIA_ROOT = os.path.join(BASE_DIR, 'be_local_server/static/media/')
-MEDIA_URL = 'http://54.69.172.241:80/static/media/'
+MEDIA_URL = 'http://belocalvictoria.me:80/static/media/'
 ADMIN_MEDIA_PREFIX = '/admin-media/'
 
 # site id for sites framework

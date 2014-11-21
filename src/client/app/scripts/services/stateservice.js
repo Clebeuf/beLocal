@@ -273,7 +273,7 @@ angular.module('clientApp')
     };
 
     this.getServerAddress = function() {
-      return 'http://54.69.172.241:8000/';
+      return 'http://belocalvictoria.me:8000/';
     };
 
     this.uploadFile = function(file) {

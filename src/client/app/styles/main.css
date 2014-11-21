@@ -447,7 +447,7 @@ body {
 .footerCopyright {
   position: absolute;
   bottom: 0;
-  height: 30px;
+  min-height: 30px;
   width: 100%;
   background-color: #343333;
   color: #FFFFFF;
@@ -649,7 +649,7 @@ a.footerLink {
   border-top: none;
   position: absolute;
   bottom: 0px;
-  height: 85px;
+  min-height: 85px;
   width: 100%;
   background-color: rgba(0,0,0,0.6);
   display: table;
@@ -1537,5 +1537,9 @@ hr {
   .navbar-header {
     width: 78%;
   }
+}
+
+.display-inline-block {
+  display: inline-block;
 }
 

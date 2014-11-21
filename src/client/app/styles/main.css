@@ -356,12 +356,14 @@ html {
   min-height: 100%;
   /*background-color: #DDDDDD;*/
   background-color: #EEEEEE;
+  /*background-image: url('/images/pattern-new.png');*/
 }
 
 body {
   /* Margin bottom by footer height */
   margin-bottom: 40px;
   background-color: #EEEEEE;
+  /*background-image: url('/images/pattern-new.png');  */
   font-family: 'Roboto', sans-serif !important;
 }
 

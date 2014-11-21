@@ -25,6 +25,17 @@ angular.module('clientApp')
           }
         };
 
+        $scope.updateCategoryDropdown = function() {
+          $scope.getAllProducts('tag');      
+          if($scope.dropdownCategory.name === 'All Products') {
+            $scope.getAllProducts('category');
+            $scope.dropdownCategory = $scope.dropdownCategoryList[0];
+          }
+          else {
+            $scope.getProductsWithCategory($scope.dropdownCategory);
+          }
+        }        
+
         $scope.checkNav = function() {
           if(angular.element($window).scrollTop() > 140 || angular.element($window).width() < 768) {
             $scope.safeApply(function() {
@@ -102,6 +113,12 @@ angular.module('clientApp')
         
         StateService.getCategories().then(function() {
           $scope.categoryList = StateService.getCategoryList();
+          $scope.dropdownCategoryList = [];
+          $scope.dropdownCategoryList.push({'name' : 'All Products'});
+          for(var i = 0; i < $scope.categoryList.length; i++) {
+            $scope.dropdownCategoryList.push($scope.categoryList[i]);
+          }
+          $scope.dropdownCategory = $scope.dropdownCategoryList[0];      
         });
 
         $scope.setProductFilter = function() {
@@ -160,6 +177,12 @@ angular.module('clientApp')
         $scope.getProductsWithCategory = function(category) {
             $scope.showCategory = true;
             $scope.selectedCategory = category.name;
+            for(var i = 0; i < $scope.dropdownCategoryList.length; i++) {
+              if($scope.dropdownCategoryList[i].id === category.id) {
+                $scope.dropdownCategory = $scope.dropdownCategoryList[i];
+                break;
+              }
+            }            
             $scope.setProductFilter();
             //$scope.instantTrendingMasonry();
         }
@@ -168,6 +191,7 @@ angular.module('clientApp')
             if (resetSelection.match('category')) {
               $scope.showCategory = false;
               $scope.selectedCategory = 'All Products';      
+              $scope.dropdownCategory = $scope.dropdownCategoryList[0];              
             } 
             else if (resetSelection.match('tag')) {
               $scope.showTag = false;

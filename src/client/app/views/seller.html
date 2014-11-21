@@ -1,4 +1,5 @@
-<div ng-show="isCurrentUserActive === false" class="alert alert-danger beLocal-alert" role="alert">
+<div ng-show="isCurrentUserActive === false && showInactiveAlert === true" class="alert alert-danger beLocal-alert" role="alert">
+  <button type="button" class="close" ng-click="hideInactiveAlert()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
   <span><strong>Your account is currently inactive!</strong> Until your account is activated, no one will be able to see your products or selling locations. After completing your profile, please email <a class="alert-link" href="mailto:{{StateService.getContactEmail()}}">{{StateService.getContactEmail()}}</a> to request activation!</span>
 </div>
 <div ng-show="showWarning" class="alert alert-warning alert-dismissible" role="alert">
@@ -9,25 +10,42 @@
 
 <div class="new-formatting-container customer-container" ng-class="{'is-inactive' : !isCurrentUserActive}">  
     <div class="row vendor-profile-header">
-        <div class="col-md-5 new-vendor-avatar">
-            <img ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}">
-        </div>
-        <div class="vendor-header-content">
 
-            <span class="new-vendor-name-style">
-                {{StateService.getCurrentUser().vendor.company_name}}<br>
-            </span>
-            <span class="new-hr-heading-style">
-                <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
-                    <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}} |
-                </span>
-                <span ng-hide="StateService.getCurrentUser().vendor.webpage == null"><a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> |</span><span ng-hide="StateService.getCurrentUser().vendor.twitter_url == null"> <a href="{{StateService.getCurrentUser().vendor.twitter_url}}">Twitter</a> |</span><span ng-hide="StateService.getCurrentUser().vendor.facebook_url == null"><a ng-hide="StateService.getCurrentUser().vendor.facebook_url == null" href="{{StateService.getCurrentUser().vendor.facebook_url}}"> Facebook</a> |</span>
-            </span>
-            <span class="pull-right">
-                    <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
-                    &nbsp;
-                    <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Update Social Media</button>
-            </span>
+
+        <div class="col-sm-5 vendor-avatar">
+            <div class="vendor-avatar-img" style="background-image:url({{StateService.getCurrentUser().vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
+            </div>
+
+        </div>
+        <div class="col-sm-7 vendor-header-content">
+
+            <div class="row new-vendor-name-style">
+                <div class="col-sm-12">
+                    {{StateService.getCurrentUser().vendor.company_name}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <span class="new-hr-heading-style">
+                        <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
+                            <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
+                        </span>
+                        <span ng-hide="StateService.getCurrentUser().vendor.webpage == null">
+                             | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a>
+                        </span>
+                        <span ng-hide="StateService.getCurrentUser().vendor.twitter_url == null"> 
+                             | <a href="{{StateService.getCurrentUser().vendor.twitter_url}}">Twitter</a> </span>
+                        <span ng-hide="StateService.getCurrentUser().vendor.facebook_url == null">
+                             | <a ng-hide="StateService.getCurrentUser().vendor.facebook_url == null" href="{{StateService.getCurrentUser().vendor.facebook_url}}">Facebook</a>
+                        </span>
+                    </span>
+                    <span class="update-profile-sm-buttons pull-right">
+                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
+                        &nbsp;
+                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Update Social Media</button>
+                    </span>
+                </div>
+            </div>
 
             <hr>
             <div class="description-container">
@@ -41,21 +59,28 @@
 <!--Display Seller's Locations-->
     <hr>
     <div class="row">
-        <div class="col-xs-9 new-hr-heading-style">
-            YOUR SELLING LOCATIONS
-        </div>
-        <div class="col-xs-3">
-            <button class="btn beLocal-btn-filled pull-right" data-toggle="modal" ng-click="resetLocationModal()" data-target="#locationModal">Create New Location</button>
+        <div class="col-xs-12">
+             <span class="new-hr-heading-style">
+                YOUR SELLING LOCATIONS
+            </span>
+            <span class="pull-right">
+                <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="resetLocationModal()" data-target="#locationModal">
+                    <div class="hidden-mobile">Create New Location</div>
+                    <div class="show-mobile">+</div>
+                </button>
+            </span>
         </div>
     </div>
     <hr>
 
     <div class="row">
-        <div class="col-sm-4">
-            <div class="map-container">
-                <div class="bl-map" be-local-map locations="sellerLocations" markets="marketLocations"></div>
+        <div ng-hide="marketLocations.length == 0 && sellerLocations.length == 0">
+            <div class="col-sm-4">
+                <div class="map-container">
+                    <div class="bl-map" be-local-map locations="sellerLocations" markets="marketLocations"></div>
+                </div>
             </div>
-        </div>       
+        </div>   
         <div class="col-sm-8">
             <!-- NG-REPEAT FOR MARKETS -->
             <div class="new-heading-style">
@@ -183,7 +208,10 @@
             YOUR INVENTORY
         </div>
         <div class="col-xs-3">
-            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" data-target="#itemModal" ng-click="resetItemModal()">Create New Item</button>
+            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" data-target="#itemModal" ng-click="resetItemModal()">
+                <div class="hidden-mobile">Create New Item</div>
+                <div class="show-mobile">+</div>
+            </button>
         </div>
     </div>
     <hr>
@@ -199,7 +227,7 @@
                 <div class="row">
 
                 <!-- Display the locations name -->
-                    <div class="col-sm-2 hidden-xs vendor-product-image">
+                    <div class="col-sm-2 vendor-product-image">
                         <img ng-src="{{product.photo.image_url}}"/>
 
                     </div>
@@ -591,7 +619,7 @@
                                 <div class="form-group">
                                     <label>Select the Market You're Selling At:</label>
                                     <select ng-show="StateService.getAvailableMarketList().length > 0" ng-model="newLocationMarket" id="modalMarketPicker" class="form-control" ng-options="market.id as market.name for market in StateService.getAvailableMarketList()"></select>
-                                    <p ng-hide="StateService.getAvailableMarketList().length > 0" class="medium-margin">You're already selling at all the markets in town! 
+                                    <p ng-hide="StateService.getAvailableMarketList().length > 0" class="medium-margin">You're already selling at all the running markets in town! 
                                     <br>Try <a class="pointer beLocal-a" ng-click="manuallyTriggerCustomLocation()">creating</a> a new custom location instead.</p> 
                                 </div>   
                             </form>

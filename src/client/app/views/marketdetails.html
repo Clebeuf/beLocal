@@ -5,29 +5,37 @@
 <!-- SELLER DETAILS -->
 <div class="customer-container">  
     <div class="row vendor-profile-header">
-        <div class="col-md-5 new-vendor-avatar">
-            <img ng-src="{{marketDetails.photo.image_url}}">
 
-            <div class="col-sm-12 like-button-markets">
-                <div data-toggle="tooltip" style="display:inline-block" data-placement="bottom" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
-                  <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(marketDetails, 'market')" type="button" class="btn btn-default beLocal-btn-default">
-                    <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : marketDetails.is_liked}"></span>
-                    <span ng-hide="marketDetails.is_liked">Like</span>
-                    <span ng-show="marketDetails.is_liked">Unlike</span>
-                    <span class="like-container" ng-show="marketDetails.total_likes > 0">
-                      {{marketDetails.total_likes}}
-                    </span>
-                  </button>
+
+        <div class="col-sm-5 vendor-avatar">
+            <div class="vendor-avatar-img" style="background-image:url({{marketDetails.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
+                <div class="col-sm-12">
+                    <div class="pull-right like-button-position" data-toggle="tooltip" style="display:inline-block" data-placement="bottom" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
+                      <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(marketDetails, 'market')" type="button" class="btn btn-default beLocal-btn-default">
+                        <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : marketDetails.is_liked}"></span>
+                        <span ng-hide="marketDetails.is_liked">Like</span>
+                        <span ng-show="marketDetails.is_liked">Unlike</span>
+                        <span class="like-container" ng-show="marketDetails.total_likes > 0">
+                          {{marketDetails.total_likes}}
+                        </span>
+                      </button>
+                    </div>
                 </div>
+
             </div>
+
         </div>
-        <div class="vendor-header-content">
+
+        <div class="vendor-header-content col-sm-7">
 
             <span class="new-vendor-name-style">
                 {{marketDetails.name}}<br>
             </span>
             <span class="new-hr-heading-style">
-                <span class="glyphicon glyphicon-map-marker"></span> {{marketDetails.address.addr_line1}}, {{marketDetails.address.city}}, {{marketDetails.address.state}}
+                <a href="http://maps.google.com/?q={{marketDetails.address.latitude}},{{marketDetails.address.longitude}}" target="_blank">
+                    <span class="glyphicon glyphicon-map-marker"></span> 
+                    {{marketDetails.address.addr_line1}}, {{marketDetails.address.city}}, {{marketDetails.address.state}}
+                </a>
                 | <a href="{{marketDetails.webpage}}">Our Website</a>
             </span>
             <hr>    
@@ -65,10 +73,7 @@
         <p class="no-bottom-margin">No local vendors have currently listed {{marketDetails.name}} as one of their selling locations.</p>
     </div>
 
-
-  <div ng-repeat="vendor in marketDetails.vendors">
-  	   <vendor-card data="vendor"></vendor-card>
-  </div>
+  	<vendor-card ng-repeat="vendor in marketDetails.vendors" data="vendor"></vendor-card>
 
 </div>
 <footer></footer>

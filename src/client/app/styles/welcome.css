@@ -327,3 +327,12 @@ body {
     font-size: 25px !important;
 }
 
+.fb-button-break {
+  display: none;
+}
+
+@media (max-width: 546px){
+  .fb-button-break {
+    display: inline;
+  }
+}

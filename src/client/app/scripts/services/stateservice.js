@@ -14,7 +14,7 @@ angular.module('clientApp')
     var vendorDetails = undefined;
     var likedUnlikedItem = undefined;
     var currentLocation = undefined;
-    var availableMarkets = undefined;
+    var availableMarkets = [];
     var likedUnlikedProduct = undefined;
     var marketDetails = undefined;
     var tagToDisplay = undefined;
@@ -201,9 +201,11 @@ angular.module('clientApp')
       return $http.get(this.getServerAddress() + 'vendor/markets/available/')
       .success(function(data) {
         for(var i = 0; i < data.length; i++) {
-          data[i].address.hours.sort(compareWeekday);
+          if(data[i].address.hours.length !== 0) {
+            data[i].address.hours.sort(compareWeekday);
+            availableMarkets.push(data[i]);
+          }
         }
-        availableMarkets = data;
       })
       .error(function(data) {
         console.log('Error retrieving markets');
@@ -414,6 +416,13 @@ angular.module('clientApp')
       return $http.get(this.getServerAddress() + "manage/vendors/list/")
         .error(function(){
             console.log('Error retrieving vendors');
+        });   
+    }
+
+    this.getManageUsers = function() {
+      return $http.get(this.getServerAddress() + "manage/users/list/")
+        .error(function(){
+            console.log('Error retrieving users');
         });   
     }
 

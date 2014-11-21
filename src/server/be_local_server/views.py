@@ -898,6 +898,17 @@ class ManageVendorsView(generics.ListAPIView):
     def get_queryset(self):
         return Vendor.objects.filter(user__is_staff=True)
 
+class ManageUsersView(generics.ListAPIView):
+    """ 
+    This view provides an endpoint to list available tags.
+    """
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.ManageUserSerializer    
+
+    def get_queryset(self):
+        return User.objects.all()
+
 class ActivateVendorView(generics.CreateAPIView):
 
     authentication_classes = (TokenAuthentication,)

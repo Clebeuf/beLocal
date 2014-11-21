@@ -4,11 +4,72 @@
 
 */
 
+@media screen and (max-width: 400px) {
+    .hidden-mobile{
+        display: none !important;
+    }
+}
+
+@media screen and (min-width: 401px) {
+    .show-mobile {
+        display: none !important;
+    }
+}
+
+
+.vendor-avatar-img{
+  width: 100%;
+  max-width: 500px;
+  height: 100%;
+  min-height: 300px;
+  overflow: hidden;
+  vertical-align: middle;
+  margin-bottom: 5px !important;
+
+}
+
+@media (max-width: 450px) {
+
+  .vendor-avatar-img{
+    height: 200px !important;
+  }
+
+  .vendor-avatar {
+    height: 200px !important;
+  }
+
+  .like-button-position{
+    margin-top: 150px !important;
+  }
+}
+
+.like-padding {
+  vertical-align: text-bottom;
+}
+
+.vendor-avatar {
+  max-height: 300px;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.update-profile-sm-buttons {
+  float: right !important;
+}
+
+
+@media (max-width: 460px) {
+  .seller-stock-formatting input[type="radio"] {
+    margin-left: 5px !important;
+    text-align: left !important;
+  }
+}
+
 /*NAV BAR RESPONSIVENESS*/
 
 @media (max-width: 1100px) and (min-width: 1001px) {
   .beLocal-search {
-    width: 500px !important;
+    width: 495px !important;
   }
 }
 
@@ -53,7 +114,7 @@
 }
 
 .search-nav-xs {
-  width: 500px;
+  width: 495px;
   margin-bottom: 0px !important;
 }
 
@@ -75,6 +136,18 @@
 
 .navbar-brand img {
   height: 35px;
+}
+
+@media screen and (max-width: 325px) {
+    .full-logo {
+        display: none !important;
+    }
+}
+
+@media screen and (min-width: 326px) {
+    .small-logo {
+        display: none !important;
+    }
 }
 
 .beLocal-search {
@@ -348,12 +421,14 @@ html {
   min-height: 100%;
   /*background-color: #DDDDDD;*/
   background-color: #EEEEEE;
+  /*background-image: url('/images/pattern-new.png');*/
 }
 
 body {
   /* Margin bottom by footer height */
   margin-bottom: 40px;
   background-color: #EEEEEE;
+  /*background-image: url('/images/pattern-new.png');  */
   font-family: 'Roboto', sans-serif !important;
 }
 
@@ -1125,7 +1200,7 @@ a:focus {
 /*NEW UI STYLES (OCT 21st)*/
 
 .new-formatting-container {
-  padding: 60px 15px 5px 15px !important;
+  padding: 80px 15px 5px 15px !important;
 }
 
 .new-heading-style {
@@ -1142,9 +1217,9 @@ a:focus {
   display: inline-block;
   font-family: 'Roboto', sans-serif;
   color: #9c9795;
-  height: 34px;
   vertical-align: middle !important;
   padding-top: 7px;
+  padding-bottom: 7px;
 }
 
 .new-hr-heading-style a {
@@ -1195,6 +1270,7 @@ hr {
 
 .new-vendor-avatar img {
   width: 100%;
+
 }
 
 .description-container {
@@ -1226,6 +1302,7 @@ hr {
   padding: 3px;
   border: 1px solid #d3d3d3;
   width: 100%;
+  max-width: 200px;
 }
 
 .seller-stock-formatting input[type="radio"] {
@@ -1240,7 +1317,20 @@ hr {
 
 .location-details {
   display: inline-block;
-  padding: 0px 15px 0px 15px !important;
+  padding: 0px 15px 0px 15px;
+  font-size: 13px;
+  font-family: 'Roboto', sans-serif;
+  color: #403e3b;
+  padding-top: 10px;
+  padding-bottom: 0px;
+}
+
+.like-button-position{
+  margin-top: 250px;
+}
+
+.seller-location-details{
+  padding: 0px 15px 0px 15px;
   font-size: 13px;
   font-family: 'Roboto', sans-serif;
   color: #403e3b;
@@ -1380,6 +1470,12 @@ hr {
   }
 }
 
+@media (max-width: 400px){
+  .bl-map {
+    height: 200px;
+  }
+}
+
 .map-container {
   background-color: white;
   padding: 3px;
@@ -1398,4 +1494,10 @@ hr {
 
 .is-inactive {
   margin-top: 50px;
+}
+
+@media (max-width: 768px) and (min-width: 768px) {
+  .navbar-header {
+    width: 78%;
+  }
 }

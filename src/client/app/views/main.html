@@ -42,6 +42,16 @@
   <div class="tab-pane active" id="trending">
     <div class="customer-container">
 
+            <div class="row visible-xs">
+              <div class="col-xs-12">
+                <hr>
+                <p class="small-header">Categories</p>
+                <select class="form-control" ng-model="dropdownCategory" ng-options="category.name for category in dropdownCategoryList" ng-change="updateCategoryDropdown()"></select>
+                <br>
+                <hr>
+              </div>                       
+            </div>
+
             <!-- DISPLAY ITEMS FOR EACH CATEGORY -->
             <div class="row">
               <div class="col-xs-12 hr-description-style">
@@ -57,19 +67,19 @@
             </div>
 
             <div class="row">
-            <div class="col-sm-10 col-xs-6">
+            <div class="col-sm-10 col-xs-12">
               <div class="new-heading-style">
                 {{selectedCategory}}
               </div>
               <div class="row" style="padding-top:5px" id="masonry-container">
-                <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-12" ng-repeat="item in trendingProducts | filterMultiple:productFilterExpr | unique:id" >
+                <div class="col-trending ms-item col-lg-3 col-md-4 col-xs-6" ng-repeat="item in trendingProducts | filterMultiple:productFilterExpr | unique:id" >
                   <product-card data="item"></product-card>
                 </div>
               </div>
             </div>
 
             <!-- DISPLAY SIDE BAR OF ALL CATEGORIES & TAGS-->
-            <div class="col-sm-2 col-xs-6 tag-bar">
+            <div class="col-sm-2 col-xs-6 tag-bar hidden-xs">
                 <hr>
                 <p class="small-header">Categories</p>
                 <ul class="tag-list" role="">

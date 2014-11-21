@@ -7,6 +7,13 @@
 	    </div>    
 	    <div ng-repeat="vendor in inactiveVendors">
 	  	    <vendor-card data="vendor"></vendor-card>
-	  	</div>    	
+	  	</div>
+		<div class="new-heading-style ng-binding">
+	        All Users
+	    </div> 
+	    <p ng-repeat="user in users">
+	    	<strong>Name:</strong> {{user.first_name}} {{user.last_name}}<br>
+	    	<strong>Email:</strong> {{user.email}}
+	    </p>	  	
     </div>
 </div>

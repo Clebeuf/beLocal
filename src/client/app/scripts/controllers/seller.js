@@ -24,6 +24,7 @@ angular.module('clientApp')
     $scope.currentUser = {};
     angular.copy(StateService.getCurrentUser(), $scope.currentUser);
     $scope.isCreatingCustomLocation = false;
+    $scope.showInactiveAlert = true;
 
     var geocoder = new google.maps.Geocoder();
 
@@ -40,7 +41,6 @@ angular.module('clientApp')
 
     StateService.retrieveUpdatedCurrentUser().then(function(response){
         StateService.setProfileVendor(response.data);
-        console.log(response.data);
         $scope.isCurrentUserActive = response.data.is_active;
     });
 
@@ -69,6 +69,10 @@ angular.module('clientApp')
     StateService.getCategories().then(function() {
       $scope.categoryList = StateService.getCategoryList();
     });
+
+    $scope.hideInactiveAlert = function() {
+        $scope.showInactiveAlert = false;
+    }
 
     $scope.doCustomLocation = function() {
         $scope.isCreatingCustomLocation = true;

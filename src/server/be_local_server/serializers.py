@@ -136,7 +136,16 @@ class ManageVendorSerializer(serializers.ModelSerializer):
                     'photo',
                     'is_active',
                     'address',
-        )        
+        )   
+
+class ManageUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (  'id',   
+                    'first_name',
+                    'last_name',
+                    'email',
+        )              
 
 class PhotoPathSerializer(serializers.ModelSerializer):
     image_url = serializers.Field(source="image_url")  

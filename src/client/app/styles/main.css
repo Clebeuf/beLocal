@@ -21,10 +21,26 @@
   width: 100%;
   max-width: 500px;
   height: 100%;
+  min-height: 300px;
   overflow: hidden;
   vertical-align: middle;
   margin-bottom: 5px !important;
 
+}
+
+@media (max-width: 450px) {
+
+  .vendor-avatar-img{
+    height: 200px !important;
+  }
+
+  .vendor-avatar {
+    height: 200px !important;
+  }
+
+  .like-button-position{
+    margin-top: 150px !important;
+  }
 }
 
 .like-padding {
@@ -1199,9 +1215,9 @@ a:focus {
   display: inline-block;
   font-family: 'Roboto', sans-serif;
   color: #9c9795;
-  height: 34px;
   vertical-align: middle !important;
   padding-top: 7px;
+  padding-bottom: 7px;
 }
 
 .new-hr-heading-style a {
@@ -1299,7 +1315,20 @@ hr {
 
 .location-details {
   display: inline-block;
-  padding: 0px 15px 0px 15px !important;
+  padding: 0px 15px 0px 15px;
+  font-size: 13px;
+  font-family: 'Roboto', sans-serif;
+  color: #403e3b;
+  padding-top: 10px;
+  padding-bottom: 0px;
+}
+
+.like-button-position{
+  margin-top: 250px;
+}
+
+.seller-location-details{
+  padding: 0px 15px 0px 15px;
   font-size: 13px;
   font-family: 'Roboto', sans-serif;
   color: #403e3b;

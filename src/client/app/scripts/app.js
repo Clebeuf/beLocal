@@ -63,8 +63,8 @@ var app = angular.module('clientApp', [
       authenticate: true,
       css: 'styles/main.css'
     })
-    .state('contactUs', {
-      url: '/contact-us',
+    .state('aboutUs', {
+      url: '/about-us',
       templateUrl: 'views/contactus.html',
       controller: 'ContactusCtrl',
       authenticate: false,

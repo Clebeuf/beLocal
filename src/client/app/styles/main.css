@@ -138,13 +138,13 @@
   height: 35px;
 }
 
-@media screen and (max-width: 325px) {
+@media (max-width: 325px) {
     .full-logo {
         display: none !important;
     }
 }
 
-@media screen and (min-width: 326px) {
+@media (min-width: 326px) {
     .small-logo {
         display: none !important;
     }

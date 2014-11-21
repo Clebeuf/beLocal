@@ -12,8 +12,10 @@
     <div class="row vendor-profile-header">
 
 
-        <div class="col-sm-5 vendor-avatar ">
-            <img ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}" class="vendor-avatar-img">
+        <div class="col-sm-5 vendor-avatar">
+            <div class="vendor-avatar-img" style="background-image:url({{StateService.getCurrentUser().vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
+            </div>
+
         </div>
         <div class="col-sm-7 vendor-header-content">
 

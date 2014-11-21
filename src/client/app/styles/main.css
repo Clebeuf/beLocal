@@ -69,7 +69,7 @@
 
 @media (max-width: 1100px) and (min-width: 1001px) {
   .beLocal-search {
-    width: 500px !important;
+    width: 495px !important;
   }
 }
 
@@ -114,7 +114,7 @@
 }
 
 .search-nav-xs {
-  width: 500px;
+  width: 495px;
   margin-bottom: 0px !important;
 }
 
@@ -1494,4 +1494,10 @@ hr {
 
 .is-inactive {
   margin-top: 50px;
+}
+
+@media (max-width: 768px) and (min-width: 768px) {
+  .navbar-header {
+    width: 78%;
+  }
 }

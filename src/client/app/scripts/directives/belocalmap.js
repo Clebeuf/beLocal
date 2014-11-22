@@ -188,7 +188,7 @@ angular.module('clientApp')
             '<div class="info-window-content">' + 
             '<div>' +
             '<h5 class="no-bottom-margin">' + 
-            '<span class="vendor-card-namer">' +
+            '<span class="vendor-card-name">' +
              object.name  + 
              '</span>' + 
              '</h5>' +

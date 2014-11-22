@@ -60,11 +60,42 @@ angular.module('clientApp')
 
         angular.element($window).scroll(function(){
             $scope.checkNav();        
-        });         
+        }); 
+
+        $scope.instantTrendingMasonry = function() {
+          $timeout(function() {
+          var container = document.querySelector('#masonry-container');
+          var msnry = new Masonry(container, {
+            itemSelector: '.ms-item',
+            columnWidth: '.ms-item'
+          });    
+          })
+        };
+
+        $scope.trendingMasonry = function() {
+          $timeout(function() {
+          var container = document.querySelector('#masonry-container');
+          var msnry = new Masonry(container, {
+            itemSelector: '.ms-item',
+            columnWidth: '.ms-item'
+          });    
+          }, 500)
+        };
+
+        $scope.marketMasonry = function() {
+          $timeout(function() {        
+            var container = document.querySelector('#masonry-market-container');
+            var msnry = new Masonry(container, {
+              itemSelector: '.ms-market-item',
+              columnWidth: '.ms-market-item'
+            });    
+          }, 500);
+        };                
 
         $scope.doProductSearch = function(query) {
             StateService.doProductSearch(query).then(function(response) {
                 $scope.productResults = response.data;
+                $scope.trendingMasonry();
             });
         }
 
@@ -86,6 +117,7 @@ angular.module('clientApp')
         $scope.doMarketSearch = function(query) {
             StateService.doMarketSearch(query).then(function(response) {
                 $scope.marketResults = response.data;
+                $scope.marketMasonry();                
             });
         }         
 

@@ -21,8 +21,13 @@
         <div class="col-sm-12">
           <h4 class="no-bottom-margin no-top-margin"><a ng-click="displayMarket(market.id)" class="pointer vendor-card-name">{{market.name}}</a></h4>
           <div class="container-display-vendor-name">
-            <span class="glyphicon glyphicon-map-marker"></span>
-            {{market.address.addr_line1}}, {{market.address.city}}, {{market.address.state}}           
+            <a href="http://maps.google.com/?q={{market.address.latitude}},{{market.address.longitude}}" target="_blank">
+              <span class="glyphicon glyphicon-map-marker"></span>
+              {{market.address.addr_line1}}, {{market.address.city}}, {{market.address.state}}
+            </a>           
+            <div ng-hide="openString">
+              <strong><span class='glyphicon glyphicon-time'></span>&nbsp;Closed for the season</span></strong>
+            </div>
             <div class="" ng-bind-html="openString"></div>
           </div>
         </div>

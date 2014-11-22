@@ -36,7 +36,7 @@
                         <span ng-hide="StateService.getCurrentUser().vendor.twitter_url == null"> 
                              | <a href="{{StateService.getCurrentUser().vendor.twitter_url}}">Twitter</a> </span>
                         <span ng-hide="StateService.getCurrentUser().vendor.facebook_url == null">
-                             | <a ng-hide="StateService.getCurrentUser().vendor.facebook_url == null" href="{{StateService.getCurrentUser().vendor.facebook_url}}">Facebook</a>
+                             | <a ng-hide="StateService.getCurrentUser().vendor.facebook_url == null" href="{{StateService.getCurrentUser().vendor.facebook_url}}" target="_blank">Facebook</a>
                         </span>
                     </span>
                     <span class="update-profile-sm-buttons pull-right">
@@ -322,6 +322,12 @@
                             <div class="col-xs-12">
                                 <label for="company-description">Company Website</label>
                                 <input ng-model="currentUser.vendor.webpage" type="text" name="website" class="form-control" id="company-description" placeholder="Optional Website URL" maxlength="400"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="company-description">Facebook Link</label>
+                                <input ng-model="currentUser.vendor.facebook_url" type="text" name="website" class="form-control" id="company-description" placeholder="Facebook URL" maxlength="400"/>
                             </div>
                         </div>
                         <div class="row">
@@ -645,13 +651,15 @@
                 <h4 class="modal-title">Update Social Media<br /><small>Please review the following fields and check or uncheck the boxes below to update your various social media accounts.</small></h4>
             </div>
             <div class="modal-body">
-                <label><i class="fa fa-facebook-square"></i> Facebook Status Update</label>            
+                <label><i class="fa fa-facebook-square"></i> Facebook Status Update</label> 
+                <p><strong>Note:</strong>  Permission to post to your wall is pending approval from Facebook. If you want to share this update, please copy and paste it into your Facebook status!</p>           
                 <textarea rows="10" required ng-model="facebookString" type="text" name="facebookField" class="form-control" id="facebook-field" placeholder="Facebook Status Update" />
-                <div class="checkbox">
+<!--                 <div class="checkbox">
                   <label>
                     <input name="fbCheck" ng-model="facebookChecked" type="checkbox"><strong>Post to Facebook</strong>
                   </label>
-                </div>
+                </div> -->
+                <br>
                 <label><i class="fa fa-twitter-square"></i> Twitter Status Update</label>
                 <div ng-show="isTwitterAuth">
                     <textarea rows="4" required ng-model="twitterString" type="text" name="twitterField" class="form-control" id="twitter-field" placeholder="Twitter Status Update" maxlength="140" />

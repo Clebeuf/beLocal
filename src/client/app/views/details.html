@@ -38,8 +38,8 @@
                     <span class="glyphicon glyphicon-map-marker"></span> {{vendorDetails.vendor.address.city}}, {{vendorDetails.vendor.address.state}} | 
                 </span>
                 <span ng-hide="StateService.getCurrentUser().vendor.webpage == null"><a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> |</span>
-                <span ng-hide="vendorDetails.vendor.twitter_url == null"> <a href="{{vendorDetails.vendor.twitter_url">Twitter</a> |</span>
-                <span ng-hide="vendorDetails.vendor.facebook_url == null"><a ng-hide="vendorDetails.vendor.facebook_url == null" href="{{vendorDetails.vendor.facebook_url}}"> Facebook</a> |</span>
+                <span ng-hide="vendorDetails.vendor.twitter_url == null"> <a href="{{vendorDetails.vendor.twitter_url" target="_blank">Twitter</a> |</span>
+                <span ng-hide="vendorDetails.vendor.facebook_url == null"><a href="{{vendorDetails.vendor.facebook_url}}" target="_blank"> Facebook</a> |</span>
                 <span ng-hide="vendorDetails.vendor.phone == null"> <a href="tel:{{vendorDetails.vendor.phone}}">{{vendorDetails.vendor.phone}}</a> |</span>
             </div>
             <hr>

@@ -13,7 +13,7 @@
     <div class="col-sm-5">
       <h4 class="no-bottom-margin no-top-margin"><a class="pointer vendor-card-name" ng-click="displayVendor(vendor.id)">{{vendor.company_name}}</a></h4>
         <div class="plain-text">
-          <span ng-show="vendor.phone != null" class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}
+          <span ng-show="vendor.phone != null" class="glyphicon glyphicon-earphone"></span> <a class="plain-text" href="tel:{{vendor.phone}}">{{vendor.phone}}</a>
           <br><span ng-show="vendor.address.addr_line1 != null && vendor.address.city != null && vendor.address.state != null">
             {{vendor.address.city}}, {{vendor.address.state}}
           </span>

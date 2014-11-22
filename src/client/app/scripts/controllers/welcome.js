@@ -51,6 +51,24 @@ angular.module('clientApp')
         $scope.signUpAsVendor();
       })
       angular.element('#noValidAccountModal').modal('hide');
-    }    
+    }  
+
+    $scope.newVendorSubmit = function() {
+      $scope.newVendorSubmitted = true;
+      if($scope.newVendorForm.$valid) {
+        var data = {
+          username: $scope.newVendorUserName,
+          password: $scope.newVendorPassword,
+          first_name: $scope.newVendorFirstName,
+          last_name: $scope.newVendorLastName,
+          email: $scope.newVendorEmail,
+        }
+      }
+      angular.element('#createVendorModal').on('hidden.bs.modal', function(e) {
+        AuthService.createNonFacebookVendor(data);
+      });
+      
+      angular.element('#createVendorModal').modal('hide');      
+    }  
 
   });

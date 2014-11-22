@@ -112,7 +112,23 @@ angular.module('clientApp')
         });
 
         return d.promise;
-    }    
+    } 
+
+    this.createNonFacebookVendor = function(customer) {
+      var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/vendor/no-fb-create/', data: customer});  
+      loginPromise.success(function(result) {
+          if(result.token) {
+            ipCookie('beLocalToken', result.token, {expires: 14});
+            ipCookie('beLocalUser', result, {expires: 14});
+            ipCookie('beLocalBypass', true, {expires: 14});
+            $http.defaults.headers.common.Authorization = 'Token ' + result.token;        
+          }
+          StateService.setProfile(result);
+          if(StateService.getUserType() === 'VEN') {
+              $location.path('/vendor');
+          }          
+      });
+    }   
 
     this.createVendor = function() {
         var d = $q.defer();

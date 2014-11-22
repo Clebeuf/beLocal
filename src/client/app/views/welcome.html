@@ -99,7 +99,8 @@
                             </div>
                             <p class="getting-started-font">To register as a farmer or foodmaker, sign up using Facebook by clicking the button below.</p>
                             <br>
-                            <a ng-click="signUpAsVendor()" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square"></i> Sign Up Using Facebook</a>
+                            <a ng-click="signUpAsVendor()" style="margin-right: 10px;" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square"></i> Sign Up Using Facebook</a>
+                            <a ng-click="signUpAsVendorWithoutFacebook()" data-toggle="modal" data-target="#createVendorModal" class="btn btn-lg beLocal-btn-filled">Sign Up Without Facebook</a>                            
                         </div>
                     </div>
                 </div>
@@ -149,3 +150,67 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<!-- Create Vendor Modal -->
+<div class="modal fade" id="createVendorModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Sign Up as a Farmer<br /><small>Please complete the following fields to register as a farmer or foodmaker.</small></h4>                
+            </div>
+            <div class="modal-body">  
+                <div class="container-fluid">                   
+                    <form role="form" name="newVendorForm" novalidate>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newVendorSubmitted && newVendorForm.vendorFirstName.$invalid }">
+                                    <label for="item-name">First Name</label>
+                                    <input required ng-model="newVendorFirstName" type="text" name="vendorFirstName" class="form-control" placeholder="First Name" maxlength="40"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newVendorSubmitted && newVendorForm.vendorLastName.$invalid }">
+                                    <label for="item-name">Last Name</label>
+                                    <input required ng-model="newVendorLastName" type="text" name="vendorLastName" class="form-control" placeholder="Last Name" maxlength="40"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newVendorSubmitted && newVendorForm.vendorUserName.$invalid }">
+                                    <label for="item-name">Username</label>
+                                    <input required ng-model="newVendorUserName" type="text" name="vendorUserName" class="form-control" placeholder="Username" maxlength="40"/>
+                                </div>
+                            </div>                        
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newVendorSubmitted && newVendorForm.vendorEmail.$invalid }">
+                                    <label for="item-name">Email</label>
+                                    <input required ng-model="newVendorEmail" type="text" name="vendorEmail" class="form-control" placeholder="Email" maxlength="50"/>
+                                </div>
+                            </div>    
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newVendorSubmitted && newVendorForm.vendorPassword.$invalid }">
+                                    <label for="item-name">Password</label>
+                                    <input required ng-model="newVendorPassword" type="password" name="vendorPassword" class="form-control" placeholder="Password" maxlength="30"/>
+                                </div>
+                            </div>    
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" ng-click="newVendorSubmit()" class="btn beLocal-btn-filled">Sign Up as a Farmer</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

@@ -35,6 +35,58 @@ def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
 
     return vincenty(user, item).miles
 
+class CreateNonFacebookVendorView(APIView):
+    permission_classes = (AllowAny,) 
+    serializer_class = serializers.UserRegistrationSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.DATA)
+        user = None
+
+        if serializer.is_valid():
+            user = User.objects.create(
+                username=serializer.init_data['username'],
+                first_name=serializer.init_data['first_name'],
+                last_name=serializer.init_data['last_name'],
+                email=serializer.init_data['email'],
+                password=serializer.init_data['password']
+            )
+
+        if user:
+            token, created_token = Token.objects.get_or_create(user=user)
+            vendor = Vendor.objects.create(user=user)
+
+            if(not created_token):
+                return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)
+            
+            # If the user is a newly created vendor, make them inactive.
+            user.is_staff = 1 # make the user a vendor
+            vendor.is_active = False # make the user inactive
+            vendor.save()
+            user.save()
+
+            vendor.company_name = user.username # set this for Carly's UI
+            vendor.save()
+
+            vendor = Vendor.objects.get(user=user)            
+                
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote       
+            response = {}
+            response = {'id': user.id, 
+                        'is_active' : vendor.is_active, 
+                        'name': user.username, 
+                        'email' : user.email, 
+                        'first_name': user.first_name, 
+                        'last_name': user.last_name, 
+                        'userType': 'VEN',
+                        'vendor' : serializers.VendorSerializer(vendor).data, 
+                        'token': token.key
+            }
+            
+            return Response(response)    
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)            
+
 class LoginView(APIView):
     throttle_classes = ()
     permission_classes = ()

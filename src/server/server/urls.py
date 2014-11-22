@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
     url(r'^admin/', include(admin.site.urls), name='admin'),
     url(r'^login/(?P<backend>.+)/$', views.LoginView.as_view(), name='login'),
+    url(r'^vendor/no-fb-create/$', views.CreateNonFacebookVendorView.as_view(), name='vendor-no-fb-create'),    
     url(r'^vendor/(?P<backend>.+)/create/$', views.CreateVendorView.as_view(), name='create-vendor'),
     url(r'^customer/(?P<backend>.+)/create/$', views.CreateCustomerView.as_view(), name='create-customer'),     
     

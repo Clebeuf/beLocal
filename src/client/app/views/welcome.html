@@ -229,6 +229,7 @@
                                 <div class="form-group" ng-class="{ 'has-error' : newUserSubmitted && newUserForm.vendorUserName.$invalid }">
                                     <label for="item-name">Username</label>
                                     <input required ng-model="newVendorUserName" type="text" name="vendorUserName" class="form-control" placeholder="Username" maxlength="40"/>
+                                    <p ng-show="usernameErrorMessage != null" class="help-block"><small style="color: red;" >{{usernameErrorMessage}}</small></p>
                                 </div>
                             </div>                        
                         </div>

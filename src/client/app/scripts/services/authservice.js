@@ -128,6 +128,7 @@ angular.module('clientApp')
               $location.path('/vendor');
           }          
       });
+      return loginPromise;      
     } 
 
     this.createNonFacebookCustomer = function(customer) {
@@ -144,6 +145,7 @@ angular.module('clientApp')
               $location.path('/');
           }          
       });
+      return loginPromise;
     }      
 
     this.createVendor = function() {

@@ -75,11 +75,15 @@ angular.module('clientApp')
           email: $scope.newVendorEmail,
         }
       }
-      angular.element('#createUserModal').on('hidden.bs.modal', function(e) {
-        AuthService.createNonFacebookVendor(data);
+      AuthService.createNonFacebookVendor(data)
+      .success(function() {
+        angular.element('#createUserModal').modal('hide');  
+      })
+      .error(function(response) {
+        if(response.username) {
+          $scope.usernameErrorMessage = response.username[0];
+        }          
       });
-
-      angular.element('#createUserModal').modal('hide');      
     } 
 
     $scope.newCustomerSubmit = function() {
@@ -93,11 +97,15 @@ angular.module('clientApp')
           email: $scope.newVendorEmail,
         }
       }
-      angular.element('#createUserModal').on('hidden.bs.modal', function(e) {
-        AuthService.createNonFacebookCustomer(data);
-      });
-
-      angular.element('#createUserModal').modal('hide');      
+      AuthService.createNonFacebookCustomer(data)
+      .success(function() {
+        angular.element('#createUserModal').modal('hide');  
+      })
+      .error(function(response) {
+        if(response.username) {
+          $scope.usernameErrorMessage = response.username[0];
+        }          
+      });    
     }     
 
     $scope.loginSubmit = function() {

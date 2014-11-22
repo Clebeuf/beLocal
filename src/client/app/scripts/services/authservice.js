@@ -186,5 +186,29 @@ angular.module('clientApp')
         });
 
         return d.promise;        
-    }    
+    } 
+
+    this.tryLoginWithoutFaceboook = function(username, password) {
+      var loginPromise = $http.post('http://localhost:8000/login-no-fb/', {username: username, password: password});
+
+      loginPromise.then(function (result) {        
+        if(result.data.token) {
+          ipCookie('beLocalToken', result.data.token, {expires: 14});
+          ipCookie('beLocalUser', result.data, {expires: 14});
+          ipCookie('beLocalBypass', true, {expires: 14});          
+          $http.defaults.headers.common.Authorization = 'Token ' + result.token;        
+        }
+        StateService.setProfile(result.data);     
+        if(StateService.getUserType() === 'CUS') {
+            $location.path('/');                    
+          // $location.path('/customer');
+        } else if(StateService.getUserType() === 'VEN') {
+            $location.path('/vendor');
+        }
+        else if(StateService.getUserType() === 'SUP') {
+            $location.path('/manage');
+        }     
+      });
+    };
+
   });

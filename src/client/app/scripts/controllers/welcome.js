@@ -11,11 +11,14 @@ angular.module('clientApp')
 	}  	
 
   	$scope.signIn = function() {
-  		AuthService.showLogin().then(function(status) {
-        if(status === 500) {
-          angular.element('#noValidAccountModal').modal('show');
-        }
+      angular.element('#loginModal').on('hidden.bs.modal', function(e) {      
+    		AuthService.showLogin().then(function(status) {
+          if(status === 500) {
+            angular.element('#noValidAccountModal').modal('show');
+          }
+        });
       });
+      angular.element('#loginModal').modal('hide');      
   	}
 
   	$scope.signUpAsCustomer = function() {
@@ -67,8 +70,18 @@ angular.module('clientApp')
       angular.element('#createVendorModal').on('hidden.bs.modal', function(e) {
         AuthService.createNonFacebookVendor(data);
       });
-      
+
       angular.element('#createVendorModal').modal('hide');      
-    }  
+    } 
+
+    $scope.loginSubmit = function() {
+      angular.element('#loginModal').on('hidden.bs.modal', function(e) {       
+        $scope.loginSubmitted = true;
+        if($scope.loginForm.$valid) {
+          AuthService.tryLoginWithoutFaceboook($scope.loginUsername, $scope.loginPassword);
+        }
+      });
+      angular.element('#loginModal').modal('hide');      
+    } 
 
   });

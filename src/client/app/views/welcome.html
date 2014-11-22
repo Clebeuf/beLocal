@@ -10,7 +10,7 @@
                         <li><a href="/welcome/#customers" role="tab" data-toggle="tab">For Foodies</a></li>
                         <li><a href="/welcome/#vendors" role="tab" data-toggle="tab">For Farmers</a></li>
                         <!-- <li><a class="pointer welcome-sign-in" ng-click="signIn()">Sign In</a></li> -->
-                        <a ng-click="signIn()" class="btn btn-md facebook-button" style="margin-left:10px;"><i class="fa fa-facebook-square"></i> Login</a>
+                        <a data-toggle="modal" data-target="#loginModal" class="btn btn-md beLocal-btn-filled" style="margin-left:10px;">Login</a>
                     </ul>
                 </div>
             </div>
@@ -100,13 +100,57 @@
                             <p class="getting-started-font">To register as a farmer or foodmaker, sign up using Facebook by clicking the button below.</p>
                             <br>
                             <a ng-click="signUpAsVendor()" style="margin-right: 10px;" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square"></i> Sign Up Using Facebook</a>
-                            <a ng-click="signUpAsVendorWithoutFacebook()" data-toggle="modal" data-target="#createVendorModal" class="btn btn-lg beLocal-btn-filled">Sign Up Without Facebook</a>                            
+                            <a data-toggle="modal" data-target="#createVendorModal" class="btn btn-lg beLocal-btn-filled">Sign Up Without Facebook</a>                            
                         </div>
                     </div>
                 </div>
             </div>
             
         </div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Login<br /><small>Please enter your username and password or login using Facebook.</small></h4>                
+            </div>
+            <div class="modal-body">  
+                <div class="container-fluid">
+                    <div style="text-align: center;">
+                        <a ng-click="signIn()" class="btn btn-lg facebook-button" style="margin-left:10px;"><i class="fa fa-facebook-square"></i> Login With Facebook</a>
+                    </div>
+                    <hr class="login-hr">
+                    <form role="form" name="loginForm" novalidate>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="form-group" ng-class="{ 'has-error' : loginSubmitted && loginForm.username.$invalid }">
+                                    <label for="item-name">Username</label>
+                                    <input required ng-model="loginUsername" type="text" name="username" class="form-control" placeholder="Username" maxlength="40"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="form-group" ng-class="{ 'has-error' : loginSubmitted && loginForm.password.$invalid }">
+                                    <label for="item-name">Password</label>
+                                    <input required ng-model="loginPassword" type="text" name="password" class="form-control" placeholder="Password" maxlength="40"/>
+                                </div>
+                            </div>
+                        </div>                
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" ng-click="loginSubmit()" class="btn beLocal-btn-filled">Login Without Facebook</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>
 
 <div class="modal fade" id="accountExistsModal">

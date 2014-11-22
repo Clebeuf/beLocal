@@ -27,6 +27,7 @@ import datetime, json
 from geopy.distance import vincenty
 from operator import itemgetter, attrgetter, methodcaller
 from taggit.models import Tag
+from django.contrib.auth import authenticate
 
 
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
@@ -44,7 +45,7 @@ class CreateNonFacebookVendorView(APIView):
         user = None
 
         if serializer.is_valid():
-            user = User.objects.create(
+            user = User.objects.create_user(
                 username=serializer.init_data['username'],
                 first_name=serializer.init_data['first_name'],
                 last_name=serializer.init_data['last_name'],
@@ -136,7 +137,59 @@ class LoginView(APIView):
                 }                
             return Response(response)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)             
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LoginNoFBView(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AuthTokenSerializer
+ 
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.DATA)
+        user = None
+
+        if serializer.is_valid():
+            user = authenticate(username=request.DATA['username'], password=request.DATA['password'])
+
+        if user:
+            token = Token.objects.get(user=user)
+            response = {}
+            if user.is_staff and not user.is_superuser:
+                vendor = Vendor.objects.get(user=user)
+                vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
+                response = {'id': user.id, 
+                            'is_active' : vendor.is_active, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'VEN', 
+                            'vendor' : serializers.VendorSerializer(vendor).data, 
+                            'token': token.key
+                }
+            elif not user.is_superuser:
+                response = {'id': user.id, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'CUS', 
+                            'token': token.key
+                }
+            else:
+                response = {'id': user.id, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'SUP', 
+                            'token': token.key
+                }                
+            return Response(response)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                        
 
 class CreateVendorView(APIView):
     throttle_classes = ()

@@ -1498,6 +1498,10 @@ hr {
   font-size: 12px !important;
 }
 
+.info-window-text a {
+  color: #696969;
+}
+
 .is-inactive {
   margin-top: 50px;
 }

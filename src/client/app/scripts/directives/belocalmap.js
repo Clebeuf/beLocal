@@ -143,9 +143,12 @@ angular.module('clientApp')
              '</a>' + 
              '</h5>' +
              '<p class="plain-text info-window-text">' +   
+             '<a href="http://maps.google.com/?q=' +
+             market.address.latitude + ',' + market.address.longitude + '" target="_blank" >' +
              '<span class="info-window-text">' + 
              market.address.addr_line1 + ', ' + market.address.state + ', ' + market.address.country +  
              '</span>' +  
+             '</a>' +
              '</p><br>' +
              '</div>' + 
             '</div>';

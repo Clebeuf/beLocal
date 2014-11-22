@@ -37,7 +37,10 @@
                 <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                     <span class="glyphicon glyphicon-map-marker"></span> {{vendorDetails.vendor.address.city}}, {{vendorDetails.vendor.address.state}} | 
                 </span>
-                <span ng-hide="StateService.getCurrentUser().vendor.webpage == null"><a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> |</span><span ng-hide="vendorDetails.vendor.twitter_url == null"> <a href="{{vendorDetails.vendor.twitter_url">Twitter</a> |</span><span ng-hide="vendorDetails.vendor.facebook_url == null"><a ng-hide="vendorDetails.vendor.facebook_url == null" href="{{vendorDetails.vendor.facebook_url}}"> Facebook</a> |</span><span ng-hide="vendorDetails.vendor.phone == null"> {{vendorDetails.vendor.phone}} |</span>
+                <span ng-hide="StateService.getCurrentUser().vendor.webpage == null"><a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> |</span>
+                <span ng-hide="vendorDetails.vendor.twitter_url == null"> <a href="{{vendorDetails.vendor.twitter_url">Twitter</a> |</span>
+                <span ng-hide="vendorDetails.vendor.facebook_url == null"><a ng-hide="vendorDetails.vendor.facebook_url == null" href="{{vendorDetails.vendor.facebook_url}}"> Facebook</a> |</span>
+                <span ng-hide="vendorDetails.vendor.phone == null"> <a href="tel:{{vendorDetails.vendor.phone}}">{{vendorDetails.vendor.phone}}</a> |</span>
             </div>
             <hr>
             <div class="description-container">
@@ -90,11 +93,14 @@
                         </p>
                         </div>
                         <div class="col-xs-12">
+
                         <p><b>LOCATION:</b>
+                            <a href="http://maps.google.com/?q={{location.address.latitude}},{{location.address.longitude}}" target="_blank">
                             {{location.address.addr_line1}},
                             {{location.address.city}}, 
                             {{location.address.state}}, 
                             {{location.address.zipcode}}
+                            </a>
                         </p>
                         </div>
                         <div class="col-xs-12">
@@ -146,16 +152,18 @@
                         </div>
                         <div class="col-xs-12">
                             <p><b>LOCATION:</b>
+                                <a href="http://maps.google.com/?q={{location.address.latitude}},{{location.address.longitude}}" target="_blank">
                                 {{location.address.addr_line1}},
                                 {{location.address.city}}, 
                                 {{location.address.state}}, 
                                 {{location.address.zipcode}}
+                            </a>
                             </p>
                         </div>
                         <div class="col-xs-12">
                             <p class="indent-after-first-line">
                                 <b>CONTACT INFORMATION:</b>
-                                {{location.phone}} | {{location.email}}
+                                <a href="tel:{{location.phone}}">{{location.phone}}</a> | <a href="mailto:{{location.email}}">{{location.email}}</a>
                             </p>
                         </div>
                         <div class="col-xs-12">
@@ -172,6 +180,7 @@
 
 	<br>
 
+
 <!--Display Seller's Inventory-->
     <div ng-hide="vendorDetails.products.length == 0">
         <hr>
@@ -183,17 +192,13 @@
         <hr>
         <br>
 
-        
-        
-
-    	<div class="row" id="masonry-container card-formatting">
-    		<div class="container-for-cards">
-    	        <div class="ms-item col-lg-3 col-md-4 col-sm-4 col-xs-6" ng-repeat="item in vendorDetails.products" >
-    	          <product-card data="item"></product-card>
-    	        </div>
-    	    </div>
-    	</div>
+        <div class="row" style="padding-top:5px" id="masonry-container">
+            <div class="col-trending ms-item col-lg-3 col-md-4 col-xs-6" ng-repeat="item in vendorDetails.products" >
+              <product-card data="item"></product-card>
+            </div>
+        </div>
     </div>
+</div>
 
 </div>
 <!-- INJECTING FOOTER.HTML -->

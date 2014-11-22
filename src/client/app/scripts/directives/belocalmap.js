@@ -170,8 +170,12 @@ angular.module('clientApp')
              object.name + '<br>' +
              '</span>' +  
              '<span class="info-window-text">' + 
+             '<a href="http://maps.google.com/?q=' +
+             object.address.latitude + ',' + object.address.longitude + '" target="_blank" >' +
+             '<span class="info-window-text">' + 
              object.address.addr_line1 + ', ' + object.address.state + ', ' + object.address.country +  
              '</span>' +  
+             '</a>' + 
              '</p><br>' +
              '</div>' + 
             '</div>';
@@ -184,14 +188,18 @@ angular.module('clientApp')
             '<div class="info-window-content">' + 
             '<div>' +
             '<h5 class="no-bottom-margin">' + 
-            '<a class="vendor-card-name pointer">' +
+            '<span class="vendor-card-namer">' +
              object.name  + 
-             '</a>' + 
+             '</span>' + 
              '</h5>' +
              '<p class="plain-text info-window-text">' + 
              '<span class="info-window-text">' + 
+             '<a href="http://maps.google.com/?q=' +
+             object.address.latitude + ',' + object.address.longitude + '" target="_blank" >' +
+             '<span class="info-window-text">' + 
              object.address.addr_line1 + ', ' + object.address.state + ', ' + object.address.country +  
              '</span>' +  
+             '</a>' +
              '</p><br>' +
              '</div>' + 
             '</div>';

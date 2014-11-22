@@ -3,6 +3,8 @@
 angular.module('clientApp')
   .controller('ContactusCtrl', function ($scope, $location, $timeout, StateService, $q, $rootScope, $window) {
     $scope.showXSNav = false;
+    $scope.emailAddress = "belocal" + "victoria" + "@gmail.com";
+
 
     $scope.safeApply = function(fn) {
       var phase = this.$root.$$phase;

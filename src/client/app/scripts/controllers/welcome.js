@@ -37,6 +37,14 @@ angular.module('clientApp')
   		});
   	}
 
+    $scope.signUpAsVendorNoFB = function() {
+      $scope.signUpAsVendor = true;
+    }
+
+    $scope.signUpAsCustomerNoFB = function() {
+      $scope.signUpAsVendor = false;
+    }
+
   	$scope.getStarted = function() {
   		ipCookie('beLocalBypass', true, {expires: 14});  		
   		$location.path('/');
@@ -57,8 +65,8 @@ angular.module('clientApp')
     }  
 
     $scope.newVendorSubmit = function() {
-      $scope.newVendorSubmitted = true;
-      if($scope.newVendorForm.$valid) {
+      $scope.newUserSubmitted = true;
+      if($scope.newUserForm.$valid) {
         var data = {
           username: $scope.newVendorUserName,
           password: $scope.newVendorPassword,
@@ -67,12 +75,30 @@ angular.module('clientApp')
           email: $scope.newVendorEmail,
         }
       }
-      angular.element('#createVendorModal').on('hidden.bs.modal', function(e) {
+      angular.element('#createUserModal').on('hidden.bs.modal', function(e) {
         AuthService.createNonFacebookVendor(data);
       });
 
-      angular.element('#createVendorModal').modal('hide');      
+      angular.element('#createUserModal').modal('hide');      
     } 
+
+    $scope.newCustomerSubmit = function() {
+      $scope.newUserSubmitted = true;
+      if($scope.newUserForm.$valid) {
+        var data = {
+          username: $scope.newVendorUserName,
+          password: $scope.newVendorPassword,
+          first_name: $scope.newVendorFirstName,
+          last_name: $scope.newVendorLastName,
+          email: $scope.newVendorEmail,
+        }
+      }
+      angular.element('#createUserModal').on('hidden.bs.modal', function(e) {
+        AuthService.createNonFacebookCustomer(data);
+      });
+
+      angular.element('#createUserModal').modal('hide');      
+    }     
 
     $scope.loginSubmit = function() {
       angular.element('#loginModal').on('hidden.bs.modal', function(e) {       

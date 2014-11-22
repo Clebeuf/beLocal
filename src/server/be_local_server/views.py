@@ -86,7 +86,37 @@ class CreateNonFacebookVendorView(APIView):
             
             return Response(response)    
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)     
+
+class CreateNonFacebookCustomerView(APIView):
+    permission_classes = (AllowAny,) 
+    serializer_class = serializers.UserRegistrationSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.DATA)
+        user = None
+
+        if serializer.is_valid():
+            user = User.objects.create_user(
+                username=serializer.init_data['username'],
+                first_name=serializer.init_data['first_name'],
+                last_name=serializer.init_data['last_name'],
+                email=serializer.init_data['email'],
+                password=serializer.init_data['password']
+            )
+
+        if user:
+            token, created_token = Token.objects.get_or_create(user=user)
+
+            if(not created_token):
+                return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)            
+
+            response = {}
+            response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
+
+            return Response(response)    
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                            
 
 class LoginView(APIView):
     throttle_classes = ()

@@ -756,6 +756,7 @@ class TrendingProductView(generics.ListAPIView):
     serializer_class = serializers.ProductDisplaySerializer
     
     def post(self, request):
+        """ 
         if ('user_position' in request.DATA.keys() and request.DATA['user_position'] is not None):
             lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))
 
@@ -791,6 +792,14 @@ class TrendingProductView(generics.ListAPIView):
             serializer = serializers.ProductDisplaySerializer(products, many=True)
            
             return Response(serializer.data)
+        """
+        products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True).order_by('?')
+        if products is not None:
+            for product in products:
+                product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
+        serializer = serializers.ProductDisplaySerializer(products, many=True)
+
+        return Response(serializer.data)
 
 class ListMarketsView(generics.ListAPIView):
     """

@@ -150,6 +150,19 @@ app.directive('holderFix', function () {
     };
 });
 
+app.directive('onFinishRender', function ($timeout) {
+  return {
+      restrict: 'A',
+      link: function (scope, element, attr) {
+          if (scope.$last === true) {
+              $timeout(function () {
+                  scope.$emit('ngRepeatFinished');
+              });
+          }
+      }
+  }
+});
+
 app.directive('head', ['$rootScope','$compile',
     function($rootScope, $compile){
         return {

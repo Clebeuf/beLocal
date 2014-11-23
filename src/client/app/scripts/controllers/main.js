@@ -186,11 +186,14 @@ angular.module('clientApp')
       angular.element('#productDetailsModal').modal('hide');
 
     }
+
+    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent, repeatId) {
+      $scope.trendingMasonry();  
+    });
    
     StateService.getUserPosition().then(function() {
         StateService.getTrendingProducts().then(function() {
           $scope.trendingProducts = StateService.getTrendingProductsList();
-          $scope.trendingMasonry();
         });
         StateService.getVendors().then(function() {
           $scope.vendors = StateService.getVendorsList();

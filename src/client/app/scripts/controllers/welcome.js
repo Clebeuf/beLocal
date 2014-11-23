@@ -66,6 +66,8 @@ angular.module('clientApp')
 
     $scope.newVendorSubmit = function() {
       $scope.newUserSubmitted = true;
+      $scope.usernameErrorMessage = null;
+      $scope.emailErrorMessage = null;      
       if($scope.newUserForm.$valid) {
         var data = {
           username: $scope.newVendorUserName,
@@ -82,12 +84,16 @@ angular.module('clientApp')
       .error(function(response) {
         if(response.username) {
           $scope.usernameErrorMessage = response.username[0];
-        }          
+        } else if(response.email) {
+          $scope.emailErrorMessage = response.email;
+        }                  
       });
     } 
 
     $scope.newCustomerSubmit = function() {
       $scope.newUserSubmitted = true;
+      $scope.usernameErrorMessage = null;
+      $scope.emailErrorMessage = null;
       if($scope.newUserForm.$valid) {
         var data = {
           username: $scope.newVendorUserName,
@@ -104,6 +110,8 @@ angular.module('clientApp')
       .error(function(response) {
         if(response.username) {
           $scope.usernameErrorMessage = response.username[0];
+        } else if(response.email) {
+          $scope.emailErrorMessage = response.email;
         }          
       });   
     } 

@@ -237,7 +237,8 @@
                             <div class="col-sm-12">
                                 <div class="form-group" ng-class="{ 'has-error' : newUserSubmitted && newUserForm.vendorEmail.$invalid }">
                                     <label for="item-name">Email</label>
-                                    <input required ng-model="newVendorEmail" type="text" name="vendorEmail" class="form-control" placeholder="Email" maxlength="50"/>
+                                    <input required ng-model="newVendorEmail" type="email" name="vendorEmail" class="form-control" placeholder="Email" maxlength="50"/>
+                                    <p ng-show="emailErrorMessage != null" class="help-block"><small style="color: red;" >{{emailErrorMessage}}</small></p>
                                 </div>
                             </div>    
                         </div>

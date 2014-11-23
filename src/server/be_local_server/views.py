@@ -28,6 +28,7 @@ from geopy.distance import vincenty
 from operator import itemgetter, attrgetter, methodcaller
 from taggit.models import Tag
 from django.contrib.auth import authenticate
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
@@ -43,6 +44,14 @@ class CreateNonFacebookVendorView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.DATA)
         user = None
+
+        try:
+            user = User.objects.get(email=serializer.init_data['email'])
+        except ObjectDoesNotExist:
+            print 'No User'
+
+        if user:
+            return Response({'email' : 'This email is already associated with a beLocal account.'}, status=status.HTTP_400_BAD_REQUEST)             
 
         if serializer.is_valid():
             user = User.objects.create_user(
@@ -95,6 +104,14 @@ class CreateNonFacebookCustomerView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.DATA)
         user = None
+
+        try:
+            user = User.objects.get(email=serializer.init_data['email'])
+        except ObjectDoesNotExist:
+            print 'No User'
+
+        if user:
+            return Response({'email' : 'This email is already associated with a beLocal account.'}, status=status.HTTP_400_BAD_REQUEST)   
 
         if serializer.is_valid():
             user = User.objects.create_user(

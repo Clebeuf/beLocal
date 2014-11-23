@@ -186,7 +186,8 @@ angular.module('clientApp')
       angular.element('#productDetailsModal').modal('hide');
 
     }
-   
+
+ /*
     StateService.getUserPosition().then(function() {
         StateService.getTrendingProducts().then(function() {
           $scope.trendingProducts = StateService.getTrendingProductsList();
@@ -198,6 +199,17 @@ angular.module('clientApp')
           $rootScope.$broadcast('forceRefreshMap');
         });        
     });
+*/
+
+  StateService.getTrendingProducts().then(function() {
+    $scope.trendingProducts = StateService.getTrendingProductsList();
+    $scope.trendingMasonry();
+  });
+  StateService.getVendors().then(function() {
+    $scope.vendors = StateService.getVendorsList();
+    $rootScope.$broadcast('generateMapPins');
+    $rootScope.$broadcast('forceRefreshMap');
+  })
 
   StateService.getMarkets().then(function() {
     $scope.marketList = StateService.getMarketList();

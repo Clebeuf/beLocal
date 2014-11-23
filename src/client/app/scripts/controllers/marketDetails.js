@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('MarketDetailsCtrl', function ($scope, StateService, $stateParams, $location, $window) {
+  .controller('MarketDetailsCtrl', function ($scope, StateService, $stateParams, $location, $window, $timeout) {
 
     StateService.getMarketToDisplay($stateParams.marketid).then(function() {
     	$scope.marketDetails = StateService.getMarketDetails();
@@ -11,7 +11,11 @@ angular.module('clientApp')
       $scope.likeDisabled = true;
     } else {
       $scope.likeDisabled = false;
-    }    
+    }   
+
+    $timeout(function(){
+      angular.element("[data-toggle='tooltip']").tooltip();
+    });     
 
     $scope.safeApply = function(fn) {
       var phase = this.$root.$$phase;

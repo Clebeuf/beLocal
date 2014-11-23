@@ -364,7 +364,6 @@ angular.module('clientApp')
 
         $timeout(function() {
         var e = angular.element('#item-image');
-        console.log(e);
         e.wrap('<form>').closest('form').get(0).reset();
         e.unwrap();
         })
@@ -377,7 +376,6 @@ angular.module('clientApp')
             $scope.tagList[counter].checked = undefined;
           } 
         }
-        console.log("clear tags: %o", $scope.tagList);
     }
 
     $scope.editItem = function(item) {

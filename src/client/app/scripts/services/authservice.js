@@ -178,20 +178,8 @@ angular.module('clientApp')
             promise.error(function(result, status) {
               d.resolve(status)
             });            
-            promise.then(function(response) {
-              if(response.status !== 200) {
-              } else {
-                if(StateService.getUserType() === 'CUS') {
-                    console.log("You're a customer!");
-                    $location.path('/');                    
-                  // $location.path('/customer');
-                } else if(StateService.getUserType() === 'VEN') {
-                    $location.path('/vendor');
-                }
-                else if(StateService.getUserType() === 'SUP') {
-                    $location.path('/manage');
-                }                
-              }         
+            promise.success(function(response) {
+              d.resolve(status)        
             });             
         })
         .fail(function (error) {

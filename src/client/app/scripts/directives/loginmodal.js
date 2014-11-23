@@ -16,17 +16,16 @@ angular.module('clientApp')
           scope.emailRecoverError = false;
           scope.emailRecoverMessage = '';
           scope.recoverHasSubmitted = false;
-        }
+        }       
 
-        scope.signIn = function() {
-          angular.element('#loginModal').on('hidden.bs.modal', function(e) {      
-            AuthService.showLogin().then(function(status) {
-              if(status === 500) {
-                angular.element('#noValidAccountModal').modal('show');
-              }
-            });
-          });
-          angular.element('#loginModal').modal('hide');      
+        scope.signIn = function() {            
+          AuthService.showLogin().then(function(status) {              
+            if(status === 500) {
+              angular.element('#noValidAccountModal').modal('show');
+            } else {
+              angular.element('#loginModal').modal('hide');                
+            }
+          });    
         }        
 
         angular.element('#loginModal').on('hidden.bs.modal', function(e) {

@@ -29,7 +29,7 @@
 
         <div class="col-sm-8">
           <div class="row" id="masonry-market-container">
-            <div class="col-trending ms-market-item col-xs-6" ng-repeat="market in marketList" >
+            <div class="col-trending ms-market-item col-xs-6" ng-repeat="market in marketList | orderBy:'address.hours.length':true" >
               <market-card data="market"></market-card>
             </div>
           </div>

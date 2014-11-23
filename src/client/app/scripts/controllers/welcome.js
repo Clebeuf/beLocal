@@ -180,7 +180,7 @@ angular.module('clientApp')
         $http.post(StateService.getServerAddress() + 'users/password/reset/', {'email' : $scope.recoverEmail})
           .success(function (data, status) {           
             console.log("Sent recovery email");       
-            angular.element('#recoverInfoModal').modal('hide');   
+            angular.element('#loginModal').modal('hide');   
             $scope.recoverHasSubmitted = false;
           })
           .error(function (data, status, headers, config) {

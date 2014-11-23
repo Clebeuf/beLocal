@@ -108,14 +108,18 @@ angular.module('clientApp')
       });    
     }     
 
-    $scope.loginSubmit = function() {
-      angular.element('#loginModal').on('hidden.bs.modal', function(e) {       
-        $scope.loginSubmitted = true;
-        if($scope.loginForm.$valid) {
-          AuthService.tryLoginWithoutFaceboook($scope.loginUsername, $scope.loginPassword);
-        }
-      });
-      angular.element('#loginModal').modal('hide');      
+    $scope.loginSubmit = function() {      
+      $scope.loginSubmitted = true;
+      $scope.loginError = false;
+      if($scope.loginForm.$valid) {
+        AuthService.tryLoginWithoutFaceboook($scope.loginUsername, $scope.loginPassword)
+        .success(function() {
+          angular.element('#loginModal').modal('hide');              
+        })
+        .error(function() {
+          $scope.loginError = true;
+        });
+      }  
     } 
 
   });

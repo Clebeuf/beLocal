@@ -227,6 +227,8 @@ angular.module('clientApp')
             $location.path('/manage');
         }     
       });
+
+      return loginPromise;
     };
 
   });

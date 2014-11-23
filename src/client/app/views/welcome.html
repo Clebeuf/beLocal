@@ -124,7 +124,7 @@
                         <a ng-click="signIn()" class="btn btn-lg facebook-button" style="margin-left:10px;"><i class="fa fa-facebook-square"></i> Login With Facebook</a>
                     </div>
                     <hr class="login-hr">
-                    <form role="form" name="loginForm" novalidate>
+                    <form role="form" name="loginForm" novalidate ng-class="{ 'has-error' : loginError}">
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
                                 <div class="form-group" ng-class="{ 'has-error' : loginSubmitted && loginForm.username.$invalid }">
@@ -140,8 +140,31 @@
                                     <input required ng-model="loginPassword" type="password" name="password" class="form-control" placeholder="Password" maxlength="40"/>
                                 </div>
                             </div>
-                        </div>                
-                    </form>
+                        </div>
+                    </form>                        
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                      <div class="panel panel-default">
+                        <div data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne" class="panel-heading" role="tab" id="headingOne">
+                            <a style="color: #696969" aria-expanded="true" aria-controls="collapseOne">
+                              Forgot Password?
+                            </a>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                          <div class="panel-body">
+                            <form name="recoverInfoForm" role="form" novalidate>        
+                              <div style="margin-bottom: 0px;" class="form-group" ng-class="{ 'has-error' : (recoverInfoForm.email.$invalid || emailRecoverError) && recoverHasSubmitted }">
+                                  <label class="control-label">Email</label>             
+                                  <input type="email" name="email" class="form-control" ng-model="recoverEmail" required>
+                                  <p ng-show="emailRecoverError" class="help-block">{{emailRecoverMessage}}</p>                  
+                                  <p ng-show="recoverInfoForm.email.$invalid && recoverHasSubmitted" class="help-block" style="margin-bottom: 0px;"><small style="color: #a94442;">Please enter a valid email</small></p>
+                                </div>
+                              </form>
+                              <p><small>An email containing your username and password reset instructions will be sent to the email you specify above.</small></p>
+                              <button type="button" ng-click="recoverInformation()" class="btn beLocal-btn-filled pull-right">Send Recovery Email</button>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -151,7 +174,6 @@
         </div>
         <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
 </div>
 
 <div class="modal fade" id="accountExistsModal">
@@ -203,7 +225,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 ng-show="signUpAsVendor" class="modal-title">Sign Up as a Farmer<br /><small>Please complete the following fields to register as a farmer or foodmaker.</small></h4>
-                <h4 ng-hide="signUpAsVendor" class="modal-title">Sign Up as a Foodie<br /><small>Please complete the following fields to register as a foodie.</small></h4>                  
+                <h4 ng-hide="signUpAsVendor" class="modal-title">Sign Up as a Foodie<br /><small>Please complete the following fields to register as a foodie.</small></h4>
             </div>
             <div class="modal-body">  
                 <div class="container-fluid">                   
@@ -229,7 +251,7 @@
                                 <div class="form-group" ng-class="{ 'has-error' : newUserSubmitted && newUserForm.vendorUserName.$invalid }">
                                     <label for="item-name">Username</label>
                                     <input required ng-model="newVendorUserName" type="text" name="vendorUserName" class="form-control" placeholder="Username" maxlength="40"/>
-                                    <p ng-show="usernameErrorMessage != null" class="help-block"><small style="color: red;" >{{usernameErrorMessage}}</small></p>
+                                    <p ng-show="usernameErrorMessage != null" class="help-block"><small style="color: #a94442;" >{{usernameErrorMessage}}</small></p>
                                 </div>
                             </div>                        
                         </div>
@@ -237,7 +259,8 @@
                             <div class="col-sm-12">
                                 <div class="form-group" ng-class="{ 'has-error' : newUserSubmitted && newUserForm.vendorEmail.$invalid }">
                                     <label for="item-name">Email</label>
-                                    <input required ng-model="newVendorEmail" type="text" name="vendorEmail" class="form-control" placeholder="Email" maxlength="50"/>
+                                    <input required ng-model="newVendorEmail" type="email" name="vendorEmail" class="form-control" placeholder="Email" maxlength="50"/>
+                                    <p ng-show="emailErrorMessage != null" class="help-block"><small style="color: #a94442;" >{{emailErrorMessage}}</small></p>
                                 </div>
                             </div>    
                         </div>

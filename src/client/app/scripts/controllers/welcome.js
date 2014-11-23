@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('WelcomeCtrl', function ($scope, AuthService, $location, ipCookie) {
+  .controller('WelcomeCtrl', function ($scope, AuthService, StateService, $location, ipCookie, $timeout, $http) {
   	$scope.AuthService = AuthService;
 
 	var url = document.location.toString();
@@ -66,6 +66,8 @@ angular.module('clientApp')
 
     $scope.newVendorSubmit = function() {
       $scope.newUserSubmitted = true;
+      $scope.usernameErrorMessage = null;
+      $scope.emailErrorMessage = null;      
       if($scope.newUserForm.$valid) {
         var data = {
           username: $scope.newVendorUserName,
@@ -82,12 +84,16 @@ angular.module('clientApp')
       .error(function(response) {
         if(response.username) {
           $scope.usernameErrorMessage = response.username[0];
-        }          
+        } else if(response.email) {
+          $scope.emailErrorMessage = response.email;
+        }                  
       });
     } 
 
     $scope.newCustomerSubmit = function() {
       $scope.newUserSubmitted = true;
+      $scope.usernameErrorMessage = null;
+      $scope.emailErrorMessage = null;
       if($scope.newUserForm.$valid) {
         var data = {
           username: $scope.newVendorUserName,
@@ -104,18 +110,87 @@ angular.module('clientApp')
       .error(function(response) {
         if(response.username) {
           $scope.usernameErrorMessage = response.username[0];
+        } else if(response.email) {
+          $scope.emailErrorMessage = response.email;
         }          
-      });    
-    }     
-
-    $scope.loginSubmit = function() {
-      angular.element('#loginModal').on('hidden.bs.modal', function(e) {       
-        $scope.loginSubmitted = true;
-        if($scope.loginForm.$valid) {
-          AuthService.tryLoginWithoutFaceboook($scope.loginUsername, $scope.loginPassword);
-        }
-      });
-      angular.element('#loginModal').modal('hide');      
+      });   
     } 
 
+    angular.element('#createUserModal').on('hidden.bs.modal', function(e) {
+      $timeout(function() {
+        if(StateService.getCurrentUser()){        
+          if(StateService.getUserType() === 'CUS') {
+              $timeout(function() {
+                $location.path('/');                    
+              });
+          } else if(StateService.getUserType() === 'VEN') {
+              $timeout(function() {
+                $location.path('/vendor');
+              });
+          }
+          else if(StateService.getUserType() === 'SUP') {
+              $timeout(function() {
+                $location.path('/manage');
+              });
+          }
+        }
+      });
+    });
+
+    angular.element('#loginModal').on('hidden.bs.modal', function(e) {
+      if(StateService.getCurrentUser()){
+        if(StateService.getUserType() === 'CUS') {
+            $timeout(function() {
+              $location.path('/');                    
+            });
+        } else if(StateService.getUserType() === 'VEN') {
+            $timeout(function() {
+              $location.path('/vendor');
+            });
+        }
+        else if(StateService.getUserType() === 'SUP') {
+            $timeout(function() {
+              $location.path('/manage');
+            });
+        }
+      }
+    });          
+
+    $scope.loginSubmit = function() {      
+      $scope.loginSubmitted = true;
+      $scope.loginError = false;
+      if($scope.loginForm.$valid) {
+        AuthService.tryLoginWithoutFaceboook($scope.loginUsername, $scope.loginPassword)
+        .success(function() {
+          angular.element('#loginModal').modal('hide');             
+        })
+        .error(function() {
+          $scope.loginError = true;
+        });
+      }     
+    }
+
+    $scope.recoverInformation = function() {
+      $scope.emailRecoverError = false;
+      $scope.emailRecoverMessage = '';      
+      $scope.recoverHasSubmitted = true;
+
+      if($scope.recoverInfoForm.$valid) {
+        console.log($scope);
+        $http.post(StateService.getServerAddress() + 'users/password/reset/', {'email' : $scope.recoverEmail})
+          .success(function (data, status) {           
+            console.log("Sent recovery email");       
+            angular.element('#recoverInfoModal').modal('hide');   
+            $scope.recoverHasSubmitted = false;
+          })
+          .error(function (data, status, headers, config) {
+            // If there's been an error, time to display it back to the user on the form. (These are where server side errors are set)
+            var h = headers();
+            if(h['error-type'] === 'email') {
+              $scope.emailRecoverError = true;
+              $scope.emailRecoverMessage = h['error-message'];
+            }
+        });   
+      }   
+    }
   });

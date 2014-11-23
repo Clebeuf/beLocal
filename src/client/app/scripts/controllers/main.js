@@ -192,7 +192,6 @@ angular.module('clientApp')
     });
    
  /*
->>>>>>> master
     StateService.getUserPosition().then(function() {
         StateService.getTrendingProducts().then(function() {
           $scope.trendingProducts = StateService.getTrendingProductsList();

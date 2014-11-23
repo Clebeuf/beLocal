@@ -29,7 +29,64 @@ from operator import itemgetter, attrgetter, methodcaller
 from taggit.models import Tag
 from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+from django.contrib.auth.views import password_reset, password_reset_confirm
 
+class PasswordReset(GenericAPIView):
+    permission_classes = (AllowAny,)
+
+    """
+    Calls Django Auth PasswordResetForm save method.
+
+    Accepts the following POST parameters: email
+    Returns the success/fail message.
+    """
+
+    serializer_class = serializers.PasswordResetSerializer
+
+    def post(self, request):
+        # Create a serializer with request.DATA
+        serializer = self.serializer_class(data=request.DATA)
+
+        try:
+            user = User.objects.get(email=request.DATA['email']);
+        except ObjectDoesNotExist:
+            header = {"Access-Control-Expose-Headers": "Error-Message, Error-Type"}
+            header["Error-Type"] = "email"
+            header["Error-Message"] = "No user with this email exists in the system."
+            return Response(headers=header, status=status.HTTP_400_BAD_REQUEST)
+
+        if serializer.is_valid():
+            # Create PasswordResetForm with the serializer
+            reset_form = PasswordResetForm(data=serializer.data)
+
+            if reset_form.is_valid():
+                # Sett some values to trigger the send_email method.
+                opts = {
+                    'use_https': request.is_secure(),
+                    'from_email': getattr(settings, 'DEFAULT_FROM_EMAIL'),
+                    'request': request,
+                }
+
+                reset_form.save(**opts)
+
+                # Return the success message with OK HTTP status
+                return Response(
+                    {"success": "Password reset e-mail has been sent."},
+                    status=status.HTTP_200_OK)
+
+            else:
+                    return Response(reset_form._errors,
+                                    status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
+def reset_confirm(request, uidb64=None, token=None):
+    print uidb64
+    print token
+    return password_reset_confirm(request, uidb64=uidb64, token=token)
 
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
     user = (user_lat, user_lng)

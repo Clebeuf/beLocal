@@ -4,21 +4,10 @@ angular.module('clientApp')
   .controller('WelcomeCtrl', function ($scope, AuthService, StateService, $location, ipCookie, $timeout, $http) {
   	$scope.AuthService = AuthService;
 
-	var url = document.location.toString();
-	if (url.match('#')) {
-	    angular.element('.masthead-nav a[href="/welcome\/#'+url.split('#')[2]+'"]').tab('show');
-	    $location.hash('');
-	}  	
-
-  	$scope.signIn = function() {
-      angular.element('#loginModal').on('hidden.bs.modal', function(e) {      
-    		AuthService.showLogin().then(function(status) {
-          if(status === 500) {
-            angular.element('#noValidAccountModal').modal('show');
-          }
-        });
-      });
-      angular.element('#loginModal').modal('hide');      
+  	var url = document.location.toString();
+  	if (url.match('#')) {
+  	    angular.element('.masthead-nav a[href="/welcome\/#'+url.split('#')[2]+'"]').tab('show');
+  	    $location.hash('');
   	}
 
   	$scope.signUpAsCustomer = function() {
@@ -136,61 +125,4 @@ angular.module('clientApp')
         }
       });
     });
-
-    angular.element('#loginModal').on('hidden.bs.modal', function(e) {
-      if(StateService.getCurrentUser()){
-        if(StateService.getUserType() === 'CUS') {
-            $timeout(function() {
-              $location.path('/');                    
-            });
-        } else if(StateService.getUserType() === 'VEN') {
-            $timeout(function() {
-              $location.path('/vendor');
-            });
-        }
-        else if(StateService.getUserType() === 'SUP') {
-            $timeout(function() {
-              $location.path('/manage');
-            });
-        }
-      }
-    });          
-
-    $scope.loginSubmit = function() {      
-      $scope.loginSubmitted = true;
-      $scope.loginError = false;
-      if($scope.loginForm.$valid) {
-        AuthService.tryLoginWithoutFaceboook($scope.loginUsername, $scope.loginPassword)
-        .success(function() {
-          angular.element('#loginModal').modal('hide');             
-        })
-        .error(function() {
-          $scope.loginError = true;
-        });
-      }     
-    }
-
-    $scope.recoverInformation = function() {
-      $scope.emailRecoverError = false;
-      $scope.emailRecoverMessage = '';      
-      $scope.recoverHasSubmitted = true;
-
-      if($scope.recoverInfoForm.$valid) {
-        console.log($scope);
-        $http.post(StateService.getServerAddress() + 'users/password/reset/', {'email' : $scope.recoverEmail})
-          .success(function (data, status) {           
-            console.log("Sent recovery email");       
-            angular.element('#loginModal').modal('hide');   
-            $scope.recoverHasSubmitted = false;
-          })
-          .error(function (data, status, headers, config) {
-            // If there's been an error, time to display it back to the user on the form. (These are where server side errors are set)
-            var h = headers();
-            if(h['error-type'] === 'email') {
-              $scope.emailRecoverError = true;
-              $scope.emailRecoverMessage = h['error-message'];
-            }
-        });   
-      }   
-    }
   });

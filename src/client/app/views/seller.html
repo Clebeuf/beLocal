@@ -27,6 +27,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <span class="new-hr-heading-style">
+                        <div nd-hide="StateService.getCurrentUser().vendor.address != null">Please enter your contact information</div>
                         <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                             <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
                         </span>
@@ -326,18 +327,19 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
+                                <br>
                                 <label for="item-name">Company Address</label>
                             </div>
                         </div>
                         <div class="well">
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group" ng-class="{ 'has-error' : profileForm.address.$invalid }">
                                         <label for="item-name">Street Address</label>
                                         <input required ng-model="currentUser.vendor.address.addr_line1" type="text" name="address" class="form-control" id="item-name" placeholder="Street Address" maxlength="50"/>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div class="form-group" ng-class="{ 'has-error' : profileForm.city.$invalid }">
@@ -358,13 +360,13 @@
                                         <label for="item-name">Country</label>
                                         <input required ng-model="currentUser.vendor.address.country" type="text" name="country" class="form-control" id="item-name" placeholder="Country" maxlength="36"/>
                                     </div>
-                                </div>
+                                </div><!-- 
                                 <div class="col-xs-6">
                                     <div class="form-group" ng-class="{ 'has-error' : profileForm.zip.$invalid }">
                                         <label for="item-name">Postal Code</label>
                                         <input required ng-model="currentUser.vendor.address.zipcode" type="text" name="zip" class="form-control" id="item-name" placeholder="Postal Code" maxlength="7"/>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="row">

@@ -123,10 +123,7 @@ angular.module('clientApp')
             ipCookie('beLocalBypass', true, {expires: 14});
             $http.defaults.headers.common.Authorization = 'Token ' + result.token;        
           }
-          StateService.setProfile(result);
-          if(StateService.getUserType() === 'VEN') {
-              $location.path('/vendor');
-          }          
+          StateService.setProfile(result);         
       });
       return loginPromise;      
     } 
@@ -140,10 +137,7 @@ angular.module('clientApp')
             ipCookie('beLocalBypass', true, {expires: 14});
             $http.defaults.headers.common.Authorization = 'Token ' + result.token;        
           }
-          StateService.setProfile(result);
-          if(StateService.getUserType() === 'CUS') {
-              $location.path('/');
-          }          
+          StateService.setProfile(result);        
       });
       return loginPromise;
     }      
@@ -216,16 +210,7 @@ angular.module('clientApp')
           ipCookie('beLocalBypass', true, {expires: 14});          
           $http.defaults.headers.common.Authorization = 'Token ' + result.token;        
         }
-        StateService.setProfile(result.data);     
-        if(StateService.getUserType() === 'CUS') {
-            $location.path('/');                    
-          // $location.path('/customer');
-        } else if(StateService.getUserType() === 'VEN') {
-            $location.path('/vendor');
-        }
-        else if(StateService.getUserType() === 'SUP') {
-            $location.path('/manage');
-        }     
+        StateService.setProfile(result.data);    
       });
 
       return loginPromise;

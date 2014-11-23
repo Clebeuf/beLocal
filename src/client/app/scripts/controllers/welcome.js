@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('WelcomeCtrl', function ($scope, AuthService, $location, ipCookie) {
+  .controller('WelcomeCtrl', function ($scope, AuthService, StateService, $location, ipCookie, $timeout) {
   	$scope.AuthService = AuthService;
 
 	var url = document.location.toString();
@@ -105,8 +105,44 @@ angular.module('clientApp')
         if(response.username) {
           $scope.usernameErrorMessage = response.username[0];
         }          
-      });    
-    }     
+      });   
+    } 
+
+    angular.element('#createUserModal').on('hidden.bs.modal', function(e) {
+      $timeout(function() {
+        if(StateService.getUserType() === 'CUS') {
+            $timeout(function() {
+              $location.path('/');                    
+            });
+        } else if(StateService.getUserType() === 'VEN') {
+            $timeout(function() {
+              $location.path('/vendor');
+            });
+        }
+        else if(StateService.getUserType() === 'SUP') {
+            $timeout(function() {
+              $location.path('/manage');
+            });
+        }
+      });
+    });
+
+    angular.element('#loginModal').on('hidden.bs.modal', function(e) {
+      if(StateService.getUserType() === 'CUS') {
+          $timeout(function() {
+            $location.path('/');                    
+          });
+      } else if(StateService.getUserType() === 'VEN') {
+          $timeout(function() {
+            $location.path('/vendor');
+          });
+      }
+      else if(StateService.getUserType() === 'SUP') {
+          $timeout(function() {
+            $location.path('/manage');
+          });
+      }
+    });          
 
     $scope.loginSubmit = function() {      
       $scope.loginSubmitted = true;
@@ -114,12 +150,12 @@ angular.module('clientApp')
       if($scope.loginForm.$valid) {
         AuthService.tryLoginWithoutFaceboook($scope.loginUsername, $scope.loginPassword)
         .success(function() {
-          angular.element('#loginModal').modal('hide');              
+          angular.element('#loginModal').modal('hide');             
         })
         .error(function() {
           $scope.loginError = true;
         });
-      }  
+      }     
     } 
 
   });

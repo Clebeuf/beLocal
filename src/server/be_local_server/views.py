@@ -90,7 +90,6 @@ def reset_confirm(request, uidb64=None, token=None):
     print uidb64
     print token
     return password_reset_confirm(request, uidb64=uidb64, token=token)
->>>>>>> d8bb689fbe552d964facd86cce6f62c1832f30bf
 
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
     user = (user_lat, user_lng)

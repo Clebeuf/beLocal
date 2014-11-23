@@ -7,7 +7,7 @@
     <div class="pull-right" style="float:left">
       <div ng-hide="AuthService.isAuthenticated()">
         <form name="loginForm" class="navbar-form sign-in-form" role="form" style="float:right">      
-          <button type="submit" ng-click="showLogin()" class="btn btn-primary beLocal-btn">Sign In</button>
+          <button data-toggle="modal" ng-click="clearLoginModal()" data-target="#loginModal" class="btn btn-primary beLocal-btn">Login</button>
         </form>
         <div style="float:right">
           <ul class="nav navbar-nav navbar-right">
@@ -30,7 +30,7 @@
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
               <li><a class="pointer" ng-click="displayAccountPage()">My Profile</a></li>          
               <li class="divider"></li>
-              <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+              <li><a class="pointer" ng-click="AuthService.logout()">Logout</a></li>
             </ul>
           </li>
         </ul>  
@@ -38,7 +38,7 @@
 
       <div ng-show="AuthService.isAuthenticated() && StateService.getUserType() === 'CUS'">
           <ul class="nav navbar-nav navbar-right">
-              <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+              <li><a class="pointer" ng-click="AuthService.logout()">Logout</a></li>
           </ul>  
       </div>      
 
@@ -49,7 +49,7 @@
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
               <li><a class="pointer" ng-click="goToManage()">Manage Vendors</a></li>        
               <li class="divider"></li>
-              <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+              <li><a class="pointer" ng-click="AuthService.logout()">Logout</a></li>
             </ul>
           </li>
         </ul>  
@@ -114,3 +114,5 @@
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 </div>
+
+<login-modal></login-modal>

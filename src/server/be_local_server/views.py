@@ -28,7 +28,9 @@ from geopy.distance import vincenty
 from operator import itemgetter, attrgetter, methodcaller
 from taggit.models import Tag
 from django.contrib.auth import authenticate
-
+from django.core.files import File 
+from PIL import Image
+import urllib
 
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
     user = (user_lat, user_lng)
@@ -67,9 +69,14 @@ class CreateNonFacebookVendorView(APIView):
             user.save()
 
             vendor.company_name = user.username # set this for Carly's UI
+
+            vp = VendorPhoto(image=File(open('../client/app/images/profilePH.jpg')))
+            vp.save()
+            vendor.photo = vp
+
             vendor.save()
 
-            vendor = Vendor.objects.get(user=user)            
+            vendor = Vendor.objects.get(user=user)  
                 
             vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote       
             response = {}

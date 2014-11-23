@@ -828,6 +828,7 @@ body {
     max-width: 335px;
     margin-right: auto;
     margin-left: auto;
+    width:100%;
   }
 }
 
@@ -1345,6 +1346,16 @@ hr {
   padding-bottom: 0px;
 }
 
+.seller-location-details a {
+  color: #403e3b;
+  margin-bottom: 2px;
+}
+
+.seller-location-details p, ul {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
 .indent-after-first-line {
   text-indent: -15px;
   margin-left: 15px;
@@ -1358,13 +1369,14 @@ hr {
 
 .card-lable-style {
   margin-top: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
   font-family: 'Libre Baskerville', serif;
   font-size: 20px;
   line-height: normal;
   font-weight: bolder;
   color: #403e3b;
 }
+
 
 .store-hours {
   padding-left: 10px;
@@ -1497,6 +1509,10 @@ hr {
 
 .info-window-text {
   font-size: 12px !important;
+}
+
+.info-window-text a {
+  color: #696969;
 }
 
 .is-inactive {

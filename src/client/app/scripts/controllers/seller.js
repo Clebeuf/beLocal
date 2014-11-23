@@ -18,7 +18,7 @@ angular.module('clientApp')
     $scope.locationResults = {};
     $scope.locationType = 'true';
     $scope.currentUser = StateService.getCurrentUser();
-    $scope.facebookChecked = false;
+    $scope.facebookChecked = true;
     $scope.twitterChecked = false;
     $scope.sellingToday = false;
     $scope.currentUser = {};
@@ -141,7 +141,7 @@ angular.module('clientApp')
 
     $scope.generateFacebookString = function() {
         var company_name = $scope.currentUser.vendor.company_name !== undefined ? $scope.currentUser.vendor.company_name : $scope.currentUser.name;
-        $scope.facebookString = company_name + ' is selling at the following locations today:\n';
+        $scope.facebookString = company_name + ' is selling at the following locations today:\n\n';
 
         // GENERATE LOCATIONS
         for(var i = 0; i < $scope.sellerLocations.length; i++) {
@@ -169,7 +169,7 @@ angular.module('clientApp')
         }
 
         // GENERATE ITEMS  
-        $scope.facebookString += '\nSome of the items we will be selling today include the following:\n';
+        $scope.facebookString += '\nSome of the items we will be selling today include the following:\n\n';
         for(var i = 0; i < $scope.sellerItems.length; i++) {
             var si = $scope.sellerItems[i];
             if(si.stock === "IS")
@@ -220,6 +220,8 @@ angular.module('clientApp')
 
     $scope.vendorProfileUpdate = function() {
         $scope.vendorProfileUpdated = true;
+        $scope.currentUser.vendor.address.addr_line1 = 'unknown';
+        $scope.currentUser.vendor.address.zipcode = 'unknown';
         if($scope.profileForm.$valid) {
             angular.element('#profileModal').modal('hide');
             console.log($scope.currentUser);
@@ -542,6 +544,8 @@ angular.module('clientApp')
             $rootScope.$broadcast('forceRefreshMap');            
         })
     }
+
+
 
     $scope.leaveMarket = function(market) {
         var data = {

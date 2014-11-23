@@ -10,7 +10,7 @@
         <div class="col-sm-5 vendor-avatar">
             <div class="vendor-avatar-img" style="background-image:url({{marketDetails.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
                 <div class="col-sm-12">
-                    <div class="pull-right like-button-position" data-toggle="tooltip" style="display:inline-block" data-placement="bottom" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
+                    <div class="pull-right like-button-position" data-toggle="tooltip" style="display:inline-block" data-placement="left" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
                       <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(marketDetails, 'market')" type="button" class="btn btn-default beLocal-btn-default">
                         <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : marketDetails.is_liked}"></span>
                         <span ng-hide="marketDetails.is_liked">Like</span>

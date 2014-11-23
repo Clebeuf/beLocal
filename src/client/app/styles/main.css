@@ -17,6 +17,20 @@
 }
 
 
+.more-items{
+  background-color: #f4f4f4; 
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  background-position: center; 
+  border: 1px solid #DDDDDD;
+}
+
+@media (min-width: 940px) {
+    .more-items {
+        font-size: 10px !important
+    }
+}
+
 .vendor-avatar-img{
   width: 100%;
   max-width: 500px;
@@ -295,8 +309,12 @@
 .plain-text {
   font-size: 15px !important;
   font-family: 'Roboto', sans-serif !important;
-  color: #696969 !important;
-  margin-top: 1px;
+  color: #403E3B !important;
+  margin-top: 0px;
+}
+
+.plain-text a{
+  color: #403E3B !important;
 }
 
 .top-nav-large {

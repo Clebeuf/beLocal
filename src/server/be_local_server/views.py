@@ -520,15 +520,22 @@ class AddProductView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)   
     serializer_class = serializers.AddProductSerializer  
 
+
     def post(self, request, *args, **kwargs):
         vendor = Vendor.objects.get(user=request.user)
         request.DATA['vendor'] = vendor.id
-        
+
         serializer = serializers.AddProductSerializer(data=request.DATA, partial=True)
        
         if serializer.is_valid():
             current_product = serializer.save()
-            
+
+            if (current_product.photo == None): 
+                pp = ProductPhoto(image=File(open('../client/app/images/productPH.png')))
+                pp.save()
+                current_product.photo = pp  
+                current_product = serializer.save()     
+
             # Save tags if they are provided in the request.
             if type(serializer.data['tags']) is list:                
                 saved_product = Product.objects.get(pk=current_product.pk)

@@ -35,14 +35,14 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-1 no-padding" ng-hide="vendor.products.length === 0">
+    <div class="col-sm-1 no-padding" ng-hide="vendor.products.length == 0 || currentState.name === 'manage'">
       <div class="vendor-image-container pointer" ng-click="displayVendor(vendor.id)">
         <div class="vendor-images more-items">
         <div class="center bold-hover" style="" ng-show="vendor.products.length > 0">
           <span class="logo-green plain-text"> <br>{{vendor.products.length}}<br> item<span ng-hide="vendor.products.length === 1">s</span></span> </div>
         </div>
       </div>
-      </div>
+
     </div>
   </div>
 
@@ -80,7 +80,7 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-1 no-padding" ng-hide="vendor.products.length === 0">
+    <div class="col-sm-1 no-padding" ng-hide="vendor.products.length === 0 || currentState.name === 'manage'">
       <div class="vendor-image-container pointer" ng-click="displayVendor(vendor.id)">
         <div class="vendor-images more-items">
         <div class="center bold-hover" style="" ng-show="vendor.products.length > 0">
@@ -88,7 +88,7 @@
         </div>
       </div>
       </div>
-    </div>
+  </div>
   </div>
 
 

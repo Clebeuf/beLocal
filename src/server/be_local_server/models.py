@@ -77,7 +77,6 @@ class ProductPhoto(models.Model):
         super(ProductPhoto, self).save() 
 
         path = str(self.image.path)
-        print path
         img = Image.open(path)
         img.thumbnail((600, 400), Image.ANTIALIAS)
         img.save(path)

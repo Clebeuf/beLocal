@@ -11,6 +11,7 @@
                     <div style="text-align: center;">
                         <a ng-click="signIn()" class="btn btn-lg facebook-button" style="margin-left:10px;"><i class="fa fa-facebook-square"></i> Login With Facebook</a>
                     </div>
+                    <p ng-show="noFacebookAccountError" class="help-block" style="margin-bottom: 0px;"><small style="color: #a94442;">Oops! We couldn't find an beLocal account registered with that Facebook account. Try signing up first!</small></p>
                     <hr class="login-hr">
                     <form role="form" name="loginForm" novalidate ng-class="{ 'has-error' : loginError}">
                         <div class="row">

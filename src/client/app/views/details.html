@@ -37,17 +37,17 @@
                 <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                     <span class="glyphicon glyphicon-map-marker"></span> {{vendorDetails.vendor.address.city}}, {{vendorDetails.vendor.address.state}} | 
                 </span>
+                <span ng-hide="vendorDetails.vendor.phone == null"> 
+                    <a href="tel:{{vendorDetails.vendor.phone}}"><span class="glyphicon glyphicon-earphone"></span> {{vendorDetails.vendor.phone}}</a> |
+                </span>
                 <span ng-hide="StateService.getCurrentUser().vendor.webpage == null">
                     <a href="http://{{StateService.getCurrentUser().vendor.webpage}}" target="_blank">Our Website</a> |
                 </span>
                 <span ng-hide="vendorDetails.vendor.twitter_url == null"> 
-                    <a href="{{vendorDetails.vendor.twitter_url" target="_blank">Twitter</a> |
+                    <a href="{{vendorDetails.vendor.twitter_url}}" target="_blank">Twitter</a> |
                 </span>
                 <span ng-hide="vendorDetails.vendor.facebook_url == null">
                     <a href="{{vendorDetails.vendor.facebook_url}}" target="_blank"> Facebook</a> |
-                </span>
-                <span ng-hide="vendorDetails.vendor.phone == null"> 
-                    <a href="tel:{{vendorDetails.vendor.phone}}">{{vendorDetails.vendor.phone}}</a> |
                 </span>
             </div>
             <hr>

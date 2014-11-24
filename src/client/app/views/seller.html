@@ -35,6 +35,11 @@
                         <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                             <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
                         </span>
+                        <span ng-hide="StateService.getCurrentUser().vendor.phone == null">
+                             | <a ng-hide="StateService.getCurrentUser().vendor.phone == null" href="tel:{{StateService.getCurrentUser().vendor.phone}}" target="_blank">
+                             <span class="glyphicon glyphicon-earphone"></span> {{StateService.getCurrentUser().vendor.phone}}
+                             </a>
+                        </span>
                         <span ng-hide="StateService.getCurrentUser().vendor.webpage == null">
                              | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}" target="_blank">Our Website</a>
                         </span>
@@ -47,7 +52,7 @@
                     <span class="update-profile-sm-buttons pull-right">
                         <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
                         &nbsp;
-                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Update Social Media</button>
+                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Post to Social Media</button>
                     </span>
                 </div>
             </div>
@@ -679,7 +684,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Update Social Media<br /><small>Please review the following fields and check or uncheck the boxes below to update your various social media accounts.</small></h4>
+                <h4 class="modal-title">Post to Social Media<br /><small>Please review the following fields and check or uncheck the boxes below to update your various social media accounts.</small></h4>
             </div>
             <div class="modal-body">
                 <label><i class="fa fa-facebook-square"></i> Facebook Status Update</label> 

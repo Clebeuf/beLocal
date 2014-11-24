@@ -37,21 +37,7 @@ angular.module('clientApp')
   	$scope.getStarted = function() {
   		ipCookie('beLocalBypass', true, {expires: 14});  		
   		$location.path('/');
-  	}
-
-    $scope.signUpAsCustomerModal = function() {
-      angular.element('#noValidAccountModal').on('hidden.bs.modal', function(e) {
-        $scope.signUpAsCustomer();
-      })
-      angular.element('#noValidAccountModal').modal('hide');
-    }
-
-    $scope.signUpAsVendorModal = function() {
-      angular.element('#noValidAccountModal').on('hidden.bs.modal', function(e) {
-        $scope.signUpAsVendor();
-      })
-      angular.element('#noValidAccountModal').modal('hide');
-    }  
+  	}  
 
     $scope.newVendorSubmit = function() {
       $scope.newUserSubmitted = true;

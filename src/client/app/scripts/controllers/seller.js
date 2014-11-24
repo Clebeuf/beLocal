@@ -220,6 +220,8 @@ angular.module('clientApp')
 
     $scope.vendorProfileUpdate = function() {
         $scope.vendorProfileUpdated = true;
+        $scope.currentUser.vendor.address.addr_line1 = 'unknown';
+        $scope.currentUser.vendor.address.zipcode = 'unknown';
         if($scope.profileForm.$valid) {
             angular.element('#profileModal').modal('hide');
             console.log($scope.currentUser);
@@ -362,7 +364,6 @@ angular.module('clientApp')
 
         $timeout(function() {
         var e = angular.element('#item-image');
-        console.log(e);
         e.wrap('<form>').closest('form').get(0).reset();
         e.unwrap();
         })
@@ -375,7 +376,6 @@ angular.module('clientApp')
             $scope.tagList[counter].checked = undefined;
           } 
         }
-        console.log("clear tags: %o", $scope.tagList);
     }
 
     $scope.editItem = function(item) {
@@ -543,6 +543,8 @@ angular.module('clientApp')
         })
     }
 
+
+
     $scope.leaveMarket = function(market) {
         var data = {
             'market_id' : market.id,
@@ -646,13 +648,13 @@ angular.module('clientApp')
         } else {
             angular.element('#locationModal').modal('hide');             
             var data = {
-                'market_id' : $scope.newLocationMarket,
+                'market_id' : $scope.newLocationMarket.id,
             };
 
             StateService.joinMarket(data).then(function() {
                 StateService.getAvailableMarkets().then(function() {
                     if(StateService.getAvailableMarketList().length > 0)
-                        $scope.newLocationMarket = StateService.getAvailableMarketList()[0].id;
+                        $scope.newLocationMarket = StateService.getAvailableMarketList()[0];
                 });                
                 $scope.getMarketLocations();
             })

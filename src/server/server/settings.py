@@ -26,6 +26,7 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
 
+SITE_ID = 1
 
 # Application definition
 
@@ -172,3 +173,11 @@ ADMIN_MEDIA_PREFIX = '/admin-media/'
 # site id for sites framework
 # https://docs.djangoproject.com/en/dev/ref/contrib/sites/#enabling-the-sites-framework
 SITE_ID = 1
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'belocalvictoria@gmail.com'
+EMAIL_HOST_PASSWORD = 'belocal43v3r'
+ 
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

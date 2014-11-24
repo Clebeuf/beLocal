@@ -1,5 +1,10 @@
 <div class="thumbnail product-card" ng-model="item">
+    <span ng-show="item.photo.image_url != null">
       <img ng-src="{{item.photo.image_url}}" class="pointer vendor-card-name" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(item)"/>
+    </span>
+    <span ng-show="item.photo.image_url == null">
+      <img ng-src="/images/productPH.png" class="pointer vendor-card-name" data-toggle="modal" data-target=".product-details-model" ng-click="showProductDetailsModal(item)"/>
+    </span>
       <div class="caption trending-caption">
 
         <div class="row">

@@ -14,6 +14,8 @@
 
         <div class="col-sm-5 vendor-avatar">
             <div class="vendor-avatar-img" style="background-image:url({{StateService.getCurrentUser().vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
+                <div ng-hide="StateService.getCurrentUser().vendor.photo.image_url != null" class="center" style="color:#ffffff;">
+                </div>
             </div>
 
         </div>
@@ -27,11 +29,19 @@
             <div class="row">
                 <div class="col-sm-12">
                     <span class="new-hr-heading-style">
+                        <div ng-show="StateService.getCurrentUser().vendor.address.city.length == null">
+                            Click edit profile to update your contact information
+                        </div>
                         <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                             <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
                         </span>
+                        <span ng-hide="StateService.getCurrentUser().vendor.phone == null">
+                             | <a ng-hide="StateService.getCurrentUser().vendor.phone == null" href="tel:{{StateService.getCurrentUser().vendor.phone}}" target="_blank">
+                             <span class="glyphicon glyphicon-earphone"></span> {{StateService.getCurrentUser().vendor.phone}}
+                             </a>
+                        </span>
                         <span ng-hide="StateService.getCurrentUser().vendor.webpage == null">
-                             | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a>
+                             | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}" target="_blank">Our Website</a>
                         </span>
                         <span ng-hide="StateService.getCurrentUser().vendor.twitter_url == null"> 
                              | <a href="{{StateService.getCurrentUser().vendor.twitter_url}}">Twitter</a> </span>
@@ -42,7 +52,7 @@
                     <span class="update-profile-sm-buttons pull-right">
                         <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
                         &nbsp;
-                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Update Social Media</button>
+                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Post to Social Media</button>
                     </span>
                 </div>
             </div>
@@ -105,6 +115,7 @@
                                 <span class="edit-text glyphicon glyphicon-trash" ng-click="leaveMarket(location)" data-toggle="modal" data-target="TBA"></span>
                             </span>
                         </div> 
+
 
                     </div>
 
@@ -298,7 +309,7 @@
                                 <div class="form-group" ng-class="{ 'has-error' : profileForm.imageField.$invalid }">
                                     <label for="profile-image">Change Profile Image</label><br />
                                     <img src="#" id="profilePreview" />
-                                    <input onchange="angular.element(this).scope().profileFileNameChanged(this.files)" name="imageField" type="file" id="profile-image">
+                                    <input required onchange="angular.element(this).scope().profileFileNameChanged(this.files)" name="imageField" type="file" id="profile-image">
                                 </div>
                             </div>
                         </div>
@@ -312,9 +323,9 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <div class="form-group" ng-class="{ 'has-error' : profileForm.number.$invalid }">
+                                <div class="form-group">
                                     <label for="company-description">Company Phone Number</label>
-                                    <input required ng-model="currentUser.vendor.phone" type="text" name="number" class="form-control" id="company-description" placeholder="Phone Number" maxlength="20"/>
+                                    <input ng-model="currentUser.vendor.phone" type="text" name="number" class="form-control" id="company-description" placeholder="Optional Phone Number" maxlength="20"/>
                                 </div>
                             </div>
                         </div>
@@ -326,24 +337,26 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
+                                <br>
                                 <label for="company-description">Facebook Link</label>
-                                <input ng-model="currentUser.vendor.facebook_url" type="text" name="website" class="form-control" id="company-description" placeholder="Facebook URL" maxlength="400"/>
+                                <input ng-model="currentUser.vendor.facebook_url" type="text" name="website" class="form-control" id="company-description" placeholder="Optional Facebook URL" maxlength="400"/>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <label for="item-name">Company Address</label>
+                                <br>
+                                <label for="item-name">Company Location</label>
                             </div>
                         </div>
                         <div class="well">
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group" ng-class="{ 'has-error' : profileForm.address.$invalid }">
                                         <label for="item-name">Street Address</label>
                                         <input required ng-model="currentUser.vendor.address.addr_line1" type="text" name="address" class="form-control" id="item-name" placeholder="Street Address" maxlength="50"/>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div class="form-group" ng-class="{ 'has-error' : profileForm.city.$invalid }">
@@ -364,13 +377,13 @@
                                         <label for="item-name">Country</label>
                                         <input required ng-model="currentUser.vendor.address.country" type="text" name="country" class="form-control" id="item-name" placeholder="Country" maxlength="36"/>
                                     </div>
-                                </div>
+                                </div><!-- 
                                 <div class="col-xs-6">
                                     <div class="form-group" ng-class="{ 'has-error' : profileForm.zip.$invalid }">
                                         <label for="item-name">Postal Code</label>
                                         <input required ng-model="currentUser.vendor.address.zipcode" type="text" name="zip" class="form-control" id="item-name" placeholder="Postal Code" maxlength="7"/>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="row">
@@ -624,7 +637,30 @@
                             <form role="form" name="marketForm" novalidate>
                                 <div class="form-group">
                                     <label>Select the Market You're Selling At:</label>
-                                    <select ng-show="StateService.getAvailableMarketList().length > 0" ng-model="newLocationMarket" id="modalMarketPicker" class="form-control" ng-options="market.id as market.name for market in StateService.getAvailableMarketList()"></select>
+                                    <select ng-show="StateService.getAvailableMarketList().length > 0" ng-model="newLocationMarket" id="modalMarketPicker" class="form-control" ng-options="market as market.name for market in StateService.getAvailableMarketList()"></select>
+                                    <div ng-show="newLocationMarket.name != null">
+                                        <!-- 
+                                        <p>{{newLocationMarket.name}} Details:</p> -->
+
+                                        <p class="indent">
+                                            <br>
+                                            <b>Address:</b>
+                                            <br>
+                                            <span class="store-hours">
+                                                {{newLocationMarket.address.addr_line1}},
+                                                {{newLocationMarket.address.city}}, 
+                                                {{newLocationMarket.address.state}}, 
+                                                {{newLocationMarket.address.zipcode}}
+                                            </span>
+                                        </p>
+                                        <span class="indent"><b>Hours:</b></span>
+                                        <ul class="list-inline store-hours indent">&nbsp
+                                            <li ng-repeat="day in newLocationMarket.address.hours">
+                                                <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                            </li>
+                                        </ul>
+                                    </div>
+
                                     <p ng-hide="StateService.getAvailableMarketList().length > 0" class="medium-margin">You're already selling at all the running markets in town! 
                                     <br>Try <a class="pointer beLocal-a" ng-click="manuallyTriggerCustomLocation()">creating</a> a new custom location instead.</p> 
                                 </div>   
@@ -648,7 +684,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Update Social Media<br /><small>Please review the following fields and check or uncheck the boxes below to update your various social media accounts.</small></h4>
+                <h4 class="modal-title">Post to Social Media<br /><small>Please review the following fields and check or uncheck the boxes below to update your various social media accounts.</small></h4>
             </div>
             <div class="modal-body">
                 <label><i class="fa fa-facebook-square"></i> Facebook Status Update</label> 

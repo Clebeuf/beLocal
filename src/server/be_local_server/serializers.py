@@ -5,6 +5,22 @@ from django.contrib.auth.models import User
 from secretballot.models import Vote
 from taggit.models import Tag
 
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class SetPasswordSerializer(serializers.Serializer):
+    new_password1 = serializers.CharField(max_length=128)
+    new_password2 = serializers.CharField(max_length=128)
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        return super(SetPasswordSerializer, self).__init__(*args, **kwargs)
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'password')
+
 class UserSerializer(serializers.ModelSerializer):
   class Meta:
     model = User

@@ -16,14 +16,6 @@ angular.module('clientApp')
             $location.path('/manage');
         }
 
-        $scope.showLogin = function() {
-            AuthService.showLogin().then(function(status) {
-                if(status === 500) {
-                  angular.element('#noValidAccountModal').modal('show');
-                };
-            });
-        }
-
         $scope.safeApply = function(fn) {
           var phase = this.$root.$$phase;
           if(phase == '$apply' || phase == '$digest') {

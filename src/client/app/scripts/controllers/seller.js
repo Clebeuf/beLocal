@@ -648,13 +648,13 @@ angular.module('clientApp')
         } else {
             angular.element('#locationModal').modal('hide');             
             var data = {
-                'market_id' : $scope.newLocationMarket,
+                'market_id' : $scope.newLocationMarket.id,
             };
 
             StateService.joinMarket(data).then(function() {
                 StateService.getAvailableMarkets().then(function() {
                     if(StateService.getAvailableMarketList().length > 0)
-                        $scope.newLocationMarket = StateService.getAvailableMarketList()[0].id;
+                        $scope.newLocationMarket = StateService.getAvailableMarketList()[0];
                 });                
                 $scope.getMarketLocations();
             })

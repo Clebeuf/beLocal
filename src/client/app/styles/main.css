@@ -29,6 +29,10 @@
   color: #FFFFFF !important;
 }
 
+.indent {
+  margin-left: 10px !important;
+}
+
 @media screen and (max-width: 400px) {
     .hidden-mobile{
         display: none !important;

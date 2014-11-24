@@ -111,6 +111,7 @@
                             </span>
                         </div> 
 
+
                     </div>
 
                     <div class="location-details">
@@ -631,7 +632,30 @@
                             <form role="form" name="marketForm" novalidate>
                                 <div class="form-group">
                                     <label>Select the Market You're Selling At:</label>
-                                    <select ng-show="StateService.getAvailableMarketList().length > 0" ng-model="newLocationMarket" id="modalMarketPicker" class="form-control" ng-options="market.id as market.name for market in StateService.getAvailableMarketList()"></select>
+                                    <select ng-show="StateService.getAvailableMarketList().length > 0" ng-model="newLocationMarket" id="modalMarketPicker" class="form-control" ng-options="market as market.name for market in StateService.getAvailableMarketList()"></select>
+                                    <div ng-show="newLocationMarket.name != null">
+                                        <!-- 
+                                        <p>{{newLocationMarket.name}} Details:</p> -->
+
+                                        <p class="indent">
+                                            <br>
+                                            <b>Address:</b>
+                                            <br>
+                                            <span class="store-hours">
+                                                {{newLocationMarket.address.addr_line1}},
+                                                {{newLocationMarket.address.city}}, 
+                                                {{newLocationMarket.address.state}}, 
+                                                {{newLocationMarket.address.zipcode}}
+                                            </span>
+                                        </p>
+                                        <span class="indent"><b>Hours:</b></span>
+                                        <ul class="list-inline store-hours indent">&nbsp
+                                            <li ng-repeat="day in newLocationMarket.address.hours">
+                                                <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                            </li>
+                                        </ul>
+                                    </div>
+
                                     <p ng-hide="StateService.getAvailableMarketList().length > 0" class="medium-margin">You're already selling at all the running markets in town! 
                                     <br>Try <a class="pointer beLocal-a" ng-click="manuallyTriggerCustomLocation()">creating</a> a new custom location instead.</p> 
                                 </div>   

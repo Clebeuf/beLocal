@@ -35,6 +35,11 @@
                         <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                             <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
                         </span>
+                        <span ng-hide="StateService.getCurrentUser().vendor.phone == null">
+                             | <a ng-hide="StateService.getCurrentUser().vendor.phone == null" href="tel:{{StateService.getCurrentUser().vendor.phone}}" target="_blank">
+                             <span class="glyphicon glyphicon-earphone"></span> {{StateService.getCurrentUser().vendor.phone}}
+                             </a>
+                        </span>
                         <span ng-hide="StateService.getCurrentUser().vendor.webpage == null">
                              | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}" target="_blank">Our Website</a>
                         </span>

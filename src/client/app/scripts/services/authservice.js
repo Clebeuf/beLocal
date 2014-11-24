@@ -112,7 +112,36 @@ angular.module('clientApp')
         });
 
         return d.promise;
-    }    
+    } 
+
+    this.createNonFacebookVendor = function(vendor) {
+      var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/vendor/no-fb-create/', data: vendor});  
+      loginPromise.success(function(result) {
+          console.log(result);
+          if(result.token) {
+            ipCookie('beLocalToken', result.token, {expires: 14});
+            ipCookie('beLocalUser', result, {expires: 14});
+            ipCookie('beLocalBypass', true, {expires: 14});
+            $http.defaults.headers.common.Authorization = 'Token ' + result.token;        
+          }
+          StateService.setProfile(result);         
+      });
+      return loginPromise;      
+    } 
+
+    this.createNonFacebookCustomer = function(customer) {
+      var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/customer/no-fb-create/', data: customer});  
+      loginPromise.success(function(result) {
+          if(result.token) {
+            ipCookie('beLocalToken', result.token, {expires: 14});
+            ipCookie('beLocalUser', result, {expires: 14});
+            ipCookie('beLocalBypass', true, {expires: 14});
+            $http.defaults.headers.common.Authorization = 'Token ' + result.token;        
+          }
+          StateService.setProfile(result);        
+      });
+      return loginPromise;
+    }      
 
     this.createVendor = function() {
         var d = $q.defer();
@@ -149,20 +178,8 @@ angular.module('clientApp')
             promise.error(function(result, status) {
               d.resolve(status)
             });            
-            promise.then(function(response) {
-              if(response.status !== 200) {
-              } else {
-                if(StateService.getUserType() === 'CUS') {
-                    console.log("You're a customer!");
-                    $location.path('/');                    
-                  // $location.path('/customer');
-                } else if(StateService.getUserType() === 'VEN') {
-                    $location.path('/vendor');
-                }
-                else if(StateService.getUserType() === 'SUP') {
-                    $location.path('/manage');
-                }                
-              }         
+            promise.success(function(response) {
+              d.resolve(status)        
             });             
         })
         .fail(function (error) {
@@ -170,5 +187,22 @@ angular.module('clientApp')
         });
 
         return d.promise;        
-    }    
+    } 
+
+    this.tryLoginWithoutFaceboook = function(username, password) {
+      var loginPromise = $http.post('http://localhost:8000/login-no-fb/', {username: username, password: password});
+
+      loginPromise.then(function (result) {        
+        if(result.data.token) {
+          ipCookie('beLocalToken', result.data.token, {expires: 14});
+          ipCookie('beLocalUser', result.data, {expires: 14});
+          ipCookie('beLocalBypass', true, {expires: 14});          
+          $http.defaults.headers.common.Authorization = 'Token ' + result.token;        
+        }
+        StateService.setProfile(result.data);    
+      });
+
+      return loginPromise;
+    };
+
   });

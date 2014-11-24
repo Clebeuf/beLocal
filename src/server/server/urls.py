@@ -3,6 +3,7 @@ from be_local_server import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.views.generic.base import RedirectView
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -11,8 +12,15 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
     url(r'^admin/', include(admin.site.urls), name='admin'),
     url(r'^login/(?P<backend>.+)/$', views.LoginView.as_view(), name='login'),
+    url(r'^vendor/no-fb-create/$', views.CreateNonFacebookVendorView.as_view(), name='vendor-no-fb-create'),
     url(r'^vendor/(?P<backend>.+)/create/$', views.CreateVendorView.as_view(), name='create-vendor'),
-    url(r'^customer/(?P<backend>.+)/create/$', views.CreateCustomerView.as_view(), name='create-customer'),     
+    url(r'^customer/no-fb-create/$', views.CreateNonFacebookCustomerView.as_view(), name='customer-no-fb-create'),     
+    url(r'^customer/(?P<backend>.+)/create/$', views.CreateCustomerView.as_view(), name='create-customer'), 
+    url(r'^login-no-fb/$', views.LoginNoFBView.as_view(), name='login-no-fb'),
+
+    url(r'^users/password/reset/$', views.PasswordReset.as_view(), name='password_reset'),
+    url(r'^users/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views.reset_confirm, name='password_reset_confirm'),      
+    url(r'^redirect_to_login/$', RedirectView.as_view(url='http://127.0.0.1:9000'), name='password_reset_complete'),
     
     url(r'^vendor/add/$', views.AddVendorView.as_view(), name='vendor-add'),    
     url(r'^vendor/?$', views.RWDVendorView.as_view(), name='vendor'),   
@@ -43,7 +51,6 @@ urlpatterns = patterns('',
     url(r'^markets/leave/$', views.LeaveMarketView.as_view(), name='market-join'),
     url(r'^market/details/$', views.MarketDetailsView.as_view(), name='market-details'),     
 
-
     url(r'^search/autocomplete', 'be_local_server.views.autocomplete'),
     url(r'^search/products', views.SearchProductView.as_view(), name="product-search"),    
     url(r'^search/vendors', views.SearchVendorView.as_view(), name="vendor-search"),
@@ -58,6 +65,6 @@ urlpatterns = patterns('',
 
     url(r'^manage/vendors/list/$',views.ManageVendorsView.as_view(), name='inactive-vendors'),
     url(r'^manage/users/list/$',views.ManageUsersView.as_view(), name='manage-users'),    
-    url(r'^manage/vendors/activate/$',views.ActivateVendorView.as_view(), name='activate-vendor'),     
+    url(r'^manage/vendors/activate/$',views.ActivateVendorView.as_view(), name='activate-vendor'), 
     
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

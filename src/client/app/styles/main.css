@@ -4,6 +4,35 @@
 
 */
 
+.fa-facebook-square {
+  padding-right:5px;
+}
+
+.facebook-button{
+  color: white;
+  background: #4A65BB;
+  background-image: -webkit-linear-gradient(top, #4A65BB, #3b54A3);
+  background-image: -moz-linear-gradient(top, #4A65BB, #3b54A3);
+  background-image: -ms-linear-gradient(top, #4A65BB, #3b54A3);
+  background-image: -o-linear-gradient(top, #4A65BB, #3b54A3);
+  background-image: linear-gradient(to bottom, #4A65BB, #3b54A3);
+}
+
+.facebook-button:hover{
+  color: white;
+  background: #5877D7;
+  background-image: -webkit-linear-gradient(top, #5877D7, #4863b6);
+  background-image: -moz-linear-gradient(top, #5877D7, #4863b6);
+  background-image: -ms-linear-gradient(top, #5877D7, #4863b6);
+  background-image: -o-linear-gradient(top, #5877D7, #4863b6);
+  background-image: linear-gradient(to bottom, #5877D7, #4863b6);
+  color: #FFFFFF !important;
+}
+
+.indent {
+  margin-left: 10px !important;
+}
+
 @media screen and (max-width: 400px) {
     .hidden-mobile{
         display: none !important;
@@ -17,6 +46,20 @@
 }
 
 
+.more-items{
+  background-color: #f4f4f4; 
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  background-position: center; 
+  border: 1px solid #DDDDDD;
+}
+
+@media (min-width: 940px) {
+    .more-items {
+        font-size: 10px !important
+    }
+}
+
 .vendor-avatar-img{
   width: 100%;
   max-width: 500px;
@@ -25,6 +68,7 @@
   overflow: hidden;
   vertical-align: middle;
   margin-bottom: 5px !important;
+  background-color: #696969;
 
 }
 
@@ -294,8 +338,12 @@
 .plain-text {
   font-size: 15px !important;
   font-family: 'Roboto', sans-serif !important;
-  color: #696969 !important;
-  margin-top: 1px;
+  color: #403E3B !important;
+  margin-top: 0px;
+}
+
+.plain-text a{
+  color: #403E3B !important;
 }
 
 .top-nav-large {

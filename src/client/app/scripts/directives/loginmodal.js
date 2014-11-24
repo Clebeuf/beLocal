@@ -8,6 +8,7 @@ angular.module('clientApp')
       link: function postLink(scope, element, attrs) {
 
         scope.clearLoginModal = function() {
+          scope.noFacebookAccountError = false;                
           scope.loginSubmitted = false;
           scope.loginError = false;
           scope.loginUsername = undefined;
@@ -18,10 +19,11 @@ angular.module('clientApp')
           scope.recoverHasSubmitted = false;
         }       
 
-        scope.signIn = function() {            
+        scope.signIn = function() {  
+          scope.noFacebookAccountError = false;          
           AuthService.showLogin().then(function(status) {              
             if(status === 500) {
-              angular.element('#noValidAccountModal').modal('show');
+              scope.noFacebookAccountError = true;
             } else {
               angular.element('#loginModal').modal('hide');                
             }

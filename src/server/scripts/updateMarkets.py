@@ -538,3 +538,51 @@ m = Market(
 m.save()
 
 
+
+#-----------------------------------------------------------------------------------------------------
+# MOSS STREET WINTER MARKET
+#-----------------------------------------------------------------------------------------------------
+
+# Create an address
+a = Address(
+	addr_line1="Garry Oak Room, 1330 Fairfield Road", # Street number and street name
+	city="Victoria", # City
+	state="BC", # Province
+	country="Canada", # Country
+	zipcode="V8S 5J1", # Postal Code
+	latitude=48.414895, # Latitude
+	longitude=-123.347773, #Longitude
+)
+
+# Save it
+a.save()
+
+# Create hours for the address
+h1 = OpeningHours(
+	address=a, # Each opening hour object has to have an address associated with it
+	weekday=6, # 1 = Monday, ..., 7 = Sunday
+	from_hour=datetime(2014, 10, 6, 10, 0, 0), # (year, month, day, hour, minute, second)
+	to_hour=datetime(2014, 10, 6, 12, 0, 0), # (year, month, day, hour, minute, second)
+)
+
+# Save it
+h1.save()
+
+mp = MarketPhoto(
+		image=File(open('../client/app/images/markets/MSWM.jpg'))
+)
+
+mp.save()
+
+# Create a market
+m = Market(
+	address=a, # Each Market object needs an address associated with it (this also associates hours)
+	name="Moss Street Winter Market", # Market name
+	description="Moss Street Market winter market runs from November to April in the Garry Oak Room, in the Fairfield Community Centre. In addition to great meats and winter produce brought to you from over a dozen local organic farmers, there will be baking, hot food, and coffee.", # Market description
+	photo=mp,
+	webpage="http://www.mossstreetmarket.com/"
+)
+
+m.save()
+
+

@@ -13,7 +13,7 @@
 
 
         <div class="col-sm-5 vendor-avatar">
-            <div class="vendor-avatar-img" style="background-image:url({{StateService.getCurrentUser().vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
+            <div class="vendor-avatar-img pointer" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal" style="background-image:url({{StateService.getCurrentUser().vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
                 <div ng-hide="StateService.getCurrentUser().vendor.photo.image_url != null" class="center" style="color:#ffffff;">
                 </div>
             </div>

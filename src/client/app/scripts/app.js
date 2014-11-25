@@ -82,7 +82,7 @@ var app = angular.module('clientApp', [
     $anchorScrollProvider.disableAutoScrolling();
   })
 
-  .run(function ($rootScope, $state, $location, AuthService, StateService, ipCookie, $timeout) {
+  .run(function ($rootScope, $state, $location, AuthService, StateService, ipCookie, $timeout, $window) {
       OAuth.initialize('FFQwiNbZnNhnZMbxNeUWxjQVSjk');
       $location.hash('trending');
 
@@ -138,6 +138,12 @@ var app = angular.module('clientApp', [
           $state.transitionTo('main');
           event.preventDefault();
         }
+
+	if (!$window.ga)
+        	return;
+ 
+        $window.ga('send', 'pageview', { page: $location.path() });
+
       });
 });
 

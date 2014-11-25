@@ -137,7 +137,7 @@ class CreateNonFacebookVendorView(APIView):
 
             vendor.company_name = user.username # set this for Carly's UI
 
-            vp = VendorPhoto(image=File(open('../client/app/images/profilePH.jpg')))
+            vp = VendorPhoto(image=File(open('../client/app/images/profilePH.png')))
             vp.save()
             vendor.photo = vp
 

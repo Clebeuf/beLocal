@@ -162,7 +162,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'be_local_server/static_files')
+STATIC_URL = '/static_files/'
 
 # User-uploaded images
 # https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user
@@ -178,6 +179,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'belocalvictoria@gmail.com'
-EMAIL_HOST_PASSWORD = 'belocal43v3r'
+EMAIL_HOST_PASSWORD = 'git#696969'
  
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

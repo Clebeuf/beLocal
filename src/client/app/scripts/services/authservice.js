@@ -115,7 +115,7 @@ angular.module('clientApp')
     } 
 
     this.createNonFacebookVendor = function(vendor) {
-      var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/vendor/no-fb-create/', data: vendor});  
+      var loginPromise = $http({method:'POST', url: 'http://54.69.172.241:8000/vendor/no-fb-create/', data: vendor});  
       loginPromise.success(function(result) {
           console.log(result);
           if(result.token) {
@@ -130,7 +130,7 @@ angular.module('clientApp')
     } 
 
     this.createNonFacebookCustomer = function(customer) {
-      var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/customer/no-fb-create/', data: customer});  
+      var loginPromise = $http({method:'POST', url: 'http://54.69.172.241:8000/customer/no-fb-create/', data: customer});  
       loginPromise.success(function(result) {
           if(result.token) {
             ipCookie('beLocalToken', result.token, {expires: 14});
@@ -190,7 +190,7 @@ angular.module('clientApp')
     } 
 
     this.tryLoginWithoutFaceboook = function(username, password) {
-      var loginPromise = $http.post('http://localhost:8000/login-no-fb/', {username: username, password: password});
+      var loginPromise = $http.post('http://54.69.172.241:8000/login-no-fb/', {username: username, password: password});
 
       loginPromise.then(function (result) {        
         if(result.data.token) {

@@ -4,6 +4,7 @@ angular.module('clientApp')
   .controller('ManageCtrl', function ($scope, StateService) {
     $scope.inactiveVendors = [];
     $scope.users = [];
+    $scope.showXSNav = true;
 
     StateService.getManageVendors().then(function(response) {
         $scope.inactiveVendors = response.data;

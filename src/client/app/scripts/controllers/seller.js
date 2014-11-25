@@ -25,6 +25,7 @@ angular.module('clientApp')
     angular.copy(StateService.getCurrentUser(), $scope.currentUser);
     $scope.isCreatingCustomLocation = false;
     $scope.showInactiveAlert = true;
+    $scope.showXSNav = true;
 
     var geocoder = new google.maps.Geocoder();
 

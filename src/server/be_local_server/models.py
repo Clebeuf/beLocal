@@ -7,6 +7,7 @@ from undelete.models import TrashableMixin
 from taggit.managers import TaggableManager
 from taggit.models import GenericTaggedItemBase, TagBase
 import secretballot
+from PIL import Image, ImageOps
 
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
@@ -71,10 +72,19 @@ class Category(models.Model):
   
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)
+
+    def save(self, force_insert=True, force_update=False, using=None):
+        super(ProductPhoto, self).save() 
+
+        path = str(self.image.path)
+        img = Image.open(path)
+        img.thumbnail((600, 400), Image.ANTIALIAS)
+        img.save(path)
+
     
     def get_image_abs_path(self):
         return os.path.join(settings.MEDIA_URL, self.image.name)        
-    image_url = property(get_image_abs_path)   
+    image_url = property(get_image_abs_path)
 
 class Product(TrashableMixin, models.Model):
     IN_STOCK = 'IS'

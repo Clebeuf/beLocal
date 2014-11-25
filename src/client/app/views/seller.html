@@ -287,7 +287,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4>Update Your Profile<br />
-                <small>Please Note: This information will be visable to others using this application.</small>
+                <small>Please Note: This information will be visible to others using this application.</small>
                 </h4>               
             </div>
             <div class="modal-body">  
@@ -298,7 +298,8 @@
                                 <div class="form-group" ng-class="{ 'has-error' : profileForm.imageField.$invalid }">
                                     <label for="profile-image">Change Profile Image</label><br />
                                     <img src="#" id="profilePreview" />
-                                    <input onchange="angular.element(this).scope().profileFileNameChanged(this.files)" name="imageField" type="file" id="profile-image">
+                                    <button type="button" data-toggle="modal" data-target="#profileImageModal" ng-click="triggerImageSelect()" class="btn beLocal-btn-filled">
+                                    <span>Choose Image</span></button>
                                 </div>
                             </div>
                         </div>
@@ -396,6 +397,34 @@
     <!-- /.modal-dialog -->
 </div>
 
+<!-- Seller Add/Edit Profile Image -->
+<div class="modal fade" id="profileImageModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4>Update Your Profile Image</h4><br/>
+                <small>Please select the area of the image to show on your profile and then click done.</small>
+            </div>
+            <div class="modal-body">  
+                <div class="container-fluid">  
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <input onchange="angular.element(this).scope().handleProfileImageFileSelect(this.files)" name="imageField" type="file" id="profile-image">
+                            <div class="crop-image-wrapper">
+                                 <img-cropped src='{{profileImage|trusted}}' selected='selected(cords)'/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" ng-click="" class="btn beLocal-btn-filled">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Seller Add/Edit Item Modal -->
 <div class="modal fade" id="itemModal">
@@ -414,9 +443,10 @@
                                 <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.imageField.$invalid }">
                                     <label ng-hide="isEditingItem" for="item-image">Add Image</label>
                                     <label ng-show="isEditingItem" for="item-image">Change Image</label><br />
-                                    <img ng-show="displayItemThumbnail" src="#" id="itemPreview" />                                    
+                                    <img ng-show="displayItemThumbnail" src="#" id="itemPreview" />
                                     <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
                                 </div>
+                               
                             </div>
                         </div>
                         <div class="row">
@@ -479,8 +509,6 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-
-
 
 <!-- Seller Add/Edit Location Modal  -->
 <div class="modal fade" id="locationModal">

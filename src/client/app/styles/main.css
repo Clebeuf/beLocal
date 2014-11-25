@@ -1028,6 +1028,16 @@ body {
   vertical-align: center;
 }
 
+.crop-image-wrapper {
+  text-align:center;
+  padding-top: 15px;
+}
+
+.jcrop-centered
+{
+    display: inline-block;
+}
+
 /* SELLER UI ENDS*/
 
 /* PRODUCT DETAILS UI STARTS */

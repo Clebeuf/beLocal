@@ -25,6 +25,7 @@ angular.module('clientApp')
     angular.copy(StateService.getCurrentUser(), $scope.currentUser);
     $scope.isCreatingCustomLocation = false;
     $scope.showInactiveAlert = true;
+    $scope.profileImage = '';
 
     var geocoder = new google.maps.Geocoder();
 
@@ -733,6 +734,28 @@ angular.module('clientApp')
             object.marker.setAnimation(null);
     };    
 
+    $scope.handleProfileImageFileSelect=function(file) {
+        if(file && file[0]) {
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                $scope.$apply(function($scope){
+                    $scope.profileImage=evt.target.result;
+                });
+            };
+            reader.readAsDataURL(file[0]);
+        }
+    };
+
+    $scope.selected = function(x) {
+    	console.log("selected",x);
+  	};
+
+  	$scope.triggerImageSelect = function () {
+		  $timeout(function() {
+		    angular.element('#profile-image').trigger('click');
+		  }, 100);
+		};
+
     $scope.init = function() {
         $scope.getSellerLocations();
         $scope.getSellerItems();
@@ -744,7 +767,7 @@ angular.module('clientApp')
         $scope.resetLocationModal();
     }  
 
-    $scope.init();   
+    $scope.init();
 
   })
   .directive('htmlComp', function($compile, $parse) {
@@ -757,4 +780,50 @@ angular.module('clientApp')
           }, true);
         }
       }
-  });
+  })
+  .directive('imgCropped', function () {
+	  return {
+	    restrict: 'E',
+	    replace: true,
+	    scope: { src:'@', selected:'&' },
+	    link: function(scope,element, attr) {
+	      var myImg;
+	      var clear = function() {
+	        if (myImg) {
+	          myImg.next().remove();
+	          myImg.remove();
+	          myImg = undefined;
+	        }
+	      };
+	      scope.$watch('src', function(nv) {        
+	        clear();
+	        if (nv) {
+	          element.after('<img />');
+	          myImg = element.next();        
+	          myImg.attr('src',nv);
+	          $(myImg).Jcrop({
+	            trackDocument: true,
+	            aspectRatio:5/3,
+	            boxWidth:560,
+	            boxHeight:336,
+	            addClass: 'jcrop-centered',
+	            onSelect: function(x) {              
+	              scope.$apply(function() {
+	                scope.selected({cords: x});
+	              });
+	            }
+	          });
+	        }
+	      });
+	      
+	      scope.$on('$destroy', clear);
+	    }
+	  };
+	})
+  //need this filter to be applied to the src of imgCropped directive or else I get
+  //cross domain error from angular when loading the image?!
+  .filter('trusted', ['$sce', function ($sce) {
+	    return function(url) {
+	        return $sce.trustAsResourceUrl(url);
+	    };
+    }]);

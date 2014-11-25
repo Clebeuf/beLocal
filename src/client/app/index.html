@@ -14,6 +14,7 @@
     <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:900,400' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>    
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">    
+
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
@@ -21,6 +22,9 @@
     <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.min.css" />
     <!-- endbower -->
     <!-- endbuild -->
+    
+    <!--apparently grunt can't inject Jcrop files automatically, so I'm doing it manually -->
+    <link src="bower_components/Jcrop/css/jquery.Jcrop.min.css"
     <!-- build:css({.tmp,app}) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->   
@@ -84,6 +88,9 @@
     <!-- endbower -->
     <!-- endbuild -->
 
+    <!--apparently grunt can't inject Jcrop files automatically, so I'm doing it manually -->
+    <script src="bower_components/Jcrop/js/jquery.Jcrop.min.js"></script>
+
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
@@ -105,6 +112,7 @@
         <script src="scripts/directives/beLocalMap.js"></script>
         <script src="scripts/controllers/contactus.js"></script>
         <script src="scripts/directives/affix.js"></script>
+        <script src="scripts/directives/imgcropped.js"></script>
         <!-- endbuild -->
 </body>
 </html>

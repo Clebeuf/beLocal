@@ -1,5 +1,5 @@
-<div class="hidden-xs"><nav-bar></nav-bar></div>
-<div ng-show="showXSNav"><navbar-x-s></navbar-x-s></div>
+<nav-bar></nav-bar>
+<navbar-x-s></navbar-x-s>
 
 <!-- EACH OF THE TABS -->
 <div class="tab-content">
@@ -29,7 +29,7 @@
 
         <div class="col-sm-8">
           <div class="row" id="masonry-market-container">
-            <div class="col-trending ms-market-item col-xs-6" ng-repeat="market in marketList | orderBy:'address.hours.length':true" >
+            <div class="col-trending ms-market-item col-xs-6" ng-repeat="market in marketList | orderBy:'address.hours.length':true" on-finish-render>
               <market-card data="market"></market-card>
             </div>
           </div>

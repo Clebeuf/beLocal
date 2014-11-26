@@ -198,6 +198,7 @@ angular.module('clientApp')
     }
 
     this.getAvailableMarkets = function() {
+      availableMarkets = [];
       return $http.get(this.getServerAddress() + 'vendor/markets/available/')
       .success(function(data) {
         for(var i = 0; i < data.length; i++) {

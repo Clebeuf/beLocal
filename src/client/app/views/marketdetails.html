@@ -1,6 +1,6 @@
 <!-- NAVBAR -->
-<div class="hidden-xs"><nav-bar></nav-bar></div>
-<div ng-show="showXSNav"><navbar-x-s></navbar-x-s></div>
+<nav-bar></nav-bar>
+<navbar-x-s></navbar-x-s>
 
 <!-- SELLER DETAILS -->
 <div class="customer-container">  
@@ -36,7 +36,7 @@
                     <span class="glyphicon glyphicon-map-marker"></span> 
                     {{marketDetails.address.addr_line1}}, {{marketDetails.address.city}}, {{marketDetails.address.state}}
                 </a>
-                | <a href="{{marketDetails.webpage}}">Our Website</a>
+                | <a href="{{marketDetails.webpage}}" target="_blank">Our Website</a>
             </span>
             <hr>    
 
@@ -44,8 +44,8 @@
                 <div class="no-bottom-margin small-header"><b>The {{marketDetails.name}} is closed for the season.</b></div>
             </div>
 
-            <div class="store-hours">
-		        <ul style="margin-bottom:0px" class="list-inline store-hours">
+            <div class="" style="padding-left:0px;">
+		        <ul style="margin-bottom:0px" class="list-inline">
 			        <li ng-repeat="day in marketDetails.address.hours">
 			            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
 			        </li>

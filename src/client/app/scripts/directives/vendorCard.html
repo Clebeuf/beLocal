@@ -13,8 +13,10 @@
     <div class="col-sm-5">
       <h4 class="no-bottom-margin no-top-margin"><a class="pointer vendor-card-name" ng-click="displayVendor(vendor.id)">{{vendor.company_name}}</a></h4>
         <div class="plain-text">
-          <span ng-show="vendor.phone != null" class="glyphicon glyphicon-earphone"></span> <a class="plain-text" href="tel:{{vendor.phone}}">{{vendor.phone}}</a>
-          <br><span ng-show="vendor.address.addr_line1 != null && vendor.address.city != null && vendor.address.state != null">
+          <a href="tel:{{vendor.phone}}" ng-show="vendor.phone != null">
+            <span class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}<br>
+          </a>
+          <span ng-show="vendor.address.addr_line1 != null && vendor.address.city != null && vendor.address.state != null">
             {{vendor.address.city}}, {{vendor.address.state}}
           </span>
           <div ng-show="vendor.selling_locations.length != 0">
@@ -33,13 +35,14 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-1 no-padding">
+    <div class="col-sm-1 no-padding" ng-hide="vendor.products.length == 0 || currentState.name === 'manage'">
       <div class="vendor-image-container pointer" ng-click="displayVendor(vendor.id)">
+        <div class="vendor-images more-items">
         <div class="center bold-hover" style="" ng-show="vendor.products.length > 0">
-          <h3 class="logo-green plain-text-font" > {{vendor.products.length}} </h3>
-          <h4 class="header-font" style="padding-bottom:15px"> item<span ng-hide="vendor.products.length === 1">s</span> </div>
+          <span class="logo-green plain-text"> <br>{{vendor.products.length}}<br> item<span ng-hide="vendor.products.length === 1">s</span></span> </div>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -55,8 +58,10 @@
     <div class="col-xs-5">
       <h4 class="no-bottom-margin no-top-margin"><a class="pointer vendor-card-name" ng-click="displayVendor(vendor.id)">{{vendor.company_name}}</a></h4>
         <div class="plain-text">
-          <span ng-show="vendor.phone != null" class="glyphicon glyphicon-earphone"></span> <a class="plain-text" href="tel:{{vendor.phone}}">{{vendor.phone}}</a>
-          <br><span ng-show="vendor.address.addr_line1 != null && vendor.address.city != null && vendor.address.state != null">
+          <a href="tel:{{vendor.phone}}" ng-show="vendor.phone != null">
+            <span class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}<br>
+          </a>
+          <span ng-show="vendor.address.addr_line1 != null && vendor.address.city != null && vendor.address.state != null">
             {{vendor.address.city}}, {{vendor.address.state}}
           </span>
           <div ng-show="vendor.selling_locations.length != 0">
@@ -75,14 +80,15 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-1 no-padding">
+    <div class="col-sm-1 no-padding" ng-hide="vendor.products.length === 0 || currentState.name === 'manage'">
       <div class="vendor-image-container pointer" ng-click="displayVendor(vendor.id)">
+        <div class="vendor-images more-items">
         <div class="center bold-hover" style="" ng-show="vendor.products.length > 0">
-          <h3 class="logo-green plain-text-font" > {{vendor.products.length}} </h3>
-          <h4 class="header-font" style="padding-bottom:15px"> item<span ng-hide="vendor.products.length === 1">s</span> </div>
+          <span class="logo-green plain-text"> <br><br> ...</span></span> </div>
         </div>
       </div>
-    </div>
+      </div>
+  </div>
   </div>
 
 
@@ -102,8 +108,10 @@
     </div>     
       <h4 class="no-bottom-margin no-top-margin"><a class="pointer vendor-card-name" ng-click="displayVendor(vendor.id)">{{vendor.company_name}}</a></h4>
         <div class="plain-text">
-          <span ng-show="vendor.phone != null" class="glyphicon glyphicon-earphone"></span> <a class="plain-text" href="tel:{{vendor.phone}}">{{vendor.phone}}</a>
-          <br><span ng-show="vendor.address.addr_line1 != null && vendor.address.city != null && vendor.address.state != null">
+          <a href="tel:{{vendor.phone}}" ng-show="vendor.phone != null">
+            <span class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}<br>
+          </a>
+          <span ng-show="vendor.address.addr_line1 != null && vendor.address.city != null && vendor.address.state != null">
             {{vendor.address.city}}, {{vendor.address.state}}
           </span>
           <div ng-show="vendor.selling_locations.length != 0">

@@ -27,13 +27,178 @@ import datetime, json
 from geopy.distance import vincenty
 from operator import itemgetter, attrgetter, methodcaller
 from taggit.models import Tag
+from django.contrib.auth import authenticate
+from django.core.files import File 
+from PIL import Image
+import urllib
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+from django.contrib.auth.views import password_reset, password_reset_confirm
 
+class PasswordReset(GenericAPIView):
+    permission_classes = (AllowAny,)
+
+    """
+    Calls Django Auth PasswordResetForm save method.
+
+    Accepts the following POST parameters: email
+    Returns the success/fail message.
+    """
+
+    serializer_class = serializers.PasswordResetSerializer
+
+    def post(self, request):
+        # Create a serializer with request.DATA
+        serializer = self.serializer_class(data=request.DATA)
+
+        try:
+            user = User.objects.get(email=request.DATA['email']);
+        except ObjectDoesNotExist:
+            header = {"Access-Control-Expose-Headers": "Error-Message, Error-Type"}
+            header["Error-Type"] = "email"
+            header["Error-Message"] = "No user with this email exists in the system."
+            return Response(headers=header, status=status.HTTP_400_BAD_REQUEST)
+
+        if serializer.is_valid():
+            # Create PasswordResetForm with the serializer
+            reset_form = PasswordResetForm(data=serializer.data)
+
+            if reset_form.is_valid():
+                # Sett some values to trigger the send_email method.
+                opts = {
+                    'use_https': request.is_secure(),
+                    'from_email': getattr(settings, 'DEFAULT_FROM_EMAIL'),
+                    'request': request,
+                }
+
+                reset_form.save(**opts)
+
+                # Return the success message with OK HTTP status
+                return Response(
+                    {"success": "Password reset e-mail has been sent."},
+                    status=status.HTTP_200_OK)
+
+            else:
+                    return Response(reset_form._errors,
+                                    status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
+def reset_confirm(request, uidb64=None, token=None):
+    print uidb64
+    print token
+    return password_reset_confirm(request, uidb64=uidb64, token=token)
 
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
     user = (user_lat, user_lng)
     item = (item_lat, item_lng)
 
     return vincenty(user, item).miles
+
+class CreateNonFacebookVendorView(APIView):
+    permission_classes = (AllowAny,) 
+    serializer_class = serializers.UserRegistrationSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.DATA)
+        user = None
+
+        try:
+            user = User.objects.get(email=serializer.init_data['email'])
+        except ObjectDoesNotExist:
+            print 'No User'
+
+        if user:
+            return Response({'email' : 'This email is already associated with a beLocal account.'}, status=status.HTTP_400_BAD_REQUEST)             
+
+        if serializer.is_valid():
+            user = User.objects.create_user(
+                username=serializer.init_data['username'],
+                first_name=serializer.init_data['first_name'],
+                last_name=serializer.init_data['last_name'],
+                email=serializer.init_data['email'],
+                password=serializer.init_data['password']
+            )
+
+        if user:
+            token, created_token = Token.objects.get_or_create(user=user)
+            vendor = Vendor.objects.create(user=user)
+
+            if(not created_token):
+                return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)
+            
+            # If the user is a newly created vendor, make them inactive.
+            user.is_staff = 1 # make the user a vendor
+            vendor.is_active = False # make the user inactive
+            vendor.save()
+            user.save()
+
+            vendor.company_name = user.username # set this for Carly's UI
+
+            vp = VendorPhoto(image=File(open('../client/app/images/profilePH.jpg')))
+            vp.save()
+            vendor.photo = vp
+
+            vendor.save()
+
+            vendor = Vendor.objects.get(user=user)  
+                
+            vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote       
+            response = {}
+            response = {'id': user.id, 
+                        'is_active' : vendor.is_active, 
+                        'name': user.username, 
+                        'email' : user.email, 
+                        'first_name': user.first_name, 
+                        'last_name': user.last_name, 
+                        'userType': 'VEN',
+                        'vendor' : serializers.VendorSerializer(vendor).data, 
+                        'token': token.key
+            }
+            
+            return Response(response)    
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)     
+
+class CreateNonFacebookCustomerView(APIView):
+    permission_classes = (AllowAny,) 
+    serializer_class = serializers.UserRegistrationSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.DATA)
+        user = None
+
+        try:
+            user = User.objects.get(email=serializer.init_data['email'])
+        except ObjectDoesNotExist:
+            print 'No User'
+
+        if user:
+            return Response({'email' : 'This email is already associated with a beLocal account.'}, status=status.HTTP_400_BAD_REQUEST)   
+
+        if serializer.is_valid():
+            user = User.objects.create_user(
+                username=serializer.init_data['username'],
+                first_name=serializer.init_data['first_name'],
+                last_name=serializer.init_data['last_name'],
+                email=serializer.init_data['email'],
+                password=serializer.init_data['password']
+            )
+
+        if user:
+            token, created_token = Token.objects.get_or_create(user=user)
+
+            if(not created_token):
+                return HttpResponse(status=status.HTTP_304_NOT_MODIFIED)            
+
+            response = {}
+            response = {'id': user.id, 'name': user.username, 'email' : user.email, 'first_name': user.first_name, 'last_name': user.last_name, 'userType': 'CUS', 'token': token.key}
+
+            return Response(response)    
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                            
 
 class LoginView(APIView):
     throttle_classes = ()
@@ -84,7 +249,59 @@ class LoginView(APIView):
                 }                
             return Response(response)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)             
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LoginNoFBView(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AuthTokenSerializer
+ 
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.DATA)
+        user = None
+
+        if serializer.is_valid():
+            user = authenticate(username=request.DATA['username'], password=request.DATA['password'])
+
+        if user:
+            token = Token.objects.get(user=user)
+            response = {}
+            if user.is_staff and not user.is_superuser:
+                vendor = Vendor.objects.get(user=user)
+                vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
+                response = {'id': user.id, 
+                            'is_active' : vendor.is_active, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'VEN', 
+                            'vendor' : serializers.VendorSerializer(vendor).data, 
+                            'token': token.key
+                }
+            elif not user.is_superuser:
+                response = {'id': user.id, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'CUS', 
+                            'token': token.key
+                }
+            else:
+                response = {'id': user.id, 
+                            'name': user.username, 
+                            'email' : user.email, 
+                            'first_name': user.first_name, 
+                            'last_name': user.last_name, 
+                            'userType': 'SUP', 
+                            'token': token.key
+                }                
+            return Response(response)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                        
 
 class CreateVendorView(APIView):
     throttle_classes = ()
@@ -303,15 +520,22 @@ class AddProductView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)   
     serializer_class = serializers.AddProductSerializer  
 
+
     def post(self, request, *args, **kwargs):
         vendor = Vendor.objects.get(user=request.user)
         request.DATA['vendor'] = vendor.id
-        
+
         serializer = serializers.AddProductSerializer(data=request.DATA, partial=True)
        
         if serializer.is_valid():
             current_product = serializer.save()
-            
+
+            if (current_product.photo == None): 
+                pp = ProductPhoto(image=File(open('../client/app/images/productPH.png')))
+                pp.save()
+                current_product.photo = pp  
+                current_product = serializer.save()     
+
             # Save tags if they are provided in the request.
             if type(serializer.data['tags']) is list:                
                 saved_product = Product.objects.get(pk=current_product.pk)

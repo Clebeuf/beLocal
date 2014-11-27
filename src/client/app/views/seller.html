@@ -174,35 +174,45 @@
                     </div>
 
                     <div class="location-details seller-location-details">
-                        <p><b>LOCATION:</b>
-                            {{location.address.addr_line1}},
-                            {{location.address.city}}, 
-                            {{location.address.state}}, 
-                            {{location.address.zipcode}}
-                        </p>
-                        <p ng-show="location.date"><b>DATE:</b>
-                            {{location.date | date:" EEEE',' MMMM d'"}},
-                            {{location.address.hours[0].from_hour}} - 
-                            {{location.address.hours[0].to_hour}}
-                        </p>
-                        <div ng-show="location.date == null" >
-                        <p><b>HOURS:</b>
-                                <ul class="list-inline store-hours">&nbsp
-                                <li ng-repeat="day in location.address.hours">
-                                    <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                                </li>
+                        <span ng-show="location.address">
+                            <p><b>LOCATION:</b>
+                                {{location.address.addr_line1}},
+                                {{location.address.city}}, 
+                                {{location.address.state}}, 
+                                {{location.address.zipcode}}
+                            </p>
+                        </span>
+                        <span ng-show="location.address">
+                            <p ng-show="location.date"><b>DATE:</b>
+                                {{location.date | date:" EEEE',' MMMM d'"}},
+                                {{location.address.hours[0].from_hour}} - 
+                                {{location.address.hours[0].to_hour}}
+                            </p>
 
-                                </ul>
-                        </p>
-                        </div>
+                            <div ng-show="location.date == null" >
+                            <p><b>HOURS:</b>
+                                    <ul class="list-inline store-hours">&nbsp
+                                    <li ng-repeat="day in location.address.hours">
+                                        <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                    </li>
 
-                        <p><b>CONTACT INFORMATION:</b>
-                            {{location.phone}} | {{location.email}}
-                        </p>
+                                    </ul>
+                            </p>
+                            </div>
+                        </span>
 
-                        <p><b>DETAILS:</b>
-                            <span class="indent-after-first-line">{{location.description}}</span>
-                        </p>
+                        <span ng-show="location.email || location.phone">
+                            <p><b>CONTACT INFORMATION:</b>
+                                {{location.phone}}
+                                <span ng-show="location.email && location.phone"> | </span>
+                                {{location.email}}
+                            </p>
+                        </span>
+                        <span ng-show="location.description">
+                            <p class="indent-after-first-line"><b>DETAILS:</b>
+                                <span>{{location.description}}</span>
+                            </p>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -430,7 +440,7 @@
 
 
 <!-- Seller Add/Edit Item Modal -->
-<div class="modal fade" id="itemModal">
+<div class="modal fade " id="itemModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -456,6 +466,9 @@
                                 <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.itemField.$invalid }">
                                     <label for="item-name">Item Name</label>
                                     <input required ng-model="itemName" type="text" name="itemField" class="form-control" id="item-name" placeholder="Item Name" maxlength="40"/>
+                                    <span class="error pull-right" ng-show="newItemSubmitted && itemForm.itemField.$invalid">
+                                        The item's name is required.
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -464,13 +477,17 @@
                                 <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.descriptionField.$invalid }">
                                     <label for="item-name">Item Description</label>
                                     <textarea required ng-model="itemDescription" type="text" name="descriptionField" class="form-control" id="item-name" placeholder="Item Description" maxlength="400"/>
+                                    <span class="error pull-right" ng-show="newItemSubmitted && itemForm.descriptionField.$invalid">
+                                        The item's description is required.
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div ng-hide="isEditingItem" class="form-group">
-                                    <label for="item-name">Item Stock<br></label>
+                                    <label for="item-name" class="no-bottom-margin">Item Stock<br></label>
+                                    <small><br>"In Stock" items will be seen by others using the site while "Out of Stock" items will be hidden. </small>
                                     <div>
                                         <input type="radio" ng-model="newItemStock" name="newItemStock" value="IS"><span class="radio-padding-right"> In Stock</span>
                                         <input type="radio" ng-model="newItemStock" name="newItemStock" value="OOS"> Out of Stock
@@ -480,7 +497,8 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="item-name">Item Category<br></label>
+                                <label for="item-name" class="no-bottom-margin">Item Category<br></label>
+                                <small><br>Please select the category that best fits your product.</small>
                                 <div class="form-group"  ng-class="{ 'has-error' : newItemSubmitted && itemForm.itemCategory.$invalid }">
                                     <select class="form-control" ng-options="category.id as category.name for category in categoryList" ng-model="itemCategory">
                                     </select>
@@ -489,7 +507,8 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="item-name">Tags<br></label>
+                                <label for="item-name" class="no-bottom-margin">Tags<br></label>
+                                <small><br>Please select all tags that meaningfully represent your product.</small>
                                 <div class="row form-group">
                                     <div class="col-sm-4" ng-repeat="tag in tagList">
                                         <label class="checkbox tag-formatting">

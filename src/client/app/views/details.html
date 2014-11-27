@@ -171,7 +171,9 @@
                         <div class="col-xs-12" ng-show="location.phone !== null && location.email !== null">
                             <p class="indent-after-first-line">
                                 <b>CONTACT INFORMATION:</b>
-                                <a href="tel:{{location.phone}}">{{location.phone}}</a> | <a href="mailto:{{location.email}}">{{location.email}}</a>
+                                <a href="tel:{{location.phone}}">{{location.phone}}</a>
+                                <span ng-show="location.email && location.phone"> | </span>
+                                <a href="mailto:{{location.email}}">{{location.email}}</a>
                             </p>
                         </div>
                         <div class="col-xs-12" ng-show="location.description !== null">

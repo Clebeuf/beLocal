@@ -34,6 +34,14 @@
 }
 
 
+#itemModal .has-error input{
+  background-color: rgb(255, 226, 226);
+}
+
+#itemModal .has-error textarea{
+  background-color: rgb(255, 226, 226);
+}
+
 .facebook-button{
   color: white;
   background: #4A65BB;

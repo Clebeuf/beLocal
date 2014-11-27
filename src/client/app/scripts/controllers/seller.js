@@ -760,4 +760,24 @@ angular.module('clientApp')
           }, true);
         }
       }
+  })
+  .directive('phone', function() {
+    // This is a directive to ensure that an input field contains an phone value.
+    var PHONE_REGEX = /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/;    
+    return {
+      require: 'ngModel',
+      link: function(scope, elm, attrs, ctrl) {
+        ctrl.$parsers.unshift(function(viewValue) {
+          if (PHONE_REGEX.test(viewValue)) {
+            // it is valid
+            ctrl.$setValidity('phone', true);
+            return viewValue;
+          } else {
+            // it is invalid, return undefined (no model update)
+            ctrl.$setValidity('phone', false);
+            return undefined;
+          }
+        });
+      }
+    };
   });

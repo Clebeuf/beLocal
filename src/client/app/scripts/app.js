@@ -62,6 +62,13 @@ var app = angular.module('clientApp', [
       controller: 'ManageCtrl',
       authenticate: true,
       css: 'styles/main.css'
+    })
+    .state('aboutUs', {
+      url: '/about-us',
+      templateUrl: 'views/contactus.html',
+      controller: 'ContactusCtrl',
+      authenticate: false,
+      css: 'styles/main.css'
     });
 
     $httpProvider.defaults.headers.patch = {
@@ -141,6 +148,19 @@ app.directive('holderFix', function () {
             Holder.run({ images: element[0], nocss: true });
         }
     };
+});
+
+app.directive('onFinishRender', function ($timeout) {
+  return {
+      restrict: 'A',
+      link: function (scope, element, attr) {
+          if (scope.$last === true) {
+              $timeout(function () {
+                  scope.$emit('ngRepeatFinished');
+              });
+          }
+      }
+  }
 });
 
 app.directive('head', ['$rootScope','$compile',

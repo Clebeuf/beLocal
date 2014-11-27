@@ -12,7 +12,7 @@ angular.module('clientApp')
       templateUrl: 'scripts/directives/footer.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-
+      	scope.emailAddress = "belocal" + "victoria" + "@gmail.com";
 
       }
     };

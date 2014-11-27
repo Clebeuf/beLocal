@@ -1,20 +1,18 @@
-<div class="navbar navbar-default" role="navigation">
-
-
+<div class="navbar navbar-default hidden-xs" role="navigation">
 <!-- TOP PART OF NAVBAR -->
   <div class="container-fluid nav-bar-top">
 
     <div class="pull-right" style="float:left">
       <div ng-hide="AuthService.isAuthenticated()">
         <form name="loginForm" class="navbar-form sign-in-form" role="form" style="float:right">      
-          <button type="submit" ng-click="showLogin()" class="btn btn-primary beLocal-btn">Sign In</button>
+          <button data-toggle="modal" ng-click="clearLoginModal()" data-target="#loginModal" class="btn btn-primary beLocal-btn">Login</button>
         </form>
         <div style="float:right">
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
               <a class="dropdown-toggle pointer">Register <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a class="pointer white-text" ng-click="showCustomerSignUp()">As a Customer</a></li>
+                <li><a class="pointer white-text" ng-click="showCustomerSignUp()">As a Foodie</a></li>
                 <li><a class="pointer white-text" ng-click="showFarmerSignUp()">As a Farmer or Foodmaker</a></li>
               </ul>
             </li>
@@ -28,10 +26,9 @@
           <li class="dropdown">
             <a class="dropdown-toggle pointer">My Account<span class="caret"></span></a>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-              <li><a class="pointer" ng-click="displayAccountPage()">My Store</a></li>
-              <li><a href="#">Account Settings</a></li>            
+              <li><a class="pointer" ng-click="displayAccountPage()">My Profile</a></li>          
               <li class="divider"></li>
-              <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+              <li><a class="pointer" ng-click="AuthService.logout()">Logout</a></li>
             </ul>
           </li>
         </ul>  
@@ -39,7 +36,7 @@
 
       <div ng-show="AuthService.isAuthenticated() && StateService.getUserType() === 'CUS'">
           <ul class="nav navbar-nav navbar-right">
-              <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+              <li><a class="pointer" ng-click="AuthService.logout()">Logout</a></li>
           </ul>  
       </div>      
 
@@ -50,7 +47,7 @@
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
               <li><a class="pointer" ng-click="goToManage()">Manage Vendors</a></li>        
               <li class="divider"></li>
-              <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+              <li><a class="pointer" ng-click="AuthService.logout()">Logout</a></li>
             </ul>
           </li>
         </ul>  
@@ -97,21 +94,6 @@
       <div style="clear:both"></div>
     </div>
   </div>
-
-  <div class="modal fade" id="noValidAccountModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <h4 class="modal-title">No Valid Account</h4>
-        </div>
-        <div class="modal-body">
-          <p>Oops! We couldn't find an beLocal account registered with that Facebook account. Try signing up using the Register button first!</p>
-        </div>
-        <div class="modal-footer no-top-margin">
-          <button type="button" class="btn beLocal-btn-filled" data-dismiss="modal">Close</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
 </div>
+
+<login-modal></login-modal>

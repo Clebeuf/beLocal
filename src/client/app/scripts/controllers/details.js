@@ -92,13 +92,17 @@ angular.module('clientApp')
       });
     };
 
-    $timeout(function() {
-		var container = document.querySelector('#masonry-container');
-		var msnry = new Masonry(container, {
-		  itemSelector: '.ms-item',
-		  columnWidth: '.ms-item'
-		});    
-    }, 1000)
+    $scope.trendingMasonry = function() {
+      $timeout(function() {
+      var container = document.querySelector('#masonry-container');
+      var msnry = new Masonry(container, {
+        itemSelector: '.ms-item',
+        columnWidth: '.ms-item'
+      });    
+      }, 500)
+    };
+
+    $scope.trendingMasonry();
 
   });
 

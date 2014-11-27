@@ -1,37 +1,55 @@
 <!-- NAVBAR -->
-<div class="hidden-xs"><nav-bar></nav-bar></div>
-<div ng-show="showXSNav"><navbar-x-s></navbar-x-s></div>
+<nav-bar></nav-bar>
+<navbar-x-s></navbar-x-s>
 
 <!-- SELLER DETAILS -->
-<div class=" new-formatting-container customer-container">  
+<div class=" customer-container">  
     <div class="row vendor-profile-header">
-        <div class="col-md-5 new-vendor-avatar">
-            <img ng-src="{{vendorDetails.vendor.photo.image_url}}">
-        
-            <div class="col-xs-12 like-button-markets">
-                <div data-toggle="tooltip" style="display:inline-block" data-placement="bottom" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
-                  <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(vendorDetails.vendor, 'vendor')" type="button" class="btn btn-default beLocal-btn-default">
-                    <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : vendorDetails.vendor.is_liked}"></span>
-                    <span ng-hide="vendorDetails.vendor.is_liked">Like</span>
-                    <span ng-show="vendorDetails.vendor.is_liked">Unlike</span>
-                    <span class="like-container" ng-show="vendorDetails.vendor.total_likes > 0">
-                      {{vendorDetails.vendor.total_likes}}
+
+        <div class="col-sm-5 vendor-avatar">
+            <div class="vendor-avatar-img" style="background-image:url({{vendorDetails.vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
+                <!-- <img ng-src="{{vendorDetails.vendor.photo.image_url}}"> -->
+                <div class="col-xs-12">
+                        <span class="pull-right like-button-position" data-toggle="tooltip" style="display:inline-block" data-placement="left" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
+                        <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(vendorDetails.vendor, 'vendor')" type="button" class="btn btn-default beLocal-btn-default">
+                            <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : vendorDetails.vendor.is_liked}"></span>
+                            <span ng-hide="vendorDetails.vendor.is_liked">Like</span>
+                            <span ng-show="vendorDetails.vendor.is_liked">Unlike</span>
+                            <span class="like-button" ng-show="vendorDetails.vendor.total_likes > 0">
+                              {{vendorDetails.vendor.total_likes}}
+                            </span>
+                        </button>
                     </span>
-                  </button>
                 </div>
+
             </div>
+
         </div>
-        <div class="vendor-header-content">
+
+        <div class="col-sm-7 vendor-header-content">
 
             <span class="new-vendor-name-style">
-                {{vendorDetails.vendor.company_name}}<br>
+                {{vendorDetails.vendor.company_name}}
             </span>
-            <span class="new-hr-heading-style">
+            <br>
+            
+            <div class="new-hr-heading-style">
                 <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                     <span class="glyphicon glyphicon-map-marker"></span> {{vendorDetails.vendor.address.city}}, {{vendorDetails.vendor.address.state}} | 
                 </span>
-                <span ng-hide="StateService.getCurrentUser().vendor.webpage == null"><a href="http://{{StateService.getCurrentUser().vendor.webpage}}">Our Website</a> |</span><span ng-hide="vendorDetails.vendor.twitter_url == null"> <a href="{{vendorDetails.vendor.twitter_url">Twitter</a> |</span><span ng-hide="vendorDetails.vendor.facebook_url == null"><a ng-hide="vendorDetails.vendor.facebook_url == null" href="{{vendorDetails.vendor.facebook_url}}"> Facebook</a> |</span><span ng-hide="vendorDetails.vendor.phone == null"> {{vendorDetails.vendor.phone}} |</span>
-            </span>
+                <span ng-hide="vendorDetails.vendor.phone == null"> 
+                    <a href="tel:{{vendorDetails.vendor.phone}}"><span class="glyphicon glyphicon-earphone"></span> {{vendorDetails.vendor.phone}}</a> |
+                </span>
+                <span ng-hide="StateService.getCurrentUser().vendor.webpage == null">
+                    <a href="http://{{StateService.getCurrentUser().vendor.webpage}}" target="_blank">Our Website</a> |
+                </span>
+                <span ng-hide="vendorDetails.vendor.twitter_url == null"> 
+                    <a href="{{vendorDetails.vendor.twitter_url}}" target="_blank">Twitter</a> |
+                </span>
+                <span ng-hide="vendorDetails.vendor.facebook_url == null">
+                    <a href="{{vendorDetails.vendor.facebook_url}}" target="_blank"> Facebook</a> |
+                </span>
+            </div>
             <hr>
             <div class="description-container">
                 {{vendorDetails.vendor.description}}
@@ -44,7 +62,7 @@
     <hr>
     <div class="row">
         <div class="col-xs-12 new-hr-heading-style">
-            SELLING LOCATIONS FOR {{vendorDetails.vendor.company_name | uppercase}}
+            {{vendorDetails.markets.length + vendorDetails.selling_locations.length}} SELLING LOCATION<span ng-show="(vendorDetails.markets.length + vendorDetails.selling_locations.length) != 1">S</span> FOR {{vendorDetails.vendor.company_name | uppercase}}
         </div>
     </div>
     <hr>
@@ -57,7 +75,7 @@
         </div>    
         <div class="col-sm-8">
             <!-- NG-REPEAT FOR MARKETS -->
-            <div class="new-heading-style">
+            <div ng-show="vendorDetails.markets.length != 0" class="new-heading-style">
                     Market Locations
             </div>
             <!-- repeating for each location that seller has in the db -->
@@ -72,8 +90,8 @@
 
                     </div>
 
-                    <div class="location-details">
-                        <div>
+                    <div class="row seller-location-details">
+                        <div class="col-xs-12">
                         <p><b>HOURS:</b>
                                 <ul class="list-inline store-hours">&nbsp
                                     <li ng-repeat="day in location.address.hours">
@@ -82,16 +100,22 @@
                                 </ul>
                         </p>
                         </div>
+                        <div class="col-xs-12">
+
                         <p><b>LOCATION:</b>
+                            <a href="http://maps.google.com/?q={{location.address.latitude}},{{location.address.longitude}}" target="_blank">
                             {{location.address.addr_line1}},
                             {{location.address.city}}, 
                             {{location.address.state}}, 
                             {{location.address.zipcode}}
+                            </a>
                         </p>
-
+                        </div>
+                        <div class="col-xs-12">
                         <p class="indent-after-first-line"><b>DETAILS:</b>
                             {{location.description}}
                         </p>
+                    </div>
                     </div>
                 </div>    
             </div>
@@ -99,12 +123,12 @@
 
 
             <!-- NG-REPEAT FOR CUSTOM LOCATIONS -->
-            <div class="new-heading-style">
+            <div ng-show="vendorDetails.selling_locations.length != 0" class="new-heading-style">
                     Custom Locations
             </div>
             <!-- repeating for each location that seller has in the db -->
             <div ng-repeat="location in vendorDetails.selling_locations | orderBy:'name'" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)" class="container-for-cards">
-                <div class="card-formatting">
+                <div class="card-formatting ">
                     <div class="row">
 
                         <!-- Display the locations name -->
@@ -114,36 +138,47 @@
 
                     </div>
 
-                    <div class="location-details">
-                        <p ng-show="location.date"><b>DATE:</b>
-                            {{location.date | date:" EEEE',' MMMM d'"}},
-                            {{location.address.hours[0].from_hour}} - 
-                            {{location.address.hours[0].to_hour}}
-                        </p>
-                        <div ng-show="location.date == null" >
-                        <p><b>HOURS:</b>
-                                <ul class="list-inline store-hours">&nbsp
-                                <li ng-repeat="day in location.address.hours">
-                                    <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                                </li>
-
-                                </ul>
-                        </p>
+                    <div class="row seller-location-details">
+                        <div class="col-xs-12">
+                            <p ng-show="location.date"><b>DATE:</b>
+                                {{location.date | date:" EEEE',' MMMM d'"}},
+                                {{location.address.hours[0].from_hour}} - 
+                                {{location.address.hours[0].to_hour}}
+                            </p>
                         </div>
-                        <p><b>LOCATION:</b>
-                            {{location.address.addr_line1}},
-                            {{location.address.city}}, 
-                            {{location.address.state}}, 
-                            {{location.address.zipcode}}
-                        </p>
+                        <div class="col-xs-12">
+                            <div ng-show="location.date == null" >
+                            <p><b>HOURS:</b>
+                                    <ul class="list-inline store-hours">&nbsp
+                                    <li ng-repeat="day in location.address.hours">
+                                        <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                    </li>
 
-                        <p><b>CONTACT INFORMATION:</b>
-                            {{location.phone}} | {{location.email}}
-                        </p>
-
-                        <p class="indent-after-first-line"><b>DETAILS:</b>
-                            {{location.description}}
-                        </p>
+                                    </ul>
+                            </p>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <p><b>LOCATION:</b>
+                                <a href="http://maps.google.com/?q={{location.address.latitude}},{{location.address.longitude}}" target="_blank">
+                                {{location.address.addr_line1}},
+                                {{location.address.city}}, 
+                                {{location.address.state}}, 
+                                {{location.address.zipcode}}
+                            </a>
+                            </p>
+                        </div>
+                        <div class="col-xs-12">
+                            <p class="indent-after-first-line">
+                                <b>CONTACT INFORMATION:</b>
+                                <a href="tel:{{location.phone}}">{{location.phone}}</a> | <a href="mailto:{{location.email}}">{{location.email}}</a>
+                            </p>
+                        </div>
+                        <div class="col-xs-12">
+                            <p class="indent-after-first-line"><b>DETAILS:</b>
+                                {{location.description}}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -153,27 +188,26 @@
 
 	<br>
 
+
 <!--Display Seller's Inventory-->
-    <hr>
-    <div class="row">
-        <div class="col-xs-9 new-hr-heading-style">
-            {{vendorDetails.products.length}} PRODUCT<span ng-hide="vendorDetails.products.length === 1">S</span>
+    <div ng-hide="vendorDetails.products.length == 0">
+        <hr>
+        <div class="row">
+            <div class="col-xs-9 new-hr-heading-style">
+                {{vendorDetails.products.length}} PRODUCT<span ng-hide="vendorDetails.products.length === 1">S</span> SOLD BY {{vendorDetails.vendor.company_name | uppercase}}
+            </div>
+        </div>
+        <hr>
+        <br>
+
+        <div class="row" style="padding-top:5px" id="masonry-container">
+            <div class="col-trending ms-item col-lg-3 col-md-4 col-xs-6" ng-repeat="item in vendorDetails.products" >
+              <product-card data="item"></product-card>
+            </div>
         </div>
     </div>
-    <hr>
+</div>
 
-
-    <div class="new-heading-style">
-            Sample Heading
-    </div>
-
-	<div class="row" id="masonry-container card-formatting">
-		<div class="container-for-cards">
-	        <div class="ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in vendorDetails.products" >
-	          <product-card data="item"></product-card>
-	        </div>
-	    </div>
-	</div>
 </div>
 <!-- INJECTING FOOTER.HTML -->
 <footer></footer>

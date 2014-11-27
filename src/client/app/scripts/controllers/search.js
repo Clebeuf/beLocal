@@ -25,6 +25,17 @@ angular.module('clientApp')
           }
         };
 
+        $scope.updateCategoryDropdown = function() {
+          $scope.getAllProducts('tag');      
+          if($scope.dropdownCategory.name === 'All Products') {
+            $scope.getAllProducts('category');
+            $scope.dropdownCategory = $scope.dropdownCategoryList[0];
+          }
+          else {
+            $scope.getProductsWithCategory($scope.dropdownCategory);
+          }
+        }        
+
         $scope.checkNav = function() {
           if(angular.element($window).scrollTop() > 140 || angular.element($window).width() < 768) {
             $scope.safeApply(function() {
@@ -49,11 +60,42 @@ angular.module('clientApp')
 
         angular.element($window).scroll(function(){
             $scope.checkNav();        
-        });         
+        }); 
+
+        $scope.instantTrendingMasonry = function() {
+          $timeout(function() {
+          var container = document.querySelector('#masonry-container');
+          var msnry = new Masonry(container, {
+            itemSelector: '.ms-item',
+            columnWidth: '.ms-item'
+          });    
+          })
+        };
+
+        $scope.trendingMasonry = function() {
+          $timeout(function() {
+          var container = document.querySelector('#masonry-container');
+          var msnry = new Masonry(container, {
+            itemSelector: '.ms-item',
+            columnWidth: '.ms-item'
+          });    
+          }, 500)
+        };
+
+        $scope.marketMasonry = function() {
+          $timeout(function() {        
+            var container = document.querySelector('#masonry-market-container');
+            var msnry = new Masonry(container, {
+              itemSelector: '.ms-market-item',
+              columnWidth: '.ms-market-item'
+            });    
+          }, 500);
+        };                
 
         $scope.doProductSearch = function(query) {
             StateService.doProductSearch(query).then(function(response) {
                 $scope.productResults = response.data;
+                $scope.trendingMasonry();
             });
         }
 
@@ -75,6 +117,7 @@ angular.module('clientApp')
         $scope.doMarketSearch = function(query) {
             StateService.doMarketSearch(query).then(function(response) {
                 $scope.marketResults = response.data;
+                $scope.marketMasonry();                
             });
         }         
 
@@ -102,6 +145,12 @@ angular.module('clientApp')
         
         StateService.getCategories().then(function() {
           $scope.categoryList = StateService.getCategoryList();
+          $scope.dropdownCategoryList = [];
+          $scope.dropdownCategoryList.push({'name' : 'All Products'});
+          for(var i = 0; i < $scope.categoryList.length; i++) {
+            $scope.dropdownCategoryList.push($scope.categoryList[i]);
+          }
+          $scope.dropdownCategory = $scope.dropdownCategoryList[0];      
         });
 
         $scope.setProductFilter = function() {
@@ -160,6 +209,12 @@ angular.module('clientApp')
         $scope.getProductsWithCategory = function(category) {
             $scope.showCategory = true;
             $scope.selectedCategory = category.name;
+            for(var i = 0; i < $scope.dropdownCategoryList.length; i++) {
+              if($scope.dropdownCategoryList[i].id === category.id) {
+                $scope.dropdownCategory = $scope.dropdownCategoryList[i];
+                break;
+              }
+            }            
             $scope.setProductFilter();
             //$scope.instantTrendingMasonry();
         }
@@ -168,6 +223,7 @@ angular.module('clientApp')
             if (resetSelection.match('category')) {
               $scope.showCategory = false;
               $scope.selectedCategory = 'All Products';      
+              $scope.dropdownCategory = $scope.dropdownCategoryList[0];              
             } 
             else if (resetSelection.match('tag')) {
               $scope.showTag = false;

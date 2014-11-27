@@ -18,12 +18,14 @@ angular.module('clientApp')
     $scope.locationResults = {};
     $scope.locationType = 'true';
     $scope.currentUser = StateService.getCurrentUser();
-    $scope.facebookChecked = true;
+    $scope.facebookChecked = false;
     $scope.twitterChecked = false;
     $scope.sellingToday = false;
     $scope.currentUser = {};
     angular.copy(StateService.getCurrentUser(), $scope.currentUser);
     $scope.isCreatingCustomLocation = false;
+    $scope.showInactiveAlert = true;
+    $scope.showXSNav = true;
 
     var geocoder = new google.maps.Geocoder();
 
@@ -40,7 +42,6 @@ angular.module('clientApp')
 
     StateService.retrieveUpdatedCurrentUser().then(function(response){
         StateService.setProfileVendor(response.data);
-        console.log(response.data);
         $scope.isCurrentUserActive = response.data.is_active;
     });
 
@@ -69,6 +70,10 @@ angular.module('clientApp')
     StateService.getCategories().then(function() {
       $scope.categoryList = StateService.getCategoryList();
     });
+
+    $scope.hideInactiveAlert = function() {
+        $scope.showInactiveAlert = false;
+    }
 
     $scope.doCustomLocation = function() {
         $scope.isCreatingCustomLocation = true;
@@ -137,7 +142,7 @@ angular.module('clientApp')
 
     $scope.generateFacebookString = function() {
         var company_name = $scope.currentUser.vendor.company_name !== undefined ? $scope.currentUser.vendor.company_name : $scope.currentUser.name;
-        $scope.facebookString = company_name + ' is selling at the following locations today:\n\n';
+        $scope.facebookString = company_name + ' is selling at the following locations today:\n';
 
         // GENERATE LOCATIONS
         for(var i = 0; i < $scope.sellerLocations.length; i++) {
@@ -165,7 +170,7 @@ angular.module('clientApp')
         }
 
         // GENERATE ITEMS  
-        $scope.facebookString += '\nSome of the items we will be selling today include the following:\n\n';
+        $scope.facebookString += '\nSome of the items we will be selling today include the following:\n';
         for(var i = 0; i < $scope.sellerItems.length; i++) {
             var si = $scope.sellerItems[i];
             if(si.stock === "IS")
@@ -216,6 +221,8 @@ angular.module('clientApp')
 
     $scope.vendorProfileUpdate = function() {
         $scope.vendorProfileUpdated = true;
+        $scope.currentUser.vendor.address.addr_line1 = 'unknown';
+        $scope.currentUser.vendor.address.zipcode = 'unknown';
         if($scope.profileForm.$valid) {
             angular.element('#profileModal').modal('hide');
             console.log($scope.currentUser);
@@ -358,7 +365,6 @@ angular.module('clientApp')
 
         $timeout(function() {
         var e = angular.element('#item-image');
-        console.log(e);
         e.wrap('<form>').closest('form').get(0).reset();
         e.unwrap();
         })
@@ -371,7 +377,6 @@ angular.module('clientApp')
             $scope.tagList[counter].checked = undefined;
           } 
         }
-        console.log("clear tags: %o", $scope.tagList);
     }
 
     $scope.editItem = function(item) {
@@ -539,6 +544,8 @@ angular.module('clientApp')
         })
     }
 
+
+
     $scope.leaveMarket = function(market) {
         var data = {
             'market_id' : market.id,
@@ -642,13 +649,13 @@ angular.module('clientApp')
         } else {
             angular.element('#locationModal').modal('hide');             
             var data = {
-                'market_id' : $scope.newLocationMarket,
+                'market_id' : $scope.newLocationMarket.id,
             };
 
             StateService.joinMarket(data).then(function() {
                 StateService.getAvailableMarkets().then(function() {
                     if(StateService.getAvailableMarketList().length > 0)
-                        $scope.newLocationMarket = StateService.getAvailableMarketList()[0].id;
+                        $scope.newLocationMarket = StateService.getAvailableMarketList()[0];
                 });                
                 $scope.getMarketLocations();
             })

@@ -23,6 +23,17 @@ angular.module('clientApp')
       }
     };
 
+    $scope.updateCategoryDropdown = function() {
+      $scope.getAllProducts('tag');      
+      if($scope.dropdownCategory.name === 'All Products') {
+        $scope.getAllProducts('category');
+        $scope.dropdownCategory = $scope.dropdownCategoryList[0];
+      }
+      else {
+        $scope.getProductsWithCategory($scope.dropdownCategory);
+      }
+    }
+
     $scope.checkNav = function() {
       if(angular.element($window).scrollTop() > 140 || angular.element($window).width() < 768) {
         $scope.safeApply(function() {
@@ -155,6 +166,12 @@ angular.module('clientApp')
     
     StateService.getCategories().then(function() {
       $scope.categoryList = StateService.getCategoryList();
+      $scope.dropdownCategoryList = [];
+      $scope.dropdownCategoryList.push({'name' : 'All Products'});
+      for(var i = 0; i < $scope.categoryList.length; i++) {
+        $scope.dropdownCategoryList.push($scope.categoryList[i]);
+      }
+      $scope.dropdownCategory = $scope.dropdownCategoryList[0];      
     });
     
     $scope.goToVendorDetails = function(vendorID){
@@ -169,11 +186,15 @@ angular.module('clientApp')
       angular.element('#productDetailsModal').modal('hide');
 
     }
+
+    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent, repeatId) {
+      $scope.trendingMasonry();  
+    });
    
+ /*
     StateService.getUserPosition().then(function() {
         StateService.getTrendingProducts().then(function() {
           $scope.trendingProducts = StateService.getTrendingProductsList();
-          $scope.trendingMasonry();
         });
         StateService.getVendors().then(function() {
           $scope.vendors = StateService.getVendorsList();
@@ -181,6 +202,17 @@ angular.module('clientApp')
           $rootScope.$broadcast('forceRefreshMap');
         });        
     });
+*/
+
+  StateService.getTrendingProducts().then(function() {
+    $scope.trendingProducts = StateService.getTrendingProductsList();
+    $scope.trendingMasonry();
+  });
+  StateService.getVendors().then(function() {
+    $scope.vendors = StateService.getVendorsList();
+    $rootScope.$broadcast('generateMapPins');
+    $rootScope.$broadcast('forceRefreshMap');
+  })
 
   StateService.getMarkets().then(function() {
     $scope.marketList = StateService.getMarketList();
@@ -192,6 +224,12 @@ angular.module('clientApp')
   $scope.getProductsWithCategory = function(category) {
     $scope.showCategory = true;
     $scope.selectedCategory = category.name;
+    for(var i = 0; i < $scope.dropdownCategoryList.length; i++) {
+      if($scope.dropdownCategoryList[i].id === category.id) {
+        $scope.dropdownCategory = $scope.dropdownCategoryList[i];
+        break;
+      }
+    }
     $scope.setProductFilter();
     $scope.instantTrendingMasonry();
   }
@@ -199,7 +237,8 @@ angular.module('clientApp')
   $scope.getAllProducts = function(resetSelection) {  
     if (resetSelection.match('category')) {
       $scope.showCategory = false;
-      $scope.selectedCategory = 'All Products';      
+      $scope.selectedCategory = 'All Products'; 
+      $scope.dropdownCategory = $scope.dropdownCategoryList[0];     
     } 
     else if (resetSelection.match('tag')) {
       $scope.showTag = false;

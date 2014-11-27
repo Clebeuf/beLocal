@@ -8,7 +8,7 @@ html {
       rgba(0, 0, 0, 0.5), 
       rgba(0, 0, 0, 0.5)
     ), 
-    url('/images/splashpage2.jpg') 
+    url('/images/splashpage.jpg') 
     no-repeat center center fixed !important;
     background-size: cover !important;
 
@@ -327,3 +327,12 @@ body {
     font-size: 25px !important;
 }
 
+.fb-button-break {
+  display: none;
+}
+
+@media (max-width: 546px){
+  .fb-button-break {
+    display: inline;
+  }
+}

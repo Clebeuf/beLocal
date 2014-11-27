@@ -4,7 +4,7 @@
 
         <div class="row">
               <div class="col-sm-12 like-button-container">
-                <div data-toggle="tooltip" style="display:inline-block" data-placement="bottom" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
+                <div data-toggle="tooltip" style="display:inline-block" data-placement="left" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
                   <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(market, 'market')" type="button" class="btn btn-default beLocal-btn-default">
                     <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : market.is_liked}"></span>
                     <span ng-hide="market.is_liked">Like</span>
@@ -21,8 +21,13 @@
         <div class="col-sm-12">
           <h4 class="no-bottom-margin no-top-margin"><a ng-click="displayMarket(market.id)" class="pointer vendor-card-name">{{market.name}}</a></h4>
           <div class="container-display-vendor-name">
-            <span class="glyphicon glyphicon-map-marker"></span>
-            {{market.address.addr_line1}}, {{market.address.city}}, {{market.address.state}}           
+            <a href="http://maps.google.com/?q={{market.address.latitude}},{{market.address.longitude}}" target="_blank">
+              <span class="glyphicon glyphicon-map-marker"></span>
+              {{market.address.addr_line1}}, {{market.address.city}}, {{market.address.state}}
+            </a>           
+            <div ng-hide="openString">
+              <strong><span class='glyphicon glyphicon-time'></span>&nbsp;Closed for the season</span></strong>
+            </div>
             <div class="" ng-bind-html="openString"></div>
           </div>
         </div>

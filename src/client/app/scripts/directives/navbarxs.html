@@ -1,8 +1,11 @@
-<div class="navbar navbar-xs navbar-fixed-top navbar-default" role="navigation">
+<div ng-show="showXSNav" class="navbar navbar-xs navbar-fixed-top navbar-default" role="navigation">
   <div class="container-fluid nav-padding">
     <div class="navbar-header">
 
-      <a class="pointer navbar-brand" ng-click="reloadMainPage()"><img src="/images/logo-simple.png"></a>
+      <a class="pointer navbar-brand" ng-click="reloadMainPage()">
+        <span class="full-logo"><img src="/images/logo-simple.png"></span>
+        <span class="small-logo"><img src="favicon.png"></span>
+      </a>
 
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
@@ -30,13 +33,13 @@
 
       <div ng-hide="AuthService.isAuthenticated()">
         <form name="loginForm" class="navbar-form navbar-right sign-in-form" role="form">      
-          <button type="submit" ng-click="showLogin()" class="btn btn-primary beLocal-btn">Sign In</button>
+          <button data-toggle="modal" ng-click="clearLoginModal()" data-target="#loginModal" class="btn btn-primary beLocal-btn">Login</button>
         </form>
         <ul class="nav navbar-nav navbar-right">
           <li class="dropdown">
             <a class="dropdown-toggle pointer">Register <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-              <li><a class="pointer" ng-click="showCustomerSignUp()">As a Customer</a></li>
+              <li><a class="pointer" ng-click="showCustomerSignUp()">As a Foodie</a></li>
               <li><a class="pointer" ng-click="showFarmerSignUp()">As a Farmer or Foodmaker</a></li>
             </ul>
           </li>
@@ -57,10 +60,9 @@
             <li class="dropdown">
               <a class="dropdown-toggle pointer">My Account<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a class="pointer" ng-click="displayAccountPage()">My Store</a></li>
-                <li><a href="#">Account Settings</a></li>            
+                <li><a class="pointer" ng-click="displayAccountPage()">My Profile</a></li>           
                 <li class="divider"></li>
-                <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+                <li><a class="pointer" ng-click="AuthService.logout()">Logout</a></li>
               </ul>
             </li>
           </ul>  
@@ -68,7 +70,7 @@
 
       <div ng-show="AuthService.isAuthenticated() && StateService.getUserType() === 'CUS'">
           <ul class="nav navbar-nav navbar-right">
-              <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+              <li><a class="pointer" ng-click="AuthService.logout()">Logout</a></li>
           </ul>  
       </div>      
 
@@ -79,16 +81,14 @@
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
               <li><a class="pointer" ng-click="goToManage()">Manage Vendors</a></li>        
               <li class="divider"></li>
-              <li><a class="pointer" ng-click="AuthService.logout()">Sign Out</a></li>
+              <li><a class="pointer" ng-click="AuthService.logout()">Logout</a></li>
             </ul>
           </li>
         </ul>  
       </div>        
 
     </div>
-
-
-
-    </div>
   </div>
 </div>
+
+<login-modal></login-modal>

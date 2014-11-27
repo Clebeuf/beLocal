@@ -487,7 +487,7 @@
                             <div class="col-sm-12">
                                 <div ng-hide="isEditingItem" class="form-group">
                                     <label for="item-name" class="no-bottom-margin">Item Stock<br></label>
-                                    <small><br>"In Stock" items will be seen by others using the site while "Out of Stock" items will be hidden. </small>
+                                    <small><br>"In Stock" items will be seen by others using the site, while "Out of Stock" items will be hidden. </small>
                                     <div>
                                         <input type="radio" ng-model="newItemStock" name="newItemStock" value="IS"><span class="radio-padding-right"> In Stock</span>
                                         <input type="radio" ng-model="newItemStock" name="newItemStock" value="OOS"> Out of Stock
@@ -647,7 +647,7 @@
                                           <div class="form-group" ng-class="{ 'has-error' : (locationForm.addressText.$invalid ) && newLocationSubmitted }">
                                             <label class="control-label">Address</label>
                                             <input type="text" autocomplete="off" name="addressText" typeahead="result.formatted_address for result in getLocation($viewValue)" typeahead-on-select="makeSelection($item)" class="form-control" ng-model="addressSearchText" placeholder="Search for an Address" required>
-                                            <span class="error pull-right" ng-show="newLocationSubmitted && locationForm.addressText.$invalid">
+                                            <span class="error pull-right" ng-show="newLocationSubmitted && (locationForm.addressText.$invalid || locationAddress === undefined || locationCity === undefined || locationProvince === undefined || locationCountry === undefined || locationPostalCode === undefined || latitude === undefined || longitude === undefined)">
                                                 Address is not vaild.
                                             </span>
                                           </div>

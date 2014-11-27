@@ -119,7 +119,13 @@
 
                     </div>
 
-                    <div class="location-details">
+                    <div class="location-details seller-location-details">
+                        <p><b>LOCATION:</b>
+                            {{location.address.addr_line1}},
+                            {{location.address.city}}, 
+                            {{location.address.state}}, 
+                            {{location.address.zipcode}}
+                        </p>
                         <p><b>HOURS:</b>
                                 <ul class="list-inline store-hours">&nbsp
                                 <li ng-repeat="day in location.address.hours">
@@ -128,15 +134,9 @@
 
                                 </ul>
                         </p>
-                        <p><b>LOCATION:</b>
-                            {{location.address.addr_line1}},
-                            {{location.address.city}}, 
-                            {{location.address.state}}, 
-                            {{location.address.zipcode}}
-                        </p>
 
-                        <p><b>DETAILS:</b>
-                            {{location.description}}
+                       <p class="indent-after-first-line"><b>DETAILS:</b>
+                             {{location.description}}
                         </p>
                     </div>    
                 </div>
@@ -173,7 +173,13 @@
 
                     </div>
 
-                    <div class="location-details">
+                    <div class="location-details seller-location-details">
+                        <p><b>LOCATION:</b>
+                            {{location.address.addr_line1}},
+                            {{location.address.city}}, 
+                            {{location.address.state}}, 
+                            {{location.address.zipcode}}
+                        </p>
                         <p ng-show="location.date"><b>DATE:</b>
                             {{location.date | date:" EEEE',' MMMM d'"}},
                             {{location.address.hours[0].from_hour}} - 
@@ -189,19 +195,13 @@
                                 </ul>
                         </p>
                         </div>
-                        <p><b>LOCATION:</b>
-                            {{location.address.addr_line1}},
-                            {{location.address.city}}, 
-                            {{location.address.state}}, 
-                            {{location.address.zipcode}}
-                        </p>
 
                         <p><b>CONTACT INFORMATION:</b>
                             {{location.phone}} | {{location.email}}
                         </p>
 
                         <p><b>DETAILS:</b>
-                            {{location.description}}
+                            <span class="indent-after-first-line">{{location.description}}</span>
                         </p>
                     </div>
                 </div>
@@ -668,8 +668,11 @@
                                         <!-- 
                                         <p>{{newLocationMarket.name}} Details:</p> -->
 
+                                        <br>
+                                        <p>
+                                            <b>Details for {{newLocationMarket.name}}:</b>
+                                        </p>
                                         <p class="indent">
-                                            <br>
                                             <b>Address:</b>
                                             <br>
                                             <span class="store-hours">
@@ -683,7 +686,7 @@
                                         <ul class="list-inline store-hours indent">&nbsp
                                             <li ng-repeat="day in newLocationMarket.address.hours">
                                                 <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                                            </li>2
+                                            </li>
                                         </ul>
                                     </div>
 

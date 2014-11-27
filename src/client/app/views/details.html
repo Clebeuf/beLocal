@@ -1,6 +1,6 @@
 <!-- NAVBAR -->
-<nav-bar></nav-bar>
-<navbar-x-s></navbar-x-s>
+<div class="hidden-xs"><nav-bar></nav-bar></div>
+<div ng-show="showXSNav"><navbar-x-s></navbar-x-s></div>
 
 <!-- SELLER DETAILS -->
 <div class=" customer-container">  
@@ -74,6 +74,8 @@
             </div>
         </div>    
         <div class="col-sm-8">
+
+
             <!-- NG-REPEAT FOR MARKETS -->
             <div ng-show="vendorDetails.markets.length != 0" class="new-heading-style">
                     Market Locations
@@ -85,11 +87,20 @@
 
                         <!-- Display the locations name -->
                         <div class="col-xs-12 card-lable-style">
-                            {{location.name}}
+                            <span class="pointer underline-hover" ng-click="displayMarket(location.id)">{{location.name}}</span>
                         </div>
 
                     </div>
-
+                    <div class="col-xs-12 seller-location-details">
+                        <p><b>LOCATION:</b>
+                            <a href="http://maps.google.com/?q={{location.address.latitude}},{{location.address.longitude}}" target="_blank">
+                            {{location.address.addr_line1}},
+                            {{location.address.city}}, 
+                            {{location.address.state}}, 
+                            {{location.address.zipcode}}
+                            </a>
+                        </p>
+                    </div>
                     <div class="row seller-location-details">
                         <div class="col-xs-12">
                         <p><b>HOURS:</b>
@@ -100,22 +111,11 @@
                                 </ul>
                         </p>
                         </div>
-                        <div class="col-xs-12">
-
-                        <p><b>LOCATION:</b>
-                            <a href="http://maps.google.com/?q={{location.address.latitude}},{{location.address.longitude}}" target="_blank">
-                            {{location.address.addr_line1}},
-                            {{location.address.city}}, 
-                            {{location.address.state}}, 
-                            {{location.address.zipcode}}
-                            </a>
-                        </p>
-                        </div>
-                        <div class="col-xs-12">
-                        <p class="indent-after-first-line"><b>DETAILS:</b>
-                            {{location.description}}
-                        </p>
-                    </div>
+                        <!-- <div class="col-xs-12">
+                            <p class="indent-after-first-line"><b>DETAILS:</b>
+                                {{location.description}}
+                            </p>
+                        </div> -->
                     </div>
                 </div>    
             </div>
@@ -146,19 +146,7 @@
                                 {{location.address.hours[0].to_hour}}
                             </p>
                         </div>
-                        <div class="col-xs-12">
-                            <div ng-show="location.date == null" >
-                            <p><b>HOURS:</b>
-                                    <ul class="list-inline store-hours">&nbsp
-                                    <li ng-repeat="day in location.address.hours">
-                                        <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                                    </li>
-
-                                    </ul>
-                            </p>
-                            </div>
-                        </div>
-                        <div class="col-xs-12">
+                        <div class="col-xs-12" ng-show="location.address !== null">
                             <p><b>LOCATION:</b>
                                 <a href="http://maps.google.com/?q={{location.address.latitude}},{{location.address.longitude}}" target="_blank">
                                 {{location.address.addr_line1}},
@@ -169,12 +157,24 @@
                             </p>
                         </div>
                         <div class="col-xs-12">
+                            <div ng-hide="location.date">
+                            <p><b>HOURS:</b>
+                                    <ul class="list-inline store-hours">&nbsp
+                                    <li ng-repeat="day in location.address.hours">
+                                        <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                    </li>
+
+                                    </ul>
+                            </p>
+                            </div>
+                        </div>
+                        <div class="col-xs-12" ng-show="location.phone !== null && location.email !== null">
                             <p class="indent-after-first-line">
                                 <b>CONTACT INFORMATION:</b>
                                 <a href="tel:{{location.phone}}">{{location.phone}}</a> | <a href="mailto:{{location.email}}">{{location.email}}</a>
                             </p>
                         </div>
-                        <div class="col-xs-12">
+                        <div class="col-xs-12" ng-show="location.description !== null">
                             <p class="indent-after-first-line"><b>DETAILS:</b>
                                 {{location.description}}
                             </p>

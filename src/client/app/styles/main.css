@@ -9,6 +9,10 @@
   padding-left: 5px;
 }
 
+.underline-hover:hover {
+  text-decoration: underline;
+}
+
 .profile-modal input.ng-invalid {
   background-color: rgb(255, 226, 226);
 }

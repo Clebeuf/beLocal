@@ -78,7 +78,7 @@ class ProductPhoto(models.Model):
 
         path = str(self.image.path)
         img = Image.open(path)
-        img.thumbnail((600, 400), Image.ANTIALIAS)
+        img.thumbnail((800, 600), Image.ANTIALIAS)
         img.save(path)
 
     

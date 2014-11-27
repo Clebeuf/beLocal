@@ -1,7 +1,6 @@
 {{object.company_name}}
 {{object.phone}}
 {{object.webpage}}
-{{object.address.addr_line1}}
 {{object.address.city}}
 {{object.address.state}}
 {{object.address.zipcode}}

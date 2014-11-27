@@ -20,7 +20,6 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 class VendorIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     company_name = indexes.NgramField(model_attr='company_name', null=True)
-    addr_line1 = indexes.NgramField(model_attr='address__addr_line1', null=True)
     city = indexes.NgramField(model_attr='address__city', null=True)
     state = indexes.NgramField(model_attr='address__state', null=True)
     country = indexes.NgramField(model_attr='address__country', null=True)

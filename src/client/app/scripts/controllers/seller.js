@@ -26,6 +26,7 @@ angular.module('clientApp')
     $scope.isCreatingCustomLocation = false;
     $scope.showInactiveAlert = true;
     $scope.profileImage = '';
+    $scope.profileImageCoords = [];
     $scope.showXSNav = true;
 
     var geocoder = new google.maps.Geocoder();
@@ -184,11 +185,6 @@ angular.module('clientApp')
         var e = angular.element('#profile-image');
         e.wrap('<form>').closest('form').get(0).reset();
         e.unwrap();
-
-        $scope.displayProfileThumbnail = $scope.currentUser.vendor.photo ? true : false;
-
-        if($scope.displayProfileThumbnail)
-            angular.element('#profilePreview').attr('src', $scope.currentUser.vendor.photo.image_url).width(50).height(50);
     }
 
     $scope.generateSocialStrings = function() {
@@ -226,7 +222,6 @@ angular.module('clientApp')
         $scope.currentUser.vendor.address.zipcode = 'unknown';
         if($scope.profileForm.$valid) {
             angular.element('#profileModal').modal('hide');
-            console.log($scope.currentUser);
             if($scope.currentUser.vendor.photo.id)
                 $scope.currentUser.vendor.photo = $scope.currentUser.vendor.photo.id;
             StateService.updateCurrentUser($scope.currentUser).then(function(result) {
@@ -484,26 +479,6 @@ angular.module('clientApp')
         });
     }
 
-    $scope.profileFileNameChanged = function(file) {
-
-        if (file && file[0]) {
-            var reader = new FileReader();
-            $scope.displayItemThumbnail = true;
-            reader.onload = function(e) {
-                angular.element('#profilePreview')
-                .attr('src', e.target.result)
-                .width(50)
-                .height(50);             
-            };
-            reader.readAsDataURL(file[0]);
-        }
-
-        StateService.uploadProfileFile(file[0])
-        .success(function(response) {
-            $scope.currentUser.vendor.photo = response.id;
-        });
-    }    
-
     $scope.roundTimeToNearestFive = function(date) {
       var coeff = 1000 * 60 * 5;
       return new Date(Math.round(date.getTime() / coeff) * coeff);
@@ -746,11 +721,17 @@ angular.module('clientApp')
                 });
             };
             reader.readAsDataURL(file[0]);
+            //cloning and replacing the file input element with itself in order to clear it
+            //this is because the onchange event doesn't get triggered if the user selects the
+            //same file as last time.
+            angular.element('#profile-image').replaceWith(angular.element('#profile-image').clone(true));
+            angular.element('#profileImageModal').modal('show');
         }
     };
 
     $scope.selected = function(x) {
-    	console.log("selected",x);
+    	$scope.profileImageCoords = [x.x, x.y, x.x2, x.y2];
+    	console.log($scope.profileImageCoords);
   	};
 
   	$scope.triggerImageSelect = function () {
@@ -758,6 +739,20 @@ angular.module('clientApp')
 		    angular.element('#profile-image').trigger('click');
 		  }, 100);
 		};
+
+		$scope.uploadProfileImage = function() {
+			if($scope.profileImage){
+        StateService.uploadProfileFile($scope.profileImage, $scope.profileImageCoords, $scope.currentUser.vendor.id)
+        .success(function(response) {
+        		$scope.displayItemThumbnail = true;
+            $scope.currentUser.vendor.photo = response.id;
+            angular.element('#vendorProfileImage').css({
+            	'background-image': 'url(' + response.image_url +')'
+        		});
+            angular.element('#profileImageModal').modal('hide');
+        });
+      }
+		}
 
     $scope.init = function() {
         $scope.getSellerLocations();

@@ -34,6 +34,10 @@ import urllib
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.contrib.auth.views import password_reset, password_reset_confirm
+import StringIO
+from base64 import b64decode
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 class PasswordReset(GenericAPIView):
     permission_classes = (AllowAny,)
@@ -696,8 +700,31 @@ class AddVendorPhotoView(generics.CreateAPIView):
     """
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,) 
-    serializer_class = serializers.VendorPhotoSerializer
-    model = VendorPhoto
+    
+    def post(self, request):
+        error = '{"error":"Required attributes not provided"}'
+        coords = json.loads(request.DATA["coords"])
+        vendor = Vendor.objects.get(pk = request.DATA["vendorId"])
+        if coords and len(coords) == 4:
+            imgData = request.DATA["image"].split(',')[1]
+            imgContent = ContentFile(b64decode(imgData))
+            img = Image.open(imgContent)
+            tempFile = img.crop((
+                int(round(coords[0])),
+                int(round(coords[1])),
+                int(round(coords[2])),
+                int(round(coords[3]))))
+            tempFileIo = StringIO.StringIO()
+            tempFile.save(tempFileIo, format='png')
+            imgFile = InMemoryUploadedFile(tempFileIo, None, vendor.company_name + '.png', 'image/png', tempFileIo.len, None)
+            vendorPhoto = VendorPhoto(image=imgFile)
+            vendorPhoto.save()
+            vendor.photo = vendorPhoto
+            vendor.save()
+            return Response(data = serializers.VendorPhotoPathSerializer(vendorPhoto).data,
+                            status=status.HTTP_200_OK)
+        return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
+
     
 class RWDProductPhotoView(generics.RetrieveUpdateDestroyAPIView):
     """

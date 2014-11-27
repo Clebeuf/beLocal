@@ -153,7 +153,7 @@ import djcelery
 djcelery.setup_loader()
 
 # Celery Configuration 
-CELERY_IMPORTS = ("tasks", )
+CELERY_IMPORTS = ("be_local_server.tasks", )
 CELERY_ALWAYS_EAGER = True
 
 # Internationalization

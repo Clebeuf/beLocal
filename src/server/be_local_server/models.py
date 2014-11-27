@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch.dispatcher import receiver
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
@@ -8,7 +10,6 @@ from taggit.managers import TaggableManager
 from taggit.models import GenericTaggedItemBase, TagBase
 import secretballot
 from PIL import Image, ImageOps
-
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -152,3 +153,15 @@ class OpeningHours(models.Model):
             if day[0] == self.weekday:
                 return day[1]    
 
+# Auto-delete image files when not needed
+@receiver(models.signals.post_delete)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """Deletes image file from filesystem
+    when corresponding `MediaFile` object is deleted.
+    """
+    if sender not in [ProductPhoto, VendorPhoto, MarketPhoto]:
+        return
+    
+    if instance.image:
+        if os.path.isfile(instance.image.path):
+            os.remove(instance.image.path)

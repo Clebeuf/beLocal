@@ -310,6 +310,7 @@
                                     <label for="profile-image">Change Profile Image</label><br />
                                     <img src="#" id="profilePreview" />
                                     <input required onchange="angular.element(this).scope().profileFileNameChanged(this.files)" name="imageField" type="file" id="profile-image">
+                                    <p ng-show="profileImageError != null" class="help-block"><small style="color: #a94442;" >{{profileImageError}}</small></p>                                    
                                 </div>
                             </div>
                         </div>
@@ -431,6 +432,7 @@
                                     <label ng-show="isEditingItem" for="item-image">Change Image</label><br />
                                     <img ng-show="displayItemThumbnail" src="#" id="itemPreview" />                                    
                                     <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
+                                    <p ng-show="productImageError != null" class="help-block"><small style="color: #a94442;" >{{productImageError}}</small></p>                                      
                                 </div>
                             </div>
                         </div>

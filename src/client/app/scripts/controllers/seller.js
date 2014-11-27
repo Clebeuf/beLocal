@@ -179,6 +179,7 @@ angular.module('clientApp')
     }
 
     $scope.editProfile = function() {
+        $scope.profileImageError = undefined;
 
         var e = angular.element('#profile-image');
         e.wrap('<form>').closest('form').get(0).reset();
@@ -223,7 +224,7 @@ angular.module('clientApp')
         $scope.vendorProfileUpdated = true;
         $scope.currentUser.vendor.address.addr_line1 = 'unknown';
         $scope.currentUser.vendor.address.zipcode = 'unknown';
-        if($scope.profileForm.$valid) {
+        if($scope.profileForm.$valid && !$scope.profileImageError) {
             angular.element('#profileModal').modal('hide');
             console.log($scope.currentUser);
             if($scope.currentUser.vendor.photo.id)
@@ -352,7 +353,8 @@ angular.module('clientApp')
         $scope.locationDescription  = location.description;
     }
 
-    $scope.resetItemModal = function() {       
+    $scope.resetItemModal = function() {
+        $scope.productImageError = undefined;       
         $scope.submitItemButtonText = "Add Item"; 
         $scope.isEditingItem = false;
         $scope.newItemSubmitted = false;
@@ -480,6 +482,11 @@ angular.module('clientApp')
         StateService.uploadFile(file[0])
         .success(function(response) {
             $scope.newImageID = response.id;
+        })
+        .error(function(response) {
+          if(response.image) {
+            $scope.productImageError = response.image[0];
+          }         
         });
     }
 
@@ -500,6 +507,11 @@ angular.module('clientApp')
         StateService.uploadProfileFile(file[0])
         .success(function(response) {
             $scope.currentUser.vendor.photo = response.id;
+        })
+        .error(function(response) {
+          if(response.image) {
+            $scope.profileImageError = response.image[0];
+          }         
         });
     }    
 
@@ -561,7 +573,7 @@ angular.module('clientApp')
 
     $scope.newItemSubmit = function() {
         $scope.newItemSubmitted = true;
-        if($scope.itemForm.$valid) {
+        if($scope.itemForm.$valid && !$scope.productImageError) {
             angular.element('#itemModal').modal('hide');
 
             /* tags*/

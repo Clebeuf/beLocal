@@ -542,7 +542,7 @@
                                         <div class="form-group">
                                           <label>Date:</label>                      
                                           <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.dateField.$invalid }">
-                                            <input required type="text" name="dateField" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="locationDate" is-open="opened" min="minDate" max="'2015-06-22'" close-text="Close" />
+                                            <input required type="text" name="dateField" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="locationDate" is-open="opened" min-date="minDate" max-date="'2015-06-22'" close-text="Close" />
                                             <span class="input-group-btn">
                                               <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                             </span>                       

@@ -413,6 +413,7 @@
 }
 
 .vendor-card-name {
+  word-wrap: break-word !important;
   color: #000;
   font-family: 'Libre Baskerville', serif;
   font-weight: bolder;

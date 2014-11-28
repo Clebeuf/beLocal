@@ -7,6 +7,18 @@
                     <div class="col-sm-5 responsive-center">
                         <div class="thumbnail vendor-card-photo">
                             <img class="" ng-src="{{product.photo.image_url}}" />
+                            <div class="row">
+                                <div class="col-xs-12 product-modal-like-button-container">
+                                    <button ng-disabled="likeDisabled" ng-click="likeUnlikeItem(product, 'product')" type="button" class="btn btn-default beLocal-btn-default">
+                                        <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : product.is_liked}"></span>
+                                        <span ng-hide="product.is_liked">Like</span>
+                                        <span ng-show="product.is_liked">Unlike</span>
+                                        <span class="like-container" ng-show="product.total_likes > 0">
+                                          {{product.total_likes}}
+                                        </span>
+                                    </button>  
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-7">

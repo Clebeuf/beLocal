@@ -179,20 +179,20 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 ng-show="signUpAsVendor" class="modal-title">Sign Up as a Farmer or Foodmaker<br /><small>Please complete the following fields to register as a farmer or foodmaker.</small></h4>
-                <h4 ng-hide="signUpAsVendor" class="modal-title">Sign Up as a Foodie<br /><small>Please complete the following fields to register as a foodie.</small></h4>
+                <h4 ng-show="registerAsVendor" class="modal-title">Sign Up as a Farmer or Foodmaker<br /><small>Please complete the following fields to register as a farmer or foodmaker.</small></h4>
+                <h4 ng-hide="registerAsVendor" class="modal-title">Sign Up as a Foodie<br /><small>Please complete the following fields to register as a foodie.</small></h4>
             </div>
             <div class="modal-body">  
                 <div class="container-fluid">
-                    <span class="center">
-                        <span ng-show="signUpAsVendor">
-                            <a ng-click="signUpAsVendor()" style="margin-right: 10px;" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square"></i> Sign Up With Facebook</a>
+                    <div class="center">
+                        <span ng-show="registerAsVendor" >
+                            <a ng-click="signUpAsVendor()" class="btn btn-lg facebook-button center"><i class="fa fa-facebook-square"></i> Sign Up With Facebook</a>
                         </span>
-                        <span ng-hide="signUpAsVendor">
-                            <a ng-click="signUpAsCustomer()" style="margin-right: 10px;" class="btn btn-lg facebook-button"><i class="fa fa-facebook-square"></i> Sign Up With Facebook</a>
+                        <span ng-hide="registerAsVendor">
+                            <a ng-click="signUpAsCustomer()" class="btn btn-lg facebook-button center"><i class="fa fa-facebook-square"></i> Sign Up With Facebook</a>
                         </span>
                         <hr>
-                    </span>
+                    </div>
 
                     <form role="form" name="newUserForm" novalidate>
                         <div class="row">

@@ -40,11 +40,11 @@ angular.module('clientApp')
   	}
 
     $scope.signUpAsVendorNoFB = function() {
-      $scope.signUpAsVendor = true;
+      $scope.registerAsVendor = true;
     }
 
     $scope.signUpAsCustomerNoFB = function() {
-      $scope.signUpAsVendor = false;
+      $scope.registerAsVendor = false;
     }
 
   	$scope.getStarted = function() {

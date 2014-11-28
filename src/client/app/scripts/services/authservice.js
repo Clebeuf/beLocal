@@ -86,6 +86,7 @@ angular.module('clientApp')
       ipCookie.remove('beLocalBypass');
       delete $http.defaults.headers.common.Authorization;
       StateService.clearCurrentUser();
+      OAuth.clearCache('facebook');      
     }
 
     this.createCustomer = function() {

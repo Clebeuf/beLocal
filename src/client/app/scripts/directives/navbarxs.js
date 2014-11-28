@@ -81,12 +81,12 @@ angular.module('clientApp')
 
         $scope.showCustomerSignUp = function() {
             $location.path('/welcome');
-            $location.hash('customers');
+            $location.hash('foodies');
         }
 
         $scope.showFarmerSignUp = function() {
             $location.path('/welcome');
-            $location.hash('vendors');
+            $location.hash('farmers');
         }  
 
         $scope.displayAccountPage = function() {

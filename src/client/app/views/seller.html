@@ -13,7 +13,7 @@
 
 
         <div class="col-sm-5 vendor-avatar">
-            <div class="vendor-avatar-img pointer" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal" style="background-image:url({{StateService.getCurrentUser().vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
+            <div class="vendor-avatar-img pointer" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal" ng-style="{'background-image': 'url('+StateService.getCurrentUser().vendor.photo.image_url+')'}" style="background-size: cover; background-repeat: no-repeat; background-position: center;">
                 <div ng-hide="StateService.getCurrentUser().vendor.photo.image_url != null" class="center" style="color:#ffffff;">
                 </div>
             </div>
@@ -310,6 +310,7 @@
                                     <label for="profile-image">Change Profile Image</label><br />
                                     <img src="#" id="profilePreview" />
                                     <input required onchange="angular.element(this).scope().profileFileNameChanged(this.files)" name="imageField" type="file" id="profile-image">
+                                    <p ng-show="profileImageError != null" class="help-block"><small style="color: #a94442;" >{{profileImageError}}</small></p>                                    
                                 </div>
                             </div>
                         </div>
@@ -324,8 +325,10 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="form-group">
-                                    <label for="company-description">Company Phone Number</label>
-                                    <input ng-model="currentUser.vendor.phone" type="text" name="number" class="form-control" id="company-description" placeholder="Optional Phone Number" maxlength="20"/>
+                                    <div class="form-group" ng-class="{ 'has-error' : profileForm.number.$invalid }">
+                                        <label for="company-description">Company Phone Number</label>
+                                        <input phone ng-model="currentUser.vendor.phone" type="text" name="number" class="form-control" id="company-description" placeholder="Optional Phone Number" maxlength="20"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -429,6 +432,7 @@
                                     <label ng-show="isEditingItem" for="item-image">Change Image</label><br />
                                     <img ng-show="displayItemThumbnail" src="#" id="itemPreview" />                                    
                                     <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
+                                    <p ng-show="productImageError != null" class="help-block"><small style="color: #a94442;" >{{productImageError}}</small></p>                                      
                                 </div>
                             </div>
                         </div>
@@ -540,7 +544,7 @@
                                         <div class="form-group">
                                           <label>Date:</label>                      
                                           <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.dateField.$invalid }">
-                                            <input required type="text" name="dateField" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="locationDate" is-open="opened" min="minDate" max="'2015-06-22'" close-text="Close" />
+                                            <input required type="text" name="dateField" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="locationDate" is-open="opened" min-date="minDate" max-date="'2015-06-22'" close-text="Close" />
                                             <span class="input-group-btn">
                                               <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                             </span>                       
@@ -613,7 +617,7 @@
                                     <div class="col-xs-6 col-md-6" ng-class="{'has-error': newLocationSubmitted && locationForm.phoneField.$invalid}">
                                         <div class="form-group">
                                             <label class="control-label">Phone Number</label>
-                                            <input required ng-model="phoneAtLocation" type="text" class="form-control" id="item-name" name="phoneField" placeholder="Phone Number" maxlength="20"/>
+                                            <input phone required ng-model="phoneAtLocation" type="text" class="form-control" id="item-name" name="phoneField" placeholder="Phone Number" maxlength="20"/>
                                         </div>
                                     </div>
                                     <div class="col-xs-6 col-md-6">

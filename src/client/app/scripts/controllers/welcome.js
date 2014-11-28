@@ -26,7 +26,7 @@ angular.module('clientApp')
   	$scope.signUpAsCustomer = function() {
   		AuthService.createCustomer().then(function(status) {
   			if(status === 304) {
-				angular.element('#accountExistsModal').modal('show'); 				
+          $scope.accountAlreadyCreated = true;
   			}
   		});
   	}
@@ -34,16 +34,18 @@ angular.module('clientApp')
   	$scope.signUpAsVendor = function() {
   		AuthService.createVendor().then(function(status) {
   			if(status === 304) {
-				angular.element('#accountExistsModal').modal('show'); 				
+          $scope.accountAlreadyCreated = true;          
   			}
   		});
   	}
 
     $scope.signUpAsVendorNoFB = function() {
+      $scope.accountAlreadyCreated = false;
       $scope.registerAsVendor = true;
     }
 
     $scope.signUpAsCustomerNoFB = function() {
+      $scope.accountAlreadyCreated = false;
       $scope.registerAsVendor = false;
     }
 

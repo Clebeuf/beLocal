@@ -156,23 +156,6 @@
 
 <login-modal></login-modal>
 
-<div class="modal fade" id="accountExistsModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title">Account Already Created</h4>
-      </div>
-      <div class="modal-body">
-        <p>Oops! It looks like this Facebook account already has a beLocal account associated with it. Try signing in instead!</p>
-      </div>
-      <div class="modal-footer no-top-margin">
-        <button type="button" class="btn beLocal-btn-filled" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
 <!-- Create User Modal -->
 <div class="modal fade" id="createUserModal">
     <div class="modal-dialog">
@@ -191,6 +174,7 @@
                         <span ng-hide="registerAsVendor">
                             <a ng-click="signUpAsCustomer()" class="btn btn-lg facebook-button center"><i class="fa fa-facebook-square"></i> Sign Up With Facebook</a>
                         </span>
+                        <p ng-show="accountAlreadyCreated"><small style="color: #a94442;">Oops! It looks like this Facebook account already has a beLocal account associated with it. Try signing in instead!</small></p>                        
                         <hr>
                     </div>
 

@@ -407,10 +407,11 @@ class MarketDetailsView(generics.CreateAPIView):
 
 class VendorDetailsView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
+    authentication_classes = (TokenAuthentication,)    
 
     def post(self, request, *args, **kwargs):
         vendor = Vendor.objects.get(pk=request.DATA["id"])
-        if(vendor.is_active == True):
+        if(vendor.is_active == True or request.user.is_superuser):
             locations = SellerLocation.objects.filter(vendor=vendor)
             products = Product.objects.filter(vendor=vendor, stock="IS")
             markets = Market.objects.filter(vendors=vendor)

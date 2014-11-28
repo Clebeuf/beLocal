@@ -4,11 +4,24 @@ angular.module('clientApp')
   .controller('WelcomeCtrl', function ($scope, AuthService, StateService, $location, ipCookie, $timeout, $http) {
   	$scope.AuthService = AuthService;
 
+    $scope.scrollTo = function(id) {
+        angular.element('html, body').animate({
+            scrollTop: angular.element(id).offset().top
+        }, 1250);
+    }
+
   	var url = document.location.toString();
-  	if (url.match('#')) {
-  	    angular.element('.masthead-nav a[href="/welcome\/#'+url.split('#')[2]+'"]').tab('show');
-  	    $location.hash('');
+  	if (url.split('#')[2]) {
+  	    // angular.element('.masthead-nav a[href="/welcome\/#'+url.split('#')[2]+'"]').tab('show');
+        $timeout(function(){
+  	      $scope.scrollTo('#' + url.split('#')[2]);
+          $location.hash('');
+        }, 250);
   	}
+
+    $scope.$watch('window.innerWidth', function() {
+            console.log(window.innerWidth);
+        });
 
   	$scope.signUpAsCustomer = function() {
   		AuthService.createCustomer().then(function(status) {

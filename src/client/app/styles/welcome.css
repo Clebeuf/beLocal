@@ -256,6 +256,10 @@ a:hover {
   .button-container {
     margin-top: 70px;
   }
+
+  .text-content {
+  max-width: 75%;
+}
 }
 
 

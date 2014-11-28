@@ -153,6 +153,7 @@ a:hover {
 
 .btn {
     text-shadow: 0 0px 0px rgba(0,0,0,0) !important;
+    white-space: normal !important;
 }
 
 .tab-buttons {

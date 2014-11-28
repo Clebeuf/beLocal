@@ -164,7 +164,6 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
     
     if instance.image:
         if os.path.isfile(instance.image.path):
-            print "removing image file"
             os.remove(instance.image.path)
 
 @receiver(models.signals.pre_save)
@@ -186,5 +185,4 @@ def auto_delete_file_on_change(sender, instance,**kwargs):
     if old_photo is not None:
         new_photo = instance.photo    
         if not old_photo.pk == new_photo.pk:
-            print "deleting photo too."
             old_photo.delete()

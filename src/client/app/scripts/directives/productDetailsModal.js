@@ -7,6 +7,12 @@ angular.module('clientApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
 
+        if (StateService.getCurrentUser() === undefined) {
+          scope.likeDisabled = true;
+        } else {
+          scope.likeDisabled = false;
+        }        
+
       	scope.redirectTagFilter = function(tagName) {
       	  StateService.setTagToDisplay(tagName);
 	      	angular.element('#productDetailsModal').on('hidden.bs.modal', function(e) {

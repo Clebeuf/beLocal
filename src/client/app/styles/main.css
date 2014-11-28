@@ -412,6 +412,13 @@
   border-bottom: 0px;
 }
 
+.product-modal-like-button-container {
+  top: -40px;
+  right: 6px;
+  height: 1px;
+  text-align: right;
+}
+
 .vendor-card-name {
   word-wrap: break-word !important;
   color: #000;

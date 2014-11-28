@@ -116,9 +116,9 @@ class SellerLocation(TrashableMixin, models.Model):
     name = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    email = models.CharField(max_length=50)
-    phone = models.CharField(max_length=25)
-    description = models.CharField(max_length=800)
+    email = models.CharField(max_length=50, blank=True, null=True)
+    phone = models.CharField(max_length=25, blank=True, null=True)
+    description = models.CharField(max_length=800, blank=True, null=True)
 
 class MarketPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='markets', blank=True)

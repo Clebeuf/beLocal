@@ -88,14 +88,14 @@ class VendorSerializer(serializers.ModelSerializer):
     is_liked = serializers.IntegerField()
   
     class Meta:
-    		model = be_local_server.models.Vendor
-    		fields = ( 	'id',	
-    	      'user',
-    		  'company_name',
-    		  'webpage',
-    		  'country_code',
-    		  'phone',
-    		  'extension',
+        model = be_local_server.models.Vendor
+        fields = (  'id', 
+              'user',
+              'company_name',
+              'webpage',
+              'country_code',
+              'phone',
+              'extension',
               'photo',
               'address',
               'description',
@@ -104,7 +104,7 @@ class VendorSerializer(serializers.ModelSerializer):
               'facebook_url',
               'twitter_url',
               'is_active',
-    		)
+        )
 
 class EditVendorSerializer(serializers.ModelSerializer):
     address = AddressSerializer()
@@ -170,9 +170,9 @@ class PhotoPathSerializer(serializers.ModelSerializer):
         fields = ('id', 'image_url',)
 
 class ProductPhotoSerializer(serializers.ModelSerializer):
-    class Meta:
-    	model = be_local_server.models.ProductPhoto
-        fields = ('id', 'image')      
+  class Meta:
+      model = be_local_server.models.ProductPhoto
+      fields = ('id', 'image')
 
 class AddSellerLocationSerializer(serializers.ModelSerializer):
     address = OpeningHoursSerializer() 

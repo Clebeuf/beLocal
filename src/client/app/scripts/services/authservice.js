@@ -117,7 +117,6 @@ angular.module('clientApp')
     this.createNonFacebookVendor = function(vendor) {
       var loginPromise = $http({method:'POST', url: 'http://54.69.172.241:8000/vendor/no-fb-create/', data: vendor});  
       loginPromise.success(function(result) {
-          console.log(result);
           if(result.token) {
             ipCookie('beLocalToken', result.token, {expires: 14});
             ipCookie('beLocalUser', result, {expires: 14});

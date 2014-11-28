@@ -50,6 +50,8 @@ INSTALLED_APPS = (
     'undelete',
     'taggit',
     'secretballot',
+    'kombu.transport.django',
+    'djcelery',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -144,6 +146,16 @@ SOCIAL_AUTH_STRATEGY = 'social.strategies.django_strategy.DjangoStrategy'
 SOCIAL_AUTH_FACEBOOK_KEY = '1527244884188403'
 SOCIAL_AUTH_FACEBOOK_SECRET = '7109a4dec448f9f8298d0859dca07682'
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_about_me', 'user_birthday', 'user_location']
+
+# Celery integration with Django
+BROKER_URL = "django://" # tell kombu to use the Django database as the message queue
+
+import djcelery
+djcelery.setup_loader()
+
+# Celery Configuration 
+CELERY_IMPORTS = ("be_local_server.tasks", )
+CELERY_ALWAYS_EAGER = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

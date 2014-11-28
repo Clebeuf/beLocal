@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('DetailsCtrl', function ($scope, $timeout, $stateParams, StateService, $rootScope, $window) {
+  .controller('DetailsCtrl', function ($scope, $timeout, $stateParams, StateService, $rootScope, $window, $location) {
 
     StateService.setVendorToDisplay($stateParams.vendorid);
 
@@ -27,6 +27,10 @@ angular.module('clientApp')
         })
       }        
     }
+
+    $scope.displayMarket = function (id) {
+      $location.path('market/details/'+id);
+    };
 
     if(angular.element($window).width() < 768) {
       $scope.safeApply(function() {

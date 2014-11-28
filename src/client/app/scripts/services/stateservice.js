@@ -286,9 +286,6 @@ angular.module('clientApp')
         headers: {'Content-Type' : undefined},
         transformRequest: angular.identity,
       })
-      .error(function(data) {
-        console.log('Error uploading image.');
-      });
     };
 
     this.uploadProfileFile = function(file) {
@@ -297,9 +294,6 @@ angular.module('clientApp')
       return $http.post(this.getServerAddress() + 'vendor/photo/add/', fd, {
         headers: {'Content-Type' : undefined},
         transformRequest: angular.identity,
-      })
-      .error(function(data) {
-        console.log('Error uploading image.');
       })
     };    
 

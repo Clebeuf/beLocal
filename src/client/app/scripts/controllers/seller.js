@@ -179,6 +179,7 @@ angular.module('clientApp')
     }
 
     $scope.editProfile = function() {
+        $scope.profileImageError = undefined;
 
         var e = angular.element('#profile-image');
         e.wrap('<form>').closest('form').get(0).reset();
@@ -223,7 +224,7 @@ angular.module('clientApp')
         $scope.vendorProfileUpdated = true;
         $scope.currentUser.vendor.address.addr_line1 = 'unknown';
         $scope.currentUser.vendor.address.zipcode = 'unknown';
-        if($scope.profileForm.$valid) {
+        if($scope.profileForm.$valid && !$scope.profileImageError) {
             angular.element('#profileModal').modal('hide');
             console.log($scope.currentUser);
             if($scope.currentUser.vendor.photo.id)
@@ -352,7 +353,8 @@ angular.module('clientApp')
         $scope.locationDescription  = location.description;
     }
 
-    $scope.resetItemModal = function() {       
+    $scope.resetItemModal = function() {
+        $scope.productImageError = undefined;       
         $scope.submitItemButtonText = "Add Item"; 
         $scope.isEditingItem = false;
         $scope.newItemSubmitted = false;
@@ -464,7 +466,8 @@ angular.module('clientApp')
     }
 
     $scope.fileNameChanged = function(file) {
-
+        $scope.productImageError = undefined;
+        
         if (file && file[0]) {
             var reader = new FileReader();
             $scope.displayItemThumbnail = true;
@@ -480,10 +483,16 @@ angular.module('clientApp')
         StateService.uploadFile(file[0])
         .success(function(response) {
             $scope.newImageID = response.id;
+        })
+        .error(function(response) {
+          if(response.image) {
+            $scope.productImageError = response.image[0];
+          }         
         });
     }
 
     $scope.profileFileNameChanged = function(file) {
+        $scope.profileImageError = undefined;
 
         if (file && file[0]) {
             var reader = new FileReader();
@@ -500,6 +509,11 @@ angular.module('clientApp')
         StateService.uploadProfileFile(file[0])
         .success(function(response) {
             $scope.currentUser.vendor.photo = response.id;
+        })
+        .error(function(response) {
+          if(response.image) {
+            $scope.profileImageError = response.image[0];
+          }         
         });
     }    
 
@@ -561,7 +575,7 @@ angular.module('clientApp')
 
     $scope.newItemSubmit = function() {
         $scope.newItemSubmitted = true;
-        if($scope.itemForm.$valid) {
+        if($scope.itemForm.$valid && !$scope.productImageError) {
             angular.element('#itemModal').modal('hide');
 
             /* tags*/
@@ -590,11 +604,48 @@ angular.module('clientApp')
         }
     }
 
+    $scope.checkAddress = function() {
+      var errorString = 'Please select an address with a ';
+      if($scope.locationAddress === undefined)
+        errorString += 'street number, ';
+      if($scope.locationCity === undefined)
+        errorString +=  'city, ';
+      if($scope.locationProvince === undefined)
+        errorString +=  'province, ';
+      if($scope.locationCountry === undefined)
+        errorString +=  'country, ';
+      if($scope.locationPostalCode === undefined)
+        errorString +=  'postal code ';
+
+      errorString = errorString.trim();
+
+      if(errorString.lastIndexOf(',') === errorString.length - 1) {
+        errorString = errorString.substr(0, errorString.length - 1);
+      }
+
+      if(errorString === 'Please select an address with a') {
+        errorString = undefined;
+        return errorString;
+      }
+
+      var andIndex = errorString.lastIndexOf(',');
+
+      if(andIndex !== -1){
+        var str1 = errorString.substr(0, andIndex + 1);
+        var str2 = errorString.substr(andIndex + 1, errorString.length - 1);
+        errorString = str1 + ' and' + str2;        
+      }
+
+      $scope.locationForm.addressText.$setValidity('required', false);
+      return errorString;
+    }
+
     $scope.newLocationSubmit = function() {       
         $scope.newLocationSubmitted = true;
+        $scope.addressErrorString = $scope.checkAddress();
 
         if($scope.isCreatingCustomLocation) {
-            if($scope.locationForm.$valid) {  
+            if($scope.locationForm.$valid && $scope.addressErrorString === undefined) {  
                 angular.element('#locationModal').modal('hide'); 
                 var hours = [];
 
@@ -760,4 +811,24 @@ angular.module('clientApp')
           }, true);
         }
       }
+  })
+  .directive('phone', function() {
+    // This is a directive to ensure that an input field contains an phone value.
+    var PHONE_REGEX = /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/;    
+    return {
+      require: 'ngModel',
+      link: function(scope, elm, attrs, ctrl) {
+        ctrl.$parsers.unshift(function(viewValue) {
+          if (viewValue === "" || PHONE_REGEX.test(viewValue)) {
+            // it is valid
+            ctrl.$setValidity('phone', true);
+            return viewValue;
+          } else {
+            // it is invalid, return undefined (no model update)
+            ctrl.$setValidity('phone', false);
+            return undefined;
+          }
+        });
+      }
+    };
   });

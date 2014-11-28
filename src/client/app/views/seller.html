@@ -647,8 +647,8 @@
                                           <div class="form-group" ng-class="{ 'has-error' : (locationForm.addressText.$invalid ) && newLocationSubmitted }">
                                             <label class="control-label">Address</label>
                                             <input type="text" autocomplete="off" name="addressText" typeahead="result.formatted_address for result in getLocation($viewValue)" typeahead-on-select="makeSelection($item)" class="form-control" ng-model="addressSearchText" placeholder="Search for an Address" required>
-                                            <span class="error pull-right" ng-show="newLocationSubmitted && (locationForm.addressText.$invalid || locationAddress === undefined || locationCity === undefined || locationProvince === undefined || locationCountry === undefined || locationPostalCode === undefined || latitude === undefined || longitude === undefined)">
-                                                Address is not vaild.
+                                            <span class="error pull-right" ng-show="newLocationSubmitted && locationForm.addressText.$invalid">
+                                                Address is not valid. {{addressErrorString}}.
                                             </span>
                                           </div>
                                     </div>                                                                                               

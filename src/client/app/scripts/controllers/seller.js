@@ -590,11 +590,48 @@ angular.module('clientApp')
         }
     }
 
+    $scope.checkAddress = function() {
+      var errorString = 'Please select an address with a ';
+      if($scope.locationAddress === undefined)
+        errorString += 'street number, ';
+      if($scope.locationCity === undefined)
+        errorString +=  'city, ';
+      if($scope.locationProvince === undefined)
+        errorString +=  'province, ';
+      if($scope.locationCountry === undefined)
+        errorString +=  'country, ';
+      if($scope.locationPostalCode === undefined)
+        errorString +=  'postal code ';
+
+      errorString = errorString.trim();
+
+      if(errorString.lastIndexOf(',') === errorString.length - 1) {
+        errorString = errorString.substr(0, errorString.length - 1);
+      }
+
+      if(errorString === 'Please select an address with a') {
+        errorString = undefined;
+        return errorString;
+      }
+
+      var andIndex = errorString.lastIndexOf(',');
+
+      if(andIndex !== -1){
+        var str1 = errorString.substr(0, andIndex + 1);
+        var str2 = errorString.substr(andIndex + 1, errorString.length - 1);
+        errorString = str1 + ' and' + str2;        
+      }
+
+      $scope.locationForm.addressText.$setValidity('required', false);
+      return errorString;
+    }
+
     $scope.newLocationSubmit = function() {       
         $scope.newLocationSubmitted = true;
+        $scope.addressErrorString = $scope.checkAddress();
 
         if($scope.isCreatingCustomLocation) {
-            if($scope.locationForm.$valid) {  
+            if($scope.locationForm.$valid && $scope.addressErrorString === undefined) {  
                 angular.element('#locationModal').modal('hide'); 
                 var hours = [];
 

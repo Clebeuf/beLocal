@@ -15,7 +15,7 @@
                             <span class="glyphicon glyphicon-heart like-button" ng-class="{'like-button-liked' : vendorDetails.vendor.is_liked}"></span>
                             <span ng-hide="vendorDetails.vendor.is_liked">Like</span>
                             <span ng-show="vendorDetails.vendor.is_liked">Unlike</span>
-                            <span class="like-button" ng-show="vendorDetails.vendor.total_likes > 0">
+                            <span class="like-container" ng-show="vendorDetails.vendor.total_likes > 0">
                               {{vendorDetails.vendor.total_likes}}
                             </span>
                         </button>

@@ -68,9 +68,11 @@
     <hr>
 
     <div class="row">
-        <div class="col-sm-4">
-            <div class="map-container">
-                <div class="bl-map" be-local-map locations="vendorDetails.selling_locations" markets="vendorDetails.markets"></div>
+        <div ng-hide="vendorDetails.markets.length == 0 && vendorDetails.selling_locations.length == 0">    
+            <div class="col-sm-4">
+                <div class="map-container">
+                    <div class="bl-map" be-local-map locations="vendorDetails.selling_locations" markets="vendorDetails.markets"></div>
+                </div>
             </div>
         </div>    
         <div class="col-sm-8">

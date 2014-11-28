@@ -40,7 +40,15 @@ angular.module('clientApp')
 
         google.maps.event.addListener(map, 'click', function() {
           $scope.closeAllBubbles();
-        });        
+        }); 
+
+        google.maps.event.addListener(map, 'bounds_changed', function(event) {
+            if (this.getZoom() > 16) {
+                // Change max/min zoom here
+                this.setZoom(16);
+                this.initialZoom = false;
+            }
+        });
 
         $scope.$on('generateMapPins', function() {
           $timeout(function() {

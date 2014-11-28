@@ -1021,11 +1021,10 @@ class SearchVendorView(generics.ListAPIView):
         city = sqs.filter(city=srch)
         state = sqs.filter(state=srch)
         zipcode = sqs.filter(zipcode=srch)
-        addr = sqs.filter(addr_line1=srch)
         country = sqs.filter(country=srch)
         country_code = sqs.filter(country_code=srch)
 
-        results = company | phone | webpage | city | state | zipcode | addr | country | country_code
+        results = company | phone | webpage | city | state | zipcode | country | country_code
         
         vendors = []
 

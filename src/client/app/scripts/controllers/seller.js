@@ -181,6 +181,7 @@ angular.module('clientApp')
     }
 
     $scope.editProfile = function() {
+        $scope.profileImageError = undefined;
 
         var e = angular.element('#profile-image');
         e.wrap('<form>').closest('form').get(0).reset();
@@ -220,7 +221,7 @@ angular.module('clientApp')
         $scope.vendorProfileUpdated = true;
         $scope.currentUser.vendor.address.addr_line1 = 'unknown';
         $scope.currentUser.vendor.address.zipcode = 'unknown';
-        if($scope.profileForm.$valid) {
+        if($scope.profileForm.$valid && !$scope.profileImageError) {
             angular.element('#profileModal').modal('hide');
             if($scope.currentUser.vendor.photo.id)
                 $scope.currentUser.vendor.photo = $scope.currentUser.vendor.photo.id;
@@ -348,7 +349,8 @@ angular.module('clientApp')
         $scope.locationDescription  = location.description;
     }
 
-    $scope.resetItemModal = function() {       
+    $scope.resetItemModal = function() {
+        $scope.productImageError = undefined;       
         $scope.submitItemButtonText = "Add Item"; 
         $scope.isEditingItem = false;
         $scope.newItemSubmitted = false;
@@ -476,9 +478,14 @@ angular.module('clientApp')
         StateService.uploadFile(file[0])
         .success(function(response) {
             $scope.newImageID = response.id;
+        })
+        .error(function(response) {
+          if(response.image) {
+            $scope.productImageError = response.image[0];
+          }         
         });
     }
-
+    
     $scope.roundTimeToNearestFive = function(date) {
       var coeff = 1000 * 60 * 5;
       return new Date(Math.round(date.getTime() / coeff) * coeff);
@@ -537,7 +544,7 @@ angular.module('clientApp')
 
     $scope.newItemSubmit = function() {
         $scope.newItemSubmitted = true;
-        if($scope.itemForm.$valid) {
+        if($scope.itemForm.$valid && !$scope.productImageError) {
             angular.element('#itemModal').modal('hide');
 
             /* tags*/
@@ -824,4 +831,24 @@ angular.module('clientApp')
 	    return function(url) {
 	        return $sce.trustAsResourceUrl(url);
 	    };
-    }]);
+    }])
+  .directive('phone', function() {
+    // This is a directive to ensure that an input field contains an phone value.
+    var PHONE_REGEX = /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/;    
+    return {
+      require: 'ngModel',
+      link: function(scope, elm, attrs, ctrl) {
+        ctrl.$parsers.unshift(function(viewValue) {
+          if (PHONE_REGEX.test(viewValue)) {
+            // it is valid
+            ctrl.$setValidity('phone', true);
+            return viewValue;
+          } else {
+            // it is invalid, return undefined (no model update)
+            ctrl.$setValidity('phone', false);
+            return undefined;
+          }
+        });
+      }
+    };
+  });

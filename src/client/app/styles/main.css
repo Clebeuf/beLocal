@@ -1617,3 +1617,7 @@ hr {
   display: inline-block;
 }
 
+.featured-image {
+  max-height:60px;
+}
+

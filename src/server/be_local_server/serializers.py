@@ -172,7 +172,7 @@ class PhotoPathSerializer(serializers.ModelSerializer):
 class ProductPhotoSerializer(serializers.ModelSerializer):
   class Meta:
       model = be_local_server.models.ProductPhoto
-      fields = ('id', 'image')      
+      fields = ('id', 'image')
 
 class AddSellerLocationSerializer(serializers.ModelSerializer):
     address = OpeningHoursSerializer() 
@@ -275,7 +275,7 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
     vendor = BusinessVendorSerializer() 
     photo = PhotoPathSerializer()
     total_likes = serializers.IntegerField(source='vote_total') 
-    is_liked = serializers.IntegerField()
+    is_liked = serializers.IntegerField(blank=True)
     tags = TagListSerializer(blank=True)
     category = CategorySerializer(blank=True)
     

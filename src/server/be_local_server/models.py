@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch.dispatcher import receiver
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
@@ -8,7 +10,6 @@ from taggit.managers import TaggableManager
 from taggit.models import GenericTaggedItemBase, TagBase
 import secretballot
 from PIL import Image, ImageOps
-
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -53,7 +54,7 @@ class Vendor(models.Model):
     extension = models.CharField(max_length=25, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    photo = models.ForeignKey(VendorPhoto, blank=True, null=True)
+    photo = models.ForeignKey(VendorPhoto, blank=True, null=True, on_delete=models.SET_NULL)
     address = models.ForeignKey(Address, null=True, blank=True)
     description = models.CharField(max_length=900)
     is_active = models.BooleanField(default=False)
@@ -102,7 +103,7 @@ class Product(TrashableMixin, models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     vendor = models.ForeignKey(Vendor, related_name='products')
-    photo = models.ForeignKey(ProductPhoto, blank=True, null=True)
+    photo = models.ForeignKey(ProductPhoto, blank=True, null=True, on_delete=models.SET_NULL)
     tags = TaggableManager(blank=True)
     category = models.ForeignKey(Category, blank=True, null=True)
     
@@ -127,7 +128,7 @@ class MarketPhoto(models.Model):
     image_url = property(get_image_abs_path)    
 
 class Market(models.Model):
-    photo = models.ForeignKey(MarketPhoto, blank=True, null=True)    
+    photo = models.ForeignKey(MarketPhoto, blank=True, null=True, on_delete=models.SET_NULL)    
     name = models.CharField(max_length=100)
     address = models.ForeignKey(Address)
     description = models.CharField(max_length=400)
@@ -152,3 +153,36 @@ class OpeningHours(models.Model):
             if day[0] == self.weekday:
                 return day[1]    
 
+# Auto-delete image files when not needed
+@receiver(models.signals.post_delete)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """Deletes image file from filesystem
+    when corresponding `MediaFile` object is deleted.
+    """
+    if sender not in [ProductPhoto, VendorPhoto, MarketPhoto]:
+        return
+    
+    if instance.image:
+        if os.path.isfile(instance.image.path):
+            os.remove(instance.image.path)
+
+@receiver(models.signals.pre_save)
+def auto_delete_file_on_change(sender, instance,**kwargs):
+    """Deletes photo from table    
+    when corresponding `Product/Vendor/Market` object is changed.    
+    """
+    if sender not in [Product, Vendor, Market]:
+        return
+    
+    if not instance.pk:
+        return False
+    
+    try:        
+        old_photo = sender.objects.get(pk=instance.pk).photo    
+    except sender.DoesNotExist:
+        return False    
+    
+    if old_photo is not None:
+        new_photo = instance.photo    
+        if not old_photo.pk == new_photo.pk:
+            old_photo.delete()

@@ -721,7 +721,7 @@ class VendorProductView(generics.ListAPIView):
     def get_queryset(self):
         vendor = Vendor.objects.get(user=self.request.user)
         products = Product.objects.filter(vendor=vendor)
-
+        
         if products is not None:
             for product in products:
                 product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote

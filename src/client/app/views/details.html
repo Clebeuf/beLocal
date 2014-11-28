@@ -7,7 +7,7 @@
     <div class="row vendor-profile-header">
 
         <div class="col-sm-5 vendor-avatar">
-            <div class="vendor-avatar-img" style="background-image:url({{vendorDetails.vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
+            <div class="vendor-avatar-img" ng-style="{'background-image': 'url('+vendorDetails.vendor.photo.image_url+')'}" style="background-size: cover; background-repeat: no-repeat; background-position: center;">
                 <!-- <img ng-src="{{vendorDetails.vendor.photo.image_url}}"> -->
                 <div class="col-xs-12">
                         <span class="pull-right like-button-position" data-toggle="tooltip" style="display:inline-block" data-placement="left" title="{{!likeDisabled ? '' : 'Sign in to Like'}}">
@@ -188,7 +188,7 @@
         </div>
     </div>
 
-	<br>
+    <br>
 
 
 <!--Display Seller's Inventory-->
@@ -218,4 +218,3 @@
 <!-- END OF CONTAINTER-SELLER -->
 
 <product-details-modal produt="product"></product-details-modal>
-

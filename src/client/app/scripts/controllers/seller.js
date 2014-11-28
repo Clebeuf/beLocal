@@ -466,7 +466,8 @@ angular.module('clientApp')
     }
 
     $scope.fileNameChanged = function(file) {
-
+        $scope.productImageError = undefined;
+        
         if (file && file[0]) {
             var reader = new FileReader();
             $scope.displayItemThumbnail = true;
@@ -491,6 +492,7 @@ angular.module('clientApp')
     }
 
     $scope.profileFileNameChanged = function(file) {
+        $scope.profileImageError = undefined;
 
         if (file && file[0]) {
             var reader = new FileReader();

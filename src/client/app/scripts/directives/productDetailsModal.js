@@ -21,8 +21,14 @@ angular.module('clientApp')
             }
 	        });
 	      });
-	      	angular.element('#productDetailsModal').modal('hide');
-      	}
+	      angular.element('#productDetailsModal').modal('hide');
+      }
+
+      scope.likeUnlikeItem = function(item, itemName) {
+        StateService.likeUnlikeItem(item, itemName).then(function() {
+          item = StateService.getLikedUnlikedItem();
+        });
+      };          
 
 	    scope.goToVendorDetails = function(vendorID){
 	      angular.element('#productDetailsModal').on('hidden.bs.modal', function(e) {

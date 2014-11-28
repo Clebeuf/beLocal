@@ -12,6 +12,7 @@
 	        All Users
 	    </div> 
 	    <p ng-repeat="user in users">
+            <a ng-click="deleteUser(user)" class="btn btn-md btn-danger" style="margin-right:10px; margin-left:10px; float:left">Delete</a>	    
 	    	<strong>Name:</strong> {{user.first_name}} {{user.last_name}}<br>
 	    	<strong>Email:</strong> {{user.email}}
 	    </p>	  	

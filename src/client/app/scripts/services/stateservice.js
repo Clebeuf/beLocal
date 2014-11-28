@@ -19,6 +19,10 @@ angular.module('clientApp')
     var marketDetails = undefined;
     var tagToDisplay = undefined;
 
+    this.deleteUser = function(userID) {
+      return $http.post(this.getServerAddress() + 'users/delete/', {'id':userID}) 
+    }
+
     this.getContactEmail = function() {
       return 'belocalvictoria' + '@' + 'gmail.com';
     }

@@ -2,10 +2,11 @@
 
 angular.module('clientApp')
   .controller('ManageCtrl', function ($scope, StateService, $location) {
-    $scope.inactiveVendors = [];
-    $scope.users = [];
+    $scope.inactiveVendors = []; // list of inactive vendors
+    $scope.users = []; // list of all users for beLocal
     $scope.showXSNav = true;
 
+    // Get a list of vendors and users from the server
     $scope.initialize = function() {
         StateService.getManageVendors().then(function(response) {
             $scope.inactiveVendors = response.data;
@@ -16,10 +17,12 @@ angular.module('clientApp')
         }); 
     }
 
+    // Go to vendor details page for vendor with specified id
     $scope.displayVendor = function (id) {         
         $location.path('vendor/details/'+ id);
     };
 
+    // Delete a user. The password is $gituvicsoup. Don't ask. 
     $scope.deleteUser = function(user) {
         var response = prompt('Say the magic word to make ' + user.first_name + ' ' + user.last_name + ' go boom!');
         if(response === '$gituvicsoup') {
@@ -29,6 +32,7 @@ angular.module('clientApp')
         }
     }    
 
+    // Activate or deactivate a vendor
     $scope.activateVendor = function(vendor) {
         StateService.activateVendor(vendor).then(function() {
             StateService.getManageVendors().then(function(response) {
@@ -37,6 +41,7 @@ angular.module('clientApp')
         });
     }
 
+    // Initialize the manage view on first load
     $scope.initialize();
     
   });

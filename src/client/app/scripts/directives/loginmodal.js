@@ -7,6 +7,7 @@ angular.module('clientApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
 
+        // Reset login modal
         scope.clearLoginModal = function() {
           scope.noFacebookAccountError = false;                
           scope.loginSubmitted = false;
@@ -19,6 +20,7 @@ angular.module('clientApp')
           scope.recoverHasSubmitted = false;
         }       
 
+        // Try to sign in with Facebook
         scope.signIn = function() {  
           scope.noFacebookAccountError = false;          
           AuthService.showLogin().then(function(status) {              
@@ -30,6 +32,7 @@ angular.module('clientApp')
           });    
         }        
 
+        // After the modal closes, redirect to the appropriate page depending on which type of user just logged in
         angular.element('#loginModal').on('hidden.bs.modal', function(e) {
           if(StateService.getCurrentUser()){
             if(StateService.getUserType() === 'CUS') {
@@ -49,6 +52,7 @@ angular.module('clientApp')
           }
         }); 
 
+        // Login without Facebook
         scope.loginSubmit = function() {      
           scope.loginSubmitted = true;
           scope.loginError = false;
@@ -63,6 +67,7 @@ angular.module('clientApp')
           }     
         }
 
+        // Send password recovery email
         scope.recoverInformation = function() {
           scope.emailRecoverError = false;
           scope.emailRecoverMessage = '';      

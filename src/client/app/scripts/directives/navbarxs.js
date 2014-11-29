@@ -10,7 +10,9 @@ angular.module('clientApp')
         $scope.StateService = StateService;
         $scope.loginError = false;
         $scope.productSuggestions = [];
-        $scope.state = $state;     
+        $scope.state = $state;   
+
+        // For documentation, please see navbar.js. These two controllers are identical.  
 
         $scope.goToManage = function() {
             $location.path('/manage');

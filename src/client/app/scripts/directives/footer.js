@@ -12,6 +12,7 @@ angular.module('clientApp')
       templateUrl: 'scripts/directives/footer.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
+      	// Email address! No hardcoding this because spam is bad.
       	scope.emailAddress = "belocal" + "victoria" + "@gmail.com";
 
       }

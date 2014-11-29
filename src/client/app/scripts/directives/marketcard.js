@@ -10,6 +10,7 @@ angular.module('clientApp')
       link: function postLink(scope, element, attrs) {
         scope.openString = undefined;
 
+        // Required for displaying weekdays on the card
         scope.weekdays = [
             'Monday',
             'Tuesday',
@@ -20,26 +21,32 @@ angular.module('clientApp')
             'Sunday'
         ];
 
+        // Go to the market details page for a specific market
         scope.displayMarket = function (id) {
           $location.path('market/details/'+id);
         };
 
+        // Make the pins bounce!
         scope.highlightPins = function(market) {
             if(market && market.marker)             
                 market.marker.setAnimation(google.maps.Animation.BOUNCE);
         };
 
+        // Stop the bouncing!
         scope.unHighlightPins = function(market) {
             if(market && market.marker) 
                 market.marker.setAnimation(null);
         };              
 
+        // Like or unlike a market
         scope.likeUnlikeItem = function(item, itemName) {
           StateService.likeUnlikeItem(item, itemName).then(function() {
             item = StateService.getLikedUnlikedItem();
           });
         };        
 
+        // This is a silly hack I had to make since on the server, I accidentally started dates with 0 = Monday rather than 0 = Sunday. 
+        // As a result, we need to put this everywhere to ensure that dates coming back from the server are parsed correctly on the client
         scope.getDate = function(date) {
             if(date.getDay() == 0)
                 return 7;
@@ -47,6 +54,7 @@ angular.module('clientApp')
                 return date.getDay();
         }      
 
+        // Compare two dates regardless of time
         scope.compareDates = function(date1, date2) {
             if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
                 return true;
@@ -54,6 +62,7 @@ angular.module('clientApp')
                 return false;
         }
         
+        // Genenerate a string that says whether a specific market is open or closed today.
         scope.generateOpeningString = function() {
             // Check if open today first
             for(var j = 0; j < scope.market.address.hours.length; j++) {
@@ -82,14 +91,17 @@ angular.module('clientApp')
             }
         }
 
+        // Generate opening string on first load for each card
         scope.generateOpeningString();
 
+        // Enable/disable liking
         if (StateService.getCurrentUser() === undefined) {
           scope.likeDisabled = true;
         } else {
           scope.likeDisabled = false;
         }  
 
+        // Initialize tooltips
         $timeout(function(){
             angular.element("[data-toggle='tooltip']").tooltip();
         });

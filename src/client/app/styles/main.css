@@ -4,8 +4,42 @@
 
 */
 
+.error{
+  color: rgb(182, 99, 98);
+  padding-left: 5px;
+}
+
+.underline-hover:hover {
+  text-decoration: underline;
+}
+
+.profile-modal input.ng-invalid {
+  background-color: rgb(255, 226, 226);
+}
+
+.profile-modal textarea.ng-invalid{
+  background-color: rgb(255, 226, 226);
+}
+
 .fa-facebook-square {
   padding-right:5px;
+}
+
+#locationModal .has-error input{
+  background-color: rgb(255, 226, 226);
+}
+
+#locationModal .has-error textarea{
+  background-color: rgb(255, 226, 226);
+}
+
+
+#itemModal .has-error input{
+  background-color: rgb(255, 226, 226);
+}
+
+#itemModal .has-error textarea{
+  background-color: rgb(255, 226, 226);
 }
 
 .facebook-button{
@@ -378,7 +412,15 @@
   border-bottom: 0px;
 }
 
+.product-modal-like-button-container {
+  top: -40px;
+  right: 6px;
+  height: 1px;
+  text-align: right;
+}
+
 .vendor-card-name {
+  word-wrap: break-word !important;
   color: #000;
   font-family: 'Libre Baskerville', serif;
   font-weight: bolder;

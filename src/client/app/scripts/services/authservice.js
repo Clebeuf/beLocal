@@ -86,6 +86,7 @@ angular.module('clientApp')
       ipCookie.remove('beLocalBypass');
       delete $http.defaults.headers.common.Authorization;
       StateService.clearCurrentUser();
+      OAuth.clearCache('facebook');      
     }
 
     this.createCustomer = function() {
@@ -117,7 +118,6 @@ angular.module('clientApp')
     this.createNonFacebookVendor = function(vendor) {
       var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/vendor/no-fb-create/', data: vendor});  
       loginPromise.success(function(result) {
-          console.log(result);
           if(result.token) {
             ipCookie('beLocalToken', result.token, {expires: 14});
             ipCookie('beLocalUser', result, {expires: 14});

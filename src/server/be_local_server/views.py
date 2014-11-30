@@ -35,6 +35,33 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.contrib.auth.views import password_reset, password_reset_confirm
 
+class DeleteUserView(generics.CreateAPIView):
+    """
+    This view provides an endpoint for sellers to
+    add a product to their products list.
+    """         
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        if(request.user and request.user.is_superuser):
+            user = User.objects.get(id=request.DATA["id"])
+            vendor = None
+
+            if user:
+                try:
+                    vendor = Vendor.objects.get(user=user)
+                except ObjectDoesNotExist:
+                    print "No Vendor"
+
+                if(vendor is not None):
+                    vendor.delete()
+
+                user.delete()
+                return HttpResponse(status=status.HTTP_200_OK)
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
 class PasswordReset(GenericAPIView):
     permission_classes = (AllowAny,)
 
@@ -407,10 +434,11 @@ class MarketDetailsView(generics.CreateAPIView):
 
 class VendorDetailsView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
+    authentication_classes = (TokenAuthentication,)    
 
     def post(self, request, *args, **kwargs):
         vendor = Vendor.objects.get(pk=request.DATA["id"])
-        if(vendor.is_active == True):
+        if(vendor.is_active == True or request.user.is_superuser):
             locations = SellerLocation.objects.filter(vendor=vendor)
             products = Product.objects.filter(vendor=vendor, stock="IS")
             markets = Market.objects.filter(vendors=vendor)
@@ -509,7 +537,7 @@ class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
             vendor = Vendor.objects.get(user=self.request.user)
         except vendor.DoesNotExist:
             raise Http404
-        return vendor
+        return vendor     
 
 class AddProductView(generics.CreateAPIView):
     """
@@ -721,7 +749,7 @@ class VendorProductView(generics.ListAPIView):
     def get_queryset(self):
         vendor = Vendor.objects.get(user=self.request.user)
         products = Product.objects.filter(vendor=vendor)
-
+        
         if products is not None:
             for product in products:
                 product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote

@@ -7,6 +7,12 @@ angular.module('clientApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
 
+        if (StateService.getCurrentUser() === undefined) {
+          scope.likeDisabled = true;
+        } else {
+          scope.likeDisabled = false;
+        }        
+
       	scope.redirectTagFilter = function(tagName) {
       	  StateService.setTagToDisplay(tagName);
 	      	angular.element('#productDetailsModal').on('hidden.bs.modal', function(e) {
@@ -21,8 +27,14 @@ angular.module('clientApp')
             }
 	        });
 	      });
-	      	angular.element('#productDetailsModal').modal('hide');
-      	}
+	      angular.element('#productDetailsModal').modal('hide');
+      }
+
+      scope.likeUnlikeItem = function(item, itemName) {
+        StateService.likeUnlikeItem(item, itemName).then(function() {
+          item = StateService.getLikedUnlikedItem();
+        });
+      };          
 
 	    scope.goToVendorDetails = function(vendorID){
 	      angular.element('#productDetailsModal').on('hidden.bs.modal', function(e) {

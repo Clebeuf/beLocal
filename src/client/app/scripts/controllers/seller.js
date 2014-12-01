@@ -747,19 +747,18 @@ angular.module('clientApp')
 		  }, 100);
 		};
 
-		$scope.uploadProfileImage = function() {
-			if($scope.profileImage){
-        StateService.uploadProfileFile($scope.profileImage, $scope.profileImageCoords, $scope.currentUser.vendor.id)
-        .success(function(response) {
-        		$scope.displayItemThumbnail = true;
-            $scope.currentUser.vendor.photo = response.id;
-            angular.element('#vendorProfileImage').css({
-            	'background-image': 'url(' + response.image_url +')'
-        		});
-            angular.element('#profileImageModal').modal('hide');
-        });
-      }
-		}
+	$scope.uploadProfileImage = function() {
+		if($scope.profileImage){
+            StateService.uploadProfileFile($scope.profileImage, $scope.profileImageCoords, $scope.currentUser.vendor.id)
+            .success(function(response) {
+                console.log(response.image_url);
+                angular.element('#profileImage').css({
+                	'background-image': 'url(' + response.image_url +')'
+            		});
+                angular.element('#profileImageModal').modal('hide');
+            });
+          }
+	}
 
     $scope.init = function() {
         $scope.getSellerLocations();

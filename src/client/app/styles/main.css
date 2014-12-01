@@ -4,6 +4,10 @@
 
 */
 
+.jcrop-keymgr {
+  opacity: 0 !important;
+}
+
 .fa-facebook-square {
   padding-right:5px;
 }

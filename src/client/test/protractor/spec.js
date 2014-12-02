@@ -193,7 +193,14 @@ ddescribe('Foodies', function(){
     }); 
 
     it('should be able to like products', function(){
-        
+
+        element(by.css('[ng-click="clearLoginModal()"]')).click();
+        element(by.model('loginUsername')).sendKeys('johndo');
+        element(by.model('loginPassword')).sendKeys('pass');
+        element(by.css('[ng-click="loginSubmit()"]')).click(); 
+        browser.sleep(5000); //Allow products to load on home page
+        element(by.css('[ng-click="likeUnlikeItem(item, \'product\')"]')).click(); 
+        browser.sleep(10000);
     });
 
 });

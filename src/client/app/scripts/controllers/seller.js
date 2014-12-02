@@ -809,7 +809,8 @@ angular.module('clientApp')
         keyboard: true,
         backdrop: true,
         orphan: true,
-        debug: false,        
+        debug: false,
+        reflex: false,        
         steps: [
           {
             element: "",
@@ -874,8 +875,10 @@ angular.module('clientApp')
         ]
     });
 
+    // initalize the tour
     $scope.tour.init();
 
+    //if the tour was requested from a different page
     var url = document.location.toString();
     if (url.split('#')[2]) {
         console.log(url.split('#')[2]);
@@ -886,6 +889,7 @@ angular.module('clientApp')
         }
     };
 
+    //if first time log in, start the tour & set a cookie
     if (!ipCookie('beLocalTutorial')) {
         console.log('first time on tour'); 
         $scope.tour.restart(true);

@@ -28,6 +28,11 @@ angular.module('clientApp')
     $scope.showXSNav = true;
     $scope.tour = undefined;
 
+    $rootScope.$on('$stateChangeStart', function() {
+        if($scope.tour)
+            $scope.tour.end();
+    })
+
     var geocoder = new google.maps.Geocoder();
 
     $scope.safeApply = function(fn) {

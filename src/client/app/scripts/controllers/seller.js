@@ -738,7 +738,6 @@ angular.module('clientApp')
 
     $scope.selected = function(x) {
     	$scope.profileImageCoords = [x.x, x.y, x.x2, x.y2];
-    	console.log($scope.profileImageCoords);
   	};
 
   	$scope.triggerImageSelect = function () {
@@ -751,7 +750,6 @@ angular.module('clientApp')
 		if($scope.profileImage){
             StateService.uploadProfileFile($scope.profileImage, $scope.profileImageCoords, $scope.currentUser.vendor.id)
             .success(function(response) {
-                console.log(response.image_url);
                 angular.element('#profileImage').css({
                 	'background-image': 'url(' + response.image_url +')'
             		});
@@ -772,7 +770,6 @@ angular.module('clientApp')
     }  
 
     $scope.init();
-
   })
   .directive('htmlComp', function($compile, $parse) {
       return {
@@ -805,22 +802,26 @@ angular.module('clientApp')
 	          element.after('<img />');
 	          myImg = element.next();        
 	          myImg.attr('src',nv);
-	          $(myImg).Jcrop({
-	            trackDocument: true,
-	            aspectRatio:5/3,
-	            boxWidth:560,
-	            boxHeight:336,
-	            addClass: 'jcrop-centered',
-	            onSelect: function(x) {              
-	              scope.$apply(function() {
-	                scope.selected({cords: x});
-	              });
-	            }
-	          });
+              myImg.attr('id', 'belocal-img-crop')
 	        }
-	      });
-	      
+	      });	      
 	      scope.$on('$destroy', clear);
+            angular.element('#profileImageModal').on('shown.bs.modal', function(e){
+                var width = angular.element('#profileImageModal').find('.crop-image-wrapper').width();
+                var height = (3/5) * width;
+            $('#belocal-img-crop').Jcrop({
+                trackDocument: true,
+                aspectRatio:5/3,
+                boxWidth: width,
+                boxHeight: height,
+                addClass: 'jcrop-centered',
+                onSelect: function(x) {
+                  scope.$apply(function() {
+                    scope.selected({cords: x});
+                  });
+                }
+              });
+            });
 	    }
 	  };
 	})

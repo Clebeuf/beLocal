@@ -29,7 +29,7 @@ from operator import itemgetter, attrgetter, methodcaller
 from taggit.models import Tag
 from django.contrib.auth import authenticate
 from django.core.files import File 
-from PIL import Image
+from PIL import Image, ImageOps
 import urllib
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm

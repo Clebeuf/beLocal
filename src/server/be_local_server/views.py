@@ -328,9 +328,16 @@ class LoginNoFBView(APIView):
                 }                
             return Response(response)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                        
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+
+                
 
 class CreateVendorView(APIView):
+    """
+    Obtains the vendor object related to the current user and sets their
+    is_staff flag to 1 (vendor) and also feels their respective information
+    according to the request. 
+    """  
     throttle_classes = ()
     permission_classes = ()
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
@@ -375,6 +382,12 @@ class CreateVendorView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+    
+    """
+    This view provides an endpoint that allows the client to create a user in the database. It 
+    then returns the associated user data back
+    """
 class CreateCustomerView(APIView):
     throttle_classes = ()
     permission_classes = ()
@@ -420,7 +433,11 @@ def register_by_access_token(request, backend):
 
     return user
 
+
 class MarketDetailsView(generics.CreateAPIView):
+    """
+    Provies an endpoint to add market information
+    """
     permission_classes = (AllowAny,)   
 
     def post(self, request, *args, **kwargs):
@@ -658,6 +675,8 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
         except location.DoesNotExist:
             raise Http404
         return location
+
+
 
 class DeleteSellerLocationView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)

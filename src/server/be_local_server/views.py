@@ -118,12 +118,14 @@ def reset_confirm(request, uidb64=None, token=None):
     print token
     return password_reset_confirm(request, uidb64=uidb64, token=token)
 
+# Used to calcualte distance from user to a specific model
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
     user = (user_lat, user_lng)
     item = (item_lat, item_lng)
 
     return vincenty(user, item).miles
 
+# Create a vendor without Facebook
 class CreateNonFacebookVendorView(APIView):
     permission_classes = (AllowAny,) 
     serializer_class = serializers.UserRegistrationSerializer
@@ -227,6 +229,7 @@ class CreateNonFacebookCustomerView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                            
 
+# Login with Facebook
 class LoginView(APIView):
     throttle_classes = ()
     permission_classes = ()
@@ -278,6 +281,7 @@ class LoginView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Login without Facebook
 class LoginNoFBView(APIView):
     throttle_classes = ()
     permission_classes = ()
@@ -330,8 +334,7 @@ class LoginNoFBView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
-                
-
+# Create a vendor with Facebook
 class CreateVendorView(APIView):
     """
     Obtains the vendor object related to the current user and sets their
@@ -382,12 +385,7 @@ class CreateVendorView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-    
-    """
-    This view provides an endpoint that allows the client to create a user in the database. It 
-    then returns the associated user data back
-    """
+# Create a customer with Facebook
 class CreateCustomerView(APIView):
     throttle_classes = ()
     permission_classes = ()
@@ -413,6 +411,8 @@ class CreateCustomerView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                               
 
+# Python Social Auth class required to register a new user with their unique social media access token.
+# In our case, this comes from Facebook.
 @psa()
 def register_by_access_token(request, backend):
     backend = request.backend
@@ -478,23 +478,6 @@ class VendorDetailsView(generics.CreateAPIView):
             )  
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-class AddVendorView(generics.CreateAPIView):
-    permission_classes = (AllowAny,)
-
-    def post(self, request, *args, **kwargs):
-        serializer = serializers.VendorSerializer(data=request.DATA)
-
-        if serializer.is_valid():
-            user = User.objects.get(id=serializer.init_data['user'])
-            user.is_staff = 1 # make the user a vendor
-            user.save()
-
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)   
-        else:
-            return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
 
 class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -575,6 +558,7 @@ class AddProductView(generics.CreateAPIView):
         if serializer.is_valid():
             current_product = serializer.save()
 
+            # Add placeholder image
             if (current_product.photo == None): 
                 pp = ProductPhoto(image=File(open('../client/app/images/productPH.png')))
                 pp.save()
@@ -677,7 +661,7 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
         return location
 
 
-
+# Delete/restore a selling location
 class DeleteSellerLocationView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,) 
@@ -703,6 +687,7 @@ class DeleteSellerLocationView(generics.CreateAPIView):
         else:
             return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)
 
+# Delete/restore a product
 class DeleteProductView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,) 
@@ -799,8 +784,7 @@ class UpdateStockView(generics.CreateAPIView):
                 return Response(status=status.HTTP_200_OK)            
         return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
 
-#TODO: Currenty this view simply returns all products rather
-# than trending ones
+#TODO: Currenty this view simply returns all products rather than trending ones
 class TrendingProductView(generics.ListAPIView):
     """
     This view provides an endpoint for customers to
@@ -904,6 +888,7 @@ class VendorsView(generics.ListAPIView):
         return vendors
 
     def post(self, request):
+        # Unused geolocation-dependent code 
         if ('user_position' in request.DATA.keys() and request.DATA['user_position'] is not None):
 
             lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))

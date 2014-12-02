@@ -22,8 +22,7 @@ urlpatterns = patterns('',
     url(r'^users/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views.reset_confirm, name='password_reset_confirm'),      
     url(r'^redirect_to_login/$', RedirectView.as_view(url='http://127.0.0.1:9000'), name='password_reset_complete'),
     url(r'^users/delete/?$', views.DeleteUserView.as_view(), name='vendor'),    
-    
-    url(r'^vendor/add/$', views.AddVendorView.as_view(), name='vendor-add'),    
+       
     url(r'^vendor/?$', views.RWDVendorView.as_view(), name='vendor'),   
     url(r'^vendor/details/?$', views.VendorDetailsView.as_view(), name='vendor-details'),
     url(r'^vendor/photo/add/$',views.AddVendorPhotoView.as_view(), name='vendor-photo-add'),

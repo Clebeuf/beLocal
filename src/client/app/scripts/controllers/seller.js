@@ -798,7 +798,76 @@ angular.module('clientApp')
         $scope.resetLocationModal();
     }  
 
-    $scope.init();   
+    $scope.init();
+
+    // ---- BOOTSTRAP TOUR --------
+
+    // Instance the tour
+    var tour = new Tour({
+        container: 'body',
+        backdrop: true,
+        orphan: true,
+        debug: true,        
+        steps: [
+          {
+            element: "",
+            title: "<center><b>Welcome to beLocal Victoria</b></center>",
+            content: "Thank you for registering as a local farmer or foodmaker. Here's a quick tutorial to get you on your way.",
+          },
+          {
+            element: "#editProfileBtn",
+            title: "<center><b>Updating your Profile</b></center>",
+            content: "Click the edit profile button to update your company name, address, contact information, and profile picture.  Also link to your Facebook page, personal webpage, and add a description about your company.",
+            placement: "bottom"
+          },
+          {
+            element: "#socialMediaBtn",
+            title: "<center><b>Post to Social Media</b></center>",
+            content: "Post directly to your Twitter and Facebook accounts by either writing your own custom status or by using our recommend updates.",
+            placement: "bottom"
+          },
+          {
+            element: "#addLocationBtn",
+            title: "<center><b>Add a selling location</b></center>",
+            content: "Let customers know where you are selling.  Simply select form a list of currently running markets or create your own custom selling location.",
+            placement: "bottom"
+          },
+          {
+            element: "#markets",
+            title: "<center><b>Your Market Locations</b></center>",
+            content: "Once you select a market as one of your selling locations, you will see it listed here.",
+            placement: "bottom"
+          },
+          {
+            element: "#customLocations",
+            title: "<center><b>Your Custom Locations</b></center>",
+            content: "Likewise, any custom selling locations you create will be listed here.",
+            placement: "bottom"
+          },
+          {
+            element: "#addItem",
+            title: "<center><b>Add some Products</b></center>",
+            content: "Click here to add items that you will be selling. You can upload a picture, add a short description, and select the category of your product.",
+            placement: "top"
+          },
+          {
+            element: "#activateAccount",
+            title: "<center><b>Account Activation</b></center>",
+            content: "Once you're happy with your profile, don't forget to send us an email to get your account activated. Doing so will allow other users to see your profile, selling locations, and products you have for sale.",
+            placement: "bottom"
+          }     
+
+        ]
+    });
+
+    $timeout(function() {
+        tour.init();
+        tour.start(true); 
+        console.log('hello'); 
+    },0);
+
+    // ---- END OF BOOTSTRAP TOUR --------
+
 
   })
   .directive('htmlComp', function($compile, $parse) {
@@ -832,3 +901,5 @@ angular.module('clientApp')
       }
     };
   });
+
+

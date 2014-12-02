@@ -4,6 +4,10 @@
 
 */
 
+.link a {
+  color: #696969 !important;
+}
+
 .error{
   color: rgb(182, 99, 98);
   padding-left: 5px;
@@ -698,6 +702,7 @@ a.footerLink {
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
 }
+
 
 .navbar-nav.navbar-right:last-child {
   margin-right: 0px !important;

@@ -95,6 +95,15 @@ angular.module('clientApp')
             }
         }
 
+        $scope.showVendorTour = function() {
+            if ($location.path() === '/vendor'){
+                $scope.tour.restart(true);
+            } else {
+                $location.path('/vendor');
+                $location.hash('tour');
+            }
+        }  
+
         $scope.doSearch = function(value){
           $window.location.href='#/search/products?q=' + value;
         }         

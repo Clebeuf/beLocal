@@ -1,12 +1,22 @@
-<div id="activateAccount" ng-show="isCurrentUserActive === false && showInactiveAlert === true" class="alert alert-danger beLocal-alert" role="alert">
-  <button type="button" class="close" ng-click="hideInactiveAlert()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-  <span><strong>Your account is currently inactive!</strong> Until your account is activated, no one will be able to see your products or selling locations. After completing your profile, please email <a class="alert-link" href="mailto:{{StateService.getContactEmail()}}">{{StateService.getContactEmail()}}</a> to request activation!</span>
+
+<div ng-show="isCurrentUserActive === false && showInactiveAlert === true" class="alert alert-danger beLocal-alert" role="alert">
+    <button type="button" class="close" ng-click="hideInactiveAlert()">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+    </button>
+    <span>
+        <strong>Your account is currently inactive!</strong> 
+        Until your account is activated, no one will be able to see your products or selling locations. After completing your profile, please email <a class="alert-link" href="mailto:{{StateService.getContactEmail()}}">{{StateService.getContactEmail()}}</a> to request activation!
+    </span>
 </div>
 <div ng-show="showWarning" class="alert alert-warning alert-dismissible" role="alert">
   <button type="button" class="close" ng-click="resetWarning()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
   <html-comp content="warningHTML"></html-comp>
 </div>
-<navbar-x-s></navbar-x-s>
+
+<div id="navBarTour">
+    <navbar-x-s></navbar-x-s>
+</div>
 
 <div class="new-formatting-container customer-container" ng-class="{'is-inactive' : !isCurrentUserActive}">  
     <div class="row vendor-profile-header">
@@ -240,58 +250,61 @@
         </div>
     </div>
     <hr>
-    <div class="vendor-placeholder-text" ng-show="sellerItems.length == 0">
-        <p class="no-bottom-margin">You haven't added any items yet! Try adding one by clicking the Create New Item button.</p>
-    </div>     
 
-    <!-- repeating for each item that seller has in the db -->
-     <div ng-repeat="product in sellerItems | orderBy:'name'" class="container-for-cards">
+    <div id="viewItems">
+        <div class="vendor-placeholder-text" ng-show="sellerItems.length == 0">
+            <p class="no-bottom-margin">You haven't added any items yet! Try adding one by clicking the Create New Item button.</p>
+        </div>     
 
-            <!-- Need this div to allow for space between each of the sellers items -->
-            <div class="card-formatting">
-                <div class="row">
+        <!-- repeating for each item that seller has in the db -->
+         <div ng-repeat="product in sellerItems | orderBy:'name'" class="container-for-cards">
 
-                <!-- Display the locations name -->
-                    <div class="col-sm-2 vendor-product-image">
-                        <img ng-src="{{product.photo.image_url}}"/>
+                <!-- Need this div to allow for space between each of the sellers items -->
+                <div class="card-formatting">
+                    <div class="row">
 
-                    </div>
-                    <div class="col-xs-9 col-sm-7 ">
-                        <div class="card-lable-style">{{product.name}}</div>
-                        <div class="location-details">
-                            <p><b>PRODUCT DETAILS:</b> {{product.description}}</p>
-                            <p><b>CATEGORY:</b> {{product.category.name}} </p>
-                            <p><b>TAGS:</b><span ng-repeat="tag in product.tags"> {{tag}} &nbsp; </span></p>
+                    <!-- Display the locations name -->
+                        <div class="col-sm-2 vendor-product-image">
+                            <img ng-src="{{product.photo.image_url}}"/>
+
                         </div>
+                        <div class="col-xs-9 col-sm-7 ">
+                            <div class="card-lable-style">{{product.name}}</div>
+                            <div class="location-details">
+                                <p><b>PRODUCT DETAILS:</b> {{product.description}}</p>
+                                <p><b>CATEGORY:</b> {{product.category.name}} </p>
+                                <p><b>TAGS:</b><span ng-repeat="tag in product.tags"> {{tag}} &nbsp; </span></p>
+                            </div>
+                        </div>
+
+                        <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
+                        <div class="col-xs-3 edit-delete-buttons">
+                            <span data-toggle="tooltip" data-placement="left" title="Edit Item">
+                                <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#itemModal" ng-click="editItem(product)"></span>
+                            </span>
+                            <span data-toggle="tooltip" data-placement="left" title="Delete Item">
+                                <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteProduct(product)" data-toggle="modal" data-target="TBA"></span>
+                            </span>
+                        </div> 
                     </div>
 
-                    <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
-                    <div class="col-xs-3 edit-delete-buttons">
-                        <span data-toggle="tooltip" data-placement="left" title="Edit Item">
-                            <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#itemModal" ng-click="editItem(product)"></span>
+                <!-- THIS IS THE NON-REPEATING PART -->
+                <div class="row">
+                    <div class="col-sm-12 seller-stock-formatting new-stock-style">
+                        <hr class="availability-hr">
+                        Current Availability:
+                        <span class="pull-right">
+                            <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="IS"> In Stock
+                            <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="OOS"> Out of Stock
                         </span>
-                        <span data-toggle="tooltip" data-placement="left" title="Delete Item">
-                            <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteProduct(product)" data-toggle="modal" data-target="TBA"></span>
-                        </span>
-                    </div> 
-                </div>
-
-            <!-- THIS IS THE NON-REPEATING PART -->
-            <div class="row">
-                <div class="col-sm-12 seller-stock-formatting new-stock-style">
-                    <hr class="availability-hr">
-                    Current Availability:
-                    <span class="pull-right">
-                        <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="IS"> In Stock
-                        <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="OOS"> Out of Stock
-                    </span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!--  end of repeat for each seller's items location -->
+            <!--  end of repeat for each seller's items location -->
 
+        </div>
+        <!--  end of repeat for each item the seller sells-->
     </div>
-    <!--  end of repeat for each item the seller sells-->
 
 </div>
 

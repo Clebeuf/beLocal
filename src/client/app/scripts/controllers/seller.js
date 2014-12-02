@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q, $rootScope) {
+  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q, $rootScope, $location, ipCookie) {
     $scope.StateService = StateService;
     $scope.opened = false;
     $scope.minDate = new Date();
@@ -26,6 +26,7 @@ angular.module('clientApp')
     $scope.isCreatingCustomLocation = false;
     $scope.showInactiveAlert = true;
     $scope.showXSNav = true;
+    $scope.tour = undefined;
 
     var geocoder = new google.maps.Geocoder();
 
@@ -803,11 +804,12 @@ angular.module('clientApp')
     // ---- BOOTSTRAP TOUR --------
 
     // Instance the tour
-    var tour = new Tour({
+    $scope.tour = new Tour({
         container: 'body',
+        keyboard: true,
         backdrop: true,
         orphan: true,
-        debug: true,        
+        debug: false,        
         steps: [
           {
             element: "",
@@ -828,8 +830,8 @@ angular.module('clientApp')
           },
           {
             element: "#addLocationBtn",
-            title: "<center><b>Add a selling location</b></center>",
-            content: "Let customers know where you are selling.  Simply select form a list of currently running markets or create your own custom selling location.",
+            title: "<center><b>Add a Selling Location</b></center>",
+            content: "Let customers know where you are selling.  Simply select from a list of currently running markets or create your own custom selling location.",
             placement: "bottom"
           },
           {
@@ -846,25 +848,51 @@ angular.module('clientApp')
           },
           {
             element: "#addItem",
-            title: "<center><b>Add some Products</b></center>",
+            title: "<center><b>Add Some Products</b></center>",
             content: "Click here to add items that you will be selling. You can upload a picture, add a short description, and select the category of your product.",
             placement: "top"
           },
           {
-            element: "#activateAccount",
-            title: "<center><b>Account Activation</b></center>",
-            content: "Once you're happy with your profile, don't forget to send us an email to get your account activated. Doing so will allow other users to see your profile, selling locations, and products you have for sale.",
+            element: "#viewItems",
+            title: "<center><b>Your Inventory</b></center>",
+            content: "Once you've added some items that you are selling you will see them displayed here.  You can easily set each of your products to either in stock (this will allow customers to see your product) or out of stock (this will keep the product hidden from customers).",
+            placement: "top"
+          },
+          {
+            element: "",
+            title: "<center><b>Request Account Activation</b></center>",
+            content: "Once you're happy with your profile, don't forget to send us an email at <a href='mailto:" + "belocalvictoria" + "@gmail.com" + "'>" + "belocalvictoria" + "@gmail.com" + "</a> to request activation. Doing so will allow other users to see your profile, selling locations, and products you have for sale.",
             placement: "bottom"
-          }     
+          },
+          {
+            element: "#navBarTour",
+            title: "<center><b>Take the Tour Again</b></center>",
+            content: "If at any time you would like to take this tutorial again, select 'Vendor Tutorial' from the drop down menu. <hr><center><b> If you have any questions or comments please don't hesitate to contact us at </b><a href='mailto:" + "belocalvictoria" + "@gmail.com" + "'>" + "belocalvictoria" + "@gmail.com" + "</a></center>",
+            placement: "bottom"
+          }  
 
         ]
     });
 
-    $timeout(function() {
-        tour.init();
-        tour.start(true); 
-        console.log('hello'); 
-    },0);
+    $scope.tour.init();
+
+    var url = document.location.toString();
+    if (url.split('#')[2]) {
+        console.log(url.split('#')[2]);
+
+        if(url.split('#')[2] === 'tour'){
+            $scope.tour.restart(true);
+            $location.hash('');
+        }
+    };
+
+    if (!ipCookie('beLocalTutorial')) {
+        console.log('first time on tour'); 
+        $scope.tour.restart(true);
+        ipCookie('beLocalTutorial', true, {expires: 365});
+    }else {
+        console.log('already taken tour');
+    };
 
     // ---- END OF BOOTSTRAP TOUR --------
 

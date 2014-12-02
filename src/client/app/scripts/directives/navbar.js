@@ -98,10 +98,12 @@ angular.module('clientApp')
             }
         }
 
+        // vendor tour was requested
         $scope.showVendorTour = function() {
+            // if on seller page start tour
             if ($location.path() === '/vendor'){
                 $scope.tour.restart(true);
-            } else {
+            } else { // redirect to the seller page and pass request to start the tour.
                 $location.path('/vendor');
                 $location.hash('tour');
             }

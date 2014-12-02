@@ -51,7 +51,7 @@ angular.module('clientApp')
     });
 
     $scope.isTwitterAuth = OAuth.create('twitter');
-    $scope.hashtag = ' #beLocal';
+    $scope.hashtag = ' #beLocalYYJ';
 
     $scope.weekdays = [
         'Monday',
@@ -127,16 +127,16 @@ angular.module('clientApp')
     }
 
     $scope.generateVendorURL = function(id) {
-        var serverAddress = 'http://54.69.172.241:9000';
-        return  serverAddress + '/vendor/details/1'; 
+        var serverAddress = 'http://belocalvictoria.me';
+        return  serverAddress + '/#/vendor/details/' + id; 
     }
 
     $scope.generateTwitterString = function() {
         var company_name = $scope.currentUser.vendor.company_name !== undefined ? $scope.currentUser.vendor.company_name : $scope.currentUser.name;        
         if($scope.sellingToday) {
-            $scope.twitterString = company_name + " is open today. For a full list of selling locations and hours, visit " + $scope.generateVendorURL();
+            $scope.twitterString = "We are open today. For a full list of selling locations and hours, visit " + $scope.generateVendorURL($scope.currentUser.vendor.id);
         } else {
-            $scope.twitterString = "We're closed today, but make sure to check out our latest products and selling locations at " + $scope.generateVendorURL();
+            $scope.twitterString = "We're closed today, but make sure to check out our latest products and selling locations at " + $scope.generateVendorURL($scope.currentUser.vendor.id);
         }
     }
 
@@ -213,7 +213,7 @@ angular.module('clientApp')
         if($scope.twitterChecked) {         
             OAuth.popup('twitter', {cache : true}).done(function(twitter) {
                 twitter.post({
-                    url: '/1.1/statuses/update.json' + '?status=' + escape($scope.twitterString + $scope.hashtag)
+                    url: '/1.1/statuses/update.json?status=' + escape($scope.twitterString + $scope.hashtag)
                 });      
             });
         }

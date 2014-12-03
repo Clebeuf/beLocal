@@ -1,4 +1,4 @@
-<div ng-show="showXSNav" class="navbar navbar-xs navbar-fixed-top navbar-default" role="navigation">
+<div id="navBarTour" ng-show="showXSNav" class="navbar navbar-xs navbar-fixed-top navbar-default" role="navigation">
   <div class="container-fluid nav-padding">
     <div class="navbar-header">
 
@@ -60,7 +60,8 @@
             <li class="dropdown">
               <a class="dropdown-toggle pointer">My Account<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a class="pointer" ng-click="displayAccountPage()">My Profile</a></li>           
+                <li><a class="pointer" ng-click="displayAccountPage()" id="myProfile">My Profile</a></li>  
+                <li><a class="pointer" ng-click="showVendorTour()" id="vendorTour">Vendor Tutorial</a></li>         
                 <li class="divider"></li>
                 <li><a class="pointer" ng-click="AuthService.logout()">Logout</a></li>
               </ul>

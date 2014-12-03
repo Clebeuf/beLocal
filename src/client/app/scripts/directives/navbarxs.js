@@ -10,7 +10,12 @@ angular.module('clientApp')
         $scope.StateService = StateService;
         $scope.loginError = false;
         $scope.productSuggestions = [];
-        $scope.state = $state;     
+        $scope.state = $state;         
+
+        angular.element('.navbar-collapse ul li a:not(.dropdown-toggle)').click(function () { 
+            if(angular.element('.navbar-toggle:visible').length > 0)
+                angular.element('.navbar-toggle:visible')[0].click(); 
+        });           
 
         $scope.goToManage = function() {
             $location.path('/manage');
@@ -94,6 +99,17 @@ angular.module('clientApp')
                 $location.path('/vendor');
             }
         }
+
+        // vendor tour was requested
+        $scope.showVendorTour = function() {
+            // if on seller page start tour
+            if ($location.path() === '/vendor'){
+                $scope.tour.restart(true);
+            } else {    // redirect to the seller page and pass request to start the tour.
+                $location.path('/vendor');
+                $location.hash('tour');
+            }
+        }  
 
         $scope.doSearch = function(value){
           $window.location.href='#/search/products?q=' + value;

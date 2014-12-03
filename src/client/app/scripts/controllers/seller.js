@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q, $rootScope) {
+  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q, $rootScope, $location, ipCookie) {
     $scope.StateService = StateService;
     $scope.opened = false;
     $scope.minDate = new Date();
@@ -26,6 +26,12 @@ angular.module('clientApp')
     $scope.isCreatingCustomLocation = false;
     $scope.showInactiveAlert = true;
     $scope.showXSNav = true;
+    $scope.tour = undefined;
+
+    $rootScope.$on('$stateChangeStart', function() {
+        if($scope.tour)
+            $scope.tour.end();
+    })
 
     var geocoder = new google.maps.Geocoder();
 
@@ -798,7 +804,115 @@ angular.module('clientApp')
         $scope.resetLocationModal();
     }  
 
-    $scope.init();   
+    $scope.init();
+
+    // ---- BOOTSTRAP TOUR --------
+
+    // Instance the tour
+    $scope.tour = new Tour({
+        container: 'body',
+        keyboard: true,
+        backdrop: true,
+        orphan: true,
+        reflex: false,        
+        debug: false, 
+        onShown: function(tour) {
+            var step = tour._options.steps[tour._current];
+            angular.element(step.element).attr('disabled', true);
+        },
+        onHidden: function(tour) {
+            var step = tour._options.steps[tour._current];
+            angular.element (step.element).removeAttr('disabled');
+        },               
+        steps: [
+          {
+            element: "",
+            title: "<center><b>Welcome to beLocal Victoria</b></center>",
+            content: "Thank you for registering as a local farmer or foodmaker. Here's a quick tutorial to get you on your way.",
+          },
+          {
+            element: "#editProfileBtn",
+            title: "<center><b>Updating your Profile</b></center>",
+            content: "Click the edit profile button to update your company name, address, contact information, and profile picture.  Also link to your Facebook page, personal webpage, and add a description about your company.",
+            placement: "bottom"
+          },
+          {
+            element: "#socialMediaBtn",
+            title: "<center><b>Post to Social Media</b></center>",
+            content: "Post directly to your Twitter and Facebook accounts by either writing your own custom status or by using our recommend updates.",
+            placement: "bottom"
+          },
+          {
+            element: "#addLocationBtn",
+            title: "<center><b>Add a Selling Location</b></center>",
+            content: "Let customers know where you are selling.  Simply select from a list of currently running markets or create your own custom selling location.",
+            placement: "bottom"
+          },
+          {
+            element: "#markets",
+            title: "<center><b>Your Market Locations</b></center>",
+            content: "Once you select a market as one of your selling locations, you will see it listed here.",
+            placement: "bottom"
+          },
+          {
+            element: "#customLocations",
+            title: "<center><b>Your Custom Locations</b></center>",
+            content: "Likewise, any custom selling locations you create will be listed here.",
+            placement: "bottom"
+          },
+          {
+            element: "#addItem",
+            title: "<center><b>Add Some Products</b></center>",
+            content: "Click here to add items that you will be selling. You can upload a picture, add a short description, and select the category of your product.",
+            placement: "top"
+          },
+          {
+            element: "#viewItems",
+            title: "<center><b>Your Inventory</b></center>",
+            content: "Once you've added some items that you are selling you will see them displayed here.  You can easily set each of your products to either in stock (this will allow customers to see your product) or out of stock (this will keep the product hidden from customers).",
+            placement: "top"
+          },
+          {
+            element: "",
+            title: "<center><b>Request Account Activation</b></center>",
+            content: "Once you're happy with your profile, don't forget to send us an email at <a href='mailto:" + "belocalvictoria" + "@gmail.com" + "'>" + "belocalvictoria" + "@gmail.com" + "</a> to request activation. Doing so will allow other users to see your profile, selling locations, and products you have for sale.",
+            placement: "bottom"
+          },
+          {
+            element: "#navBarTour",
+            title: "<center><b>Take the Tour Again</b></center>",
+            content: "If at any time you would like to take this tutorial again, select 'Vendor Tutorial' from the drop down menu. <hr><center><b> If you have any questions or comments please don't hesitate to contact us at </b><a href='mailto:" + "belocalvictoria" + "@gmail.com" + "'>" + "belocalvictoria" + "@gmail.com" + "</a></center>",
+            placement: "bottom"
+          }  
+
+        ]
+    });
+
+    // initalize the tour
+    $scope.tour.init();
+
+    //if the tour was requested from a different page
+    var url = document.location.toString();
+    if (url.split('#')[2]) {
+        console.log(url.split('#')[2]);
+
+        if(url.split('#')[2] === 'tour'){
+            $scope.tour.restart(true);
+            $location.hash('');
+        }
+    };
+
+    //if first time log in, start the tour & set a cookie
+    if (!ipCookie('beLocalTutorial')) {
+        console.log('first time on tour'); 
+        $scope.tour.restart(true);
+        ipCookie('beLocalTutorial', true, {expires: 365});
+    }else {
+        console.log('already taken tour');
+    };
+
+    // ---- END OF BOOTSTRAP TOUR --------
+
 
   })
   .directive('htmlComp', function($compile, $parse) {
@@ -832,3 +946,5 @@ angular.module('clientApp')
       }
     };
   });
+
+

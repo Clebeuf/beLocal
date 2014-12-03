@@ -299,6 +299,7 @@
 }
 
 .navbar {
+  border-radius: 0px;
   background-color: #FFFFFF !important;
   height: 140px;
   -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3) !important;

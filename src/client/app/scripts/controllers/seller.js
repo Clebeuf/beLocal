@@ -818,12 +818,12 @@ angular.module('clientApp')
         debug: false, 
         onShown: function(tour) {
             var step = tour._options.steps[tour._current];
-            $(step.element).attr('disabled', true);
+            angular.element(step.element).attr('disabled', true);
         },
         onHidden: function(tour) {
             var step = tour._options.steps[tour._current];
-            $(step.element).removeAttr('disabled');
-        },
+            angular.element (step.element).removeAttr('disabled');
+        },               
         steps: [
           {
             element: "",

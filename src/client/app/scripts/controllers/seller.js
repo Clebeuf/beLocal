@@ -879,9 +879,9 @@ angular.module('clientApp')
             placement: "bottom"
           },
           {
-            element: "#navBarTour",
+            element: "",
             title: "<center><b>Take the Tour Again</b></center>",
-            content: "If at any time you would like to take this tutorial again, select 'Vendor Tutorial' from the drop down menu. <hr><center><b> If you have any questions or comments please don't hesitate to contact us at </b><a href='mailto:" + "belocalvictoria" + "@gmail.com" + "'>" + "belocalvictoria" + "@gmail.com" + "</a></center>",
+            content: "If at any time you would like to take this tutorial again, select 'Vendor Tutorial' from the drop down menu in the navigation bar. <hr><center><b> If you have any questions or comments please don't hesitate to contact us at </b><a href='mailto:" + "belocalvictoria" + "@gmail.com" + "'>" + "belocalvictoria" + "@gmail.com" + "</a></center>",
             placement: "bottom"
           }  
 

@@ -172,7 +172,7 @@ class PhotoPathSerializer(serializers.ModelSerializer):
 class ProductPhotoSerializer(serializers.ModelSerializer):
   class Meta:
       model = be_local_server.models.ProductPhoto
-      fields = ('id', 'image')
+      fields = ('id', 'image')      
 
 class AddSellerLocationSerializer(serializers.ModelSerializer):
     address = OpeningHoursSerializer() 
@@ -275,7 +275,7 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
     vendor = BusinessVendorSerializer() 
     photo = PhotoPathSerializer()
     total_likes = serializers.IntegerField(source='vote_total') 
-    is_liked = serializers.IntegerField(blank=True)
+    is_liked = serializers.IntegerField()
     tags = TagListSerializer(blank=True)
     category = CategorySerializer(blank=True)
     
@@ -376,7 +376,25 @@ class MarketDetailsVendorSerializer(serializers.ModelSerializer):
                   'products',
                   'photo',
                   'address',
-      )           
+      )  
+
+class PublicMarketSerializer(serializers.ModelSerializer):
+    address = AddAddressSerializer()
+    total_likes = serializers.IntegerField(source='vote_total') 
+    is_liked = serializers.IntegerField()
+    photo = MarketPhotoPathSerializer()
+  
+    class Meta:
+        model = be_local_server.models.Market
+        fields = (  'id',
+                    'address',
+                    'name',
+                    'description',
+                    'total_likes',
+                    'is_liked',
+                    'photo',
+                    'webpage',
+        )               
 
 class MarketDisplaySerializer(serializers.ModelSerializer):
     vendors = BusinessVendorSerializer(many=True)
@@ -399,16 +417,11 @@ class MarketDisplaySerializer(serializers.ModelSerializer):
         )
 
 class MarketDetailsSerializer(serializers.ModelSerializer):
-    vendors = serializers.SerializerMethodField('get_active_vendors')
+    vendors = MarketDetailsVendorSerializer(many=True)
     address = AddAddressSerializer()
     total_likes = serializers.IntegerField(source='vote_total') 
     is_liked = serializers.IntegerField()
     photo = MarketPhotoPathSerializer()
-
-    def get_active_vendors(self, obj):
-      vendors = obj.vendors.all().filter(is_active=True)
-      serializer = MarketDetailsVendorSerializer(vendors, many=True)
-      return serializer.data    
   
     class Meta:
         model = be_local_server.models.Market

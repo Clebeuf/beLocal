@@ -4,6 +4,9 @@
 
 */
 
+
+
+
 .link a {
   color: #696969 !important;
 }
@@ -300,8 +303,6 @@
   height: 140px;
   -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3) !important;
 }
-
-
 
 .nav-bar-top {
   padding-bottom: 50px;
@@ -787,6 +788,10 @@ a.footerLink {
 .beLocal-btn-filled:hover {
   background-color: #89cc1d;
   color: white;
+}
+
+.tour-tour-element:disabled {
+  opacity: 1.0 !important;
 }
 
 /* VENDOR CARD STUFF */

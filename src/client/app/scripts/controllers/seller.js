@@ -814,8 +814,16 @@ angular.module('clientApp')
         keyboard: true,
         backdrop: true,
         orphan: true,
-        debug: false,
         reflex: false,        
+        debug: false, 
+        onShown: function(tour) {
+            var step = tour._options.steps[tour._current];
+            $(step.element).attr('disabled', true);
+        },
+        onHidden: function(tour) {
+            var step = tour._options.steps[tour._current];
+            $(step.element).removeAttr('disabled');
+        },
         steps: [
           {
             element: "",

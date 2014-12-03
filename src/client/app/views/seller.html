@@ -14,7 +14,7 @@
   <html-comp content="warningHTML"></html-comp>
 </div>
 
-<div id="navBarTour">
+<div>
     <navbar-x-s></navbar-x-s>
 </div>
 
@@ -40,7 +40,7 @@
                 <div class="col-sm-12">
                     <span class="new-hr-heading-style">
                         <div ng-show="StateService.getCurrentUser().vendor.address.city.length == null">
-                            Click edit profile to update your contact information
+                            City, Province
                         </div>
                         <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                             <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}

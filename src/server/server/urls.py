@@ -21,7 +21,6 @@ urlpatterns = patterns('',
     url(r'^users/password/reset/$', views.PasswordReset.as_view(), name='password_reset'),
     url(r'^users/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views.reset_confirm, name='password_reset_confirm'),      
     url(r'^redirect_to_login/$', RedirectView.as_view(url='http://127.0.0.1:9000'), name='password_reset_complete'),
-    url(r'^users/delete/?$', views.DeleteUserView.as_view(), name='vendor'),    
     
     url(r'^vendor/add/$', views.AddVendorView.as_view(), name='vendor-add'),    
     url(r'^vendor/?$', views.RWDVendorView.as_view(), name='vendor'),   
@@ -67,5 +66,7 @@ urlpatterns = patterns('',
     url(r'^manage/vendors/list/$',views.ManageVendorsView.as_view(), name='inactive-vendors'),
     url(r'^manage/users/list/$',views.ManageUsersView.as_view(), name='manage-users'),    
     url(r'^manage/vendors/activate/$',views.ActivateVendorView.as_view(), name='activate-vendor'), 
+
+    url(r'^public/markets/$', views.ListMarketsOnlyView.as_view(), name='public-market-list'),    
     
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

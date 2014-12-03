@@ -10,7 +10,12 @@ angular.module('clientApp')
         $scope.StateService = StateService;
         $scope.loginError = false;
         $scope.productSuggestions = [];
-        $scope.state = $state;     
+        $scope.state = $state;         
+
+        angular.element('.navbar-collapse ul li a:not(.dropdown-toggle)').click(function () { 
+            if(angular.element('.navbar-toggle:visible').length > 0)
+                angular.element('.navbar-toggle:visible')[0].click(); 
+        });           
 
         $scope.goToManage = function() {
             $location.path('/manage');

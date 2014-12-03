@@ -816,7 +816,6 @@ angular.module('clientApp')
         orphan: true,
         debug: false, 
         onShown: function(tour) {
-            console.log(tour);
             var step = tour._options.steps[tour._current];
             $(step.element).attr('disabled', true);
         },

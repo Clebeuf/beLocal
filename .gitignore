@@ -17,5 +17,8 @@ src/server/be_local_server/static/media/*
 !src/client/*.jpg
 
 *.jpg
-
 *.jpeg
+
+log.txt
+src/server/log.txt
+src/server/out.txt

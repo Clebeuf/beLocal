@@ -70,4 +70,4 @@ urlpatterns = patterns('',
 
     url(r'^public/markets/$', views.ListMarketsOnlyView.as_view(), name='public-market-list'),    
     
-) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+) # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

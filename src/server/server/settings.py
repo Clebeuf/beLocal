@@ -20,11 +20,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'fy=c#^1m+x38z=(5pb6i3a_8v(bhv)$#2a7h!1*dv))jby0xh4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['belocalvictoria.me']
 
 SITE_ID = 1
 
@@ -174,13 +174,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'be_local_server/static_files')
-STATIC_URL = '/static_files/'
+STATIC_ROOT = '/home/ubuntu/beLocal.com/static/'
+STATIC_URL = '/static/'
 
 # User-uploaded images
 # https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user
-MEDIA_ROOT = os.path.join(BASE_DIR, 'be_local_server/static/media/')
-MEDIA_URL = 'http://belocalvictoria.me:80/static/media/'
+MEDIA_ROOT = os.path.join('/home/ubuntu/beLocal.com/media/')
+MEDIA_URL = 'http://belocalvictoria.me:80/media/' #'http://belocalvictoria.me:80/static/media/'
 ADMIN_MEDIA_PREFIX = '/admin-media/'
 
 # site id for sites framework

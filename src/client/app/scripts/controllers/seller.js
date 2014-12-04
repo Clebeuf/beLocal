@@ -25,7 +25,10 @@ angular.module('clientApp')
     angular.copy(StateService.getCurrentUser(), $scope.currentUser);
     $scope.isCreatingCustomLocation = false;
     $scope.showInactiveAlert = true;
+    $scope.profileImage = '';
+    $scope.profileImageCoords = [];
     $scope.showXSNav = true;
+    $scope.profileImageError='';
 
     var geocoder = new google.maps.Geocoder();
 
@@ -179,16 +182,9 @@ angular.module('clientApp')
     }
 
     $scope.editProfile = function() {
-        $scope.profileImageError = undefined;
-
         var e = angular.element('#profile-image');
         e.wrap('<form>').closest('form').get(0).reset();
         e.unwrap();
-
-        $scope.displayProfileThumbnail = $scope.currentUser.vendor.photo ? true : false;
-
-        if($scope.displayProfileThumbnail)
-            angular.element('#profilePreview').attr('src', $scope.currentUser.vendor.photo.image_url).width(50).height(50);
     }
 
     $scope.generateSocialStrings = function() {
@@ -224,9 +220,8 @@ angular.module('clientApp')
         $scope.vendorProfileUpdated = true;
         $scope.currentUser.vendor.address.addr_line1 = 'unknown';
         $scope.currentUser.vendor.address.zipcode = 'unknown';
-        if($scope.profileForm.$valid && !$scope.profileImageError) {
+        if($scope.profileForm.$valid) {
             angular.element('#profileModal').modal('hide');
-            console.log($scope.currentUser);
             if($scope.currentUser.vendor.photo.id)
                 $scope.currentUser.vendor.photo = $scope.currentUser.vendor.photo.id;
             StateService.updateCurrentUser($scope.currentUser).then(function(result) {
@@ -490,32 +485,6 @@ angular.module('clientApp')
           }         
         });
     }
-
-    $scope.profileFileNameChanged = function(file) {
-        $scope.profileImageError = undefined;
-
-        if (file && file[0]) {
-            var reader = new FileReader();
-            $scope.displayItemThumbnail = true;
-            reader.onload = function(e) {
-                angular.element('#profilePreview')
-                .attr('src', e.target.result)
-                .width(50)
-                .height(50);             
-            };
-            reader.readAsDataURL(file[0]);
-        }
-
-        StateService.uploadProfileFile(file[0])
-        .success(function(response) {
-            $scope.currentUser.vendor.photo = response.id;
-        })
-        .error(function(response) {
-          if(response.image) {
-            $scope.profileImageError = response.image[0];
-          }         
-        });
-    }    
 
     $scope.roundTimeToNearestFive = function(date) {
       var coeff = 1000 * 60 * 5;
@@ -787,6 +756,134 @@ angular.module('clientApp')
             object.marker.setAnimation(null);
     };    
 
+    $scope.handleProfileImageFileSelect=function(file) {
+        if(file && file[0]) {
+        	//show progress modal while opening and resizing image
+        	var progress = angular.element('.js-loading-bar'),
+      		bar = progress.find('.progress-bar');  
+  			progress.modal('show');
+  			bar.addClass('animate');
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                $scope.$apply(function($scope){
+                    $scope.profileImage = evt.target.result;
+                    var image = new Image();
+                    image.src = evt.target.result;
+                    //resize image width to 1000 on client side rather than 500 because
+                    //there will be some cropping after.
+                    $scope.resizeStep(image, 1000).then(function(resizedImage){
+                    	bar.removeClass('animate');
+  						progress.modal('hide');
+                        $scope.profileImage = resizedImage.src;
+                        //only trigger the modal show event once the resize is done so that
+                        //the resized image can fit onto the modal.
+                        angular.element('#profileImageModal').modal('show');
+                    });
+                });
+            };
+            reader.readAsDataURL(file[0]);
+            //cloning and replacing the file input element with itself in order to clear it
+            //this is because the onchange event doesn't get triggered if the user selects the
+            //same file as last time.
+            angular.element('#profile-image').replaceWith(angular.element('#profile-image').clone(true));
+
+        }
+    };
+
+     $scope.selected = function(x) {
+    	$scope.profileImageCoords = [x.x, x.y, x.x2, x.y2];
+  	};
+
+  	$scope.triggerImageSelect = function () {
+		  $timeout(function() {
+		    angular.element('#profile-image').trigger('click');
+		  }, 100);
+		};
+
+	$scope.uploadProfileImage = function() {
+		//change the Done button to a loader to prevent clicks while uploading
+		angular.element('#uploadProfileImage').button('loading');
+		if($scope.profileImage){
+            StateService.uploadProfileFile($scope.profileImage, $scope.profileImageCoords, $scope.currentUser.vendor.id)
+            .success(function(response) {
+                angular.element('#profileImage').css({
+                	'background-image': 'url(' + response.image_url +')'
+            		});
+                angular.element('#profileImageModal').modal('hide');
+                angular.element('#uploadProfileImage').button('reset');
+            })
+            .error(function(response){
+                angular.element('#uploadProfileImage').button('reset');
+                $scope.profileImageError = response;
+            });
+          }
+	}
+
+	/* function to resize image */
+    $scope.resizeStep = function (img, width, quality) {
+
+        function getContext (canvas) {
+            var context = canvas.getContext('2d')
+
+            context.imageSmoothingEnabled       = true
+            context.mozImageSmoothingEnabled    = true
+            context.oImageSmoothingEnabled      = true
+            context.webkitImageSmoothingEnabled = true
+
+            return context
+        }
+
+        quality = quality || 1.0
+     
+        var resultD = $q.defer()
+        var canvas  = document.createElement( 'canvas' )
+        var context = getContext(canvas)
+        var type = "image/png"
+     
+        var cW = img.naturalWidth
+        var cH = img.naturalHeight
+        var wRatio = cW/width;
+        var height = cH / wRatio;
+        var dst = new Image()
+        var tmp = null
+     
+        function stepDown () {
+            cW = Math.max(cW / 2, width) | 0
+            cH = Math.max(cH / 2, height) | 0
+
+            canvas.width  = cW
+            canvas.height = cH
+
+            context.drawImage(tmp || img, 0, 0, cW, cH)
+
+            dst.src = canvas.toDataURL(type, quality)
+
+            if (cW <= width || cH <= height) {
+                return resultD.resolve(dst)
+            }
+
+            if (!tmp) {
+                tmp = new Image()
+                tmp.onload = stepDown
+            }
+
+            tmp.src = dst.src
+        }
+     
+        if (cW <= width || cH <= height || cW / 2 < width || cH / 2 < height) {
+            canvas.width  = width
+            canvas.height = height
+            context.drawImage(img, 0, 0, width, height)
+            dst.src = canvas.toDataURL(type, quality)
+
+            resultD.resolve(dst)
+        } else {
+            stepDown()
+        }
+     
+        return resultD.promise
+    }
+
     $scope.init = function() {
         $scope.getSellerLocations();
         $scope.getSellerItems();
@@ -798,8 +895,7 @@ angular.module('clientApp')
         $scope.resetLocationModal();
     }  
 
-    $scope.init();   
-
+    $scope.init();
   })
   .directive('htmlComp', function($compile, $parse) {
       return {
@@ -812,6 +908,62 @@ angular.module('clientApp')
         }
       }
   })
+  .directive('imgCropped', function () {
+	  return {
+	    restrict: 'E',
+	    replace: true,
+	    scope: { src:'@', selected:'&' },
+	    link: function(scope,element, attr) {
+	      var myImg;
+	      var clear = function() {
+	        if (myImg) {
+	          myImg.next().remove();
+	          myImg.remove();
+	          myImg = undefined;
+	        }
+	      };
+	      scope.$watch('src', function(nv) {        
+	        clear();
+	        if (nv) {
+	          element.after('<img />');
+	          myImg = element.next();        
+	          myImg.attr('src',nv);
+              myImg.attr('id', 'belocal-img-crop')
+	        }
+	      });	      
+	      scope.$on('$destroy', clear);
+	      //when the modal is shown, then only we can figure out the display
+	      //size of the image to make it responsive to screen size.
+            angular.element('#profileImageModal').on('shown.bs.modal', function(e){
+                var width = angular.element('#profileImageModal').find('.crop-image-wrapper').width();
+                var height = (3/5) * width;
+                var quarterWidth = width/4;
+                var quarterHeight = height/4;
+            $('#belocal-img-crop').Jcrop({
+                trackDocument: true,
+                aspectRatio:5/3,
+                boxWidth: width,
+                boxHeight: height,
+                addClass: 'jcrop-centered',
+                //set the default crop selection area
+                setSelect: [quarterWidth, quarterHeight, width-quarterWidth, height-quarterHeight],
+                onSelect: function(x) {
+                  scope.$apply(function() {
+                    scope.selected({cords: x});
+                  });
+                }
+              });
+            });
+	    }
+	  };
+	})
+  //need this filter to be applied to the src of imgCropped directive or else I get
+  //cross domain error from angular when loading the image?!
+  .filter('trusted', ['$sce', function ($sce) {
+	    return function(url) {
+	        return $sce.trustAsResourceUrl(url);
+	    };
+    }])
   .directive('phone', function() {
     // This is a directive to ensure that an input field contains an phone value.
     var PHONE_REGEX = /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/;    

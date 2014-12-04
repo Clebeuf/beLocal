@@ -724,7 +724,12 @@ angular.module('clientApp')
             var reader = new FileReader();
             reader.onload = function (evt) {
                 $scope.$apply(function($scope){
-                    $scope.profileImage=evt.target.result;
+                    $scope.profileImage = evt.target.result;
+                    var image = new Image();
+                    image.src = evt.target.result;
+                    $scope.resizeStep(image,1000).then(function(resizedImage){
+                        $scope.profileImage = resizedImage.src;
+                    });
                 });
             };
             reader.readAsDataURL(file[0]);
@@ -757,6 +762,70 @@ angular.module('clientApp')
             });
           }
 	}
+
+    $scope.resizeStep = function (img, width, quality) {
+
+        function getContext (canvas) {
+            var context = canvas.getContext('2d')
+
+            context.imageSmoothingEnabled       = true
+            context.mozImageSmoothingEnabled    = true
+            context.oImageSmoothingEnabled      = true
+            context.webkitImageSmoothingEnabled = true
+
+            return context
+        }
+
+        quality = quality || 1.0
+     
+        var resultD = $q.defer()
+        var canvas  = document.createElement( 'canvas' )
+        var context = getContext(canvas)
+        var type = "image/png"
+     
+        var cW = img.naturalWidth
+        var cH = img.naturalHeight
+        var wRatio = cW/width;
+        var height = cH / wRatio;
+        var dst = new Image()
+        var tmp = null
+     
+        function stepDown () {
+            cW = Math.max(cW / 2, width) | 0
+            cH = Math.max(cH / 2, height) | 0
+
+            canvas.width  = cW
+            canvas.height = cH
+
+            context.drawImage(tmp || img, 0, 0, cW, cH)
+
+            dst.src = canvas.toDataURL(type, quality)
+
+            if (cW <= width || cH <= height) {
+                return resultD.resolve(dst)
+            }
+
+            if (!tmp) {
+                tmp = new Image()
+                tmp.onload = stepDown
+            }
+
+            tmp.src = dst.src
+        }
+     
+        if (cW <= width || cH <= height || cW / 2 < width || cH / 2 < height) {
+            canvas.width  = width
+            canvas.height = height
+            context.drawImage(img, 0, 0, width, height)
+            dst.src = canvas.toDataURL(type, quality)
+
+            resultD.resolve(dst)
+        } else {
+            stepDown()
+        }
+     
+        return resultD.promise
+    }
 
     $scope.init = function() {
         $scope.getSellerLocations();

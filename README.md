@@ -9,6 +9,8 @@ beLocal is a web application that connects local farmers and foodmakers with the
 
 This is a project from CSC 485 - Startup Programming at the University of Victoria.
 
+**New to beLocal? Make sure to check out our [User Guide](https://github.com/rpanjwani/beLocal/wiki/User-Guide)!**
+
 ###Our Team
 [Scott Low](https://github.com/scottlow)  
 [Carly Lebeuf](https://github.com/clebeuf)  
@@ -19,7 +21,12 @@ This is a project from CSC 485 - Startup Programming at the University of Victor
 ###Trello 
 Follow our team progress on [Trello](https://trello.com/b/3ivzzaQ3/belocal)
 
-###Documents
-[beLocal Pitch Slides](https://docs.google.com/presentation/d/127o2roBkdHE7jTACNYLP7jXUE_X0euAElPQksTqPJ3A/edit?usp=sharing)  
-[Entity-Relationship Diagram](https://docs.google.com/document/d/1Ki1SjheW_Fv4dR-6vBupUFS9pC-5pYIOk5oFubcxe9s/edit?usp=sharing)  
-[Rest Endpoints](https://docs.google.com/document/d/1YGYBoMR3pN_R_jdtBvF9mjdy-Vu94VtUAixf_voMP08/edit?usp=sharing)
+###Wiki Contents
+[Architectural Overview](https://github.com/rpanjwani/beLocal/wiki/Architectural-Overview)  
+[Authentication Workflow](https://github.com/rpanjwani/beLocal/wiki/Authentication-Workflow)  
+[Main Features](https://github.com/rpanjwani/beLocal/wiki/Main-Features)  
+[Main Use Cases](https://github.com/rpanjwani/beLocal/wiki/Main-Use-Cases)  
+[Public REST API](https://github.com/rpanjwani/beLocal/wiki/Public-REST-API)  
+[Third Party Libraries](https://github.com/rpanjwani/beLocal/wiki/Third-Party-Libraries)  
+[Tool & Installation Instructions](https://github.com/rpanjwani/beLocal/wiki/Tools-&-Installation-Instructions)  
+[User Guide](https://github.com/rpanjwani/beLocal/wiki/User-Guide)  

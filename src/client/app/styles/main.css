@@ -4,9 +4,15 @@
 
 */
 
+
 .jcrop-keymgr {
   opacity: 0 !important;
 }
+
+.link a {
+  color: #696969 !important;
+}
+
 .error{
   color: rgb(182, 99, 98);
   padding-left: 5px;
@@ -327,12 +333,11 @@
 }
 
 .navbar {
+  border-radius: 0px;
   background-color: #FFFFFF !important;
   height: 140px;
   -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3) !important;
 }
-
-
 
 .nav-bar-top {
   padding-bottom: 50px;
@@ -734,6 +739,7 @@ a.footerLink {
   border-top-right-radius: 0px;
 }
 
+
 .navbar-nav.navbar-right:last-child {
   margin-right: 0px !important;
 }
@@ -817,6 +823,10 @@ a.footerLink {
 .beLocal-btn-filled:hover {
   background-color: #89cc1d;
   color: white;
+}
+
+.tour-tour-element:disabled {
+  opacity: 1.0 !important;
 }
 
 /* VENDOR CARD STUFF */

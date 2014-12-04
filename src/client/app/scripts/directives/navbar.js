@@ -62,11 +62,11 @@ angular.module('clientApp')
         $scope.onSelect = function($item,$model,$label){
 
             if($item.vendorSearch != null) {
-                $window.location.href='#/search/vendors?q=' + $item.vendorSearch;
+                $window.location.href='#/search/vendors?q=' + encodeURI($item.vendorSearch);
             } else if($item.marketSearch != null) {
-                $window.location.href='#/search/markets?q=' + $item.marketSearch;
+                $window.location.href='#/search/markets?q=' + encodeURI($item.marketSearch);
             }else {
-                $window.location.href='#/search/products?q=' + $item.name;
+                $window.location.href='#/search/products?q=' + encodeURI($item.name);
             }
         }         
 
@@ -98,8 +98,19 @@ angular.module('clientApp')
             }
         }
 
+        // vendor tour was requested
+        $scope.showVendorTour = function() {
+            // if on seller page start tour
+            if ($location.path() === '/vendor'){
+                $scope.tour.restart(true);
+            } else { // redirect to the seller page and pass request to start the tour.
+                $location.path('/vendor');
+                $location.hash('tour');
+            }
+        }  
+
         $scope.doSearch = function(value){
-          $window.location.href='#/search/products?q=' + value;
+          $window.location.href='#/search/products?q=' + encodeURI(value);
         }         
       }],
     };

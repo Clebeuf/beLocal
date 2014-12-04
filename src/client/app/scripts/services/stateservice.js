@@ -19,6 +19,10 @@ angular.module('clientApp')
     var marketDetails = undefined;
     var tagToDisplay = undefined;
 
+    this.deleteUser = function(userID) {
+      return $http.post(this.getServerAddress() + 'users/delete/', {'id':userID}) 
+    }
+
     this.getContactEmail = function() {
       return 'belocalvictoria' + '@' + 'gmail.com';
     }
@@ -436,7 +440,7 @@ angular.module('clientApp')
         // unlike the product
         return $http.delete(this.getServerAddress() + 'like/' + itemName + '/' + item.id + '/')
         .success(function(data, status, headers, config) {
-          console.log('Unliked an item! total_likes: ' + data.num_votes);
+          // console.log('Unliked an item! total_likes: ' + data.num_votes);
           likedUnlikedItem.total_likes = data.num_votes;
           likedUnlikedItem.is_liked = null;
         })
@@ -447,7 +451,7 @@ angular.module('clientApp')
         // like the product
         return $http.post(this.getServerAddress() + 'like/' + itemName + '/' + item.id + '/')
         .success(function(data, status, headers, config) {
-          console.log('Liked an item! total_likes: '+ data.num_votes);
+          // console.log('Liked an item! total_likes: '+ data.num_votes);
           likedUnlikedItem.total_likes = data.num_votes;
           likedUnlikedItem.is_liked = true;
         })

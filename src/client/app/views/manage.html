@@ -3,15 +3,16 @@
 <div class="new-formatting-container customer-container">  
     <div class="row">
 		<div class="new-heading-style ng-binding">
-	        All Vendors
+	        All Vendors ({{inactiveVendors.length}} Currently Registered)
 	    </div>    
 	    <div ng-repeat="vendor in inactiveVendors">
 	  	    <vendor-card data="vendor"></vendor-card>
 	  	</div>
 		<div class="new-heading-style ng-binding">
-	        All Users
+	        All Users ({{users.length}} Currently Registered)
 	    </div> 
 	    <p ng-repeat="user in users">
+            <a ng-click="deleteUser(user)" class="btn btn-md btn-danger" style="margin-right:10px; margin-left:10px; float:left">Delete</a>	    
 	    	<strong>Name:</strong> {{user.first_name}} {{user.last_name}}<br>
 	    	<strong>Email:</strong> {{user.email}}
 	    </p>	  	

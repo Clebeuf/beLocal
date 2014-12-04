@@ -62,11 +62,11 @@ angular.module('clientApp')
         $scope.onSelect = function($item,$model,$label){
 
             if($item.vendorSearch != null) {
-                $window.location.href='#/search/vendors?q=' + $item.vendorSearch;
+                $window.location.href='#/search/vendors?q=' + encodeURI($item.vendorSearch);
             } else if($item.marketSearch != null) {
-                $window.location.href='#/search/markets?q=' + $item.marketSearch;
+                $window.location.href='#/search/markets?q=' + encodeURI($item.marketSearch);
             }else {
-                $window.location.href='#/search/products?q=' + $item.name;
+                $window.location.href='#/search/products?q=' + encodeURI($item.name);
             }
         }         
 
@@ -110,7 +110,7 @@ angular.module('clientApp')
         }  
 
         $scope.doSearch = function(value){
-          $window.location.href='#/search/products?q=' + value;
+          $window.location.href='#/search/products?q=' + encodeURI(value);
         }         
       }],
     };

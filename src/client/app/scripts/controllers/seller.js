@@ -28,6 +28,7 @@ angular.module('clientApp')
     $scope.profileImage = '';
     $scope.profileImageCoords = [];
     $scope.showXSNav = true;
+    $scope.profileImageError='';
 
     var geocoder = new google.maps.Geocoder();
 
@@ -181,8 +182,6 @@ angular.module('clientApp')
     }
 
     $scope.editProfile = function() {
-        $scope.profileImageError = undefined;
-
         var e = angular.element('#profile-image');
         e.wrap('<form>').closest('form').get(0).reset();
         e.unwrap();
@@ -221,7 +220,7 @@ angular.module('clientApp')
         $scope.vendorProfileUpdated = true;
         $scope.currentUser.vendor.address.addr_line1 = 'unknown';
         $scope.currentUser.vendor.address.zipcode = 'unknown';
-        if($scope.profileForm.$valid && !$scope.profileImageError) {
+        if($scope.profileForm.$valid) {
             angular.element('#profileModal').modal('hide');
             if($scope.currentUser.vendor.photo.id)
                 $scope.currentUser.vendor.photo = $scope.currentUser.vendor.photo.id;
@@ -721,6 +720,11 @@ angular.module('clientApp')
 
     $scope.handleProfileImageFileSelect=function(file) {
         if(file && file[0]) {
+        	//show progress modal while opening and resizing image
+        	var modal = angular.element('.js-loading-bar'),
+      		bar = modal.find('.progress-bar');  
+  			modal.modal('show');
+  			bar.addClass('animate');
             var reader = new FileReader();
             reader.onload = function (evt) {
                 $scope.$apply(function($scope){
@@ -728,7 +732,12 @@ angular.module('clientApp')
                     var image = new Image();
                     image.src = evt.target.result;
                     $scope.resizeStep(image,1000).then(function(resizedImage){
+                    	bar.removeClass('animate');
+  						modal.modal('hide');
                         $scope.profileImage = resizedImage.src;
+                        //only trigger the modal show event once the resize is done so that
+                        //the resized image can fit onto the modal.
+                        angular.element('#profileImageModal').modal('show');
                     });
                 });
             };
@@ -737,11 +746,11 @@ angular.module('clientApp')
             //this is because the onchange event doesn't get triggered if the user selects the
             //same file as last time.
             angular.element('#profile-image').replaceWith(angular.element('#profile-image').clone(true));
-            angular.element('#profileImageModal').modal('show');
+
         }
     };
 
-    $scope.selected = function(x) {
+     $scope.selected = function(x) {
     	$scope.profileImageCoords = [x.x, x.y, x.x2, x.y2];
   	};
 
@@ -752,6 +761,7 @@ angular.module('clientApp')
 		};
 
 	$scope.uploadProfileImage = function() {
+		angular.element('#uploadProfileImage').button('loading');
 		if($scope.profileImage){
             StateService.uploadProfileFile($scope.profileImage, $scope.profileImageCoords, $scope.currentUser.vendor.id)
             .success(function(response) {
@@ -759,6 +769,12 @@ angular.module('clientApp')
                 	'background-image': 'url(' + response.image_url +')'
             		});
                 angular.element('#profileImageModal').modal('hide');
+                angular.element('#uploadProfileImage').button('reset');
+            })
+            .error(function(response){
+                angular.element('#uploadProfileImage').button('reset');
+                console.log(response);
+                $scope.profileImageError = response;
             });
           }
 	}
@@ -875,15 +891,21 @@ angular.module('clientApp')
 	        }
 	      });	      
 	      scope.$on('$destroy', clear);
+	      //when the modal is shown, then only we can figure out the display
+	      //size of the image to make it responsive to screen size.
             angular.element('#profileImageModal').on('shown.bs.modal', function(e){
                 var width = angular.element('#profileImageModal').find('.crop-image-wrapper').width();
                 var height = (3/5) * width;
+                var quarterWidth = width/4;
+                var quarterHeight = height/4;
+                console.log(quarterWidth, quarterHeight, width, height);
             $('#belocal-img-crop').Jcrop({
                 trackDocument: true,
                 aspectRatio:5/3,
                 boxWidth: width,
                 boxHeight: height,
                 addClass: 'jcrop-centered',
+                setSelect: [quarterWidth, quarterHeight, width-quarterWidth, height-quarterHeight],
                 onSelect: function(x) {
                   scope.$apply(function() {
                     scope.selected({cords: x});

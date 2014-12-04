@@ -424,10 +424,24 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" ng-click="uploadProfileImage()" class="btn beLocal-btn-filled">Done</button>
+                <button type="button" ng-click="uploadProfileImage()" id="uploadProfileImage" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" class="btn beLocal-btn-filled">Done</button>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Loading bar when resizing image -->
+<div class="modal js-loading-bar">
+ <div class="modal-dialog">
+   <div class="modal-content">
+     <div class="modal-header">Resizing image...Please wait</div>
+     <div class="modal-body">
+       <div class="progress progress-popup">
+        <div class="progress-bar"></div>
+       </div>
+     </div>
+   </div>
+ </div>
 </div>
 
 <!-- Seller Add/Edit Item Modal -->

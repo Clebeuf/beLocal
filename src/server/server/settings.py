@@ -175,7 +175,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_ROOT = '/home/ubuntu/beLocal.com/static/'
-STATIC_URL = '/static/'
+STATIC_URL = 'http://belocalvictoria.me:80/static/'
 
 # User-uploaded images
 # https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user

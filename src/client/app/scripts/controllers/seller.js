@@ -485,37 +485,7 @@ angular.module('clientApp')
           }         
         });
     }
-<<<<<<< HEAD
-    
-=======
 
-    $scope.profileFileNameChanged = function(file) {
-        $scope.profileImageError = undefined;
-
-        if (file && file[0]) {
-            var reader = new FileReader();
-            $scope.displayItemThumbnail = true;
-            reader.onload = function(e) {
-                angular.element('#profilePreview')
-                .attr('src', e.target.result)
-                .width(50)
-                .height(50);             
-            };
-            reader.readAsDataURL(file[0]);
-        }
-
-        StateService.uploadProfileFile(file[0])
-        .success(function(response) {
-            $scope.currentUser.vendor.photo = response.id;
-        })
-        .error(function(response) {
-          if(response.image) {
-            $scope.profileImageError = response.image[0];
-          }         
-        });
-    }    
-
->>>>>>> master
     $scope.roundTimeToNearestFive = function(date) {
       var coeff = 1000 * 60 * 5;
       return new Date(Math.round(date.getTime() / coeff) * coeff);
@@ -789,9 +759,9 @@ angular.module('clientApp')
     $scope.handleProfileImageFileSelect=function(file) {
         if(file && file[0]) {
         	//show progress modal while opening and resizing image
-        	var modal = angular.element('.js-loading-bar'),
-      		bar = modal.find('.progress-bar');  
-  			modal.modal('show');
+        	var progress = angular.element('.js-loading-bar'),
+      		bar = progress.find('.progress-bar');  
+  			progress.modal('show');
   			bar.addClass('animate');
             var reader = new FileReader();
             reader.onload = function (evt) {
@@ -799,9 +769,11 @@ angular.module('clientApp')
                     $scope.profileImage = evt.target.result;
                     var image = new Image();
                     image.src = evt.target.result;
-                    $scope.resizeStep(image,1000).then(function(resizedImage){
+                    //resize image width to 1000 on client side rather than 500 because
+                    //there will be some cropping after.
+                    $scope.resizeStep(image, 1000).then(function(resizedImage){
                     	bar.removeClass('animate');
-  						modal.modal('hide');
+  						progress.modal('hide');
                         $scope.profileImage = resizedImage.src;
                         //only trigger the modal show event once the resize is done so that
                         //the resized image can fit onto the modal.
@@ -829,6 +801,7 @@ angular.module('clientApp')
 		};
 
 	$scope.uploadProfileImage = function() {
+		//change the Done button to a loader to prevent clicks while uploading
 		angular.element('#uploadProfileImage').button('loading');
 		if($scope.profileImage){
             StateService.uploadProfileFile($scope.profileImage, $scope.profileImageCoords, $scope.currentUser.vendor.id)
@@ -841,12 +814,12 @@ angular.module('clientApp')
             })
             .error(function(response){
                 angular.element('#uploadProfileImage').button('reset');
-                console.log(response);
                 $scope.profileImageError = response;
             });
           }
 	}
 
+	/* function to resize image */
     $scope.resizeStep = function (img, width, quality) {
 
         function getContext (canvas) {
@@ -966,13 +939,13 @@ angular.module('clientApp')
                 var height = (3/5) * width;
                 var quarterWidth = width/4;
                 var quarterHeight = height/4;
-                console.log(quarterWidth, quarterHeight, width, height);
             $('#belocal-img-crop').Jcrop({
                 trackDocument: true,
                 aspectRatio:5/3,
                 boxWidth: width,
                 boxHeight: height,
                 addClass: 'jcrop-centered',
+                //set the default crop selection area
                 setSelect: [quarterWidth, quarterHeight, width-quarterWidth, height-quarterHeight],
                 onSelect: function(x) {
                   scope.$apply(function() {

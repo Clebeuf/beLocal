@@ -417,11 +417,16 @@ class MarketDisplaySerializer(serializers.ModelSerializer):
         )
 
 class MarketDetailsSerializer(serializers.ModelSerializer):
-    vendors = MarketDetailsVendorSerializer(many=True)
+    vendors = serializers.SerializerMethodField('get_active_vendors')
     address = AddAddressSerializer()
     total_likes = serializers.IntegerField(source='vote_total') 
     is_liked = serializers.IntegerField()
     photo = MarketPhotoPathSerializer()
+
+    def get_active_vendors(self, obj):
+        vendors = obj.vendors.all().filter(is_active=True)
+        serializer = MarketDetailsVendorSerializer(vendors, many=True)
+        return serializer.data     
   
     class Meta:
         model = be_local_server.models.Market

@@ -1178,23 +1178,23 @@ body {
 }
 
 .dotted-image-container {
-  margin : 10% 15% 10% 15%;
-  border-style: dashed;
+  margin-left:auto;
+  margin-right:auto;
+  border: 2px dashed #b3b3b3;
   height:200px;
+  text-align: center;
 }
 
 .btn-image-select{
-  margin: -20px -50px; 
   position:relative; 
   top:45%; 
-  left:40%;
 }
 
-@media (max-width: 500px){
+/*@media (max-width: 500px){
   .btn-image-select{
     left:30%;
   }
-}
+}*/
 
 /* SELLER UI ENDS*/
 

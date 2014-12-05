@@ -763,6 +763,7 @@ angular.module('clientApp')
     };
 
     $scope.launchProfileImageModal = function(){
+    	//angular.element('#profileImageModal').modal({backdrop:'static'});
     	angular.element('#profileImageModal').modal('show');
     }
 
@@ -787,9 +788,10 @@ angular.module('clientApp')
         	if(file[0].size > 3000000){
         		
         		$scope.safeApply(function($scope){
-        			$scope.profileImageError = 'The selected file is too big. Please select a file less than 3 mb.';
+        			$scope.profileImageError = 'The selected file is too big. Please select a file less than 3 MB.';
         		})
         	} else {
+        				$scope.profileImageError = null;
         		    	$scope.showImageSelectButton = false;
     					$scope.showImageCroppingText = true;
 	        	//show progress modal while opening and resizing image

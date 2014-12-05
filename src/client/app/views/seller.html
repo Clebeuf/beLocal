@@ -22,11 +22,11 @@
     <div class="row vendor-profile-header">
         <div class="col-sm-5 vendor-avatar">
             <div id="imageOverlay" class="image-overlay">
-                <div id="profileImage" class="vendor-avatar-img pointer" data-toggle="modal" ng-click="triggerImageSelect()" style="background-image:url({{StateService.getCurrentUser().vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
+                <div id="profileImage" class="vendor-avatar-img pointer" data-toggle="modal" style="background-image:url({{StateService.getCurrentUser().vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
                     <div ng-hide="StateService.getCurrentUser().vendor.photo.image_url != null" class="center" style="color:#ffffff;">
                     </div>
                 </div>
-                <div id="profileOverlay" class="pointer" ng-click="triggerImageSelect()"><span>Change Profile Image</span></div>
+                <div id="profileOverlay" class="pointer" ng-click="launchProfileImageModal()"><span>Change Profile Image</span></div>
             </div>
         </div>
         <div class="col-sm-7 vendor-header-content">
@@ -452,17 +452,24 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4>Crop Your Profile Image</h4>
-                <small>Please select the area of the image to show on your profile and then click done.</small>
+                <h4>Upload New Profile Image</h4>
+                <small>Please upload an image file less than 3 mb.</small>
                 <p ng-show="profileImageError != null" class="help-block"><small style="color: #a94442;" >{{profileImageError}}</small></p>
             </div>
             <div class="modal-body">  
-                <div class="container-fluid">  
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col-xs-12 col-md-12">
-                            <input style="display:none" onchange="angular.element(this).scope().handleProfileImageFileSelect(this.files)" name="imageField" type="file" id="profile-image" accept="image/*">
+                            <div class="dotted-image-container" ng-show="showImageSelectButton">
+                                <input style="display:none" onchange="angular.element(this).scope().handleProfileImageFileSelect(this.files)" name="imageField" type="file" id="profile-image" accept="image/*">
+                                <button type="button" id="triggerImageSelect" class="btn beLocal-btn-filled btn-image-select" ng-click="triggerImageSelect()"><i class="fa fa-plus"></i>Select Image to Upload</button>
+                            </div>
                             <div class="crop-image-wrapper">
                                  <img-cropped src='{{profileImage|trusted}}' selected='selected(cords)'/>
+                            </div>
+                            <div ng-show="showImageCroppingText" id="imageCroppingText" style="padding:0 50px 0 50px;">
+                                <p>To make adjustments to the image, drag & resize the selected area above.<br/>
+                                Once you are happy with your image, click <b>Save Profile Image</b> below.</p>
                             </div>
                         </div>
                     </div>
@@ -470,7 +477,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" ng-click="uploadProfileImage()" id="uploadProfileImage" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" class="btn beLocal-btn-filled">Done</button>
+                <button type="button" ng-click="uploadProfileImage()" id="uploadProfileImage" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-disabled="disableProfileImageSubmit" class="btn beLocal-btn-filled">Save Profile Image</button>
             </div>
         </div>
     </div>

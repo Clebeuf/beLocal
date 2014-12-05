@@ -38,6 +38,7 @@ import StringIO
 from base64 import b64decode
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
 
 class DeleteUserView(generics.CreateAPIView):
     """
@@ -731,31 +732,34 @@ class AddVendorPhotoView(generics.CreateAPIView):
     
     def post(self, request):
         error = ''
-        coords = json.loads(request.DATA["coords"])
-        vendor = Vendor.objects.get(pk = request.DATA["vendorId"])
-        if coords and len(coords) == 4:
-            try:
-                imgData = request.DATA["image"].split(',')[1]
-                imgContent = ContentFile(b64decode(imgData))
-                img = Image.open(imgContent)
-                tempFile = img.crop((
-                    int(round(coords[0])),
-                    int(round(coords[1])),
-                    int(round(coords[2])),
-                    int(round(coords[3]))))
-                tempFileIo = StringIO.StringIO()
-                tempFile.save(tempFileIo, format='png')
-                imgFile = InMemoryUploadedFile(tempFileIo, None, vendor.company_name + '.png', 'image/png', tempFileIo.len, None)
-                vendorPhoto = VendorPhoto(image=imgFile)
-                vendorPhoto.save()
-                vendor.photo = vendorPhoto
-                vendor.save()
-                return Response(data = serializers.VendorPhotoPathSerializer(vendorPhoto).data,
-                            status=status.HTTP_200_OK)
-            except:
-                error = 'unexpected error: ' + sys.exc_info()[0]
+        if len(request.DATA["image"]) * 0.75 > 3000000:
+            error = 'Image size is too big. Should be less than 3 mb.'
         else:
-            error = 'Please select the area to crop the image.'
+            coords = json.loads(request.DATA["coords"])
+            vendor = Vendor.objects.get(pk = request.DATA["vendorId"])
+            if coords and len(coords) == 4:
+                try:
+                    imgData = request.DATA["image"].split(',')[1]
+                    imgContent = ContentFile(b64decode(imgData))
+                    img = Image.open(imgContent)
+                    tempFile = img.crop((
+                        int(round(coords[0])),
+                        int(round(coords[1])),
+                        int(round(coords[2])),
+                        int(round(coords[3]))))
+                    tempFileIo = StringIO.StringIO()
+                    tempFile.save(tempFileIo, format='png')
+                    imgFile = InMemoryUploadedFile(tempFileIo, None, vendor.company_name + '.png', 'image/png', tempFileIo.len, None)
+                    vendorPhoto = VendorPhoto(image=imgFile)
+                    vendorPhoto.save()
+                    vendor.photo = vendorPhoto
+                    vendor.save()
+                    return Response(data = serializers.VendorPhotoPathSerializer(vendorPhoto).data,
+                                status=status.HTTP_200_OK)
+                except:
+                    error = 'An unexpected error occured. Please try again.';
+            else:
+                error = 'Please select the area to crop the image.'
         return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
 
     

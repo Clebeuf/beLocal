@@ -760,39 +760,70 @@ angular.module('clientApp')
     $scope.unHighlightPins = function(object) {
         if(object && object.marker)          
             object.marker.setAnimation(null);
-    };    
+    };
+
+    $scope.launchProfileImageModal = function(){
+    	angular.element('#profileImageModal').modal('show');
+    }
+
+    $scope.resetProfileImageModal = function(){
+    	// angular.element('#triggerImageSelect').show();
+    	// angular.element('#imageCroppingText').hide();
+    	$scope.profileImageError = undefined;
+    	$scope.profileImage = undefined;
+    	$scope.showImageSelectButton = true;
+    	$scope.showImageCroppingText = false;
+    	$scope.disableProfileImageSubmit = true;
+    }
+
+    $scope.resetProfileImageModal();
+
+   	angular.element('#profileImageModal').on('hide.bs.modal', function(){
+   		$scope.resetProfileImageModal();
+   	})
 
     $scope.handleProfileImageFileSelect=function(file) {
         if(file && file[0]) {
-        	//show progress modal while opening and resizing image
-        	var progress = angular.element('.js-loading-bar'),
-      		bar = progress.find('.progress-bar');  
-  			progress.modal('show');
-  			bar.addClass('animate');
-            var reader = new FileReader();
-            reader.onload = function (evt) {
-                $scope.$apply(function($scope){
-                    $scope.profileImage = evt.target.result;
-                    var image = new Image();
-                    image.src = evt.target.result;
-                    //resize image width to 1000 on client side rather than 500 because
-                    //there will be some cropping after.
-                    $scope.resizeStep(image, 1000).then(function(resizedImage){
-                    	bar.removeClass('animate');
-  						progress.modal('hide');
-                        $scope.profileImage = resizedImage.src;
-                        //only trigger the modal show event once the resize is done so that
-                        //the resized image can fit onto the modal.
-                        angular.element('#profileImageModal').modal('show');
-                    });
-                });
-            };
-            reader.readAsDataURL(file[0]);
+        	if(file[0].size > 3000000){
+        		
+        		$scope.safeApply(function($scope){
+        			$scope.profileImageError = 'The selected file is too big. Please select a file less than 3 mb.';
+        		})
+        	} else {
+        		    	$scope.showImageSelectButton = false;
+    					$scope.showImageCroppingText = true;
+	        	//show progress modal while opening and resizing image
+        	
+	     //    	var progress = angular.element('.js-loading-bar'),
+	     //  		bar = progress.find('.progress-bar');  
+	  			// progress.modal('show');
+	  			// bar.addClass('animate');
+	            var reader = new FileReader();
+	            reader.onload = function (evt) {
+	                $scope.safeApply(function($scope){
+	                    $scope.profileImage = evt.target.result;
+	                    $scope.disableProfileImageSubmit = false;
+	        //             var image = new Image();
+	        //             image.src = evt.target.result;
+	        //             //resize image width to 1000 on client side rather than 500 because
+	        //             //there will be some cropping after.
+	        //             $scope.resizeStep(image, 1000).then(function(resizedImage){
+	        //             	bar.removeClass('animate');
+	  						// progress.modal('hide');
+	        //                 $scope.profileImage = resizedImage.src;
+	                        //only trigger the modal show event once the resize is done so that
+	                        //the resized image can fit onto the modal.
+	                        
+	                    //});
+	                });
+	            };
+	            reader.readAsDataURL(file[0]);
+	        }
             //cloning and replacing the file input element with itself in order to clear it
             //this is because the onchange event doesn't get triggered if the user selects the
             //same file as last time.
             angular.element('#profile-image').replaceWith(angular.element('#profile-image').clone(true));
-
+	            //angular.element('#profileImageModal').modal('show');
         }
     };
 
@@ -816,13 +847,14 @@ angular.module('clientApp')
                 	'background-image': 'url(' + response.image_url +')'
             		});
                 angular.element('#profileImageModal').modal('hide');
+                $scope.resetProfileImageModal();
                 angular.element('#uploadProfileImage').button('reset');
             })
             .error(function(response){
                 angular.element('#uploadProfileImage').button('reset');
                 $scope.profileImageError = response;
             });
-          }
+         }
 	}
 
 	/* function to resize image */
@@ -1036,38 +1068,48 @@ angular.module('clientApp')
 	          myImg = undefined;
 	        }
 	      };
-	      scope.$watch('src', function(nv) {        
+	      scope.$watch('src', function(nv) {
+			scope.safeApply = function(fn) {
+			  var phase = this.$root.$$phase;
+			  if(phase == '$apply' || phase == '$digest') {
+			    if(fn && (typeof(fn) === 'function')) {
+			      fn();
+			    }
+			  } else {
+			    this.$apply(fn);
+			  }
+			}           
 	        clear();
 	        if (nv) {
-	          element.after('<img />');
-	          myImg = element.next();        
-	          myImg.attr('src',nv);
-              myImg.attr('id', 'belocal-img-crop')
+				element.after('<img />');
+				myImg = element.next();        
+				myImg.attr('src',nv);
+				myImg.attr('id', 'belocal-img-crop');
+				var imgWidth = myImg[0].naturalWidth;
+	      		var imgHeight = myImg[0].naturalHeight;
+				var quarterImgWidth = imgWidth / 4;
+				var quarterImgHeight = imgHeight / 4;
+
+				//figure out the display size of the image to make it responsive to screen size.
+	            var width = angular.element('#profileImageModal').find('.crop-image-wrapper').width();
+	            var height = (3/5) * width;
+	        	angular.element('#belocal-img-crop').Jcrop({
+	            trackDocument: true,
+	            aspectRatio:5/3,
+	            boxWidth: width,
+	            boxHeight: height,
+	            addClass: 'jcrop-centered',
+	            //set the default crop selection area
+	            setSelect: [quarterImgWidth, quarterImgHeight, imgWidth - quarterImgWidth, imgHeight - quarterImgHeight],
+	            onSelect: function(x) {
+	              scope.safeApply(function() {
+	                scope.selected({cords: x});
+	              });
+	            }
+	          });
 	        }
 	      });	      
 	      scope.$on('$destroy', clear);
-	      //when the modal is shown, then only we can figure out the display
-	      //size of the image to make it responsive to screen size.
-            angular.element('#profileImageModal').on('shown.bs.modal', function(e){
-                var width = angular.element('#profileImageModal').find('.crop-image-wrapper').width();
-                var height = (3/5) * width;
-                var quarterWidth = width/4;
-                var quarterHeight = height/4;
-            $('#belocal-img-crop').Jcrop({
-                trackDocument: true,
-                aspectRatio:5/3,
-                boxWidth: width,
-                boxHeight: height,
-                addClass: 'jcrop-centered',
-                //set the default crop selection area
-                setSelect: [quarterWidth, quarterHeight, width-quarterWidth, height-quarterHeight],
-                onSelect: function(x) {
-                  scope.$apply(function() {
-                    scope.selected({cords: x});
-                  });
-                }
-              });
-            });
 	    }
 	  };
 	})

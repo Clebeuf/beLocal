@@ -1177,6 +1177,25 @@ body {
    width: 100%;
 }
 
+.dotted-image-container {
+  margin : 10% 15% 10% 15%;
+  border-style: dashed;
+  height:200px;
+}
+
+.btn-image-select{
+  margin: -20px -50px; 
+  position:relative; 
+  top:45%; 
+  left:40%;
+}
+
+@media (max-width: 500px){
+  .btn-image-select{
+    left:30%;
+  }
+}
+
 /* SELLER UI ENDS*/
 
 /* PRODUCT DETAILS UI STARTS */

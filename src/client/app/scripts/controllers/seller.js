@@ -763,13 +763,10 @@ angular.module('clientApp')
     };
 
     $scope.launchProfileImageModal = function(){
-    	//angular.element('#profileImageModal').modal({backdrop:'static'});
     	angular.element('#profileImageModal').modal('show');
     }
 
     $scope.resetProfileImageModal = function(){
-    	// angular.element('#triggerImageSelect').show();
-    	// angular.element('#imageCroppingText').hide();
     	$scope.profileImageError = undefined;
     	$scope.profileImage = undefined;
     	$scope.showImageSelectButton = true;
@@ -794,29 +791,11 @@ angular.module('clientApp')
         				$scope.profileImageError = null;
         		    	$scope.showImageSelectButton = false;
     					$scope.showImageCroppingText = true;
-	        	//show progress modal while opening and resizing image
-        	
-	     //    	var progress = angular.element('.js-loading-bar'),
-	     //  		bar = progress.find('.progress-bar');  
-	  			// progress.modal('show');
-	  			// bar.addClass('animate');
 	            var reader = new FileReader();
 	            reader.onload = function (evt) {
 	                $scope.safeApply(function($scope){
 	                    $scope.profileImage = evt.target.result;
 	                    $scope.disableProfileImageSubmit = false;
-	        //             var image = new Image();
-	        //             image.src = evt.target.result;
-	        //             //resize image width to 1000 on client side rather than 500 because
-	        //             //there will be some cropping after.
-	        //             $scope.resizeStep(image, 1000).then(function(resizedImage){
-	        //             	bar.removeClass('animate');
-	  						// progress.modal('hide');
-	        //                 $scope.profileImage = resizedImage.src;
-	                        //only trigger the modal show event once the resize is done so that
-	                        //the resized image can fit onto the modal.
-	                        
-	                    //});
 	                });
 	            };
 	            reader.readAsDataURL(file[0]);

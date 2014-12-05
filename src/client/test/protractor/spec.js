@@ -15,12 +15,13 @@ describe('The beLocal Start Page', function() {
     });
 
     it('should redirect to homepage through Get Started button', function() { 
-        element(by.linkText('Get Started')).click();
+        element(by.css('[ng-click="getStarted()"]')).click(); 
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/');
     });
 
-    it('should not allow sing in without first creating an account', function(){
-        element(by.css('.facebook-button')).click();
+    it('should not allow login without first creating an account', function(){
+        element(by.css('[ng-click="clearLoginModal()"]')).click();
+        element(by.css('[ng-click="signIn()"]')).click();
 
         //Wait for Facebook pop-up to load
         //We cannot use waitForAngular() here since Facebook popup is not angular
@@ -47,15 +48,18 @@ describe('The beLocal Start Page', function() {
         });
 
         browser.waitForAngular(); 
-        var modal = element(by.id('noValidAccountModal'));
-        expect(modal);
+        var no_fb_account_error = element(by.css('[ng-show="noFacebookAccountError"]')).click();
+        expect(no_fb_account_error);
     });
 
+    /*
+    Once this is done for the first time, it will show was a failure
+    in protractor. This is perfectly fine. */
     it('should allow farmers to create an account', function(){
-        element(by.linkText('For Farmers')).click();
+        element(by.css('[ng-click="signUpAsVendorNoFB()"]')).click();
         element(by.css('[ng-click="signUpAsVendor()"]')).click();
 
-        browser.sleep(1000);
+        browser.sleep(4000);
     });
 });
 
@@ -90,7 +94,8 @@ describe('The Vendor Page', function(){
 */
 
     it('should allow the creation a product', function(){
-        element(by.css('.facebook-button')).click();
+        element(by.css('[ng-click="clearLoginModal()"]')).click();
+        element(by.css('[ng-click="signIn()"]')).click();
 
         browser.sleep(1000);
         var path = require('path');
@@ -116,7 +121,8 @@ describe('The Vendor Page', function(){
         browser.wait(function() {
             return browser.isElementPresent(element(by.css('.facebook-button'))); 
         })
-        element(by.css('.facebook-button')).click();
+        element(by.css('[ng-click="clearLoginModal()"]')).click();
+        element(by.css('[ng-click="signIn()"]')).click();
 
         browser.wait(function() {
             return browser.isElementPresent(element(by.css('[ng-click="deleteProduct(product)"]')));
@@ -134,7 +140,8 @@ describe('The Vendor Page', function(){
     });
 
     it('should allow the creation of multiple products', function(){
-        element(by.css('.facebook-button')).click();
+        element(by.css('[ng-click="clearLoginModal()"]')).click();
+        element(by.css('[ng-click="signIn()"]')).click();
 
         browser.sleep(500);
         var path = require('path');
@@ -159,6 +166,43 @@ describe('The Vendor Page', function(){
 
         browser.sleep(5000);
     });
+});
+
+ddescribe('Foodies', function(){
+    console.log("Testing Foodies");        
+
+    beforeEach(function(){
+        browser.manage().deleteAllCookies();
+        browser.driver.manage().deleteAllCookies();
+        browser.get('http://127.0.0.1:9000');
+    });
+
+    it('should be able to Log in', function(){
+        element(by.css('[ng-click="signUpAsCustomerNoFB()"]')).click(); 
+
+        //send New customer information
+        element(by.model('newVendorFirstName')).sendKeys('John');
+        element(by.model('newVendorLastName')).sendKeys('Doe'); 
+        element(by.model('newVendorUserName')).sendKeys('johndo');
+        element(by.model('newVendorEmail')).sendKeys('jd@email.com');
+        element(by.model('newVendorPassword')).sendKeys('pass');
+
+        element(by.css('[ng-click="newCustomerSubmit()"]')).click(); 
+
+        browser.sleep(1500); 
+    }); 
+
+    it('should be able to like products', function(){
+
+        element(by.css('[ng-click="clearLoginModal()"]')).click();
+        element(by.model('loginUsername')).sendKeys('johndo');
+        element(by.model('loginPassword')).sendKeys('pass');
+        element(by.css('[ng-click="loginSubmit()"]')).click(); 
+        browser.sleep(5000); //Allow products to load on home page
+        element(by.css('[ng-click="likeUnlikeItem(item, \'product\')"]')).click(); 
+        browser.sleep(10000);
+    });
+
 });
 
 

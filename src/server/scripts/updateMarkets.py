@@ -4,6 +4,78 @@ from django.core.files import File
 from PIL import Image
 import urllib
 
+#-----------------------------------------------------------------------------------------------------
+# Bastion Square Holiday Market
+#-----------------------------------------------------------------------------------------------------
+
+# Create an address
+a = Address(
+	addr_line1="Bastion Square", # Street number and street name
+	city="Victoria", # City
+	state="BC", # Province
+	country="Canada", # Country
+	zipcode="V5H1G9", # Postal Code
+	latitude=48.4257621,
+	longitude=-123.3684807,
+)
+
+# Save it
+a.save()
+
+# Create hours for the address
+h1 = OpeningHours(
+	address=a, # Each opening hour object has to have an address associated with it
+	weekday=5, # 1 = Monday, ..., 7 = Sunday
+	from_hour=datetime(2014, 10, 4, 9, 0, 0), # (year, month, day, hour, minute, second)
+	to_hour=datetime(2014, 10, 4, 15, 0, 0), # (year, month, day, hour, minute, second)
+)
+
+# Save it
+h1.save()
+
+# Create hours for the address
+h2 = OpeningHours(
+	address=a, # Each opening hour object has to have an address associated with it
+	weekday=6, # 1 = Monday, ..., 7 = Sunday
+	from_hour=datetime(2014, 10, 4, 12, 0, 0), # (year, month, day, hour, minute, second)
+	to_hour=datetime(2014, 10, 4, 17, 0, 0), # (year, month, day, hour, minute, second)
+)
+
+# Save it
+h2.save()
+
+# Create hours for the address
+h3 = OpeningHours(
+	address=a, # Each opening hour object has to have an address associated with it
+	weekday=7, # 1 = Monday, ..., 7 = Sunday
+	from_hour=datetime(2014, 10, 4, 12, 0, 0), # (year, month, day, hour, minute, second)
+	to_hour=datetime(2014, 10, 4, 17, 0, 0), # (year, month, day, hour, minute, second)
+)
+
+# Save it
+h3.save()
+
+mp = MarketPhoto(
+		image=File(open('../client/app/images/markets/BSHM.jpg'))
+)
+
+mp.save()
+
+# Create a market
+m = Market(
+	address=a, # Each Market object needs an address associated with it (this also associates hours)
+	name="Bastion Square Holiday Market", # Market name
+	description="This magical Holiday Pop-Up Market will feature an exciting array of locally produced arts, crafts, tasty treats, and great entertainment!  Come and experience Bastion Square in the heart of downtown this Christmas.  The Event is weather permitting, and runs every Friday, Saturday, and Sunday from November 29th until December 21st.", # Market description
+	photo=mp,
+	webpage="http://bastionsquare.ca/"
+)
+
+m.save()
+
+#-----------------------------------------------------------------------------------------------------
+# HUDSON PUBLIC MARKET
+#-----------------------------------------------------------------------------------------------------
+
 
 #-----------------------------------------------------------------------------------------------------
 # MOSS STREET MARKET

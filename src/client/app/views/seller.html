@@ -1,12 +1,22 @@
+
 <div ng-show="isCurrentUserActive === false && showInactiveAlert === true" class="alert alert-danger beLocal-alert" role="alert">
-  <button type="button" class="close" ng-click="hideInactiveAlert()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-  <span><strong>Your account is currently inactive!</strong> Until your account is activated, no one will be able to see your products or selling locations. After completing your profile, please email <a class="alert-link" href="mailto:{{StateService.getContactEmail()}}">{{StateService.getContactEmail()}}</a> to request activation!</span>
+    <button type="button" class="close" ng-click="hideInactiveAlert()">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+    </button>
+    <span>
+        <strong>Your account is currently inactive!</strong> 
+        Until your account is activated, no one will be able to see your products or selling locations. After completing your profile, please email <a class="alert-link" href="mailto:{{StateService.getContactEmail()}}">{{StateService.getContactEmail()}}</a> to request activation!
+    </span>
 </div>
 <div ng-show="showWarning" class="alert alert-warning alert-dismissible" role="alert">
   <button type="button" class="close" ng-click="resetWarning()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
   <html-comp content="warningHTML"></html-comp>
 </div>
-<navbar-x-s></navbar-x-s>
+
+<div id="navBarTour">
+    <navbar-x-s></navbar-x-s>
+</div>
 
 <div class="new-formatting-container customer-container" ng-class="{'is-inactive' : !isCurrentUserActive}">  
     <div class="row vendor-profile-header">
@@ -30,7 +40,7 @@
                 <div class="col-sm-12">
                     <span class="new-hr-heading-style">
                         <div ng-show="StateService.getCurrentUser().vendor.address.city.length == null">
-                            Click edit profile to update your contact information
+                            City, Province
                         </div>
                         <span ng-show="StateService.getCurrentUser().vendor.address.city != null && StateService.getCurrentUser().vendor.address.state != null">            
                             <span class="glyphicon glyphicon-map-marker"></span> {{StateService.getCurrentUser().vendor.address.city}}, {{StateService.getCurrentUser().vendor.address.state}}
@@ -50,9 +60,11 @@
                         </span>
                     </span>
                     <span class="update-profile-sm-buttons pull-right">
-                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal">Edit Profile</button>
+                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal" id="editProfileBtn">
+                            Edit Profile
+                        </button>
                         &nbsp;
-                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal">Post to Social Media</button>
+                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="generateSocialStrings()" data-target="#shareModal"  id="socialMediaBtn">Post to Social Media</button>
                     </span>
                 </div>
             </div>
@@ -74,7 +86,7 @@
                 YOUR SELLING LOCATIONS
             </span>
             <span class="pull-right">
-                <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="resetLocationModal()" data-target="#locationModal">
+                <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="resetLocationModal()" data-target="#locationModal" id="addLocationBtn">
                     <div class="hidden-mobile">Create New Location</div>
                     <div class="show-mobile">+</div>
                 </button>
@@ -93,103 +105,40 @@
         </div>   
         <div class="col-sm-8">
             <!-- NG-REPEAT FOR MARKETS -->
-            <div class="new-heading-style">
-                    Market Locations
-            </div>
-            <div class="vendor-placeholder-text" ng-show="marketLocations.length == 0">
-                <p class="no-bottom-margin">You're not selling at any markets right now! Try joining one by clicking the Create Location button.</p>
-            </div>
-            <!-- repeating for each location that seller has in the db -->
-            <div ng-repeat="location in marketLocations" class="container-for-cards">
-                <div class="card-formatting" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)">
-                    <div class="row">
-
-                        <!-- Display the locations name -->
-                        <div class="col-xs-9 card-lable-style">
-                            {{location.name}}
-                        </div>
-
-                        <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
-                        <div class="col-xs-3 edit-delete-buttons">
-                            <span data-toggle="tooltip" data-placement="left" title="Leave Market">
-                                <span class="edit-text glyphicon glyphicon-trash" ng-click="leaveMarket(location)" data-toggle="modal" data-target="TBA"></span>
-                            </span>
-                        </div> 
-
-
-                    </div>
-
-                    <div class="location-details seller-location-details">
-                        <p><b>LOCATION:</b>
-                            {{location.address.addr_line1}},
-                            {{location.address.city}}, 
-                            {{location.address.state}}, 
-                            {{location.address.zipcode}}
-                        </p>
-                        <p><b>HOURS:</b>
-                                <ul class="list-inline store-hours">&nbsp
-                                <li ng-repeat="day in location.address.hours">
-                                    <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                                </li>
-
-                                </ul>
-                        </p>
-
-                       <p class="indent-after-first-line"><b>DETAILS:</b>
-                             {{location.description}}
-                        </p>
-                    </div>    
+            <div id="markets">
+                <div class="new-heading-style">
+                        Market Locations
                 </div>
-            </div>
-            <!-- end of repeating for each market that seller has in the db -->
+                <div class="vendor-placeholder-text" ng-show="marketLocations.length == 0">
+                    <p class="no-bottom-margin">You're not selling at any markets right now! Try joining one by clicking the Create Location button.</p>
+                </div>
+                <!-- repeating for each location that seller has in the db -->
+                <div ng-repeat="location in marketLocations" class="container-for-cards">
+                    <div class="card-formatting" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)">
+                        <div class="row">
+
+                            <!-- Display the locations name -->
+                            <div class="col-xs-9 card-lable-style">
+                                {{location.name}}
+                            </div>
+
+                            <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
+                            <div class="col-xs-3 edit-delete-buttons">
+                                <span data-toggle="tooltip" data-placement="left" title="Leave Market">
+                                    <span class="edit-text glyphicon glyphicon-trash" ng-click="leaveMarket(location)" data-toggle="modal" data-target="TBA"></span>
+                                </span>
+                            </div> 
 
 
-            <!-- NG-REPEAT FOR CUSTOM LOCATIONS -->
-            <div class="new-heading-style">
-                    Custom Locations
-            </div>
-            <div class="vendor-placeholder-text" ng-show="sellerLocations.length == 0">
-                <p class="no-bottom-margin">You haven't created any custom locations yet! Try making one by clicking the Create Location button.</p>
-            </div>    
-            <!-- repeating for each location that seller has in the db -->
-            <div ng-repeat="location in sellerLocations" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)" class="container-for-cards">
-                <div class="card-formatting">
-                    <div class="row">
-
-                        <!-- Display the locations name -->
-                        <div class="col-xs-9 card-lable-style">
-                            {{location.name}}
                         </div>
 
-                        <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
-                        <div class="col-xs-3 edit-delete-buttons">
-                            <span data-toggle="tooltip" data-placement="left" title="Edit Location">
-                            <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
-                            </span>
-                            <span data-toggle="tooltip" data-placement="left" title="Delete Location">
-                            <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
-                            </span>
-                        </div> 
-
-                    </div>
-
-                    <div class="location-details seller-location-details">
-                        <span ng-show="location.address">
+                        <div class="location-details seller-location-details">
                             <p><b>LOCATION:</b>
                                 {{location.address.addr_line1}},
                                 {{location.address.city}}, 
                                 {{location.address.state}}, 
                                 {{location.address.zipcode}}
                             </p>
-                        </span>
-                        <span ng-show="location.address">
-                            <p ng-show="location.date"><b>DATE:</b>
-                                {{location.date | date:" EEEE',' MMMM d'"}},
-                                {{location.address.hours[0].from_hour}} - 
-                                {{location.address.hours[0].to_hour}}
-                            </p>
-
-                            <div ng-show="location.date == null" >
                             <p><b>HOURS:</b>
                                     <ul class="list-inline store-hours">&nbsp
                                     <li ng-repeat="day in location.address.hours">
@@ -198,25 +147,90 @@
 
                                     </ul>
                             </p>
-                            </div>
-                        </span>
 
-                        <span ng-show="location.email || location.phone">
-                            <p><b>CONTACT INFORMATION:</b>
-                                {{location.phone}}
-                                <span ng-show="location.email && location.phone"> | </span>
-                                {{location.email}}
+                           <p class="indent-after-first-line"><b>DETAILS:</b>
+                                 {{location.description}}
                             </p>
-                        </span>
-                        <span ng-show="location.description">
-                            <p class="indent-after-first-line"><b>DETAILS:</b>
-                                <span>{{location.description}}</span>
-                            </p>
-                        </span>
+                        </div>    
                     </div>
                 </div>
+                <!-- end of repeating for each market that seller has in the db -->
             </div>
-            <!-- end of repeating for each custom location that seller has in the db -->
+            <div id="customLocations">
+                <!-- NG-REPEAT FOR CUSTOM LOCATIONS -->
+                <div class="new-heading-style">
+                        Custom Locations
+                </div>
+                <div class="vendor-placeholder-text" ng-show="sellerLocations.length == 0">
+                    <p class="no-bottom-margin">You haven't created any custom locations yet! Try making one by clicking the Create Location button.</p>
+                </div>    
+                <!-- repeating for each location that seller has in the db -->
+                <div ng-repeat="location in sellerLocations" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)" class="container-for-cards">
+                    <div class="card-formatting">
+                        <div class="row">
+
+                            <!-- Display the locations name -->
+                            <div class="col-xs-9 card-lable-style">
+                                {{location.name}}
+                            </div>
+
+                            <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
+                            <div class="col-xs-3 edit-delete-buttons">
+                                <span data-toggle="tooltip" data-placement="left" title="Edit Location">
+                                <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
+                                </span>
+                                <span data-toggle="tooltip" data-placement="left" title="Delete Location">
+                                <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
+                                </span>
+                            </div> 
+
+                        </div>
+
+                        <div class="location-details seller-location-details">
+                            <span ng-show="location.address">
+                                <p><b>LOCATION:</b>
+                                    {{location.address.addr_line1}},
+                                    {{location.address.city}}, 
+                                    {{location.address.state}}, 
+                                    {{location.address.zipcode}}
+                                </p>
+                            </span>
+                            <span ng-show="location.address">
+                                <p ng-show="location.date"><b>DATE:</b>
+                                    {{location.date | date:" EEEE',' MMMM d'"}},
+                                    {{location.address.hours[0].from_hour}} - 
+                                    {{location.address.hours[0].to_hour}}
+                                </p>
+
+                                <div ng-show="location.date == null" >
+                                <p><b>HOURS:</b>
+                                        <ul class="list-inline store-hours">&nbsp
+                                        <li ng-repeat="day in location.address.hours">
+                                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                        </li>
+
+                                        </ul>
+                                </p>
+                                </div>
+                            </span>
+
+                            <span ng-show="location.email || location.phone">
+                                <p><b>CONTACT INFORMATION:</b>
+                                    {{location.phone}}
+                                    <span ng-show="location.email && location.phone"> | </span>
+                                    {{location.email}}
+                                </p>
+                            </span>
+                            <span ng-show="location.description">
+                                <p class="indent-after-first-line"><b>DETAILS:</b>
+                                    <span>{{location.description}}</span>
+                                </p>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- end of repeating for each custom location that seller has in the db -->
+            </div>
         </div>
     </div>
 
@@ -229,65 +243,68 @@
             YOUR INVENTORY
         </div>
         <div class="col-xs-3">
-            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" data-target="#itemModal" ng-click="resetItemModal()">
+            <button class="btn beLocal-btn-filled btn-md pull-right" data-toggle="modal" data-target="#itemModal" ng-click="resetItemModal()" id="addItem">
                 <div class="hidden-mobile">Create New Item</div>
                 <div class="show-mobile">+</div>
             </button>
         </div>
     </div>
     <hr>
-    <div class="vendor-placeholder-text" ng-show="sellerItems.length == 0">
-        <p class="no-bottom-margin">You haven't added any items yet! Try adding one by clicking the Create New Item button.</p>
-    </div>     
 
-    <!-- repeating for each item that seller has in the db -->
-     <div ng-repeat="product in sellerItems | orderBy:'name'" class="container-for-cards">
+    <div id="viewItems">
+        <div class="vendor-placeholder-text" ng-show="sellerItems.length == 0">
+            <p class="no-bottom-margin">You haven't added any items yet! Try adding one by clicking the Create New Item button.</p>
+        </div>     
 
-            <!-- Need this div to allow for space between each of the sellers items -->
-            <div class="card-formatting">
-                <div class="row">
+        <!-- repeating for each item that seller has in the db -->
+         <div ng-repeat="product in sellerItems | orderBy:'name'" class="container-for-cards">
 
-                <!-- Display the locations name -->
-                    <div class="col-sm-2 vendor-product-image">
-                        <img ng-src="{{product.photo.image_url}}"/>
+                <!-- Need this div to allow for space between each of the sellers items -->
+                <div class="card-formatting">
+                    <div class="row">
 
-                    </div>
-                    <div class="col-xs-9 col-sm-7 ">
-                        <div class="card-lable-style">{{product.name}}</div>
-                        <div class="location-details">
-                            <p><b>PRODUCT DETAILS:</b> {{product.description}}</p>
-                            <p><b>CATEGORY:</b> {{product.category.name}} </p>
-                            <p><b>TAGS:</b><span ng-repeat="tag in product.tags"> {{tag}} &nbsp; </span></p>
+                    <!-- Display the locations name -->
+                        <div class="col-sm-2 vendor-product-image">
+                            <img ng-src="{{product.photo.image_url}}"/>
+
                         </div>
+                        <div class="col-xs-9 col-sm-7 ">
+                            <div class="card-lable-style">{{product.name}}</div>
+                            <div class="location-details">
+                                <p><b>PRODUCT DETAILS:</b> {{product.description}}</p>
+                                <p><b>CATEGORY:</b> {{product.category.name}} </p>
+                                <p><b>TAGS:</b><span ng-repeat="tag in product.tags"> {{tag}} &nbsp; </span></p>
+                            </div>
+                        </div>
+
+                        <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
+                        <div class="col-xs-3 edit-delete-buttons">
+                            <span data-toggle="tooltip" data-placement="left" title="Edit Item">
+                                <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#itemModal" ng-click="editItem(product)"></span>
+                            </span>
+                            <span data-toggle="tooltip" data-placement="left" title="Delete Item">
+                                <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteProduct(product)" data-toggle="modal" data-target="TBA"></span>
+                            </span>
+                        </div> 
                     </div>
 
-                    <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
-                    <div class="col-xs-3 edit-delete-buttons">
-                        <span data-toggle="tooltip" data-placement="left" title="Edit Item">
-                            <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#itemModal" ng-click="editItem(product)"></span>
+                <!-- THIS IS THE NON-REPEATING PART -->
+                <div class="row">
+                    <div class="col-sm-12 seller-stock-formatting new-stock-style">
+                        <hr class="availability-hr">
+                        Current Availability:
+                        <span class="pull-right">
+                            <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="IS"> In Stock
+                            <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="OOS"> Out of Stock
                         </span>
-                        <span data-toggle="tooltip" data-placement="left" title="Delete Item">
-                            <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteProduct(product)" data-toggle="modal" data-target="TBA"></span>
-                        </span>
-                    </div> 
-                </div>
-
-            <!-- THIS IS THE NON-REPEATING PART -->
-            <div class="row">
-                <div class="col-sm-12 seller-stock-formatting new-stock-style">
-                    <hr class="availability-hr">
-                    Current Availability:
-                    <span class="pull-right">
-                        <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="IS"> In Stock
-                        <input type="radio" ng-change="stockValueChanged(product)" ng-model="product.stock" name="stock{{$index}}" value="OOS"> Out of Stock
-                    </span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!--  end of repeat for each seller's items location -->
+            <!--  end of repeat for each seller's items location -->
 
+        </div>
+        <!--  end of repeat for each item the seller sells-->
     </div>
-    <!--  end of repeat for each item the seller sells-->
 
 </div>
 

@@ -66,5 +66,7 @@ urlpatterns = patterns('',
     url(r'^manage/vendors/list/$',views.ManageVendorsView.as_view(), name='inactive-vendors'),
     url(r'^manage/users/list/$',views.ManageUsersView.as_view(), name='manage-users'),    
     url(r'^manage/vendors/activate/$',views.ActivateVendorView.as_view(), name='activate-vendor'), 
+
+    url(r'^public/markets/$', views.ListMarketsOnlyView.as_view(), name='public-market-list'),    
     
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

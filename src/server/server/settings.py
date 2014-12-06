@@ -26,6 +26,12 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['belocalvictoria.me']
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
+#SESSION_COOKIE_HTTPONLY
+SESSION_COOKIE_SECURE = True
+#CSRF_COOKIE_SECURE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 SITE_ID = 1
 
 # Application definition
@@ -175,12 +181,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_ROOT = '/home/ubuntu/beLocal.com/static/'
-STATIC_URL = 'http://belocalvictoria.me:80/static/'
+STATIC_URL = 'https://belocalvictoria.me/static/'
 
 # User-uploaded images
 # https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user
 MEDIA_ROOT = os.path.join('/home/ubuntu/beLocal.com/media/')
-MEDIA_URL = 'http://belocalvictoria.me:80/media/' #'http://belocalvictoria.me:80/static/media/'
+MEDIA_URL = 'https://belocalvictoria.me/media/' #'http://belocalvictoria.me:80/static/media/'
 ADMIN_MEDIA_PREFIX = '/admin-media/'
 
 # site id for sites framework

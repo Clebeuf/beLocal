@@ -103,7 +103,7 @@ angular.module('clientApp')
         itemSelector: '.ms-item',
         columnWidth: '.ms-item'
       });    
-      }, 500)
+      }, 1000)
     };
 
     $scope.trendingMasonry();

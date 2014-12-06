@@ -69,5 +69,4 @@ urlpatterns = patterns('',
     url(r'^manage/vendors/activate/$',views.ActivateVendorView.as_view(), name='activate-vendor'), 
 
     url(r'^public/markets/$', views.ListMarketsOnlyView.as_view(), name='public-market-list'),    
-    
 ) # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

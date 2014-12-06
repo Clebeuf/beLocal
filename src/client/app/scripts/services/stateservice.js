@@ -280,7 +280,7 @@ angular.module('clientApp')
     };
 
     this.getServerAddress = function() {
-      return 'http://belocalvictoria.me:8000/';
+      return '//belocalvictoria.me/';
     };
 
     this.uploadFile = function(file) {

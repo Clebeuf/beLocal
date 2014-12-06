@@ -8,7 +8,7 @@ angular.module('clientApp')
     	var loggedIn = false;
     	var backend = 'facebook';
   		var token = "Token " + result.access_token;
-  		var loginPromise = $http({method:'POST', url: 'http://belocalvictoria.me:8000/login/' + backend + '/', headers: {'Authorization': token}});
+  		var loginPromise = $http({method:'POST', url: '//belocalvictoria.me/login/' + backend + '/', headers: {'Authorization': token}});
 
   		// loginService.loginUser(loginPromise);
   		loginPromise.then(function (result) {
@@ -30,7 +30,7 @@ angular.module('clientApp')
       var loggedIn = false;
       var backend = 'facebook';
       var token = "Token " + result.access_token;
-      var loginPromise = $http({method:'POST', url: 'http://belocalvictoria.me:8000/vendor/' + backend + '/create/', headers: {'Authorization': token}});
+      var loginPromise = $http({method:'POST', url: '//belocalvictoria.me/vendor/' + backend + '/create/', headers: {'Authorization': token}});
 
       // loginService.loginUser(loginPromise);
       loginPromise.then(function (result) {
@@ -51,7 +51,7 @@ angular.module('clientApp')
       var loggedIn = false;
       var backend = 'facebook';
       var token = "Token " + result.access_token;
-      var loginPromise = $http({method:'POST', url: 'http://belocalvictoria.me:8000/customer/' + backend + '/create/', headers: {'Authorization': token}});
+      var loginPromise = $http({method:'POST', url: '//belocalvictoria.me/customer/' + backend + '/create/', headers: {'Authorization': token}});
 
       // loginService.loginUser(loginPromise);
       loginPromise.then(function (result) {        
@@ -116,7 +116,7 @@ angular.module('clientApp')
     } 
 
     this.createNonFacebookVendor = function(vendor) {
-      var loginPromise = $http({method:'POST', url: 'http://belocalvictoria.me:8000/vendor/no-fb-create/', data: vendor});  
+      var loginPromise = $http({method:'POST', url: '//belocalvictoria.me/vendor/no-fb-create/', data: vendor});  
       loginPromise.success(function(result) {
           if(result.token) {
             ipCookie('beLocalToken', result.token, {expires: 14});
@@ -130,7 +130,7 @@ angular.module('clientApp')
     } 
 
     this.createNonFacebookCustomer = function(customer) {
-      var loginPromise = $http({method:'POST', url: 'http://belocalvictoria.me:8000/customer/no-fb-create/', data: customer});  
+      var loginPromise = $http({method:'POST', url: '//belocalvictoria.me/customer/no-fb-create/', data: customer});  
       loginPromise.success(function(result) {
           if(result.token) {
             ipCookie('beLocalToken', result.token, {expires: 14});
@@ -190,7 +190,7 @@ angular.module('clientApp')
     } 
 
     this.tryLoginWithoutFaceboook = function(username, password) {
-      var loginPromise = $http.post('http://belocalvictoria.me:8000/login-no-fb/', {username: username, password: password});
+      var loginPromise = $http.post('//belocalvictoria.me/login-no-fb/', {username: username, password: password});
 
       loginPromise.then(function (result) {        
         if(result.data.token) {

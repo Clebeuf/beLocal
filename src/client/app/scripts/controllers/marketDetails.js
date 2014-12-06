@@ -3,16 +3,19 @@
 angular.module('clientApp')
   .controller('MarketDetailsCtrl', function ($scope, StateService, $stateParams, $location, $window, $timeout) {
 
+    // Get market information from the server based on the id passed along in the url. $stateParams handles all url variables.
     StateService.getMarketToDisplay($stateParams.marketid).then(function() {
     	$scope.marketDetails = StateService.getMarketDetails();
     });
 
+    // Enable/disable liking
     if (StateService.getCurrentUser() === undefined) {
       $scope.likeDisabled = true;
     } else {
       $scope.likeDisabled = false;
     }   
 
+    // Initialize tooltips
     $timeout(function(){
       angular.element("[data-toggle='tooltip']").tooltip();
     });     
@@ -28,6 +31,7 @@ angular.module('clientApp')
       }
     };
 
+    // Called on scroll/resize events to see if we should be displaying the XS nav bar or not
     $scope.checkNav = function() {
       if(angular.element($window).scrollTop() > 140 || angular.element($window).width() < 768) {
         $scope.safeApply(function() {
@@ -54,6 +58,7 @@ angular.module('clientApp')
         $scope.checkNav();        
     });   
 
+    // Used to display weekday strings in selling location/market cards
     $scope.weekdays = [
         'Monday',
         'Tuesday',
@@ -64,6 +69,7 @@ angular.module('clientApp')
         'Sunday'
     ];    
 
+    // Like or unlike an item
     $scope.likeUnlikeItem = function(item, itemName) {
       StateService.likeUnlikeItem(item, itemName).then(function() {
         item = StateService.getLikedUnlikedItem();
@@ -78,6 +84,8 @@ angular.module('clientApp')
         $scope.product = {};            
     };  
 
+    // If the current user is a vendor and they have clicked themselves, take them to their vendor page.
+    // Otherwise, take them to the vendor details page for the vendor they have clicked    
     $scope.displayVendor = function (id) {
       var user = StateService.getCurrentUser();
       if(user && user.userType === 'VEN' && user.vendor.id === id) {

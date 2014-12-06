@@ -6,6 +6,7 @@ angular.module('clientApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) { 
 
+        // Make the pins bounce!
         scope.highlightPins = function(vendor) {
           if(vendor) {
             angular.forEach(vendor.markers, function(marker){
@@ -14,6 +15,7 @@ angular.module('clientApp')
           }
         };
 
+        // Stop the bouncing!
         scope.unHighlightPins = function(vendor) {
           if(vendor) {
             angular.forEach(vendor.markers, function(marker){
@@ -22,8 +24,10 @@ angular.module('clientApp')
           }
         };
 
+        // Put current state on the scope so that we can display Activate/Deactivate buttons in manager state only
         scope.currentState = $state.current;
         
+        // Enable/disable liking
         if (StateService.getCurrentUser() === undefined) {
           scope.likeDisabled = true;
         } else {

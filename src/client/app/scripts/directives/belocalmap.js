@@ -13,6 +13,7 @@ angular.module('clientApp')
       },  
       link: function ($scope, elem, attrs) {
 
+        // Style the map
         var style = [{"featureType":"landscape","stylers":[{"hue":"#FFA800"},{"saturation":0},{"lightness":0},{"gamma":1}]},{"featureType":"road.highway","stylers":[{"hue":"#53FF00"},{"saturation":-73},{"lightness":40},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FBFF00"},{"saturation":0},{"lightness":0},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#00FFFD"},{"saturation":0},{"lightness":30},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#00BFFF"},{"saturation":6},{"lightness":8},{"gamma":1}]},{"featureType":"poi","stylers":[{"hue":"#679714"},{"saturation":33.4},{"lightness":-25.4},{"gamma":1}]}]
 
         var mapOptions,
@@ -27,6 +28,7 @@ angular.module('clientApp')
         longitude = longitude && parseFloat(longitude, 10) || -123.3121053;
         zoom = zoom && parseInt(zoom) || 10;
 
+        // Set map options
         mapOptions = {
           panControl: false,
           streetViewControl: false,
@@ -36,12 +38,15 @@ angular.module('clientApp')
           styles: style,
         };
 
+        // Create new map
         map = new google.maps.Map(elem[0], mapOptions);
 
+        // Add a listener to the map so that when it's clicked, we close all information bubbles that are currently open
         google.maps.event.addListener(map, 'click', function() {
           $scope.closeAllBubbles();
         }); 
 
+        // Any time the bounds are changed on the map, ensure that we don't zoom past a maximum amount of 16
         google.maps.event.addListener(map, 'bounds_changed', function(event) {
             if (this.getZoom() > 16) {
                 // Change max/min zoom here
@@ -50,11 +55,13 @@ angular.module('clientApp')
             }
         });
 
+        // Regenerate all pins on the map
         $scope.$on('generateMapPins', function() {
           $timeout(function() {
             $scope.clearMarkers();            
             // Initialize map
             if($scope.vendors != undefined) {
+              // If we have passed a list of vendors into the map, generate pins for all their selling locations
               for(var i = 0; i < $scope.vendors.length; i++) {
                   var vendor = $scope.vendors[i];
                   vendor.markers = [];
@@ -63,6 +70,7 @@ angular.module('clientApp')
                       for(var j = 0; j < vendor.selling_locations.length; j++) {
                           var sellingLocation = vendor.selling_locations[j];
 
+                          // Create info bubbles for each selling location
                           var infoTemplate = $scope.getVendorInfoTemplate(sellingLocation, vendor);
                           var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
                           vendor.markers.push($scope.createMarker(center, infoTemplate));
@@ -72,9 +80,11 @@ angular.module('clientApp')
             } 
 
             if($scope.markets != undefined) {
+              // If we have passed a list of markets into the map, generate pins for all of these
               for(var i = 0; i < $scope.markets.length; i++) {
                   var market = $scope.markets[i];
 
+                  // Create info bubbles for each market
                   var infoTemplate = $scope.getMarketInfoTemplate(market);
                   var center = new google.maps.LatLng(market.address.latitude, market.address.longitude);
                   market.marker = $scope.createMarker(center, infoTemplate);
@@ -82,9 +92,11 @@ angular.module('clientApp')
             }
 
             if($scope.locations != undefined) {
+              // If we have passed a list of selling locations into the map, generate pins for all of these
               for(var i = 0; i < $scope.locations.length; i++) {
                   var sellingLocation = $scope.locations[i];
 
+                  // Create info bubbles for each selling location
                   var infoTemplate = $scope.getLocationInfoTemplate(sellingLocation);
                   var center = new google.maps.LatLng(sellingLocation.address.latitude, sellingLocation.address.longitude);
                   sellingLocation.marker = $scope.createMarker(center, infoTemplate);
@@ -119,6 +131,8 @@ angular.module('clientApp')
           }
         }        
 
+        // Helper function to create a new marker on the map. Without this, each time we loop through locations and create markers, each marker would replace
+        // the one generated before it.
         $scope.createMarker = function(center, infoTemplate) {
             var marker = new google.maps.Marker({
               position: center,
@@ -141,6 +155,7 @@ angular.module('clientApp')
             return marker;                               
         }
 
+        // Nasty HTML in JavaScript template for market info bubbles
         $scope.getMarketInfoTemplate = function(market) {
             var infoTemplate = '' + 
             '<div class="info-window-content">' + 
@@ -164,6 +179,7 @@ angular.module('clientApp')
             return infoTemplate;           
         }
 
+        // Nasty HTML in JavaScript template for vendor info bubbles
         $scope.getVendorInfoTemplate = function(object, parent) {
             var infoTemplate = '' + 
             '<div class="info-window-content">' + 
@@ -191,6 +207,7 @@ angular.module('clientApp')
             return infoTemplate;           
         }
 
+        // Nasty HTML in JavaScript template for selling location info bubbles
         $scope.getLocationInfoTemplate = function(object) {
             var infoTemplate = '' + 
             '<div class="info-window-content">' + 
@@ -215,6 +232,7 @@ angular.module('clientApp')
             return infoTemplate;           
         }        
 
+        // Refreshing the map causes it to calculate the smallest bounding box that is able to display all markers and zoom to fit that box.
         $scope.$on('forceRefreshMap', function() {
             $timeout(function() {
                 google.maps.event.trigger(map, 'resize');                
@@ -226,6 +244,8 @@ angular.module('clientApp')
             });
         });
 
+        // If the current user is a vendor and they have clicked themselves, take them to their vendor page.
+        // Otherwise, take them to the vendor details page for the vendor they have clicked        
         $scope.displayVendor = function (id) {
           var user = StateService.getCurrentUser();
           if(user && user.userType === 'VEN' && user.vendor.id === id) {
@@ -235,6 +255,7 @@ angular.module('clientApp')
           }
         };
 
+        // Display market details page for a given market
         $scope.displayMarket = function (id) {
           $location.path('market/details/'+id).replace();
         };        

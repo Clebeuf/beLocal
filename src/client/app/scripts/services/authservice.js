@@ -4,15 +4,17 @@ angular.module('clientApp')
   .service('AuthService', function AuthService($http, $location, ipCookie, StateService, $q) {
     var self = this;    
 
+    // Performs a login with Facebook
     this.processLogin = function(result) {
     	var loggedIn = false;
     	var backend = 'facebook';
   		var token = "Token " + result.access_token;
   		var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/login/' + backend + '/', headers: {'Authorization': token}});
 
-  		// loginService.loginUser(loginPromise);
   		loginPromise.then(function (result) {
   		  loggedIn = true;
+
+        // If the login was successful and we have a user token coming back from the server, set all cookies
   		  if(result.data.token) {
   		  	ipCookie('beLocalToken', result.data.token, {expires: 14});
           ipCookie('beLocalUser', result.data, {expires: 14});
@@ -26,13 +28,14 @@ angular.module('clientApp')
   		return loginPromise;
   	}
 
+    // Creates a new vendor with Facebook
     this.createVendorRequest = function(result) {
       var loggedIn = false;
       var backend = 'facebook';
       var token = "Token " + result.access_token;
       var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/vendor/' + backend + '/create/', headers: {'Authorization': token}});
 
-      // loginService.loginUser(loginPromise);
+      // If the login was successful and we have a user token coming back from the server, set all cookies
       loginPromise.then(function (result) {
         loggedIn = true;
         if(result.data.token) {
@@ -47,13 +50,14 @@ angular.module('clientApp')
       return loginPromise;
     }
 
+    // Creates a new customer with Facebook
     this.createCustomerRequest = function(result) {
       var loggedIn = false;
       var backend = 'facebook';
       var token = "Token " + result.access_token;
       var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/customer/' + backend + '/create/', headers: {'Authorization': token}});
 
-      // loginService.loginUser(loginPromise);
+      // If the login was successful and we have a user token coming back from the server, set all cookies      
       loginPromise.then(function (result) {        
         loggedIn = true;
         if(result.data.token) {
@@ -79,6 +83,7 @@ angular.module('clientApp')
       }
     };
 
+    // Performs a full logout and clears all beLocal cookies as well as the OAuth.io cache
     this.logout = function() {
       $location.path('/welcome');
       ipCookie.remove('beLocalToken');
@@ -89,6 +94,7 @@ angular.module('clientApp')
       OAuth.clearCache('facebook');      
     }
 
+    // This actually pops the Facebook authentication modal for creating a customer
     this.createCustomer = function() {
         var d = $q.defer();
 
@@ -115,6 +121,7 @@ angular.module('clientApp')
         return d.promise;
     } 
 
+    // Create a vendor without Facebook
     this.createNonFacebookVendor = function(vendor) {
       var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/vendor/no-fb-create/', data: vendor});  
       loginPromise.success(function(result) {
@@ -129,6 +136,7 @@ angular.module('clientApp')
       return loginPromise;      
     } 
 
+    // Create a customer without Facebook
     this.createNonFacebookCustomer = function(customer) {
       var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/customer/no-fb-create/', data: customer});  
       loginPromise.success(function(result) {
@@ -143,6 +151,7 @@ angular.module('clientApp')
       return loginPromise;
     }      
 
+    // This actually pops the Facebook authentication modal for creating a vendor
     this.createVendor = function() {
         var d = $q.defer();
 
@@ -169,6 +178,7 @@ angular.module('clientApp')
         return d.promise;
     }    
 
+    // This pops the login modal for Facebook
     this.showLogin = function() {
         var d = $q.defer();
 
@@ -189,6 +199,7 @@ angular.module('clientApp')
         return d.promise;        
     } 
 
+    // This attempts to log in without Facebook
     this.tryLoginWithoutFaceboook = function(username, password) {
       var loginPromise = $http.post('http://localhost:8000/login-no-fb/', {username: username, password: password});
 

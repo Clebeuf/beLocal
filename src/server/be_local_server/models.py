@@ -81,6 +81,11 @@ class Category(models.Model):
 class ProductPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='products', blank=True)
 
+    
+    """
+    Here we scale the image and save it to the database
+
+    """
     def save(self, force_insert=True, force_update=False, using=None):
         super(ProductPhoto, self).save() 
 

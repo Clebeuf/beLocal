@@ -2,17 +2,17 @@
 
 angular.module('clientApp')
     .controller('SearchCtrl', function ($scope, $stateParams, StateService, $timeout, $location, $window) {
-        $scope.productResults = [];
-        $scope.vendorResults = [];
-        $scope.marketResults = [];
-        $scope.query = $stateParams.q;
-        $scope.showCategory = false;
-        $scope.showTag = false;
-        $scope.selectedCategory = 'All Products';
-        $scope.selectedTags = 'All Products';
-        $scope.productFilterExpr = {};
+        $scope.productResults = []; // List of product search results
+        $scope.vendorResults = []; // List of vendor search results
+        $scope.marketResults = []; // List of market search results
+        $scope.query = $stateParams.q; // Query passed into this controller via the URL 
+        $scope.showCategory = false; // True if we're currently filtering by a category
+        $scope.showTag = false; // True if we're currently filtering by a tag
+        $scope.selectedCategory = 'All Products'; // Name of currently selected category ('All Products' is a special value)
+        $scope.selectedTags = 'All Products'; // Name of currently selected tag ('All Products' is a special value) 
+        $scope.productFilterExpr = {}; // Expression to filter products by
 
-    $scope.tagToDisplay = StateService.readTagToDisplay();
+        $scope.tagToDisplay = StateService.readTagToDisplay(); // I don't think this is necessary here... but I'm going to leave it in for now.
 
         $scope.safeApply = function(fn) {
           var phase = this.$root.$$phase;
@@ -25,6 +25,7 @@ angular.module('clientApp')
           }
         };
 
+        // See documentation in main.js
         $scope.updateCategoryDropdown = function() {
           $scope.getAllProducts('tag');      
           if($scope.dropdownCategory.name === 'All Products') {
@@ -36,6 +37,7 @@ angular.module('clientApp')
           }
         }        
 
+        // See documentation in main.js
         $scope.checkNav = function() {
           if(angular.element($window).scrollTop() > 140 || angular.element($window).width() < 768) {
             $scope.safeApply(function() {
@@ -48,6 +50,7 @@ angular.module('clientApp')
           }        
         }
 
+        // See documentation in main.js
         if(angular.element($window).width() < 768) {
           $scope.safeApply(function() {
             $scope.showXSNav = true;
@@ -62,6 +65,7 @@ angular.module('clientApp')
             $scope.checkNav();        
         }); 
 
+        // See documentation in main.js
         $scope.instantTrendingMasonry = function() {
           $timeout(function() {
           var container = document.querySelector('#masonry-container');
@@ -72,6 +76,7 @@ angular.module('clientApp')
           })
         };
 
+        // See documentation in main.js
         $scope.trendingMasonry = function() {
           $timeout(function() {
           var container = document.querySelector('#masonry-container');
@@ -82,6 +87,7 @@ angular.module('clientApp')
           }, 500)
         };
 
+        // See documentation in main.js
         $scope.marketMasonry = function() {
           $timeout(function() {        
             var container = document.querySelector('#masonry-market-container');
@@ -92,6 +98,7 @@ angular.module('clientApp')
           }, 500);
         };                
 
+        // Search for products based on a query
         $scope.doProductSearch = function(query) {
             StateService.doProductSearch(query).then(function(response) {
                 $scope.productResults = response.data;
@@ -99,6 +106,7 @@ angular.module('clientApp')
             });
         }
 
+        // Search for vendors based on a query
         $scope.displayVendor = function (id) {
           var user = StateService.getCurrentUser();
           if(user && user.userType === 'VEN' && user.vendor.id === id) {
@@ -108,12 +116,14 @@ angular.module('clientApp')
           }
         };         
 
+        // Return vendor search results and display them
         $scope.doVendorSearch = function(query) {
             StateService.doVendorSearch(query).then(function(response) {
                 $scope.vendorResults = response.data;
             });
         } 
 
+        // Return market search results and display them
         $scope.doMarketSearch = function(query) {
             StateService.doMarketSearch(query).then(function(response) {
                 $scope.marketResults = response.data;
@@ -121,6 +131,7 @@ angular.module('clientApp')
             });
         }         
 
+        // Perform search based on the type of search (specified in the URL)
         $scope.doSearch = function() {
             if($stateParams.search_type === 'products') {
                 $scope.doProductSearch($stateParams.q);
@@ -139,10 +150,12 @@ angular.module('clientApp')
             $scope.product = {};            
         };           
     
+        // See documentation in main.j
         StateService.getTags().then(function() {
           $scope.tagList = StateService.getTagList();
         });
         
+        // See documentation in main.js
         StateService.getCategories().then(function() {
           $scope.categoryList = StateService.getCategoryList();
           $scope.dropdownCategoryList = [];
@@ -153,6 +166,7 @@ angular.module('clientApp')
           $scope.dropdownCategory = $scope.dropdownCategoryList[0];      
         });
 
+        // See documentation in main.js
         $scope.setProductFilter = function() {
           if (!$scope.showCategory && !$scope.showTag) {
             $scope.productFilterExpr = {};
@@ -168,6 +182,7 @@ angular.module('clientApp')
           }
         }
         
+        // See documentation in main.js
         $scope.tagSelected = function(tagName) {
           if (angular.isString($scope.selectedTags) && tagName.match('All Products')){
             return true;
@@ -181,6 +196,7 @@ angular.module('clientApp')
           return false;
         }
 
+        // See documentation in main.js
         $scope.doTagFilter = function(tagName) {
           if (tagName.match('All Products')){
             $scope.getAllProducts('tag');
@@ -206,6 +222,7 @@ angular.module('clientApp')
           //$scope.instantTrendingMasonry();
         }
 
+        // See documentation in main.js
         $scope.getProductsWithCategory = function(category) {
             $scope.showCategory = true;
             $scope.selectedCategory = category.name;
@@ -219,6 +236,7 @@ angular.module('clientApp')
             //$scope.instantTrendingMasonry();
         }
 
+        // See documentation in main.js
         $scope.getAllProducts = function(resetSelection) {  
             if (resetSelection.match('category')) {
               $scope.showCategory = false;

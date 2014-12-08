@@ -736,11 +736,13 @@ class AddVendorPhotoView(generics.CreateAPIView):
     
     def post(self, request):
         error = ''
+        #image is coming in base64 format, which uses only 6 bits out of 8. 
+        #so its actual size is 3/4 of the data.
         if len(request.DATA["image"]) * 0.75 > 3000000:
             error = 'Image size is too big. Should be less than 3 mb.'
         else:
             coords = json.loads(request.DATA["coords"])
-            vendor = Vendor.objects.get(pk = request.DATA["vendorId"])
+            vendor = Vendor.objects.get(user=request.user)
             if coords and len(coords) == 4:
                 try:
                     imgData = request.DATA["image"].split(',')[1]

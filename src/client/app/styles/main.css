@@ -137,6 +137,7 @@
   padding: 50% 0 0 0;
   -webkit-transition: opacity .25s ease;
   -moz-transition: opacity .25s ease;
+  transition: opacity .25s ease;
 }
 
 #imageOverlay:hover #profileOverlay {

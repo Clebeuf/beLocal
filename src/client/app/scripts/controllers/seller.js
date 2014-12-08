@@ -889,7 +889,7 @@ angular.module('clientApp')
 		//change the Done button to a loader to prevent clicks while uploading
 		angular.element('#uploadProfileImage').button('loading');
 		if($scope.profileImage){
-            StateService.uploadProfileFile($scope.profileImage, $scope.profileImageCoords, $scope.currentUser.vendor.id)
+            StateService.uploadProfileFile($scope.profileImage, $scope.profileImageCoords)
             .success(function(response) {
                 angular.element('#profileImage').css({
                 	'background-image': 'url(' + response.image_url +')'
@@ -904,71 +904,6 @@ angular.module('clientApp')
             });
          }
 	}
-
-	/* function to resize image */
-    $scope.resizeStep = function (img, width, quality) {
-
-        function getContext (canvas) {
-            var context = canvas.getContext('2d')
-
-            context.imageSmoothingEnabled       = true
-            context.mozImageSmoothingEnabled    = true
-            context.oImageSmoothingEnabled      = true
-            context.webkitImageSmoothingEnabled = true
-
-            return context
-        }
-
-        quality = quality || 1.0
-     
-        var resultD = $q.defer()
-        var canvas  = document.createElement( 'canvas' )
-        var context = getContext(canvas)
-        var type = "image/png"
-     
-        var cW = img.naturalWidth
-        var cH = img.naturalHeight
-        var wRatio = cW/width;
-        var height = cH / wRatio;
-        var dst = new Image()
-        var tmp = null
-     
-        function stepDown () {
-            cW = Math.max(cW / 2, width) | 0
-            cH = Math.max(cH / 2, height) | 0
-
-            canvas.width  = cW
-            canvas.height = cH
-
-            context.drawImage(tmp || img, 0, 0, cW, cH)
-
-            dst.src = canvas.toDataURL(type, quality)
-
-            if (cW <= width || cH <= height) {
-                return resultD.resolve(dst)
-            }
-
-            if (!tmp) {
-                tmp = new Image()
-                tmp.onload = stepDown
-            }
-
-            tmp.src = dst.src
-        }
-     
-        if (cW <= width || cH <= height || cW / 2 < width || cH / 2 < height) {
-            canvas.width  = width
-            canvas.height = height
-            context.drawImage(img, 0, 0, width, height)
-            dst.src = canvas.toDataURL(type, quality)
-
-            resultD.resolve(dst)
-        } else {
-            stepDown()
-        }
-     
-        return resultD.promise
-    }
 
     // Initialize the seller page.
     $scope.init = function() {
@@ -1105,72 +1040,6 @@ angular.module('clientApp')
         }
       }
   })
-  .directive('imgCropped', function () {
-	  return {
-	    restrict: 'E',
-	    replace: true,
-	    scope: { src:'@', selected:'&' },
-	    link: function(scope,element, attr) {
-	      var myImg;
-	      var clear = function() {
-	        if (myImg) {
-	          myImg.next().remove();
-	          myImg.remove();
-	          myImg = undefined;
-	        }
-	      };
-	      scope.$watch('src', function(nv) {
-			scope.safeApply = function(fn) {
-			  var phase = this.$root.$$phase;
-			  if(phase == '$apply' || phase == '$digest') {
-			    if(fn && (typeof(fn) === 'function')) {
-			      fn();
-			    }
-			  } else {
-			    this.$apply(fn);
-			  }
-			}           
-	        clear();
-	        if (nv) {
-				element.after('<img />');
-				myImg = element.next();        
-				myImg.attr('src',nv);
-				myImg.attr('id', 'belocal-img-crop');
-				var imgWidth = myImg[0].naturalWidth;
-	      		var imgHeight = myImg[0].naturalHeight;
-				var quarterImgWidth = imgWidth / 4;
-				var quarterImgHeight = imgHeight / 4;
-
-				//figure out the display size of the image to make it responsive to screen size.
-	            var width = angular.element('#profileImageModal').find('.crop-image-wrapper').width();
-	            var height = (3/5) * width;
-	        	angular.element('#belocal-img-crop').Jcrop({
-	            trackDocument: true,
-	            aspectRatio:5/3,
-	            boxWidth: width,
-	            boxHeight: height,
-	            addClass: 'jcrop-centered',
-	            //set the default crop selection area
-	            setSelect: [quarterImgWidth, quarterImgHeight, imgWidth - quarterImgWidth, imgHeight - quarterImgHeight],
-	            onSelect: function(x) {
-	              scope.safeApply(function() {
-	                scope.selected({cords: x});
-	              });
-	            }
-	          });
-	        }
-	      });	      
-	      scope.$on('$destroy', clear);
-	    }
-	  };
-	})
-  //need this filter to be applied to the src of imgCropped directive or else I get
-  //cross domain error from angular when loading the image?!
-  .filter('trusted', ['$sce', function ($sce) {
-	    return function(url) {
-	        return $sce.trustAsResourceUrl(url);
-	    };
-    }])
   .directive('phone', function() {
     // This is a directive to ensure that an input field contains an phone value.
     var PHONE_REGEX = /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/;    

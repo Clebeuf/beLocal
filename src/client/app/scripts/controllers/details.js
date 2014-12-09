@@ -111,10 +111,12 @@ angular.module('clientApp')
     // Set up masonry properly once all product images have loaded.
     var vendorContainer = document.querySelector('#masonry-container');
     imagesLoaded(vendorContainer, function() {
-      var msnry = new Masonry(vendorContainer, {
-        itemSelector: '.ms-item',
-        columnWidth: '.ms-item'
-      });
+      $timeout(function() {
+          var msnry = new Masonry(vendorContainer, {
+            itemSelector: '.ms-item',
+            columnWidth: '.ms-item'
+          });
+      })
     });
   });
 

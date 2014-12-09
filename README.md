@@ -1,6 +1,8 @@
 beLocal
 ======
 
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/rpanjwani/beLocal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ![beLocal Logo](http://drive.google.com/uc?id=0B5qWf9vc8yiRRFhhMENsRS11RUk)
 
 beLocal is a web application that connects local farmers and foodmakers with the community by allowing them to post information about their business, what items they produce, and where they will be selling. 

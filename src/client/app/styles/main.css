@@ -120,6 +120,14 @@
 
 }
 
+#vendorProfileImage {
+  width: 100%;
+}
+
+.vendor-profile-image {
+  max-width: 500px !important;
+}
+
 #profileOverlay{
   position: absolute;
   bottom: 0;
@@ -127,7 +135,6 @@
   width: 100%;
   height: 50px;
   text-align: center;
-  color: rgba(255,255,255,.85);
   background: rgba(0,0,0,.75);
   font-family: 'Roboto', sans-serif !important;
   font-weight: normal;
@@ -1183,6 +1190,7 @@ body {
   margin-right:auto;
   border: 2px dashed #b3b3b3;
   height:200px;
+  max-width: 400px;
   text-align: center;
 }
 
@@ -1498,6 +1506,13 @@ hr {
 .like-button-position{
   margin-top: 250px;
 }
+
+
+.vendor-profile-like{
+    top: -50px;
+    padding-right: 30px !important;
+}
+
 
 .seller-location-details{
   padding: 0px 15px 0px 15px;

@@ -5,6 +5,7 @@ angular.module('clientApp')
 
     StateService.setVendorToDisplay($stateParams.vendorid);
 
+    // Required for AngularJS to finish its digest loop
     $scope.safeApply = function(fn) {
       var phase = this.$root.$$phase;
       if(phase == '$apply' || phase == '$digest') {
@@ -16,6 +17,7 @@ angular.module('clientApp')
       }
     };
 
+    // Called on scroll/resize events to see if we should be displaying the XS nav bar or not
     $scope.checkNav = function() {
       if(angular.element($window).scrollTop() > 140 || angular.element($window).width() < 768) {
         $scope.safeApply(function() {
@@ -28,6 +30,7 @@ angular.module('clientApp')
       }        
     }
 
+    // Navigate to market details page for a given market
     $scope.displayMarket = function (id) {
       $location.path('market/details/'+id);
     };
@@ -46,22 +49,26 @@ angular.module('clientApp')
         $scope.checkNav();        
     });    
 
+    // Disable/enable likes on the details page if the current user is authenticated
     if (StateService.getCurrentUser() === undefined) {
       $scope.likeDisabled = true;
     } else {
       $scope.likeDisabled = false;
     } 
     
+    // Required to initialize tooltips on page load
     $timeout(function(){
       angular.element("[data-toggle='tooltip']").tooltip();
     });
     
+    // Get vendor information from StateService
     StateService.getVendorInfo().then(function() {
-    	$scope.vendorDetails = StateService.getVendorDetails();
-        $rootScope.$broadcast('generateMapPins');
-        $rootScope.$broadcast('forceRefreshMap');
+    	$scope.vendorDetails = StateService.getVendorDetails(); // Set it on scope
+        $rootScope.$broadcast('generateMapPins'); // Re-generate all map pins
+        $rootScope.$broadcast('forceRefreshMap'); // Refresh the map once pins have been generated
     });
 
+    // Required for displaying weekday strings on selling location cards
     $scope.weekdays = [
         'Monday',
         'Tuesday',
@@ -72,30 +79,38 @@ angular.module('clientApp')
         'Sunday'
     ];
 
+    // Called on selling/market location mouseover to make pins bounce
     $scope.highlightPins = function(object) {
         if(object && object.marker)
             object.marker.setAnimation(google.maps.Animation.BOUNCE);
     };
 
+    // Stop the bouncing!
     $scope.unHighlightPins = function(object) {
         if(object && object.marker)        
             object.marker.setAnimation(null);
     };    
 
+    // Initialize product details modal
     $scope.showProductDetailsModal = function(item) {
-        $scope.product = item;      
+        $scope.product = item;   
     };
 
+    // Reset product details modal
     $scope.hideProductDetailsModal = function() {   
         $scope.product = {};            
     };    
 
+    // Like or unlike an item
     $scope.likeUnlikeItem = function(item, itemName) {
       StateService.likeUnlikeItem(item, itemName).then(function() {
         item = StateService.getLikedUnlikedItem();
       });
     };
 
+    // Construct masonry for product cards. This is s nasty hack, but essentially
+    // we're just waiting for a timeout of 500ms to "hope" that products have loaded
+    // by then. There are better ways to do this that we should probably explore.
     $scope.trendingMasonry = function() {
       $timeout(function() {
       var container = document.querySelector('#masonry-container');

@@ -4,39 +4,44 @@ angular.module('clientApp')
   .service('StateService', function StateService($http, ipCookie, $location, $q, $timeout) {
     var currentUser = undefined; // Currently authenticated user
     var trendingProducts = []; // Currently trending products
-    var vendors = [];
-    var marketlist = [];
-    var categorylist = [];
-    var taglist = [];
-    var categoryProductList = [];
-    var tagProductList = [];
-    var vendorToDisplay = undefined;
-    var vendorDetails = undefined;
-    var likedUnlikedItem = undefined;
-    var currentLocation = undefined;
-    var availableMarkets = [];
-    var likedUnlikedProduct = undefined;
-    var marketDetails = undefined;
-    var tagToDisplay = undefined;
+    var vendors = []; // List of vendors coming back from the server
+    var marketlist = []; // List of markets coming from the markets
+    var categorylist = []; // List of categories coming from the server
+    var taglist = []; // List of tags coming from the server
+    var categoryProductList = []; // List of products in a specific category 
+    var tagProductList = []; // List of products with a specific tag
+    var vendorToDisplay = undefined; // Vendor ID to display (used when navigating to a new page)
+    var vendorDetails = undefined; // Vendor details object coming back from the server
+    var likedUnlikedItem = undefined; // Item to be liked/unliked
+    var currentLocation = undefined; // User's current location
+    var availableMarkets = []; // Markets that are currently available to be joined
+    var likedUnlikedProduct = undefined; // Product that is to be liked/unliked
+    var marketDetails = undefined; // Market details returned from the server
+    var tagToDisplay = undefined; // Tag to display (used when navigating to a new page)
 
+    // Makes the serverside call to delete a user
     this.deleteUser = function(userID) {
       return $http.post(this.getServerAddress() + 'users/delete/', {'id':userID}) 
     }
 
+    // Returns our email!
     this.getContactEmail = function() {
       return 'belocalvictoria' + '@' + 'gmail.com';
     }
 
+    // Sets a specific tag to be displayed
     this.setTagToDisplay = function(tagName) {
       tagToDisplay = tagName;
     }
 
+    // Reads the tag to be displayed and clears it (used when navigating back to / via clicking a tag in a product details modal)
     this.readTagToDisplay = function() {
       var tempTag = tagToDisplay;
       tagToDisplay = undefined;
       return tempTag;
     }
 
+    // Get the user's geolocation
     this.getUserPosition = function() {
 
       var d = $q.defer();
@@ -72,14 +77,17 @@ angular.module('clientApp')
       return d.promise; 
     } 
 
+    // Compare weekdays in ascending order
     function compareWeekday(a,b) {
       return a.weekday - b.weekday;
     }
 
+    // Clear the current user object
     this.clearCurrentUser = function() {
       currentUser = undefined;
     }
 
+    // Get a new vendor object from the server
     this.retrieveUpdatedCurrentUser = function() {
       var url = this.getServerAddress() + 'vendor/';        
       return $http.get(url)
@@ -88,6 +96,7 @@ angular.module('clientApp')
       }); 
     };    
 
+    // Perform an edit of the current user
     this.updateCurrentUser = function(user) {
       var url = this.getServerAddress() + 'vendor/';        
       return $http({method: 'PATCH', url: url, data: user.vendor})
@@ -96,6 +105,7 @@ angular.module('clientApp')
       }); 
     };
 
+    // Update Twitter URL in server after Twitter sign in on client side
     this.updateTwitterURL = function(data) {
       var url = this.getServerAddress() + 'vendor/';        
       return $http({method: 'PATCH', url: url, data: data})
@@ -104,15 +114,17 @@ angular.module('clientApp')
       }); 
     };    
 
-
+    // Set the vendor to be displayed (used when navigating between pages)
     this.setVendorToDisplay = function(vendorID) {
       vendorToDisplay = vendorID;
     };
 
+    // Return market details object
     this.getMarketDetails = function() {
       return marketDetails;
     }
 
+    // Get the market details for market with id marketID
     this.getMarketToDisplay = function(marketID) {
       return $http.post(this.getServerAddress() + 'market/details/', {"id":marketID})
       .success(function(data) {
@@ -120,15 +132,18 @@ angular.module('clientApp')
         marketDetails = data;
       })
       .error(function(data) {
+        // If the client tries to request an invalid market, redirect back to /
         console.log('Error retrieving market info');
         $location.path('/');
       });
     }
 
+    // Return vendor details object
     this.getVendorDetails = function(){
       return vendorDetails;
     };
 
+    // Get vendor details object for vendor with id vendorToDisplay
     this.getVendorInfo = function(){
       return $http.post(this.getServerAddress() + 'vendor/details', {"id":vendorToDisplay})
       .success(function(data) {
@@ -138,32 +153,39 @@ angular.module('clientApp')
         vendorDetails = data;
       })
       .error(function(data) {
+        // If the client tries to request an invalid vendor, redirect back to /        
         console.log('Error retrieving vendor info');
         $location.path('/');
       });
     };
 
+    // Return vendor object to display
     this.getVendorInfoToDisplay = function(){
       return vendorToDisplayInfo;
     };
 
+    // Set user profile object
     this.setProfile = function(u) {
       currentUser = u;
     };
 
+    // Set vnedor profile cookie
     this.setProfileVendor = function(u) {
       currentUser.vendor = u;
       ipCookie('beLocalUser', currentUser, {expires: 14});
     };
 
+    // Return user type
     this.getUserType = function() {
       return currentUser.userType;
     };
 
+    // Return current suer
     this.getCurrentUser = function() {
       return currentUser;
     };
 
+    // Get a list of trending/in season products from the server
     this.getTrendingProducts = function() {
       return $http.post(this.getServerAddress() + 'products/trending/', {'user_position':currentLocation})
       .success(function(data) {
@@ -174,6 +196,7 @@ angular.module('clientApp')
       });
     };
 
+    // Get a list of vendors from the server
     this.getVendors = function() {
       return $http.post(this.getServerAddress() + 'vendors/', {'user_position':currentLocation})
       .success(function(data) {
@@ -184,6 +207,7 @@ angular.module('clientApp')
       });
     };   
 
+    // Get a list of markets from the server
     this.getMarkets = function() {
       return $http.get(this.getServerAddress() + 'markets/')
       .success(function(data) {
@@ -197,10 +221,12 @@ angular.module('clientApp')
       });
     };
 
+    // Return a list of available markets
     this.getAvailableMarketList = function() {
       return availableMarkets;
     }
 
+    // Get a list of available markets from the server
     this.getAvailableMarkets = function() {
       availableMarkets = [];
       return $http.get(this.getServerAddress() + 'vendor/markets/available/')
@@ -217,6 +243,7 @@ angular.module('clientApp')
       });
     };    
 
+    // Get a list of all markets for a specific vendor
     this.getMarketLocations = function() {
       return $http.get(this.getServerAddress() + 'vendor/markets/list/')
       .error(function(data) {
@@ -224,6 +251,7 @@ angular.module('clientApp')
       });      
     }
 
+    // Get a list of all seller locations for a specific vendor
     this.getSellerLocations = function() {
       return $http.get(this.getServerAddress() + 'vendor/location/list/')
       .error(function(data) {
@@ -231,6 +259,7 @@ angular.module('clientApp')
       }); 
     };
     
+    // Get a list of all tags from the server
     this.getTags = function() {
       return $http.get(this.getServerAddress() + 'tag/list/')
       .success(function(data) { 
@@ -241,6 +270,7 @@ angular.module('clientApp')
       });
     };
 
+    // Get a list of all categories from the server
     this.getCategories = function() {
       return $http.get(this.getServerAddress() + 'category/list/')
       .success(function(data) {
@@ -251,6 +281,7 @@ angular.module('clientApp')
       });
     };
     
+    // Delete or restore a location
     this.trashOrRestoreLocation = function(id, action) {
       return $http.post(this.getServerAddress() + 'vendor/location/delete/', {'id' : id, 'action' : action})
       .error(function(data) {
@@ -258,6 +289,7 @@ angular.module('clientApp')
       });
     };
 
+    // Delete or restore a product
     this.trashOrRestoreProduct = function(id, action) {
       return $http.post(this.getServerAddress() + 'vendor/products/delete/', {'id' : id, 'action' : action})
       .error(function(data) {
@@ -265,6 +297,7 @@ angular.module('clientApp')
       });
     };    
 
+    // Update a product's in stock/out of stock value
     this.updateStockValue = function(productId, value) {
       return $http.post(this.getServerAddress() + 'vendor/products/stock/', {'product_id' : productId, 'value' : value})
       .error(function(data) {
@@ -272,6 +305,7 @@ angular.module('clientApp')
       });
     };
 
+    // Get items from a specific vendor
     this.getSellerItems = function() {
       return $http.get(this.getServerAddress() + 'vendor/products/list/')
       .error(function(data) {
@@ -279,10 +313,12 @@ angular.module('clientApp')
       });
     };
 
+    // Return server address
     this.getServerAddress = function() {
       return '//belocalvictoria.me/';
     };
 
+    // Upload a product photo to the server
     this.uploadFile = function(file) {
       var fd = new FormData();
       fd.append('image', file);
@@ -292,15 +328,18 @@ angular.module('clientApp')
       })
     };
 
-    this.uploadProfileFile = function(file) {
+    // Upload a profile photo to the server
+    this.uploadProfileFile = function(file, selImgCoords) {
       var fd = new FormData();
       fd.append('image', file);
+      fd.append('coords', JSON.stringify(selImgCoords));
       return $http.post(this.getServerAddress() + 'vendor/photo/add/', fd, {
         headers: {'Content-Type' : undefined},
         transformRequest: angular.identity,
       })
     };    
 
+    // Create or edit an item
     this.createItem = function(item, isEditing) { 
       if(isEditing) {
         var url = this.getServerAddress() + 'vendor/products/' + item.id + '/';        
@@ -316,6 +355,7 @@ angular.module('clientApp')
       }
     };
     
+    // Get a list of products from the server that are all categorized under one category
     this.getSelectedCategoryProducts = function(category) {
       return $http.get(this.getServerAddress() + 'products/category/' + category.slug + '/')
       .success(function(data) {
@@ -326,6 +366,7 @@ angular.module('clientApp')
       });
     };
     
+    // Get a list of products from the server that are all tagged with one tag.
     this.getSelectedTagProducts = function(tag) {
       return $http.get(this.getServerAddress() + 'products/tag/' + tag.slug + '/')
       .success(function(data) {
@@ -336,38 +377,47 @@ angular.module('clientApp')
       });
     };
 
+    // Return the trending/in season product list
     this.getTrendingProductsList = function() {
       return trendingProducts;
     };
 
+    // Return the list of current vendors
     this.getVendorsList = function() {
       return vendors;
     };
 
+    // Return the list of markets
     this.getMarketList = function() {
       return marketlist;
     };
     
+    // Return the list of tags
     this.getTagList = function() { 
       return taglist;
     }
     
+    // Return the list of categories
     this.getCategoryList = function() {
       return categorylist;
     }
     
+    // Return the list of products categorized in the same category
     this.getSelectedCategoryProductsList = function() {
       return categoryProductList;
     }
     
+    // Return the list of products tagged with the same tag
     this.getSelectedTagProductsList = function() {
       return tagProductList;
     }
 
+    // Set the beLocal user profile from a cookie saved previously
     this.setProfileFromCookie = function() {
       this.setProfile(ipCookie('beLocalUser'));
     };
 
+    // Create or edit a selling location
     this.createSellerLocation = function(sellerLocation, isEditing) {
       if(isEditing) {
         var url = this.getServerAddress() + 'vendor/location/' + sellerLocation.id + '/';       
@@ -388,7 +438,8 @@ angular.module('clientApp')
         })        
       }
     };
-
+    
+    // Join a market
     this.joinMarket = function(data) {
       var url = this.getServerAddress() + 'markets/join/';
         return $http.post(url, data)
@@ -400,6 +451,7 @@ angular.module('clientApp')
         })
     }
 
+    // Leave a market
     this.leaveMarket = function(data) {
       var url = this.getServerAddress() + 'markets/leave/';
         return $http.post(url, data)
@@ -411,6 +463,7 @@ angular.module('clientApp')
         })
     }
 
+    // Get a list of all vendors for the manage view
     this.getManageVendors = function() {
       return $http.get(this.getServerAddress() + "manage/vendors/list/")
         .error(function(){
@@ -418,6 +471,7 @@ angular.module('clientApp')
         });   
     }
 
+    // Get a list of all users for the manage view
     this.getManageUsers = function() {
       return $http.get(this.getServerAddress() + "manage/users/list/")
         .error(function(){
@@ -425,6 +479,7 @@ angular.module('clientApp')
         });   
     }
 
+    // Activate/deactivate a vendor
     this.activateVendor = function(vendor) {
       return $http.post(this.getServerAddress() + 'manage/vendors/activate/', {'id' : vendor.id})
       .error(function() {
@@ -432,6 +487,7 @@ angular.module('clientApp')
       })
     }
     
+    // Like/unlike an item
     this.likeUnlikeItem = function(item, itemName) {
       likedUnlikedItem = item;
       if (item.is_liked) {
@@ -459,6 +515,7 @@ angular.module('clientApp')
       }
     };
     
+    // Return the item that has just been liked/unliked
     this.getLikedUnlikedItem = function() {
       return likedUnlikedItem;
     };

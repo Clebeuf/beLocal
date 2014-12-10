@@ -29,11 +29,16 @@ from operator import itemgetter, attrgetter, methodcaller
 from taggit.models import Tag
 from django.contrib.auth import authenticate
 from django.core.files import File 
-from PIL import Image
+from PIL import Image, ImageOps
 import urllib
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.contrib.auth.views import password_reset, password_reset_confirm
+import StringIO
+from base64 import b64decode
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
 
 class DeleteUserView(generics.CreateAPIView):
     """
@@ -118,12 +123,14 @@ def reset_confirm(request, uidb64=None, token=None):
     print token
     return password_reset_confirm(request, uidb64=uidb64, token=token)
 
+# Used to calcualte distance from user to a specific model
 def getDistanceFromUser(user_lat, user_lng, item_lat, item_lng):
     user = (user_lat, user_lng)
     item = (item_lat, item_lng)
 
     return vincenty(user, item).miles
 
+# Create a vendor without Facebook
 class CreateNonFacebookVendorView(APIView):
     permission_classes = (AllowAny,) 
     serializer_class = serializers.UserRegistrationSerializer
@@ -227,6 +234,7 @@ class CreateNonFacebookCustomerView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                            
 
+# Login with Facebook
 class LoginView(APIView):
     throttle_classes = ()
     permission_classes = ()
@@ -278,6 +286,7 @@ class LoginView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Login without Facebook
 class LoginNoFBView(APIView):
     throttle_classes = ()
     permission_classes = ()
@@ -328,9 +337,15 @@ class LoginNoFBView(APIView):
                 }                
             return Response(response)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                        
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
+# Create a vendor with Facebook
 class CreateVendorView(APIView):
+    """
+    Obtains the vendor object related to the current user and sets their
+    is_staff flag to 1 (vendor) and also feels their respective information
+    according to the request. 
+    """  
     throttle_classes = ()
     permission_classes = ()
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
@@ -375,6 +390,7 @@ class CreateVendorView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Create a customer with Facebook
 class CreateCustomerView(APIView):
     throttle_classes = ()
     permission_classes = ()
@@ -400,6 +416,8 @@ class CreateCustomerView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                               
 
+# Python Social Auth class required to register a new user with their unique social media access token.
+# In our case, this comes from Facebook.
 @psa()
 def register_by_access_token(request, backend):
     backend = request.backend
@@ -420,7 +438,11 @@ def register_by_access_token(request, backend):
 
     return user
 
+
 class MarketDetailsView(generics.CreateAPIView):
+    """
+    Provies an endpoint to add market information
+    """
     permission_classes = (AllowAny,)   
 
     def post(self, request, *args, **kwargs):
@@ -461,23 +483,6 @@ class VendorDetailsView(generics.CreateAPIView):
             )  
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-class AddVendorView(generics.CreateAPIView):
-    permission_classes = (AllowAny,)
-
-    def post(self, request, *args, **kwargs):
-        serializer = serializers.VendorSerializer(data=request.DATA)
-
-        if serializer.is_valid():
-            user = User.objects.get(id=serializer.init_data['user'])
-            user.is_staff = 1 # make the user a vendor
-            user.save()
-
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)   
-        else:
-            return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
 
 class RWDVendorView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -558,6 +563,7 @@ class AddProductView(generics.CreateAPIView):
         if serializer.is_valid():
             current_product = serializer.save()
 
+            # Add placeholder image
             if (current_product.photo == None): 
                 pp = ProductPhoto(image=File(open('../client/app/images/productPH.png')))
                 pp.save()
@@ -659,6 +665,8 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
             raise Http404
         return location
 
+
+# Delete/restore a selling location
 class DeleteSellerLocationView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,) 
@@ -684,6 +692,7 @@ class DeleteSellerLocationView(generics.CreateAPIView):
         else:
             return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)
 
+# Delete/restore a product
 class DeleteProductView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,) 
@@ -724,8 +733,41 @@ class AddVendorPhotoView(generics.CreateAPIView):
     """
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,) 
-    serializer_class = serializers.VendorPhotoSerializer
-    model = VendorPhoto
+    
+    def post(self, request):
+        error = ''
+        #image is coming in base64 format, which uses only 6 bits out of 8. 
+        #so its actual size is 3/4 of the data.
+        if len(request.DATA["image"]) * 0.75 > 3000000:
+            error = 'Image size is too big. Should be less than 3 mb.'
+        else:
+            coords = json.loads(request.DATA["coords"])
+            vendor = Vendor.objects.get(user=request.user)
+            if coords and len(coords) == 4:
+                try:
+                    imgData = request.DATA["image"].split(',')[1]
+                    imgContent = ContentFile(b64decode(imgData))
+                    img = Image.open(imgContent)
+                    tempFile = img.crop((
+                        int(round(coords[0])),
+                        int(round(coords[1])),
+                        int(round(coords[2])),
+                        int(round(coords[3]))))
+                    tempFileIo = StringIO.StringIO()
+                    tempFile.save(tempFileIo, format='png')
+                    imgFile = InMemoryUploadedFile(tempFileIo, None, vendor.company_name + '.png', 'image/png', tempFileIo.len, None)
+                    vendorPhoto = VendorPhoto(image=imgFile)
+                    vendorPhoto.save()
+                    vendor.photo = vendorPhoto
+                    vendor.save()
+                    return Response(data = serializers.VendorPhotoPathSerializer(vendorPhoto).data,
+                                status=status.HTTP_200_OK)
+                except:
+                    error = 'An unexpected error occured. Please try again.';
+            else:
+                error = 'Please select the area to crop the image.'
+        return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
+
     
 class RWDProductPhotoView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -780,8 +822,7 @@ class UpdateStockView(generics.CreateAPIView):
                 return Response(status=status.HTTP_200_OK)            
         return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
 
-#TODO: Currenty this view simply returns all products rather
-# than trending ones
+#TODO: Currenty this view simply returns all products rather than trending ones
 class TrendingProductView(generics.ListAPIView):
     """
     This view provides an endpoint for customers to
@@ -901,6 +942,7 @@ class VendorsView(generics.ListAPIView):
         return vendors
 
     def post(self, request):
+        # Unused geolocation-dependent code 
         if ('user_position' in request.DATA.keys() and request.DATA['user_position'] is not None):
 
             lat, lng = map(float, request.DATA['user_position'].strip('()').split(','))

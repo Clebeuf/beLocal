@@ -6,12 +6,13 @@ angular.module('clientApp')
       restrict: 'E',
       templateUrl: 'scripts/directives/navbar.html',
       controller: ['$scope', function($scope) {
-        $scope.AuthService = AuthService;
-        $scope.loginError = false;
-        $scope.productSuggestions = [];
-        $scope.StateService = StateService;
-        $scope.state = $state;
+        $scope.AuthService = AuthService; // Put AuthService on the scope so that it is accessible from HTML
+        $scope.loginError = false; // True if there has been a login error 
+        $scope.productSuggestions = []; // List of autocomplete product suggestions that comes back from the server
+        $scope.StateService = StateService; // Put StateService on the scope so that it is accessible from HTML
+        $scope.state = $state; // State is necessary to check for which page we're on in the HTML. Put it on the scope too.
 
+        // Go to the manage page
         $scope.goToManage = function() {
             $location.path('/manage');
         }
@@ -27,6 +28,10 @@ angular.module('clientApp')
           }
         };          
 
+        // This is a dirty hack necessary to ensure that back-button history is preserved correctly and that navigation events
+        // fire properly when clicking on any of the tabs (In Season, Farmers, Markets) in the nav bar. Essentially, we must
+        // navigate back to / if we're not there already, and then we must set either #trending, #vendors or #farmers in the location.hash
+        // so that when main.js loads, it knows which tab we should be displaying.
         $scope.setHash = function(hash) {
             var oldPath = $location.path();           
             $scope.safeApply(function(){
@@ -40,10 +45,12 @@ angular.module('clientApp')
             });             
         }      
 
+        // Refresh the map present on any page
         $scope.refreshMap = function() {
             $rootScope.$broadcast('forceRefreshMap');    
         }        
 
+        // Autocomplete for search
         $scope.updateProductSuggestions = function(val) {
             return $http.get(StateService.getServerAddress() + "search/autocomplete?q=" + val
                 ).then(function(response){
@@ -59,6 +66,8 @@ angular.module('clientApp')
                     return products;
             });
         }
+
+        // Called when a user selects an suggested entry for search from the dropdown
         $scope.onSelect = function($item,$model,$label){
 
             if($item.vendorSearch != null) {
@@ -70,28 +79,34 @@ angular.module('clientApp')
             }
         }         
 
+        // Reloads the main page and navigates to the trending tab.
         $scope.reloadMainPage = function() {
             $scope.setHash('trending');
         }
 
+        // Create a new vendor
         $scope.createVendor = function() {
             AuthService.createVendor();
         }
 
+        // Create a new customer
         $scope.createCustomer = function() {
             AuthService.createCustomer();
         }       
 
+        // Show customer sign up information on the welcome screen
         $scope.showCustomerSignUp = function() {
             $location.path('/welcome');
             $location.hash('foodies');
         }
 
+        // Shwo vendor sign up information on the welcome screen
         $scope.showFarmerSignUp = function() {
             $location.path('/welcome');
             $location.hash('farmers');
         }  
 
+        // Display vendor account page (Used for My Profile in the My Account dropdown)
         $scope.displayAccountPage = function() {
             if(StateService.getUserType() === "VEN") {
                 $location.path('/vendor');
@@ -109,6 +124,7 @@ angular.module('clientApp')
             }
         }  
 
+        // Perform a product search
         $scope.doSearch = function(value){
           $window.location.href='#/search/products?q=' + encodeURI(value);
         }         

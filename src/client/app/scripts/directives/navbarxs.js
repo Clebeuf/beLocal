@@ -10,6 +10,8 @@ angular.module('clientApp')
         $scope.StateService = StateService;
         $scope.loginError = false;
         $scope.productSuggestions = [];
+
+        // For documentation, please see navbar.js. These two controllers are identical.  
         $scope.state = $state;         
 
         angular.element('.navbar-collapse ul li a:not(.dropdown-toggle)').click(function () { 

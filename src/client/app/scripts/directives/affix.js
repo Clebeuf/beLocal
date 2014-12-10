@@ -13,16 +13,31 @@ angular.module('clientApp')
       scope: {
         offsetTop: '=',
         containerClass: '@',
+        scrollElementClass: '@',
       },
       link: function postLink(scope, element, attrs) {
-        angular.element($window).scroll(function() {
+        scope.scrollElementHeight = angular.element('.' + scope.scrollElementClass).height();
+
+        scope.doScroll = function() {
             var rowHeight = angular.element(element).closest('.' + scope.containerClass).height();
             var scroll = angular.element($window).scrollTop();
-            if(scroll > scope.offsetTop && angular.element($window).width() > 768 && scroll < rowHeight) {
+            if(scroll > scope.offsetTop && angular.element($window).width() > 768 && scroll + scope.scrollElementHeight - scope.offsetTop < rowHeight) {
                 angular.element(element).css({top: scroll - scope.offsetTop})
-            } else {
+            } else if(!(scroll + scope.scrollElementHeight - scope.offsetTop >= rowHeight)) {
                 angular.element(element).css({top: 0});
             } 
+        }
+
+        angular.element($window).resize(function() {
+          if(angular.element($window).width() <= 768) {
+            angular.element(element).css({top: 0});
+          } else {
+            scope.doScroll();
+          }
+        });        
+
+        angular.element($window).scroll(function() {
+          scope.doScroll();
         });      
       }
     };

@@ -22,8 +22,8 @@
       <br>
       <div class="row">
         <div class="col-sm-4">
-          <div class="no-top-margin map-container" style="margin-bottom:15px">
-            <div class="bl-map" be-local-map markets="marketList"></div>
+          <div class="no-top-margin map-container" style="margin-bottom:15px" affix offset-top="170" container-class="row" scroll-element-class="market-map">
+            <div class="bl-map market-map" be-local-map markets="marketList"></div>
           </div>
         </div> 
 
@@ -79,37 +79,39 @@
             </div>
 
             <!-- DISPLAY SIDE BAR OF ALL CATEGORIES & TAGS-->
-            <div class="col-sm-2 col-xs-6 tag-bar hidden-xs">
-                <hr>
-                <p class="small-header">Categories</p>
-                <ul class="tag-list" role="">
-                    <li><a class="plain-text-font" ng-class="{'active' : selectedCategory === 'All Products'}" ng-click="getAllProducts('category')">All Products</a></li>
-                    <li class="" ng-repeat="category in categoryList">
-                      <a class="plain-text-font" ng-class="{'active' : selectedCategory === category.name}" ng-click="getProductsWithCategory(category)">{{category.name}}</a>
-                    </li>
-                </ul>
-                <hr>
-                <p class="small-header">Filter By</p>
-                <ul class="tag-list" role="">
-                    <li>
-                        <span ng-hide="tagSelected('All Products')">
-                            <a class="pointer tag-check" ng-click="doTagFilter('All Products')" ><i class="fa fa-circle-o"></i></a>
-                          </span>
-                          <span ng-show="tagSelected('All Products')">
-                            <a class="pointer tag-check" ng-click="doTagFilter('All Products')" ><i class="fa fa-check-circle"></i></a>
-                          </span>                      
-                          <a class="plain-text-font" ng-click="doTagFilter('All Products')">All Products</a>
-                    </li>
-                    <li class="" ng-repeat="tag in tagList">
-                      <span ng-hide="tagSelected(tag.name)">
-                        <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-circle-o"></i></a>
-                      </span>
-                      <span ng-show="tagSelected(tag.name)">
-                        <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-check-circle"></i></a>
-                      </span>                      
-                      <a class="plain-text-font" ng-click="doTagFilter(tag.name)">{{tag.name}}</a>
-                    </li>
-                </ul>
+            <div class="col-sm-2 col-xs-6 tag-bar hidden-xs" affix offset-top="170" container-class="customer-container" scroll-element-class="tag-category-bar">
+                <div class="tag-category-bar">
+                  <hr>
+                  <p class="small-header">Categories</p>
+                  <ul class="tag-list" role="">
+                      <li><a class="plain-text-font" ng-class="{'active' : selectedCategory === 'All Products'}" ng-click="getAllProducts('category')">All Products</a></li>
+                      <li class="" ng-repeat="category in categoryList">
+                        <a class="plain-text-font" ng-class="{'active' : selectedCategory === category.name}" ng-click="getProductsWithCategory(category)">{{category.name}}</a>
+                      </li>
+                  </ul>
+                  <hr>
+                  <p class="small-header">Filter By</p>
+                  <ul class="tag-list" role="">
+                      <li>
+                          <span ng-hide="tagSelected('All Products')">
+                              <a class="pointer tag-check" ng-click="doTagFilter('All Products')" ><i class="fa fa-circle-o"></i></a>
+                            </span>
+                            <span ng-show="tagSelected('All Products')">
+                              <a class="pointer tag-check" ng-click="doTagFilter('All Products')" ><i class="fa fa-check-circle"></i></a>
+                            </span>                      
+                            <a class="plain-text-font" ng-click="doTagFilter('All Products')">All Products</a>
+                      </li>
+                      <li class="" ng-repeat="tag in tagList">
+                        <span ng-hide="tagSelected(tag.name)">
+                          <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-circle-o"></i></a>
+                        </span>
+                        <span ng-show="tagSelected(tag.name)">
+                          <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-check-circle"></i></a>
+                        </span>                      
+                        <a class="plain-text-font" ng-click="doTagFilter(tag.name)">{{tag.name}}</a>
+                      </li>
+                  </ul>
+                </div>
             </div>
 
         </div>
@@ -135,8 +137,8 @@
 
       <div class="row">
           <div class="col-sm-4">
-            <div class="map-container">
-              <div class="bl-map" be-local-map vendors="vendors"></div>
+            <div class="map-container" affix offset-top="170" container-class="row" scroll-element-class="vendor-map">
+              <div class="bl-map vendor-map" be-local-map vendors="vendors"></div>
             </div>
           </div>
           <div class="col-sm-8">

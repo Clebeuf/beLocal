@@ -1,9 +1,3 @@
-// This directive is currenty unsed in beLocal, but it contains a SUPER hacky workaround to cause certain elements on the page to scroll
-// in a way that continues to work with bootstrap's grid system. It's worth noting that Bootstrap itself has something like this called
-// affix.js, but that the position:fixed; style that it places on all affixed elements causes any grid layouts to break (genius, I know).
-// We pulled this out because it was breaking our footer, but I think it's close to working. My math is slightly off somewhere...
-// When we want to put fixed maps back into beLocal, I'll give this another shot.
-
 'use strict';
 
 angular.module('clientApp')
@@ -13,16 +7,37 @@ angular.module('clientApp')
       scope: {
         offsetTop: '=',
         containerClass: '@',
+        scrollElementClass: '@',
       },
       link: function postLink(scope, element, attrs) {
-        angular.element($window).scroll(function() {
-            var rowHeight = angular.element(element).closest('.' + scope.containerClass).height();
-            var scroll = angular.element($window).scrollTop();
-            if(scroll > scope.offsetTop && angular.element($window).width() > 768 && scroll < rowHeight) {
-                angular.element(element).css({top: scroll - scope.offsetTop})
-            } else {
+        scope.doScroll = function() {
+            scope.scrollElementHeight = angular.element('.' + scope.scrollElementClass).height(); // Height of element being fixed
+            var rowHeight = angular.element(element).closest('.' + scope.containerClass).height(); // Height of container being fixed
+            var scroll = angular.element($window).scrollTop(); // Amount in pixels that has been scrolled from the top of the screen
+
+            // Kinda nasty if statement to catch all different cases. There's also a special check in here to make sure we're not on xs screen sizes.
+            if(scope.scrollElementHeight < (angular.element($window).height() - scope.offsetTop) 
+                    && scroll > scope.offsetTop && angular.element($window).width() > 768 
+                    && scroll + scope.scrollElementHeight - scope.offsetTop < rowHeight) {
+                angular.element(element).css({top: scroll - scope.offsetTop});
+            } else if(!(scroll + scope.scrollElementHeight - scope.offsetTop >= rowHeight)) {
+                // I don't think we should ever get here, but just in case, we should push the affixed element to the top of the page
                 angular.element(element).css({top: 0});
             } 
+        }
+
+        // On resize, check to see if we're on XS. If we are, push the affix'd element to the top of the page, otherwise calculate where it should go
+        angular.element($window).resize(function() {
+          if(angular.element($window).width() <= 768) {
+            angular.element(element).css({top: 0});
+          } else {
+            scope.doScroll();
+          }
+        });        
+
+        // Every time we scroll, calculate the top offset.
+        angular.element($window).scroll(function() {
+          scope.doScroll();
         });      
       }
     };

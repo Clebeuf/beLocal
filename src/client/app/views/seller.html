@@ -20,16 +20,13 @@
 
 <div class="new-formatting-container customer-container" ng-class="{'is-inactive' : !isCurrentUserActive}">  
     <div class="row vendor-profile-header">
-
-
-        <div class="col-sm-5 vendor-avatar">
-            <div class="vendor-avatar-img pointer" data-toggle="modal" ng-click="editProfile()" data-target="#profileModal" ng-style="{'background-image': 'url('+StateService.getCurrentUser().vendor.photo.image_url+')'}" style="background-size: cover; background-repeat: no-repeat; background-position: center;">
-                <div ng-hide="StateService.getCurrentUser().vendor.photo.image_url != null" class="center" style="color:#ffffff;">
-                </div>
+        <div class="col-sm-6 col-md-5 vendor-avatar">
+            <div id="imageOverlay" class="image-overlay pointer" ng-click="launchProfileImageModal()" disabled="true">
+                <img id="vendorProfileImage" ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}" data-toggle="modal"/>
+                <div id="profileOverlay" class="pointer"><span>Change Profile Image</span></div>
             </div>
-
         </div>
-        <div class="col-sm-7 vendor-header-content">
+        <div class="col-sm-6 col-md-7 vendor-header-content">
 
             <div class="row new-vendor-name-style">
                 <div class="col-sm-12">
@@ -76,8 +73,6 @@
             </div>
         </div>
     </div>
-
-
 <!--Display Seller's Locations-->
     <hr>
     <div class="row">
@@ -325,22 +320,12 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4>Update Your Profile<br />
-                <small>Please Note: This information will be visable to others using this application.</small>
+                <small>Please Note: This information will be visible to others using this application.</small>
                 </h4>               
             </div>
             <div class="modal-body">  
                 <div class="container-fluid">                   
                     <form role="form" class="profile-modal" name="profileForm" novalidate>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="form-group" ng-class="{ 'has-error' : profileForm.imageField.$invalid }">
-                                    <label for="profile-image">Change Profile Image</label><br />
-                                    <img src="#" id="profilePreview" />
-                                    <input required onchange="angular.element(this).scope().profileFileNameChanged(this.files)" name="imageField" type="file" id="profile-image">
-                                    <p ng-show="profileImageError != null" class="help-block"><small style="color: #a94442;" >{{profileImageError}}</small></p>                                    
-                                </div>
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="form-group" ng-class="{ 'has-error' : profileForm.companyName.$invalid }">
@@ -458,6 +443,42 @@
     <!-- /.modal-dialog -->
 </div>
 
+<!-- Seller Add/Edit Profile Image -->
+<div class="modal fade" id="profileImageModal" data-backdrop="static" tabindex='-1'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Upload New Profile Image</h4>
+                <small>Please upload an image file less than 3 MB.</small>
+            </div>
+            <div class="modal-body">  
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <div class="dotted-image-container" ng-show="showImageSelectButton">
+                                <input style="display:none" onchange="angular.element(this).scope().handleProfileImageFileSelect(this.files)" name="imageField" type="file" id="profile-image" accept="image/*">
+                                <button type="button" id="triggerImageSelect" class="btn beLocal-btn-filled btn-image-select" ng-click="triggerImageSelect()">Select Image to Upload</button>
+                            </div>
+                            <div class="crop-image-wrapper">
+                                 <img-cropped src='{{profileImage|trusted}}' selected='selected(cords)'/>
+                                  <p ng-show="profileImageError != null" class="help-block"><span style="color: #a94442;" >{{profileImageError}}</span></p>
+                            </div>
+                            <div ng-show="showImageCroppingText" id="imageCroppingText" style="padding:0 50px 0 50px;">
+                                <p style="text-align:center;">To make adjustments to the image, drag and resize the selected area above.
+                                Once you are happy with your image, click <b>Save Profile Image</b> below.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" ng-click="uploadProfileImage()" id="uploadProfileImage" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-disabled="disableProfileImageSubmit" class="btn beLocal-btn-filled">Save Profile Image</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Seller Add/Edit Item Modal -->
 <div class="modal fade " id="itemModal">
@@ -476,10 +497,11 @@
                                 <div class="form-group" ng-class="{ 'has-error' : newItemSubmitted && itemForm.imageField.$invalid }">
                                     <label ng-hide="isEditingItem" for="item-image">Add Image</label>
                                     <label ng-show="isEditingItem" for="item-image">Change Image</label><br />
-                                    <img ng-show="displayItemThumbnail" src="#" id="itemPreview" />                                    
+                                    <img ng-show="displayItemThumbnail" src="#" id="itemPreview" />
                                     <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
                                     <p ng-show="productImageError != null" class="help-block"><small style="color: #a94442;" >{{productImageError}}</small></p>                                      
                                 </div>
+                               
                             </div>
                         </div>
                         <div class="row">
@@ -551,8 +573,6 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-
-
 
 <!-- Seller Add/Edit Location Modal  -->
 <div class="modal fade" id="locationModal">

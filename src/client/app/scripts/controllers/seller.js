@@ -26,6 +26,7 @@ angular.module('clientApp')
     $scope.showInactiveAlert = true; // True if the "Your account is inactive" message should be displayed
     $scope.showXSNav = true; // True if we should be showing the XS nav bar.
     $scope.tour = undefined; // The tour object for bootstrap tour
+    $scope.buttonsDisabledForTour = false;
 
     var geocoder = new google.maps.Geocoder(); // Create a geocoder for looking up addresses
 
@@ -200,21 +201,6 @@ angular.module('clientApp')
         }
     }
 
-    // Called to reset edit profile modal
-    $scope.editProfile = function() {
-        $scope.profileImageError = undefined; // Reset error message on photo
-
-        // Strange hack to clear an image uploader. It turns out that wrapping it in a <form> and resetting that form before unwrapping it works like a charm.
-        var e = angular.element('#profile-image');
-        e.wrap('<form>').closest('form').get(0).reset();
-        e.unwrap();
-
-        $scope.displayProfileThumbnail = $scope.currentUser.vendor.photo ? true : false; // Should we display a thumbail image preview for profile photo?
-
-        if($scope.displayProfileThumbnail)
-            angular.element('#profilePreview').attr('src', $scope.currentUser.vendor.photo.image_url).width(50).height(50); // If so, set the profile image thumbnail
-    }
-
     // Generate strings for social media (Facebook and Twitter)
     $scope.generateSocialStrings = function() {
         $scope.generateFacebookString();
@@ -253,9 +239,8 @@ angular.module('clientApp')
         $scope.vendorProfileUpdated = true;
         $scope.currentUser.vendor.address.addr_line1 = 'unknown'; // We should probably set these to NULL in the DB now.
         $scope.currentUser.vendor.address.zipcode = 'unknown';
-        if($scope.profileForm.$valid && !$scope.profileImageError) { // If we have a valid edit profile form... UPDATE!
+        if($scope.profileForm.$valid) {
             angular.element('#profileModal').modal('hide');
-            console.log($scope.currentUser);
             if($scope.currentUser.vendor.photo.id)
                 $scope.currentUser.vendor.photo = $scope.currentUser.vendor.photo.id; // Set vendor photo to vendor.photo.id so that our serverside serializer is happy!
             StateService.updateCurrentUser($scope.currentUser).then(function(result) { // Update the vendor object on the server, and update our client side model with the result!
@@ -538,35 +523,7 @@ angular.module('clientApp')
             $scope.productImageError = response.image[0];
           }         
         });
-    }
-
-    // Called when a profile image changes (i.e. when a new image is selected using the image picker)
-    $scope.profileFileNameChanged = function(file) {
-        $scope.profileImageError = undefined;
-
-        if (file && file[0]) {
-            var reader = new FileReader();
-            $scope.displayItemThumbnail = true;
-            reader.onload = function(e) {
-                angular.element('#profilePreview')
-                .attr('src', e.target.result)
-                .width(50)
-                .height(50);             
-            };
-            reader.readAsDataURL(file[0]);
-        }
-
-        // Upload the new image
-        StateService.uploadProfileFile(file[0])
-        .success(function(response) {
-            $scope.currentUser.vendor.photo = response.id;
-        })
-        .error(function(response) {
-          if(response.image) {
-            $scope.profileImageError = response.image[0];
-          }         
-        });
-    }    
+    } 
 
     // Round any time to the nearest increment of five.
     $scope.roundTimeToNearestFive = function(date) {
@@ -871,7 +828,89 @@ angular.module('clientApp')
     $scope.unHighlightPins = function(object) {
         if(object && object.marker)          
             object.marker.setAnimation(null);
-    };    
+    };
+
+    $scope.launchProfileImageModal = function(){
+        if (!$scope.buttonsDisabledForTour){
+    	   angular.element('#profileImageModal').modal('show');
+           console.log("hit");
+        }
+    }
+
+    $scope.resetProfileImageModal = function(){
+    	$scope.profileImageError = undefined;
+    	$scope.profileImage = undefined;
+    	$scope.showImageSelectButton = true;
+    	$scope.showImageCroppingText = false;
+    	$scope.disableProfileImageSubmit = true;
+    }
+
+    $scope.resetProfileImageModal();
+
+   	angular.element('#profileImageModal').on('hide.bs.modal', function(){
+   		$scope.resetProfileImageModal();
+   	})
+
+    $scope.handleProfileImageFileSelect=function(file) {
+        if(file && file[0]) {
+        	if(file[0].size > 3000000){
+        		
+        		$scope.safeApply(function($scope){
+        			$scope.profileImageError = 'The selected file is too big. Please select a file less than 3 MB.';
+        		})
+        	} else {
+        				$scope.profileImageError = null;
+        		    	$scope.showImageSelectButton = false;
+    					$scope.showImageCroppingText = true;
+	            var reader = new FileReader();
+	            reader.onload = function (evt) {
+	                $scope.safeApply(function($scope){
+	                    $scope.profileImage = evt.target.result;
+	                    $scope.disableProfileImageSubmit = false;
+	                });
+	            };
+	            reader.readAsDataURL(file[0]);
+	        }
+            //cloning and replacing the file input element with itself in order to clear it
+            //this is because the onchange event doesn't get triggered if the user selects the
+            //same file as last time.
+            angular.element('#profile-image').replaceWith(angular.element('#profile-image').clone(true));
+	            //angular.element('#profileImageModal').modal('show');
+        }
+    };
+
+     $scope.selected = function(x) {
+    	$scope.profileImageCoords = [x.x, x.y, x.x2, x.y2];
+  	};
+
+  	$scope.triggerImageSelect = function () {
+		  $timeout(function() {
+		    angular.element('#profile-image').trigger('click');
+		  }, 100);
+		};
+
+	$scope.uploadProfileImage = function() {
+		//change the Done button to a loader to prevent clicks while uploading
+		angular.element('#uploadProfileImage').button('loading');
+		if($scope.profileImage){
+            StateService.uploadProfileFile($scope.profileImage, $scope.profileImageCoords)
+            .success(function(response) {
+              //   angular.element('#profileImage').css({
+              //   	'background-image': 'url(' + response.image_url +')'
+            		// });
+                StateService.getCurrentUser().vendor.photo.image_url = response.image_url;
+                StateService.getCurrentUser().vendor.photo.id = response.id;
+                $scope.currentUser = StateService.getCurrentUser();
+                angular.element('#profileImageModal').modal('hide');
+                $scope.resetProfileImageModal();
+                angular.element('#uploadProfileImage').button('reset');
+            })
+            .error(function(response){
+                angular.element('#uploadProfileImage').button('reset');
+                $scope.profileImageError = response;
+            });
+         }
+	}
 
     // Initialize the seller page.
     $scope.init = function() {
@@ -900,10 +939,12 @@ angular.module('clientApp')
         onShown: function(tour) {
             var step = tour._options.steps[tour._current];
             angular.element(step.element).attr('disabled', true);
+            $scope.buttonsDisabledForTour = true;
         },
         onHidden: function(tour) {
             var step = tour._options.steps[tour._current];
             angular.element (step.element).removeAttr('disabled');
+            $scope.buttonsDisabledForTour = false;
         },               
         steps: [
           {
@@ -912,9 +953,15 @@ angular.module('clientApp')
             content: "Thank you for registering as a local farmer or foodmaker. Here's a quick tutorial to get you on your way.",
           },
           {
+            element: "#imageOverlay",
+            title: "<center><b>Updating your Profile Image</b></center>",
+            content: "Click here to upload a new profile image. Once uploaded, you will be able to crop your image so that it fits perfectly in your company's profile.",
+            placement: "bottom"
+          },
+          {
             element: "#editProfileBtn",
             title: "<center><b>Updating your Profile</b></center>",
-            content: "Click the edit profile button to update your company name, address, contact information, and profile picture.  Also link to your Facebook page, personal webpage, and add a description about your company.",
+            content: "Click the edit profile button to update your company name, address, and contact information.  Also link to your Facebook page, personal webpage, and add a description about your company.",
             placement: "bottom"
           },
           {
@@ -933,13 +980,13 @@ angular.module('clientApp')
             element: "#markets",
             title: "<center><b>Your Market Locations</b></center>",
             content: "Once you select a market as one of your selling locations, you will see it listed here.",
-            placement: "bottom"
+            placement: "top"
           },
           {
             element: "#customLocations",
             title: "<center><b>Your Custom Locations</b></center>",
             content: "Likewise, any custom selling locations you create will be listed here.",
-            placement: "bottom"
+            placement: "top"
           },
           {
             element: "#addItem",
@@ -962,7 +1009,7 @@ angular.module('clientApp')
           {
             element: "",
             title: "<center><b>Take the Tour Again</b></center>",
-            content: "If at any time you would like to take this tutorial again, select 'Vendor Tutorial' from the drop down menu in the navigation bar. <hr><center><b> If you have any questions or comments please don't hesitate to contact us at </b><a href='mailto:" + "belocalvictoria" + "@gmail.com" + "'>" + "belocalvictoria" + "@gmail.com" + "</a></center>",
+            content: "<center>If at any time you would like to take this tutorial again, select Vendor Tutorial from the drop down menu in the navigation bar. <hr><center><b> If you have any questions or comments please don't hesitate to contact us at </b><a href='mailto:" + "belocalvictoria" + "@gmail.com" + "'>" + "belocalvictoria" + "@gmail.com" + "</a></center>",
             placement: "bottom"
           }  
 
@@ -993,7 +1040,6 @@ angular.module('clientApp')
     };
 
     // ---- END OF BOOTSTRAP TOUR --------
-
 
   })
   .directive('htmlComp', function($compile, $parse) {

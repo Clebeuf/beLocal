@@ -5,7 +5,9 @@
 */
 
 
-
+.jcrop-keymgr {
+  opacity: 0 !important;
+}
 
 .link a {
   color: #696969 !important;
@@ -101,6 +103,11 @@
     }
 }
 
+.image-overlay{
+  position:relative;
+  max-width: 500px;
+}
+
 .vendor-avatar-img{
   width: 100%;
   max-width: 500px;
@@ -111,6 +118,37 @@
   margin-bottom: 5px !important;
   background-color: #696969;
 
+}
+
+#vendorProfileImage {
+  width: 100%;
+}
+
+.vendor-profile-image {
+  max-width: 500px !important;
+}
+
+#profileOverlay{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  background: rgba(0,0,0,.75);
+  font-family: 'Roboto', sans-serif !important;
+  font-weight: normal;
+  color: #FFFFFF;
+  font-size:24px;
+  opacity:0;
+  padding: 5px 0 0 0;
+  -webkit-transition: opacity .20s ease;
+  -moz-transition: opacity .20s ease;
+  transition: opacity .20s ease;
+}
+
+#imageOverlay:hover #profileOverlay {
+  opacity:1;
 }
 
 @media (max-width: 450px) {
@@ -126,6 +164,10 @@
   .like-button-position{
     margin-top: 150px !important;
   }
+
+  #profileOverlay{
+    font-size:18px;
+  }
 }
 
 .like-padding {
@@ -133,7 +175,7 @@
 }
 
 .vendor-avatar {
-  max-height: 300px;
+  max-height: 350px;
   overflow: hidden;
   vertical-align: middle;
 }
@@ -1129,6 +1171,34 @@ body {
   vertical-align: center;
 }
 
+.crop-image-wrapper {
+  text-align:center;
+  padding-top: 15px;
+}
+
+.jcrop-centered
+{
+    display: inline-block;
+}
+
+.progress-bar.animate {
+   width: 100%;
+}
+
+.dotted-image-container {
+  margin-left:auto;
+  margin-right:auto;
+  border: 2px dashed #b3b3b3;
+  height:200px;
+  max-width: 400px;
+  text-align: center;
+}
+
+.btn-image-select{
+  position:relative; 
+  top:45%; 
+}
+
 /* SELLER UI ENDS*/
 
 /* PRODUCT DETAILS UI STARTS */
@@ -1436,6 +1506,13 @@ hr {
 .like-button-position{
   margin-top: 250px;
 }
+
+
+.vendor-profile-like{
+    top: -50px;
+    padding-right: 30px !important;
+}
+
 
 .seller-location-details{
   padding: 0px 15px 0px 15px;

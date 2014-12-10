@@ -29,11 +29,16 @@ from operator import itemgetter, attrgetter, methodcaller
 from taggit.models import Tag
 from django.contrib.auth import authenticate
 from django.core.files import File 
-from PIL import Image
+from PIL import Image, ImageOps
 import urllib
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.contrib.auth.views import password_reset, password_reset_confirm
+import StringIO
+from base64 import b64decode
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
 
 class DeleteUserView(generics.CreateAPIView):
     """
@@ -728,8 +733,41 @@ class AddVendorPhotoView(generics.CreateAPIView):
     """
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,) 
-    serializer_class = serializers.VendorPhotoSerializer
-    model = VendorPhoto
+    
+    def post(self, request):
+        error = ''
+        #image is coming in base64 format, which uses only 6 bits out of 8. 
+        #so its actual size is 3/4 of the data.
+        if len(request.DATA["image"]) * 0.75 > 3000000:
+            error = 'Image size is too big. Should be less than 3 mb.'
+        else:
+            coords = json.loads(request.DATA["coords"])
+            vendor = Vendor.objects.get(user=request.user)
+            if coords and len(coords) == 4:
+                try:
+                    imgData = request.DATA["image"].split(',')[1]
+                    imgContent = ContentFile(b64decode(imgData))
+                    img = Image.open(imgContent)
+                    tempFile = img.crop((
+                        int(round(coords[0])),
+                        int(round(coords[1])),
+                        int(round(coords[2])),
+                        int(round(coords[3]))))
+                    tempFileIo = StringIO.StringIO()
+                    tempFile.save(tempFileIo, format='png')
+                    imgFile = InMemoryUploadedFile(tempFileIo, None, vendor.company_name + '.png', 'image/png', tempFileIo.len, None)
+                    vendorPhoto = VendorPhoto(image=imgFile)
+                    vendorPhoto.save()
+                    vendor.photo = vendorPhoto
+                    vendor.save()
+                    return Response(data = serializers.VendorPhotoPathSerializer(vendorPhoto).data,
+                                status=status.HTTP_200_OK)
+                except:
+                    error = 'An unexpected error occured. Please try again.';
+            else:
+                error = 'Please select the area to crop the image.'
+        return Response(data=error, status=status.HTTP_400_BAD_REQUEST)
+
     
 class RWDProductPhotoView(generics.RetrieveUpdateDestroyAPIView):
     """

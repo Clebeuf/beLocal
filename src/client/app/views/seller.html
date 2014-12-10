@@ -20,16 +20,13 @@
 
 <div class="new-formatting-container customer-container" ng-class="{'is-inactive' : !isCurrentUserActive}">  
     <div class="row vendor-profile-header">
-        <div class="col-sm-5 vendor-avatar">
-            <div id="imageOverlay" class="image-overlay">
-                <div id="profileImage" class="vendor-avatar-img pointer" data-toggle="modal" style="background-image:url({{StateService.getCurrentUser().vendor.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;">
-                    <div ng-hide="StateService.getCurrentUser().vendor.photo.image_url != null" class="center" style="color:#ffffff;">
-                    </div>
-                </div>
-                <div id="profileOverlay" class="pointer" ng-click="launchProfileImageModal()"><span>Change Profile Image</span></div>
+        <div class="col-sm-6 col-md-5 vendor-avatar">
+            <div id="imageOverlay" class="image-overlay" ng-click="launchProfileImageModal()">
+                <img ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}" style="width: 100%;" class="pointer" data-toggle="modal"/>
+                <div id="profileOverlay" class="pointer"><span>Change Profile Image</span></div>
             </div>
         </div>
-        <div class="col-sm-7 vendor-header-content">
+        <div class="col-sm-6 col-md-7 vendor-header-content">
 
             <div class="row new-vendor-name-style">
                 <div class="col-sm-12">

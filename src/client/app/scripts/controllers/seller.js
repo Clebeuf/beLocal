@@ -891,9 +891,12 @@ angular.module('clientApp')
 		if($scope.profileImage){
             StateService.uploadProfileFile($scope.profileImage, $scope.profileImageCoords)
             .success(function(response) {
-                angular.element('#profileImage').css({
-                	'background-image': 'url(' + response.image_url +')'
-            		});
+              //   angular.element('#profileImage').css({
+              //   	'background-image': 'url(' + response.image_url +')'
+            		// });
+                StateService.getCurrentUser().vendor.photo.image_url = response.image_url;
+                StateService.getCurrentUser().vendor.photo.id = response.id;
+                $scope.currentUser = StateService.getCurrentUser();
                 angular.element('#profileImageModal').modal('hide');
                 $scope.resetProfileImageModal();
                 angular.element('#uploadProfileImage').button('reset');

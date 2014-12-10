@@ -27,9 +27,10 @@
                                 <div class="form-group" ng-class="{ 'has-error' : loginSubmitted && loginForm.password.$invalid }">
                                     <label for="item-name">Password</label>
                                     <input required ng-model="loginPassword" type="password" name="password" class="form-control" placeholder="Password" maxlength="40"/>
-                                </div>
+                                    <p ng-show="loginErrorMessage != null" class="help-block pull-right" style="padding-top:0px; margin-top: 0px;"><small style="color: #a94442;">{{loginErrorMessage}}</small></p>                                      
+                                </div>                               
                             </div>
-                        </div>
+                        </div>                     
                     </form>                        
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                       <div class="panel panel-default">

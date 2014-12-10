@@ -20,8 +20,8 @@
 
 <div class="new-formatting-container customer-container" ng-class="{'is-inactive' : !isCurrentUserActive}">  
     <div class="row vendor-profile-header">
-        <div class="col-sm-6 col-md-5">
-            <div id="imageOverlay" class="image-overlay pointer" ng-click="launchProfileImageModal()">
+        <div class="col-sm-6 col-md-5 vendor-avatar">
+            <div id="imageOverlay" class="image-overlay pointer" ng-click="launchProfileImageModal()" disabled="true">
                 <img id="vendorProfileImage" ng-src="{{StateService.getCurrentUser().vendor.photo.image_url}}" data-toggle="modal"/>
                 <div id="profileOverlay" class="pointer"><span>Change Profile Image</span></div>
             </div>

@@ -26,6 +26,7 @@ angular.module('clientApp')
     $scope.showInactiveAlert = true; // True if the "Your account is inactive" message should be displayed
     $scope.showXSNav = true; // True if we should be showing the XS nav bar.
     $scope.tour = undefined; // The tour object for bootstrap tour
+    $scope.buttonsDisabledForTour = false;
 
     var geocoder = new google.maps.Geocoder(); // Create a geocoder for looking up addresses
 
@@ -830,7 +831,10 @@ angular.module('clientApp')
     };
 
     $scope.launchProfileImageModal = function(){
-    	angular.element('#profileImageModal').modal('show');
+        if (!$scope.buttonsDisabledForTour){
+    	   angular.element('#profileImageModal').modal('show');
+           console.log("hit");
+        }
     }
 
     $scope.resetProfileImageModal = function(){
@@ -935,10 +939,12 @@ angular.module('clientApp')
         onShown: function(tour) {
             var step = tour._options.steps[tour._current];
             angular.element(step.element).attr('disabled', true);
+            $scope.buttonsDisabledForTour = true;
         },
         onHidden: function(tour) {
             var step = tour._options.steps[tour._current];
             angular.element (step.element).removeAttr('disabled');
+            $scope.buttonsDisabledForTour = false;
         },               
         steps: [
           {
@@ -947,9 +953,15 @@ angular.module('clientApp')
             content: "Thank you for registering as a local farmer or foodmaker. Here's a quick tutorial to get you on your way.",
           },
           {
+            element: "#imageOverlay",
+            title: "<center><b>Updating your Profile Image</b></center>",
+            content: "Click here to upload a new profile image. Once uploaded, you will be able to crop your image so that it fits perfectly in your company's profile.",
+            placement: "bottom"
+          },
+          {
             element: "#editProfileBtn",
             title: "<center><b>Updating your Profile</b></center>",
-            content: "Click the edit profile button to update your company name, address, contact information, and profile picture.  Also link to your Facebook page, personal webpage, and add a description about your company.",
+            content: "Click the edit profile button to update your company name, address, and contact information.  Also link to your Facebook page, personal webpage, and add a description about your company.",
             placement: "bottom"
           },
           {
@@ -968,13 +980,13 @@ angular.module('clientApp')
             element: "#markets",
             title: "<center><b>Your Market Locations</b></center>",
             content: "Once you select a market as one of your selling locations, you will see it listed here.",
-            placement: "bottom"
+            placement: "top"
           },
           {
             element: "#customLocations",
             title: "<center><b>Your Custom Locations</b></center>",
             content: "Likewise, any custom selling locations you create will be listed here.",
-            placement: "bottom"
+            placement: "top"
           },
           {
             element: "#addItem",
@@ -997,7 +1009,7 @@ angular.module('clientApp')
           {
             element: "",
             title: "<center><b>Take the Tour Again</b></center>",
-            content: "If at any time you would like to take this tutorial again, select 'Vendor Tutorial' from the drop down menu in the navigation bar. <hr><center><b> If you have any questions or comments please don't hesitate to contact us at </b><a href='mailto:" + "belocalvictoria" + "@gmail.com" + "'>" + "belocalvictoria" + "@gmail.com" + "</a></center>",
+            content: "<center>If at any time you would like to take this tutorial again, select Vendor Tutorial from the drop down menu in the navigation bar. <hr><center><b> If you have any questions or comments please don't hesitate to contact us at </b><a href='mailto:" + "belocalvictoria" + "@gmail.com" + "'>" + "belocalvictoria" + "@gmail.com" + "</a></center>",
             placement: "bottom"
           }  
 

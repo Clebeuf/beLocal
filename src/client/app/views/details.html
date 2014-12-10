@@ -29,7 +29,7 @@
 
             </div>
         </div>
-        
+
         <div class="col-sm-6 col-md-7">
 
             <span class="new-vendor-name-style">
@@ -63,138 +63,140 @@
 
 
 <!--Display Seller's Locations-->
-    <hr>
-    <div class="row">
-        <div class="col-xs-12 new-hr-heading-style">
-            {{vendorDetails.markets.length + vendorDetails.selling_locations.length}} SELLING LOCATION<span ng-show="(vendorDetails.markets.length + vendorDetails.selling_locations.length) != 1">S</span> FOR {{vendorDetails.vendor.company_name | uppercase}}
+    <div ng-hide="vendorDetails.markets.length == 0 && vendorDetails.selling_locations.length == 0">
+        <hr>
+        <div class="row">
+            <div class="col-xs-12 new-hr-heading-style">
+                {{vendorDetails.markets.length + vendorDetails.selling_locations.length}} SELLING LOCATION<span ng-show="(vendorDetails.markets.length + vendorDetails.selling_locations.length) != 1">S</span> FOR {{vendorDetails.vendor.company_name | uppercase}}
+            </div>
         </div>
-    </div>
-    <hr>
+        <hr>
 
-    <div class="row">
-        <div ng-hide="vendorDetails.markets.length == 0 && vendorDetails.selling_locations.length == 0">    
-            <div class="col-sm-4">
-                <div class="map-container">
-                    <div class="bl-map" be-local-map locations="vendorDetails.selling_locations" markets="vendorDetails.markets"></div>
+        <div class="row">
+            <div ng-hide="vendorDetails.markets.length == 0 && vendorDetails.selling_locations.length == 0">    
+                <div class="col-sm-4">
+                    <div class="map-container">
+                        <div class="bl-map" be-local-map locations="vendorDetails.selling_locations" markets="vendorDetails.markets"></div>
+                    </div>
                 </div>
-            </div>
-        </div>    
-        <div class="col-sm-8">
+            </div>    
+            <div class="col-sm-8">
 
 
-            <!-- NG-REPEAT FOR MARKETS -->
-            <div ng-show="vendorDetails.markets.length != 0" class="new-heading-style">
-                    Market Locations
-            </div>
-            <!-- repeating for each location that seller has in the db -->
-            <div ng-repeat="location in vendorDetails.markets" class="container-for-cards">
-                <div class="card-formatting" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)">
-                    <div class="row">
+                <!-- NG-REPEAT FOR MARKETS -->
+                <div ng-show="vendorDetails.markets.length != 0" class="new-heading-style">
+                        Market Locations
+                </div>
+                <!-- repeating for each location that seller has in the db -->
+                <div ng-repeat="location in vendorDetails.markets" class="container-for-cards">
+                    <div class="card-formatting" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)">
+                        <div class="row">
 
-                        <!-- Display the locations name -->
-                        <div class="col-xs-12 card-lable-style">
-                            <span class="pointer underline-hover" ng-click="displayMarket(location.id)">{{location.name}}</span>
+                            <!-- Display the locations name -->
+                            <div class="col-xs-12 card-lable-style">
+                                <span class="pointer underline-hover" ng-click="displayMarket(location.id)">{{location.name}}</span>
+                            </div>
+
                         </div>
-
-                    </div>
-                    <div class="col-xs-12 seller-location-details">
-                        <p><b>LOCATION:</b>
-                            <a href="http://maps.google.com/?q={{location.address.latitude}},{{location.address.longitude}}" target="_blank">
-                            {{location.address.addr_line1}},
-                            {{location.address.city}}, 
-                            {{location.address.state}}, 
-                            {{location.address.zipcode}}
-                            </a>
-                        </p>
-                    </div>
-                    <div class="row seller-location-details">
-                        <div class="col-xs-12">
-                        <p><b>HOURS:</b>
-                                <ul class="list-inline store-hours">&nbsp
-                                    <li ng-repeat="day in location.address.hours">
-                                        <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                                    </li>
-                                </ul>
-                        </p>
-                        </div>
-                        <!-- <div class="col-xs-12">
-                            <p class="indent-after-first-line"><b>DETAILS:</b>
-                                {{location.description}}
-                            </p>
-                        </div> -->
-                    </div>
-                </div>    
-            </div>
-            <!-- end of repeating for each market that seller has in the db -->
-
-
-            <!-- NG-REPEAT FOR CUSTOM LOCATIONS -->
-            <div ng-show="vendorDetails.selling_locations.length != 0" class="new-heading-style">
-                    Custom Locations
-            </div>
-            <!-- repeating for each location that seller has in the db -->
-            <div ng-repeat="location in vendorDetails.selling_locations | orderBy:'name'" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)" class="container-for-cards">
-                <div class="card-formatting ">
-                    <div class="row">
-
-                        <!-- Display the locations name -->
-                        <div class="col-xs-12 card-lable-style">
-                            {{location.name}}
-                        </div>
-
-                    </div>
-
-                    <div class="row seller-location-details">
-                        <div class="col-xs-12">
-                            <p ng-show="location.date"><b>DATE:</b>
-                                {{location.date | date:" EEEE',' MMMM d'"}},
-                                {{location.address.hours[0].from_hour}} - 
-                                {{location.address.hours[0].to_hour}}
-                            </p>
-                        </div>
-                        <div class="col-xs-12" ng-show="location.address !== null">
+                        <div class="col-xs-12 seller-location-details">
                             <p><b>LOCATION:</b>
                                 <a href="http://maps.google.com/?q={{location.address.latitude}},{{location.address.longitude}}" target="_blank">
                                 {{location.address.addr_line1}},
                                 {{location.address.city}}, 
                                 {{location.address.state}}, 
                                 {{location.address.zipcode}}
-                            </a>
+                                </a>
                             </p>
                         </div>
-                        <div class="col-xs-12">
-                            <div ng-hide="location.date">
+                        <div class="row seller-location-details">
+                            <div class="col-xs-12">
                             <p><b>HOURS:</b>
                                     <ul class="list-inline store-hours">&nbsp
-                                    <li ng-repeat="day in location.address.hours">
-                                        <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                                    </li>
-
+                                        <li ng-repeat="day in location.address.hours">
+                                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                        </li>
                                     </ul>
                             </p>
                             </div>
+                            <!-- <div class="col-xs-12">
+                                <p class="indent-after-first-line"><b>DETAILS:</b>
+                                    {{location.description}}
+                                </p>
+                            </div> -->
                         </div>
-                        <div class="col-xs-12" ng-show="location.phone !== null && location.email !== null">
-                            <p class="indent-after-first-line">
-                                <b>CONTACT INFORMATION:</b>
-                                <a href="tel:{{location.phone}}">{{location.phone}}</a>
-                                <span ng-show="location.email && location.phone"> | </span>
-                                <a href="mailto:{{location.email}}">{{location.email}}</a>
-                            </p>
+                    </div>    
+                </div>
+                <!-- end of repeating for each market that seller has in the db -->
+
+
+                <!-- NG-REPEAT FOR CUSTOM LOCATIONS -->
+                <div ng-show="vendorDetails.selling_locations.length != 0" class="new-heading-style">
+                        Custom Locations
+                </div>
+                <!-- repeating for each location that seller has in the db -->
+                <div ng-repeat="location in vendorDetails.selling_locations | orderBy:'name'" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)" class="container-for-cards">
+                    <div class="card-formatting ">
+                        <div class="row">
+
+                            <!-- Display the locations name -->
+                            <div class="col-xs-12 card-lable-style">
+                                {{location.name}}
+                            </div>
+
                         </div>
-                        <div class="col-xs-12" ng-show="location.description !== null">
-                            <p class="indent-after-first-line"><b>DETAILS:</b>
-                                {{location.description}}
-                            </p>
+
+                        <div class="row seller-location-details">
+                            <div class="col-xs-12">
+                                <p ng-show="location.date"><b>DATE:</b>
+                                    {{location.date | date:" EEEE',' MMMM d'"}},
+                                    {{location.address.hours[0].from_hour}} - 
+                                    {{location.address.hours[0].to_hour}}
+                                </p>
+                            </div>
+                            <div class="col-xs-12" ng-show="location.address !== null">
+                                <p><b>LOCATION:</b>
+                                    <a href="http://maps.google.com/?q={{location.address.latitude}},{{location.address.longitude}}" target="_blank">
+                                    {{location.address.addr_line1}},
+                                    {{location.address.city}}, 
+                                    {{location.address.state}}, 
+                                    {{location.address.zipcode}}
+                                </a>
+                                </p>
+                            </div>
+                            <div class="col-xs-12">
+                                <div ng-hide="location.date">
+                                <p><b>HOURS:</b>
+                                        <ul class="list-inline store-hours">&nbsp
+                                        <li ng-repeat="day in location.address.hours">
+                                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                        </li>
+
+                                        </ul>
+                                </p>
+                                </div>
+                            </div>
+                            <div class="col-xs-12" ng-show="location.phone !== null && location.email !== null">
+                                <p class="indent-after-first-line">
+                                    <b>CONTACT INFORMATION:</b>
+                                    <a href="tel:{{location.phone}}">{{location.phone}}</a>
+                                    <span ng-show="location.email && location.phone"> | </span>
+                                    <a href="mailto:{{location.email}}">{{location.email}}</a>
+                                </p>
+                            </div>
+                            <div class="col-xs-12" ng-show="location.description !== null">
+                                <p class="indent-after-first-line"><b>DETAILS:</b>
+                                    {{location.description}}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <!-- end of repeating for each custom location that seller has in the db -->
             </div>
-            <!-- end of repeating for each custom location that seller has in the db -->
         </div>
-    </div>
 
-    <br>
+        <br>
+    </div>
 
 
 <!--Display Seller's Inventory-->

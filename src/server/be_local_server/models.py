@@ -26,8 +26,15 @@ WEEKDAYS = [
 
 class VendorPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='vendors', blank=True)
-    
-    def get_image_abs_path(self):
+
+    def save(self, force_insert=True, force_update=False, using=None):
+        super(VendorPhoto, self).save() 
+        path = str(self.image.path)
+        img = Image.open(path)
+        img.thumbnail((500, 300), Image.ANTIALIAS)
+        img.save(path)
+
+    def get_image_abs_path(self):   
         return os.path.join(settings.MEDIA_URL, self.image.name)        
     image_url = property(get_image_abs_path)
 

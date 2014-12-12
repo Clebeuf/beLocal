@@ -329,9 +329,10 @@ angular.module('clientApp')
     };
 
     // Upload a profile photo to the server
-    this.uploadProfileFile = function(file) {
+    this.uploadProfileFile = function(file, selImgCoords) {
       var fd = new FormData();
       fd.append('image', file);
+      fd.append('coords', JSON.stringify(selImgCoords));
       return $http.post(this.getServerAddress() + 'vendor/photo/add/', fd, {
         headers: {'Content-Type' : undefined},
         transformRequest: angular.identity,

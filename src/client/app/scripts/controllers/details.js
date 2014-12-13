@@ -107,16 +107,5 @@ angular.module('clientApp')
         item = StateService.getLikedUnlikedItem();
       });
     };
-
-    // Set up masonry properly once all product images have loaded.
-    var vendorContainer = document.querySelector('#masonry-container');
-    imagesLoaded(vendorContainer, function() {
-      $timeout(function() {
-          var msnry = new Masonry(vendorContainer, {
-            itemSelector: '.ms-item',
-            columnWidth: '.ms-item'
-          });
-      })
-    });
   });
 

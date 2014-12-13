@@ -28,8 +28,8 @@
         </div> 
 
         <div class="col-sm-8">
-          <div class="row" id="masonry-market-container">
-            <div class="col-trending ms-market-item col-xs-6" ng-repeat="market in marketList | orderBy:'address.hours.length':true" on-finish-render>
+          <div class="row" masonry reload-on-show>
+            <div class="col-trending ms-market-item col-xs-6 masonry-brick" ng-repeat="market in marketList | orderBy:'address.hours.length':true" on-finish-render>
               <market-card data="market"></market-card>
             </div>
           </div>
@@ -71,8 +71,8 @@
               <div class="new-heading-style">
                 {{selectedCategory}}
               </div>
-              <div class="row" style="padding-top:5px" id="masonry-container">
-                <div class="col-trending ms-item col-lg-3 col-md-4 col-xs-6" ng-repeat="item in trendingProducts | filterMultiple:productFilterExpr | unique:id" >
+              <div class="row" style="padding-top:5px" masonry reload-on-show>
+                <div class="col-trending ms-item col-lg-3 col-md-4 col-xs-6 masonry-brick" ng-repeat="item in trendingProducts | filterMultiple:productFilterExpr | unique:id" >
                   <product-card data="item"></product-card>
                 </div>
               </div>

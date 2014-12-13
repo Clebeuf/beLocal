@@ -210,8 +210,8 @@
         <hr>
         <br>
 
-        <div class="row" style="padding-top:5px" id="masonry-container">
-            <div class="col-trending ms-item col-lg-3 col-md-4 col-xs-6" ng-repeat="item in vendorDetails.products" >
+        <div class="row" style="padding-top:5px" masonry>
+            <div class="col-trending ms-item col-lg-3 col-md-4 col-xs-6 masonry-brick" ng-repeat="item in vendorDetails.products" >
               <product-card data="item"></product-card>
             </div>
         </div>

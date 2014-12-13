@@ -22,7 +22,8 @@
     "angular-ui-utils": "~0.1.1",
     "bootstrap-tour": "~0.10.1",
     "imagesloaded": "~3.1.8",
-    "Jcrop": "~0.9.12"
+    "Jcrop": "~0.9.12",
+    "angular-masonry": "~0.11.0"
   },
   "devDependencies": {
     "angular-mocks": "1.2.6",
@@ -30,6 +31,8 @@
   },
   "resolutions": {
     "angular": "1.2.6",
-    "bootstrap": "~3.0.3"
+    "bootstrap": "~3.0.3",
+    "jquery": "~2.1.0",
+    "masonry": "~3.2.0"
   }
 }

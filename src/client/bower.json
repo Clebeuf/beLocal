@@ -32,7 +32,6 @@
   "resolutions": {
     "angular": "1.2.6",
     "bootstrap": "~3.0.3",
-    "jquery": "~2.1.0",
     "masonry": "~3.2.0"
   }
 }

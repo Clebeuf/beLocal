@@ -28,7 +28,7 @@
         </div> 
 
         <div class="col-sm-8">
-          <div class="row" masonry reload-on-show>
+          <div class="row" masonry="{transitionDuration:'0'}" reload-on-show>
             <div class="col-trending col-xs-6 masonry-brick" ng-repeat="market in marketList | orderBy:'address.hours.length':true">
               <market-card data="market"></market-card>
             </div>
@@ -71,8 +71,8 @@
               <div class="new-heading-style">
                 {{selectedCategory}}
               </div>
-              <div class="row" style="padding-top:5px" masonry reload-on-show>
-                <div class="col-trending ms-item col-lg-3 col-md-4 col-xs-6 masonry-brick" ng-repeat="item in trendingProducts | filterMultiple:productFilterExpr | unique:id" >
+              <div class="row" style="padding-top:5px" masonry="{transitionDuration:'0'}" reload-on-show>
+                <div class="col-trending col-lg-3 col-md-4 col-xs-6 masonry-brick" ng-repeat="item in trendingProducts | filterMultiple:productFilterExpr | unique:id" >
                   <product-card data="item"></product-card>
                 </div>
               </div>

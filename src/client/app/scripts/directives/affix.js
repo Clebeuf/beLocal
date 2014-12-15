@@ -16,9 +16,7 @@ angular.module('clientApp')
             var scroll = angular.element($window).scrollTop(); // Amount in pixels that has been scrolled from the top of the screen
 
             // Kinda nasty if statement to catch all different cases. There's also a special check in here to make sure we're not on xs screen sizes.
-            if(scope.scrollElementHeight < (angular.element($window).height() - scope.offsetTop) 
-                    && scroll > scope.offsetTop && angular.element($window).width() > 767
-                    && scroll + scope.scrollElementHeight - scope.offsetTop < rowHeight) {
+            if(scroll > scope.offsetTop && angular.element($window).width() > 767 && scroll + scope.scrollElementHeight - scope.offsetTop < rowHeight) {
                 angular.element(element).css({top: scroll - scope.offsetTop});
             } else if(!(scroll + scope.scrollElementHeight - scope.offsetTop >= rowHeight)) {
                 // I don't think we should ever get here, but just in case, we should push the affixed element to the top of the page

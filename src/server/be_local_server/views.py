@@ -1069,12 +1069,15 @@ class autocompleteViewModel():
 
 def autocomplete(request):
     products = []
-    prodSqs = SearchQuerySet().models(Product).autocomplete(name_auto=request.GET.get('q', ''))
-    for product in [result.object for result in prodSqs]:
-        if product is not None and product.vendor.is_active:
-            products.append(autocompleteViewModel(product.name))
+    search = request.GET.get('q', '')
+    the_data = ''
+    if search:
+        prodSqs = SearchQuerySet().models(Product).autocomplete(name_auto=search)
+        for product in [result.object for result in prodSqs]:
+            if product is not None and product.vendor.is_active:
+                products.append(autocompleteViewModel(product.name))
     the_data = sjson.dumps({
-        'products': products}, cls=JsonHelper)
+       'products': products}, cls=JsonHelper)
     return HttpResponse(the_data, content_type='application/json')
 
 class SearchProductView(generics.ListAPIView):

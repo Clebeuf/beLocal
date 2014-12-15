@@ -17,7 +17,7 @@ angular.module('clientApp')
 
             // Kinda nasty if statement to catch all different cases. There's also a special check in here to make sure we're not on xs screen sizes.
             if(scope.scrollElementHeight < (angular.element($window).height() - scope.offsetTop) 
-                    && scroll > scope.offsetTop && angular.element($window).width() > 768 
+                    && scroll > scope.offsetTop && angular.element($window).width() > 767
                     && scroll + scope.scrollElementHeight - scope.offsetTop < rowHeight) {
                 angular.element(element).css({top: scroll - scope.offsetTop});
             } else if(!(scroll + scope.scrollElementHeight - scope.offsetTop >= rowHeight)) {
@@ -28,7 +28,7 @@ angular.module('clientApp')
 
         // On resize, check to see if we're on XS. If we are, push the affix'd element to the top of the page, otherwise calculate where it should go
         angular.element($window).resize(function() {
-          if(angular.element($window).width() <= 768) {
+          if(angular.element($window).width() < 767) {
             angular.element(element).css({top: 0});
           } else {
             scope.doScroll();

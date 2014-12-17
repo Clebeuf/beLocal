@@ -63,7 +63,14 @@ angular.module('clientApp')
 
     angular.element($window).scroll(function(){
         $scope.checkNav();        
-    });   
+    });
+
+    // Construct masonry for product cards instantly (no timeout). This is used for filtering
+    $scope.instantTrendingMasonry = function() {
+      $timeout(function() {
+        $rootScope.$broadcast('masonry.reload');
+      }, 250); 
+    };    
 
     // Set filters for products and tags
     $scope.setProductFilter = function() {

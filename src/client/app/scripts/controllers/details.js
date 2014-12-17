@@ -63,7 +63,7 @@ angular.module('clientApp')
     
     // Get vendor information from StateService
     StateService.getVendorInfo().then(function() {
-    	$scope.vendorDetails = StateService.getVendorDetails(); // Set it on scope
+      $scope.vendorDetails = StateService.getVendorDetails(); // Set it on scope
         $rootScope.$broadcast('generateMapPins'); // Re-generate all map pins
         $rootScope.$broadcast('forceRefreshMap'); // Refresh the map once pins have been generated
     });
@@ -107,21 +107,5 @@ angular.module('clientApp')
         item = StateService.getLikedUnlikedItem();
       });
     };
-
-    // Construct masonry for product cards. This is s nasty hack, but essentially
-    // we're just waiting for a timeout of 500ms to "hope" that products have loaded
-    // by then. There are better ways to do this that we should probably explore.
-    $scope.trendingMasonry = function() {
-      $timeout(function() {
-      var container = document.querySelector('#masonry-container');
-      var msnry = new Masonry(container, {
-        itemSelector: '.ms-item',
-        columnWidth: '.ms-item'
-      });    
-      }, 1000)
-    };
-
-    $scope.trendingMasonry();
-
   });
 

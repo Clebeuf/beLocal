@@ -18,6 +18,7 @@ angular.module('clientApp')
           scope.emailRecoverError = false;
           scope.emailRecoverMessage = '';
           scope.recoverHasSubmitted = false;
+          scope.loginErrorMessage = null;
         }       
 
         // Try to sign in with Facebook
@@ -53,7 +54,8 @@ angular.module('clientApp')
         }); 
 
         // Login without Facebook
-        scope.loginSubmit = function() {      
+        scope.loginSubmit = function() { 
+          scope.loginErrorMessage = null;     
           scope.loginSubmitted = true;
           scope.loginError = false;
           if(scope.loginForm.$valid) {
@@ -61,8 +63,10 @@ angular.module('clientApp')
             .success(function() {
               angular.element('#loginModal').modal('hide');             
             })
-            .error(function() {
+            .error(function(response) {
               scope.loginError = true;
+              if(response.non_field_errors)
+                scope.loginErrorMessage = response.non_field_errors[0];
             });
           }     
         }

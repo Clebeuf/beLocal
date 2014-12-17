@@ -833,7 +833,6 @@ angular.module('clientApp')
     $scope.launchProfileImageModal = function(){
         if (!$scope.buttonsDisabledForTour){
     	   angular.element('#profileImageModal').modal('show');
-           console.log("hit");
         }
     }
 

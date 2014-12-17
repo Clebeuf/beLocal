@@ -63,41 +63,7 @@ angular.module('clientApp')
 
     angular.element($window).scroll(function(){
         $scope.checkNav();        
-    });
-
-    // Construct masonry for product cards instantly (no timeout). This is used for filtering
-    $scope.instantTrendingMasonry = function() {
-      $timeout(function() {
-      var container = document.querySelector('#masonry-container');
-      var msnry = new Masonry(container, {
-        itemSelector: '.ms-item',
-        columnWidth: '.ms-item'
-      });    
-      })
-    };
-
-    // Construct masonry for product cards with a timeout of 500ms. This is
-    // necessary for first page load.
-    $scope.trendingMasonry = function() {
-      $timeout(function() {
-      var container = document.querySelector('#masonry-container');
-      var msnry = new Masonry(container, {
-        itemSelector: '.ms-item',
-        columnWidth: '.ms-item'
-      });    
-      }, 500)
-    };
-
-    // Construct masonry for market cards with a timeout of 500ms
-    $scope.marketMasonry = function() {
-      $timeout(function() {        
-        var container = document.querySelector('#masonry-market-container');
-        var msnry = new Masonry(container, {
-          itemSelector: '.ms-market-item',
-          columnWidth: '.ms-market-item'
-        });    
-      }, 500);
-    };    
+    });   
 
     // Set filters for products and tags
     $scope.setProductFilter = function() {
@@ -207,13 +173,6 @@ angular.module('clientApp')
       angular.element('#productDetailsModal').modal('hide');
 
     }
-
-    // When the product cards finish loading (ng-repeat finishes) on first page load, this event will fire.
-    // This makes us better at not displaying broken product card masonry on first load, but it's still not
-    // working in the case where product images take time to load. Still need to work on this.
-    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent, repeatId) {
-      $scope.trendingMasonry();  
-    });
    
 // Commented out location code. When we decide to do location again, we'll need to uncomment this and fix it up.
  /*
@@ -233,7 +192,6 @@ angular.module('clientApp')
   // Eventually, we should fix this to include pagination
   StateService.getTrendingProducts().then(function() {
     $scope.trendingProducts = StateService.getTrendingProductsList();
-    $scope.trendingMasonry();
   });
 
   // Get a list of all vendors from database
@@ -248,7 +206,6 @@ angular.module('clientApp')
     $scope.marketList = StateService.getMarketList();
     $rootScope.$broadcast('generateMapPins'); // Regenerate map pins
     $rootScope.$broadcast('forceRefreshMap'); // Refresh map
-    $scope.marketMasonry();
   });
   
   // Used to filter products by category on mobile view (from dropdown)

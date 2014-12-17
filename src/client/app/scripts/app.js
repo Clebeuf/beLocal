@@ -10,6 +10,7 @@ var app = angular.module('clientApp', [
   'ui.router',
   'ui.bootstrap',
   'mgcrea.ngStrap.timepicker',
+  'wu.masonry',
 ])
   .config(function ($stateProvider, $httpProvider, $urlRouterProvider, $locationProvider, $anchorScrollProvider) {
 

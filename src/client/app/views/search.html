@@ -30,8 +30,8 @@
                 <div class="new-heading-style">
                     Search Results for "{{query}}" in {{selectedCategory}}
                 </div>
-                <div class="row" style="padding-top:5px" id="masonry-container">
-                    <div class="col-trending ms-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in productResults | filterMultiple:productFilterExpr | unique:id" >
+                <div class="row" style="padding-top:5px" masonry="{transitionDuration:'0'}" reload-on-show>
+                    <div class="col-trending masonry-brick col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="item in productResults | filterMultiple:productFilterExpr | unique:id" >
                         <product-card data="item"></product-card>
                     </div>
                 </div>
@@ -95,8 +95,8 @@
                 <div class="new-heading-style">
                     Search Results for "{{query}}"
                 </div>         
-                <div class="row" id="masonry-market-container">
-                    <div class="col-trending ms-market-item col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="market in marketResults" >
+                <div class="row" masonry="{transitionDuration:'0'}" reload-on-show>
+                    <div class="col-trending masonry-brick col-lg-3 col-md-4 col-sm-6 col-xs-6" ng-repeat="market in marketResults" >
                       <market-card data="market"></market-card>
                     </div>
               </div>

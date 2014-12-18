@@ -814,8 +814,8 @@ angular.module('clientApp')
         $scope.locationProvince = parsedLocation.state;
         $scope.locationCountry = parsedLocation.country;
         $scope.locationPostalCode = parsedLocation.postal_code;
-        $scope.latitude = item.geometry.location.k;
-        $scope.longitude = item.geometry.location.B;   
+        $scope.latitude = item.geometry.location.lat();
+        $scope.longitude = item.geometry.location.lng();   
     }
 
     // Make pins on the map bounce!

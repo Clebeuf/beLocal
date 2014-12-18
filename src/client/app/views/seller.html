@@ -727,7 +727,7 @@
                                 <div class="form-group">
                                     <label>Select the Market You're Selling At:</label>
                                     <select ng-show="StateService.getAvailableMarketList().length > 0" ng-model="newLocationMarket" id="modalMarketPicker" class="form-control" ng-options="market as market.name for market in StateService.getAvailableMarketList()"></select>
-                                    <div ng-show="newLocationMarket.name != null">
+                                    <div ng-show="newLocationMarket.name != null && StateService.getAvailableMarketList().length > 0">
                                         <!-- 
                                         <p>{{newLocationMarket.name}} Details:</p> -->
 

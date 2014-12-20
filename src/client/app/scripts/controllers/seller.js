@@ -925,6 +925,58 @@ angular.module('clientApp')
 
     $scope.init();
 
+    // ---- MAIL CHIMP ------------
+
+
+// Create a function to log the response from the Mandrill API
+$scope.log = function (obj) {
+    console.log(
+        $('#response').text(JSON.stringify(obj));
+    );
+}
+
+// create a new instance of the Mandrill class with your API key
+var m = new mandrill.Mandrill('iDrH78tvFCIaq1AQdIAF0A');
+
+// create a variable for the API call parameters
+var params = {
+    "template_name": "vendor-welcome",
+    "template_content": [
+        {
+            "name": "example name",
+            "content": "example content"
+        }
+    ],
+    "message": {
+        "from_email":"belocalvictoria@gmail.com",
+        "template_name" : "vendor-welcome",
+        "to":[{"email":"carly.lebeuf@gmail.com"}],
+        "subject": "Welcome to beLocal Victoria"
+        
+    }
+};
+
+
+$scope.sendTheMail = function () {
+// Send the email!
+
+    console.log("hit");
+
+    m.messages.sendTemplate(
+        params, 
+        function a(res) {
+            console.log("sent");
+            console.log(res);
+
+        }, 
+        function b(err) {
+            console.log("error sending");
+            console.log(err);
+        }
+    );
+}
+
+
     // ---- BOOTSTRAP TOUR --------
 
     // Instance the tour

@@ -68,7 +68,7 @@ angular.module('clientApp')
             for(var j = 0; j < scope.market.address.hours.length; j++) {
                 var today = scope.getDate(new Date());
                 if(scope.market.address.hours[j].weekday == today) {
-                    scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open today:</span></strong> " + scope.market.address.hours[0].from_hour + ' - ' + scope.market.address.hours[0].to_hour;
+                    scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open today:</span></strong> " + scope.market.address.hours[j].from_hour + ' - ' + scope.market.address.hours[j].to_hour;
                 }
             }
 

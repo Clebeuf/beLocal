@@ -112,7 +112,6 @@ class EditVendorSerializer(serializers.ModelSerializer):
         model = be_local_server.models.Vendor
         fields = (  
               'id', 
-              'user',
               'company_name',
               'webpage',
               'country_code',

@@ -10,6 +10,7 @@ from taggit.managers import TaggableManager
 from taggit.models import GenericTaggedItemBase, TagBase
 import secretballot
 from PIL import Image, ImageOps
+from pilkit.processors import Transpose
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -31,6 +32,8 @@ class VendorPhoto(models.Model):
         super(VendorPhoto, self).save() 
         path = str(self.image.path)
         img = Image.open(path)
+        processor = Transpose()
+        img = processor.process(img)        
         img.thumbnail((500, 300), Image.ANTIALIAS)
         img.save(path)
 
@@ -92,6 +95,9 @@ class ProductPhoto(models.Model):
         path = str(self.image.path)
         img = Image.open(path)
         img.thumbnail((800, 600), Image.ANTIALIAS)
+        processor = Transpose()
+        img = processor.process(img)
+        img.thumbnail((600, 400), Image.ANTIALIAS)
         img.save(path)
 
     

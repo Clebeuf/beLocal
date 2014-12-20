@@ -74,11 +74,11 @@
   <div class="row customer-nav top-nav-large" style="margin-right: 0px;">
     <div class="header-container">
       <div class="logo-header" style="float:left">
-        <a class="pointer" ng-click="reloadMainPage()"><img src="/images/logo.png"></a>
+        <a class="pointer" ng-click="reloadMainPage();"><img src="/images/logo.png"></a>
       </div>
       <div style="float:left" class="">
         <ul class="list-inline nav-shadow">
-          <li ng-class="{active : state.$current.name === 'main'}"><a class="pointer" data-target="#trending" data-toggle="tab" ng-click="setHash('trending'); trendingMasonry()" id="trendingTab">
+          <li ng-class="{active : state.$current.name === 'main'}"><a class="pointer" data-target="#trending" data-toggle="tab" ng-click="setHash('trending');" id="trendingTab">
             <span class="hidden-sm hidden-xs no-block">In Season Now</span>
             <span class="hidden-md hidden-lg no-block">In Season</span>
           </a></li>
@@ -86,7 +86,7 @@
             <span class="hidden-sm hidden-xs no-block">Farmers & Foodmakers</span>
             <span class="hidden-md hidden-lg no-block">Local Producers</span>
           </a></li>
-          <li><a data-target="#markets" class="pointer" data-toggle="tab" ng-click="setHash('markets'); marketMasonry()" id="marketsTab">
+          <li><a data-target="#markets" class="pointer" data-toggle="tab" ng-click="setHash('markets');" id="marketsTab">
             <span class="hidden-sm hidden-xs no-block">Local Markets</span>
             <span class="hidden-md hidden-lg no-block">Markets</span>
           </a></li>  

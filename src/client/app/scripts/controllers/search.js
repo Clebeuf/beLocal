@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-    .controller('SearchCtrl', function ($scope, $stateParams, StateService, $timeout, $location, $window) {
+    .controller('SearchCtrl', function ($scope, $stateParams, StateService, $timeout, $location, $window, $rootScope) {
         $scope.productResults = []; // List of product search results
         $scope.vendorResults = []; // List of vendor search results
         $scope.marketResults = []; // List of market search results
@@ -65,44 +65,18 @@ angular.module('clientApp')
             $scope.checkNav();        
         }); 
 
-        // See documentation in main.js
+        // Construct masonry for product cards instantly (no timeout). This is used for filtering
         $scope.instantTrendingMasonry = function() {
           $timeout(function() {
-          var container = document.querySelector('#masonry-container');
-          var msnry = new Masonry(container, {
-            itemSelector: '.ms-item',
-            columnWidth: '.ms-item'
-          });    
-          })
-        };
-
-        // See documentation in main.js
-        $scope.trendingMasonry = function() {
-          $timeout(function() {
-          var container = document.querySelector('#masonry-container');
-          var msnry = new Masonry(container, {
-            itemSelector: '.ms-item',
-            columnWidth: '.ms-item'
-          });    
-          }, 500)
-        };
-
-        // See documentation in main.js
-        $scope.marketMasonry = function() {
-          $timeout(function() {        
-            var container = document.querySelector('#masonry-market-container');
-            var msnry = new Masonry(container, {
-              itemSelector: '.ms-market-item',
-              columnWidth: '.ms-market-item'
-            });    
-          }, 500);
-        };                
+            $rootScope.$broadcast('masonry.reload');
+          }, 250); 
+        };            
 
         // Search for products based on a query
         $scope.doProductSearch = function(query) {
             StateService.doProductSearch(query).then(function(response) {
                 $scope.productResults = response.data;
-                $scope.trendingMasonry();
+                $scope.instantTrendingMasonry();
             });
         }
 
@@ -127,7 +101,6 @@ angular.module('clientApp')
         $scope.doMarketSearch = function(query) {
             StateService.doMarketSearch(query).then(function(response) {
                 $scope.marketResults = response.data;
-                $scope.marketMasonry();                
             });
         }         
 
@@ -219,7 +192,7 @@ angular.module('clientApp')
           }
           
           $scope.setProductFilter();
-          //$scope.instantTrendingMasonry();
+          $scope.instantTrendingMasonry();
         }
 
         // See documentation in main.js
@@ -233,7 +206,7 @@ angular.module('clientApp')
               }
             }            
             $scope.setProductFilter();
-            //$scope.instantTrendingMasonry();
+            $scope.instantTrendingMasonry();
         }
 
         // See documentation in main.js
@@ -248,7 +221,7 @@ angular.module('clientApp')
               $scope.selectedTags = 'All Products';
             }
             $scope.setProductFilter();
-            //$scope.instantTrendingMasonry();
+            $scope.instantTrendingMasonry();
             }
 
             if($scope.tagToDisplay != undefined) {

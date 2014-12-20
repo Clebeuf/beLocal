@@ -22,14 +22,14 @@
       <br>
       <div class="row">
         <div class="col-sm-4">
-          <div class="no-top-margin map-container" style="margin-bottom:15px" affix offset-top="170" container-class="row" scroll-element-class="market-map">
+          <div class="no-top-margin map-container" style="margin-bottom:15px" affix offset-top="185" container-class="row" scroll-element-class="market-map">
             <div class="bl-map market-map" be-local-map markets="marketList"></div>
           </div>
         </div> 
 
         <div class="col-sm-8">
-          <div class="row" id="masonry-market-container">
-            <div class="col-trending ms-market-item col-xs-6" ng-repeat="market in marketList | orderBy:'address.hours.length':true" on-finish-render>
+          <div class="row" masonry="{transitionDuration:'0'}" reload-on-show>
+            <div class="col-trending col-xs-6 masonry-brick" ng-repeat="market in marketList | orderBy:'address.hours.length':true">
               <market-card data="market"></market-card>
             </div>
           </div>
@@ -71,15 +71,15 @@
               <div class="new-heading-style">
                 {{selectedCategory}}
               </div>
-              <div class="row" style="padding-top:5px" id="masonry-container">
-                <div class="col-trending ms-item col-lg-3 col-md-4 col-xs-6" ng-repeat="item in trendingProducts | filterMultiple:productFilterExpr | unique:id" >
+              <div class="row" style="padding-top:5px" masonry="{transitionDuration:'0'}" reload-on-show>
+                <div class="col-trending col-lg-3 col-md-4 col-xs-6 masonry-brick"  on-finish-render ng-repeat="item in trendingProducts | filterMultiple:productFilterExpr | unique:id" >
                   <product-card data="item"></product-card>
                 </div>
               </div>
             </div>
 
             <!-- DISPLAY SIDE BAR OF ALL CATEGORIES & TAGS-->
-            <div class="col-sm-2 col-xs-6 tag-bar hidden-xs" affix offset-top="170" container-class="customer-container" scroll-element-class="tag-category-bar">
+            <div class="col-sm-2 col-xs-6 tag-bar hidden-xs" affix offset-top="225" container-class="customer-container" scroll-element-class="tag-category-bar">
                 <div class="tag-category-bar">
                   <hr>
                   <p class="small-header">Categories</p>
@@ -137,7 +137,7 @@
 
       <div class="row">
           <div class="col-sm-4">
-            <div class="map-container" affix offset-top="170" container-class="row" scroll-element-class="vendor-map">
+            <div class="map-container" affix offset-top="185" container-class="row" scroll-element-class="vendor-map">
               <div class="bl-map vendor-map" be-local-map vendors="vendors"></div>
             </div>
           </div>

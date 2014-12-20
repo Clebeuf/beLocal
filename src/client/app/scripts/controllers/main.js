@@ -65,36 +65,11 @@ angular.module('clientApp')
         $scope.checkNav();        
     });
 
-    // Set up masonry properly once all product images have loaded.
-    var trendingContainer = document.querySelector('#masonry-container');
-    imagesLoaded(trendingContainer, function() {
-      var msnry = new Masonry(trendingContainer, {
-        itemSelector: '.ms-item',
-        columnWidth: '.ms-item'
-      });
-    });
-
     // Construct masonry for product cards instantly (no timeout). This is used for filtering
     $scope.instantTrendingMasonry = function() {
       $timeout(function() {
-      var container = document.querySelector('#masonry-container');
-      var msnry = new Masonry(container, {
-        itemSelector: '.ms-item',
-        columnWidth: '.ms-item'
-      });    
-      })
-    };
-
-    // Construct masonry for market cards instantly. This is called from the navbar to re-build masonry for markets.
-    // I don't believe a timeout is necessary here since all images have already come down during the initial page load.
-    $scope.marketMasonry = function() {
-      $timeout(function() {        
-        var container = document.querySelector('#masonry-market-container');
-        var msnry = new Masonry(container, {
-          itemSelector: '.ms-market-item',
-          columnWidth: '.ms-market-item'
-        });    
-      });
+        $rootScope.$broadcast('masonry.reload');
+      }, 250); 
     };    
 
     // Set filters for products and tags

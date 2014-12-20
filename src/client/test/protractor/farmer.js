@@ -1,13 +1,10 @@
-describe('The beLocal Start Page', function() {
-    console.log("Testing Start Page");
+describe('The beLocal Farmer Splash Page', function() {
 
-    var hasClass = function (element, cls) {
-        return element.getAttribute('class').then(function (classes) {
-            return classes.split(' ').indexOf(cls) !== -1;
-        });
-    };  
+    browser.manage().deleteAllCookies();
+    browser.driver.manage().deleteAllCookies();
+    browser.get('http://127.0.0.1:9000');
 
-    var signInWithFacebook = function() {
+    var vendorSignInWithFacebook = function() {
         element(by.css('[ng-click="clearLoginModal()"]')).click();
 
         browser.sleep(1000);
@@ -37,84 +34,93 @@ describe('The beLocal Start Page', function() {
             //Switch back to main window (is this even necessary?)
             browser.driver.switchTo().window(handles[0]);
         });
-    }       
+    }
 
-    beforeEach(function(){
-        browser.manage().deleteAllCookies();
-        browser.driver.manage().deleteAllCookies();
-        browser.get('http://127.0.0.1:9000');
-    });
+    var scrollIntoView = function () {
+      arguments[0].scrollIntoView();
+    }    
 
-    it('Should have a title', function() {
-        expect(browser.getTitle()).toEqual('beLocal');
-    });
-
-    it('Should redirect to homepage through Get Started button', function() { 
-        element(by.css('[ng-click="getStarted()"]')).click(); 
-        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/');
-    });
-
-    it('Farmer button should redirect back to splash page through Register dropdown', function() {
-        element(by.css('[ng-click="getStarted()"]')).click();         
-        element(by.id('register-dropdown')).click();
-        element(by.css('[ng-click="showFarmerSignUp()"]')).click();
-        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/welcome');        
-    });
-
+    // This will fail if the account doesn't exist. Not sure how to work around this right now.
     it('Should allow Facebook sign in as a vendor', function(){
-        signInWithFacebook(); 
+        vendorSignInWithFacebook(); 
         browser.waitForAngular();
-        var noFacebookAccount = $('[ng-show=noFacebookAccountError]').isDisplayed();
-        var noFacebookElement = element(by.css('[ng-show=noFacebookAccountError]'));
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor');
+    });
 
-        if(hasClass(noFacebookElement), 'ng-show') {
-            browser.sleep(1000);
-
-            element(by.id('login-modal-close')).click();
-
-            browser.sleep(1000);
-
-            element(by.css('[ng-click="signUpAsVendorNoFB()"')).click();
-
-            browser.sleep(1000);
-
-            element(by.css('[ng-click="signUpAsVendor()"]')).click();
-            expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor');
-        } else {
-            expect(noFacebookAccount).toBeFalsy();
-            expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor');            
-        }
-    }); 
-
-    it('Should allow editing of user profiles', function(){
-        signInWithFacebook(); 
-        browser.waitForAngular();
-        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor'); 
+    // Can we edit company name?
+    it('Should allow editing of company name', function(){
+        // Open edit profile modal
         element(by.css('[data-role="end"]')).click();
         browser.sleep(500);
-        element(by.css('[ng-click="editProfile()"]')).click();
+        var editProfileButton = element(by.css('[ng-click="editProfile()"]'));
+        editProfileButton.click();
         browser.sleep(1000);
+
+        // Change company name
         element(by.name('companyName')).clear().sendKeys('Protractor Test!');
 
-        // WE NEED TO SCROLL THIS INTO VIEW FOR THIS TO WORK
-        $('[ng-click="vendorProfileUpdate()"]').click();
-        browser.sleep(1000);
+        // Fill in other information just in case it's blank
+        element(by.name('number')).clear().sendKeys('7783459485');  
+        element(by.name('website')).clear().sendKeys('http://www.google.ca');  
+        element(by.name('city')).clear().sendKeys('Victoria');  
+        element(by.name('province')).clear().sendKeys('BC');  
+        element(by.name('country')).clear().sendKeys('Canada');      
+        element(by.name('descriptionField')).clear().sendKeys('Some description about our company goes here!');        
 
+        // Update profile
+        var updateProfileButton = browser.driver.findElement(by.css('[ng-click="vendorProfileUpdate()"]'));
+        browser.executeScript(scrollIntoView, updateProfileButton);
+        updateProfileButton.click();
+        browser.sleep(1000);             
+
+        // Did the company name change?
         expect(element(by.css('.new-vendor-name-style > *')).getText()).toEqual('Protractor Test!');
 
-        // // Change company name to something else for next test case
-        // element(by.css('[ng-click="editProfile()"]')).click();
-        // browser.sleep(1000);
-        // element(by.name('companyName')).clear().sendKeys('beLocal User');
+        // Change company name back to something else so that we don't automatically pass next test case.
+        editProfileButton = browser.driver.findElement(by.css('[ng-click="editProfile()"]'));
+        browser.executeScript('scrollTo(0,0);');        
+        editProfileButton.click();
+        browser.sleep(1000);
+        element(by.name('companyName')).clear().sendKeys('beLocal User');
 
-        // // // Then, fill out other fields.
-        // element(by.name('number')).clear().sendKeys('7783459485');  
-        // element(by.name('website')).clear().sendKeys('http://www.google.ca');  
-        // element(by.name('city')).clear().sendKeys('Victoria');  
-        // element(by.name('province')).clear().sendKeys('BC');  
-        // element(by.name('country')).clear().sendKeys('Canada');      
-        // element(by.name('descriptionField')).clear().sendKeys('Some description about our company goes here!');
-        // browser.executeScript(scrollIntoView, element(by.css('[ng-click="vendorProfileUpdate()"]')));        
-        // element(by.css('[ng-click="vendorProfileUpdate()"]')).click();
-    });     
+        var updateProfileButton = browser.driver.findElement(by.css('[ng-click="vendorProfileUpdate()"]'));
+        browser.executeScript(scrollIntoView, updateProfileButton);
+        updateProfileButton.click();
+        browser.sleep(1000);        
+    });
+
+    // Can we edit website
+    it('Should allow editing of website', function(){
+        // Open edit profile modal
+        browser.executeScript('scrollTo(0,0);');
+        var editProfileButton = element(by.css('[ng-click="editProfile()"]'));
+        editProfileButton.click();
+        browser.sleep(1000);
+
+        // Change company name
+        element(by.name('website')).clear().sendKeys('sometestwebsite.com');      
+
+        // Update profile
+        var updateProfileButton = browser.driver.findElement(by.css('[ng-click="vendorProfileUpdate()"]'));
+        browser.executeScript(scrollIntoView, updateProfileButton);
+        updateProfileButton.click();
+        browser.sleep(1000);             
+
+        // Did the website change? 
+        element(by.css('#website-link')).getAttribute('href').then(function(href) {
+            expect(href).toEqual('http://sometestwebsite.com/');
+        });   
+
+        // Change website back to something else so that we don't automatically pass next test case.
+        editProfileButton = browser.driver.findElement(by.css('[ng-click="editProfile()"]'));
+        browser.executeScript('scrollTo(0,0);');        
+        editProfileButton.click();
+        browser.sleep(1000);
+        element(by.name('website')).clear().sendKeys('http://www.google.com');
+
+        var updateProfileButton = browser.driver.findElement(by.css('[ng-click="vendorProfileUpdate()"]'));
+        browser.executeScript(scrollIntoView, updateProfileButton);
+        updateProfileButton.click();
+        browser.sleep(1000);      
+    });         
 });

@@ -48,7 +48,7 @@
                              </a>
                         </span>
                         <span ng-hide="StateService.getCurrentUser().vendor.webpage == null">
-                             | <a href="http://{{StateService.getCurrentUser().vendor.webpage}}" target="_blank">Our Website</a>
+                             | <a id="website-link" href="http://{{StateService.getCurrentUser().vendor.webpage}}" target="_blank">Our Website</a>
                         </span>
                         <span ng-hide="StateService.getCurrentUser().vendor.twitter_url == null"> 
                              | <a href="{{StateService.getCurrentUser().vendor.twitter_url}}">Twitter</a> </span>

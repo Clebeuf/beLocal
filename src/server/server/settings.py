@@ -24,7 +24,7 @@ DEBUG = False
 
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = ['belocalvictoria.me']
+ALLOWED_HOSTS = ['belocalvictoria.me', 'api.belocalvictoria.me', '127.0.0.1', 'localhost']
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 #SESSION_COOKIE_HTTPONLY

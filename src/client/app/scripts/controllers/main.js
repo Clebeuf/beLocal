@@ -69,7 +69,7 @@ angular.module('clientApp')
     $scope.instantTrendingMasonry = function() {
       $timeout(function() {
         $rootScope.$broadcast('masonry.reload');
-      }, 250); 
+      }, 500); 
     };    
 
     // Set filters for products and tags

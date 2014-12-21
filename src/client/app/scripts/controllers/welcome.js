@@ -72,7 +72,7 @@ angular.module('clientApp')
             "template_name": "vendor-welcome",
             "template_content": [
                 {
-                    "name": "Welcome to beLocal Victoria",
+                    "name": "Welcome to beLocal Victoria!",
                     "content": "Thank you for registering as a Farmer or Foodmaker with beLocal Victoria."
                 }
             ],
@@ -80,7 +80,7 @@ angular.module('clientApp')
                 "from_email":"belocalvictoria@gmail.com",
                 "template_name" : "vendor-welcome",
                 "to":[{"email": StateService.getCurrentUser().email }],
-                "subject": "Welcome to beLocal Victoria"
+                "subject": "Welcome to beLocal Victoria!"
                 
             }
         };
@@ -113,7 +113,7 @@ angular.module('clientApp')
             "template_name": "foodie-welcome",
             "template_content": [
                 {
-                    "name": "Welcome to beLocal Victoria",
+                    "name": "Welcome to beLocal Victoria!",
                     "content": "Thank you for registering as a foodie with beLocal Victoria."
                 }
             ],
@@ -121,7 +121,7 @@ angular.module('clientApp')
                 "from_email":"belocalvictoria@gmail.com",
                 "template_name" : "foodie-welcome",
                 "to":[{"email": StateService.getCurrentUser().email }],
-                "subject": "Welcome to beLocal Victoria"
+                "subject": "Welcome to beLocal Victoria!"
                 
             }
         };

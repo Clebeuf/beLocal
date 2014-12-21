@@ -60,9 +60,11 @@ angular.module('clientApp')
   		$location.path('/');
   	}  
 
+    // The function calls our Mandrill Api and sends the vendor email template to new vendors
     $scope.vendorSendEmail = function (){
 
         // create a new instance of the Mandrill class with your API key
+        // This API key can only send template emails so there is no security risk for having it straight in the code
         var m = new mandrill.Mandrill('CaG6Ld7MlGVaM8_KFM1u6w');
 
         // create a variable for the API call parameters
@@ -84,6 +86,47 @@ angular.module('clientApp')
         };
 
         // send the vendor email
+        m.messages.sendTemplate(
+            params, 
+            function a(res) {
+                console.log("sent email");
+                console.log(res[0]);
+
+            }, 
+            function b(err) {
+                console.log("error sending");
+                console.log(err[0]);
+            }
+        );
+
+    };
+
+    // The function calls our Mandrill Api and sends the foodie email template to newly registered foodies
+    $scope.foodieSendEmail = function (){
+
+        // create a new instance of the Mandrill class with your API key
+        // This API key can only send template emails so there is no security risk for having it straight in the code
+        var m = new mandrill.Mandrill('KJu3pTuBNBRancggJyYRKg');
+
+        // create a variable for the API call parameters
+        var params = {
+            "template_name": "foodie-welcome",
+            "template_content": [
+                {
+                    "name": "Welcome to beLocal Victoria",
+                    "content": "Thank you for registering as a foodie with beLocal Victoria."
+                }
+            ],
+            "message": {
+                "from_email":"belocalvictoria@gmail.com",
+                "template_name" : "foodie-welcome",
+                "to":[{"email": StateService.getCurrentUser().email }],
+                "subject": "Welcome to beLocal Victoria"
+                
+            }
+        };
+
+        // send the foodie email
         m.messages.sendTemplate(
             params, 
             function a(res) {
@@ -126,7 +169,7 @@ angular.module('clientApp')
           $scope.emailErrorMessage = response.email;
         }                  
       });
-    } 
+    }; 
 
     // Create a new customer without Facebook
     $scope.newCustomerSubmit = function() {
@@ -145,6 +188,7 @@ angular.module('clientApp')
       AuthService.createNonFacebookCustomer(data)
       .success(function() {
         angular.element('#createUserModal').modal('hide');  
+        $scope.foodieSendEmail();
       })
       .error(function(response) {
         // Set a flag to sign up as a vendor (this changes the appearance of some modals in the HTML)
@@ -154,7 +198,7 @@ angular.module('clientApp')
           $scope.emailErrorMessage = response.email;
         }          
       });   
-    } 
+    }; 
 
     // When the create user modal is hidden, check to see what kind of user we have just created, and redirect to the appropriate page in beLocal.
     angular.element('#createUserModal').on('hidden.bs.modal', function(e) {

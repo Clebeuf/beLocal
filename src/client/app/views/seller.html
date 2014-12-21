@@ -266,7 +266,7 @@
                         <div class="col-xs-9 col-sm-7 ">
                             <div class="card-lable-style">{{product.name}}</div>
                             <div class="location-details">
-                                <p><b>PRODUCT DETAILS:</b> {{product.description}}</p>
+                                <p><b>PRODUCT DETAILS:</b> <span id="pro-product-details">{{product.description}}</span></p>
                                 <p><b>CATEGORY:</b> {{product.category.name}} </p>
                                 <p><b>TAGS:</b><span ng-repeat="tag in product.tags"> {{tag}} &nbsp; </span></p>
                             </div>

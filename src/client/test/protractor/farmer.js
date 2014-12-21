@@ -127,8 +127,6 @@ describe('The beLocal Farmer Splash Page', function() {
     // Can we join and leave a market?
     it('Should allow markets to be joined and left', function(){
         // Open Create New Location Modal
-        element(by.css('[data-role="end"]')).click();
-        browser.sleep(500);
         browser.executeScript('scrollTo(0,0);');
         var createNewLocationButton = element(by.css('[ng-click="resetLocationModal()"]'));
         createNewLocationButton.click();
@@ -148,5 +146,63 @@ describe('The beLocal Farmer Splash Page', function() {
         // Leave the market
         element(by.css('[ng-click="leaveMarket(location)"]')).click();        
         expect(element.all(by.repeater('location in marketLocations')).count()).toEqual(0);
-    });            
+    });   
+
+    it('Should allow the creation of a product', function(){
+        // Load the picture of pears
+        var path = require('path');
+        var fileToUpload = 'pears.jpg';
+        var absolutePath = path.resolve(__dirname, fileToUpload);
+
+        // Create a new item
+        element(by.buttonText('Create New Item')).click();
+        element(by.id('item-image')).sendKeys(absolutePath);
+        element(by.model('itemName')).sendKeys('Pears');
+        element(by.model('itemDescription')).sendKeys('Yummy pears!');
+
+        // Did we create a new item?
+        element(by.css('[ng-click="newItemSubmit()"]')).click(); 
+        expect(element.all(by.repeater('product in sellerItems')).count()).toEqual(1);
+
+        // Does it have a picture?
+        var productImage = element(by.css('.vendor-product-image > img')); 
+        productImage.getAttribute('src').then(function(src) {
+            expect(src).toContain('http://127.0.0.1:8000/static/media/products/pears');
+        });
+    });
+
+    it('Should allow the editing of a product', function(){
+        // Load the picture of pears
+        var path = require('path');
+        var fileToUpload = 'pears.jpg';
+        var absolutePath = path.resolve(__dirname, fileToUpload);
+
+        // Create a new item
+        element(by.css('[ng-click="editItem(product)"]')).click();
+        browser.sleep(1000);
+        element(by.model('itemDescription')).clear().sendKeys('Edited yummy pears!');
+
+        // Did we edit the item?
+        element(by.css('[ng-click="newItemSubmit()"]')).click();
+        browser.sleep(1000);
+        expect(element(by.id('pro-product-details')).getText()).toEqual('Edited yummy pears!');
+    });
+
+    it('Should allow the deletion of a product', function(){
+        // Delete the item
+        element(by.css('[ng-click="deleteProduct(product)"]')).click();        
+        expect(element.all(by.repeater('product in sellerItems')).count()).toEqual(0);
+    });
+
+    it('Should allow undoing the deletion of a product', function(){
+        // Undo the deletion of the item
+        element(by.css('[ng-click="restoreProduct(deletedProduct)"]')).click();        
+        expect(element.all(by.repeater('product in sellerItems')).count()).toEqual(1);
+
+        // Delete the item again
+        element(by.css('[ng-click="deleteProduct(product)"]')).click();        
+        expect(element.all(by.repeater('product in sellerItems')).count()).toEqual(0);        
+    });           
+
+
 });

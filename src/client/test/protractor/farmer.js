@@ -122,31 +122,74 @@ describe('The beLocal Farmer Splash Page', function() {
         browser.executeScript(scrollIntoView, updateProfileButton);
         updateProfileButton.click();
         browser.sleep(1000);      
+    });   
+
+    it('Should allow the creation of a one-time custom location', function(){
+
+        // Create a new custom location
+        element(by.buttonText('Create New Location')).click();
+        browser.sleep(1000);
+        element(by.css('[ng-click="doCustomLocation()"]')).click();
+        element(by.model('locationName')).clear().sendKeys('Farm Stand');
+
+        // This is a pretty nasty hack to get the typeahead to appear cross-OS since sendKeys() for OS X fakes key presses rather than
+        // sending them natively. Essentially, we're setting the value of the input normally, then triggering Angular's $setViewValue
+        // to fire the $parsers pipeline (which typeahead uses to know when to trigger itself).
+        var updateInput = "var input = document.getElementById('address-typeahead');" +
+            "input.value = 'University of Victoria, 3800 Finnerty Road, Victoria, BC V8P 5C2, Canada';" + 
+            "angular.element(input).scope().$apply(function(s) { s.locationForm[input.name].$setViewValue(input.value); });";
+        browser.executeScript(updateInput);
+
+        // We don't need to click the typeahead! Just press enter!
+        element(by.name('addressText')).click();
+        element(by.name('addressText')).sendKeys(protractor.Key.ENTER);        
+
+        // Did we actually create the location?
+        element(by.css('[ng-click="newLocationSubmit()"]')).click();
+        expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(1);
+
+        // Is the map showing?
+        expect(element(by.css('[ng-hide="marketLocations.length == 0 && sellerLocations.length == 0"]')).isDisplayed()).toBeTruthy();
     });
 
-    // Can we join and leave a market?
-    it('Should allow markets to be joined and left', function(){
-        // Open Create New Location Modal
-        browser.executeScript('scrollTo(0,0);');
-        var createNewLocationButton = element(by.css('[ng-click="resetLocationModal()"]'));
-        createNewLocationButton.click();
+    it('Should allow the editing of a one-time custom location', function(){
+        // Create a new custom location
+        element(by.css('[ng-click="editLocation(location)"]')).click();
         browser.sleep(1000);
+        element(by.model('locationDescription')).clear().sendKeys('Farm Stand description!');      
 
-        // Select a market
-        element(by.cssContainingText('option', 'Victoria Public Market')).click();
+        // Did we actually edit the location?
+        element(by.css('[ng-click="newLocationSubmit()"]')).click();
+        expect(element(by.id('pro-cust-description')).getText()).toEqual('Farm Stand description!');
+    });
 
-        // Join Market
-        var joinMarketButton = browser.driver.findElement(by.css('[ng-click="newLocationSubmit()"]'));
-        joinMarketButton.click();
-        browser.sleep(1000);         
+    it('Should allow the deletion of a one-time custom location', function(){
+        // Delete the location
+        element(by.css('[ng-click="deleteLocation(location)"]')).click();    
 
-        // Did we join the market?
-        expect(element.all(by.repeater('location in marketLocations')).count()).toEqual(1);
+        // Is the locaton gone?    
+        expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(0);
 
-        // Leave the market
-        element(by.css('[ng-click="leaveMarket(location)"]')).click();        
-        expect(element.all(by.repeater('location in marketLocations')).count()).toEqual(0);
-    });   
+        // Is the map hidden?
+        expect(element(by.css('[ng-hide="marketLocations.length == 0 && sellerLocations.length == 0"]')).isDisplayed()).toBeFalsy();
+    }); 
+
+    it('Should allow undoing the deletion of a one-time custom location', function(){
+        // Delete the location
+        element(by.css('[ng-click="restoreLocation(deletedLocation)"]')).click();    
+
+        // Is the locaton back?    
+        expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(1);
+
+        // Is the map back?
+        expect(element(by.css('[ng-hide="marketLocations.length == 0 && sellerLocations.length == 0"]')).isDisplayed()).toBeTruthy();
+
+        // Delete the location again
+        element(by.css('[ng-click="deleteLocation(location)"]')).click();    
+
+        // Is the locaton gone?    
+        expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(0);        
+    });                           
 
     it('Should allow the creation of a product', function(){
         // Load the picture of pears
@@ -202,7 +245,6 @@ describe('The beLocal Farmer Splash Page', function() {
         // Delete the item again
         element(by.css('[ng-click="deleteProduct(product)"]')).click();        
         expect(element.all(by.repeater('product in sellerItems')).count()).toEqual(0);        
-    });           
-
+    });
 
 });

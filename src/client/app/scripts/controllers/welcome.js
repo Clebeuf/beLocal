@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('WelcomeCtrl', function ($scope, AuthService, StateService, $location, ipCookie, $timeout, $http) {
+  .controller('WelcomeCtrl', function ($scope, AuthService, StateService, $location, ipCookie, $timeout, $http, $filter) {
   	$scope.AuthService = AuthService;
 
     // Scroll to a DOM element with a specific id
@@ -142,6 +142,85 @@ angular.module('clientApp')
 
     };
 
+    // The function calls our Mandrill Api and sends the foodie email template to newly registered foodies
+    $scope.sendNewVendorEmail = function (){
+
+        // create a new instance of the Mandrill class with your API key
+        // This API key can only send template emails so there is no security risk for having it straight in the code
+        var m = new mandrill.Mandrill('KJu3pTuBNBRancggJyYRKg');
+
+        // create a variable for the API call parameters
+        var params = {
+            "template_name": "new-vendor",
+            "template_content": [
+                {
+                    "name": "Welcome to beLocal Victoria!",
+                    "content": "Thank you for registering as a foodie with beLocal Victoria."
+                }
+            ],
+            "message": {
+                "from_email":"belocalvictoria@gmail.com",
+                "template_name" : "new-vendor",
+                "to":[{"email": "belocalvictoria@gmail.com" }],
+                "subject": "New Vendor on beLocal",
+                "global_merge_vars": [
+                    {
+                        "name": "var1",
+                        "content": "Global Value 1"
+                    }
+                ],
+                "merge_vars": [
+                  {
+                      "rcpt": "belocalvictoria@gmail.com",
+                      "vars": [
+                          {
+                              "name": "FNAME",
+                              "content": $scope.newVendorFirstName
+                          },
+                          {
+                              "name": "LNAME",
+                              "content": $scope.newVendorLastName
+                          },
+                          {
+                              "name": "UNAME",
+                              "content": $scope.newVendorUserName
+                          },
+                          {
+                              "name": "UEMAIL",
+                              "content": $scope.newVendorEmail
+                          },
+                          {
+                              "name": "SMETHOD",
+                              "content": "Non-Facebook (Email)"
+                          },
+                          {
+                              "name": "RTIME",
+                              "content": $filter('date')(new Date(), 'medium')
+                          }
+                      ]
+                  }
+            ]
+                
+            }
+        };
+
+
+        // send the email to belocal
+        m.messages.sendTemplate(
+            params, 
+            function a(res) {
+                console.log("sent email");
+                console.log(res[0]);
+
+            }, 
+            function b(err) {
+                console.log("error sending");
+                console.log(err[0]);
+            }
+        );
+
+    };
+
     // Create a new vendor without Facebook
     $scope.newVendorSubmit = function() {
       $scope.newUserSubmitted = true;
@@ -160,6 +239,7 @@ angular.module('clientApp')
       .success(function() {
         angular.element('#createUserModal').modal('hide');  
         $scope.vendorSendEmail();
+        $scope.sendNewVendorEmail();
       })
       .error(function(response) {
         // Catch any serverside errors and display them on the client (duplicate email/username are the only things we check for currently)

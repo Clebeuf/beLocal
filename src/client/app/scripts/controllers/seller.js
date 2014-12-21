@@ -351,7 +351,8 @@ angular.module('clientApp')
             $scope.locationType = 'false'; // Remember, false means recurring event. I'm sorry this had to be done, but it's used in the HTML       
         } else {
             $scope.locationType = 'true'; // Remember, false means non-recurring event.
-            $scope.locationDate = location.date; // Set the date
+            $scope.locationDate = new Date(location.date); // Set the date
+            $scope.locationDate.setTime($scope.locationDate.getTime() + $scope.locationDate.getTimezoneOffset() * 60000);            
 
             $scope.startTime = $scope.setTime(location.address.hours[0].from_hour); // Set the start time
             $scope.endTime = $scope.setTime(location.address.hours[0].to_hour); // Set the end time

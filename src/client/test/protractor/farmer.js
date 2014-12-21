@@ -122,5 +122,31 @@ describe('The beLocal Farmer Splash Page', function() {
         browser.executeScript(scrollIntoView, updateProfileButton);
         updateProfileButton.click();
         browser.sleep(1000);      
-    });         
+    });
+
+    // Can we join and leave a market?
+    it('Should allow markets to be joined and left', function(){
+        // Open Create New Location Modal
+        element(by.css('[data-role="end"]')).click();
+        browser.sleep(500);
+        browser.executeScript('scrollTo(0,0);');
+        var createNewLocationButton = element(by.css('[ng-click="resetLocationModal()"]'));
+        createNewLocationButton.click();
+        browser.sleep(1000);
+
+        // Select a market
+        element(by.cssContainingText('option', 'Victoria Public Market')).click();
+
+        // Join Market
+        var joinMarketButton = browser.driver.findElement(by.css('[ng-click="newLocationSubmit()"]'));
+        joinMarketButton.click();
+        browser.sleep(1000);         
+
+        // Did we join the market?
+        expect(element.all(by.repeater('location in marketLocations')).count()).toEqual(1);
+
+        // Leave the market
+        element(by.css('[ng-click="leaveMarket(location)"]')).click();        
+        expect(element.all(by.repeater('location in marketLocations')).count()).toEqual(0);
+    });            
 });

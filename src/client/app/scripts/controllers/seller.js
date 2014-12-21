@@ -925,48 +925,6 @@ angular.module('clientApp')
 
     $scope.init();
 
-    // ---- MAIL CHIMP ------------
-
-
-        // create a new instance of the Mandrill class with your API key
-        var m = new mandrill.Mandrill('CaG6Ld7MlGVaM8_KFM1u6w');
-
-        // create a variable for the API call parameters
-        var params = {
-            "template_name": "vendor-welcome",
-            "template_content": [
-                {
-                    "name": "example name",
-                    "content": "example content"
-                }
-            ],
-            "message": {
-                "from_email":"belocalvictoria@gmail.com",
-                "template_name" : "vendor-welcome",
-                "to":[{"email": StateService.getCurrentUser().email }],
-                "subject": "Welcome to beLocal Victoria"
-                
-            }
-        };
-
-
-        $scope.sendTheMail = function () {
-        // Send the email!
-
-            m.messages.sendTemplate(
-                params, 
-                function a(res) {
-                    console.log("sent email");
-                    console.log(res[0]);
-
-                }, 
-                function b(err) {
-                    console.log("error sending");
-                    console.log(err[0]);
-                }
-            );
-        }
-
 
     // ---- BOOTSTRAP TOUR --------
 

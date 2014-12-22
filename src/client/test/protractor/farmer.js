@@ -40,6 +40,7 @@ describe('The beLocal Farmer Splash Page', function() {
       arguments[0].scrollIntoView();
     }    
 
+    // MAKE SURE AN ACCOUNT FOR THE CREDENTIALS ABOVE EXISTS IN YOUR APPLICATION
     // This will fail if the account doesn't exist. Not sure how to work around this right now.
     it('Should allow Facebook sign in as a vendor', function(){
         vendorSignInWithFacebook(); 
@@ -55,6 +56,7 @@ describe('The beLocal Farmer Splash Page', function() {
         var oldProfilePictureSrc = undefined;
         var newProfilePictureSrc = undefined;
 
+        // Grab the old profile picture src
         var oldProfilePictureSrc = element(by.id('vendorProfileImage')).getAttribute('src').then(function(src) {
             return src;
         });
@@ -73,10 +75,12 @@ describe('The beLocal Farmer Splash Page', function() {
         element(by.css('[ng-click="uploadProfileImage()"]')).click();
         browser.waitForAngular();
 
+        // Grab the new profile picture src
         newProfilePictureSrc = element(by.id('vendorProfileImage')).getAttribute('src').then(function(src) {
             return src;
         });
 
+        // The srcs shouldn't be the same!
         expect(oldProfilePictureSrc).toNotEqual(newProfilePictureSrc);
     });
 

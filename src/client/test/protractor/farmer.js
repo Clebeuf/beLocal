@@ -25,7 +25,7 @@ describe('The beLocal Farmer Splash Page', function() {
             expect(browser.driver.getCurrentUrl()).toContain('facebook');
 
             //Send login information for a facebook test user
-            browser.driver.findElement(by.id('email')).sendKeys('bgyznnn_mcdonaldstein_1415845994@tfbnw.net');
+            browser.driver.findElement(by.id('email')).sendKeys('protractor_tandkpu_farmer@tfbnw.net');
             browser.driver.findElement(by.id('pass')).sendKeys('belocal');
             browser.driver.findElement(by.id('loginbutton')).click();
 
@@ -74,6 +74,7 @@ describe('The beLocal Farmer Splash Page', function() {
 
         element(by.css('[ng-click="uploadProfileImage()"]')).click();
         browser.waitForAngular();
+        browser.sleep(1000);        
 
         // Grab the new profile picture src
         newProfilePictureSrc = element(by.id('vendorProfileImage')).getAttribute('src').then(function(src) {
@@ -157,7 +158,29 @@ describe('The beLocal Farmer Splash Page', function() {
         browser.executeScript(scrollIntoView, updateProfileButton);
         updateProfileButton.click();
         browser.sleep(1000);      
-    });   
+    });
+
+   // Can we join and leave a market?
+    it('Should allow markets to be joined and left', function(){
+        // Open Create New Location Modal
+        element(by.buttonText('Create New Location')).click();
+        browser.sleep(1000);
+
+        // Select a market
+        element(by.cssContainingText('option', 'Victoria Public Market')).click();
+
+        // Join Market
+        var joinMarketButton = browser.driver.findElement(by.css('[ng-click="newLocationSubmit()"]'));
+        joinMarketButton.click();
+        browser.sleep(1000);         
+
+        // Did we join the market?
+        expect(element.all(by.repeater('location in marketLocations')).count()).toEqual(1);
+
+        // Leave the market
+        element(by.css('[ng-click="leaveMarket(location)"]')).click();        
+        expect(element.all(by.repeater('location in marketLocations')).count()).toEqual(0);
+    });       
 
     it('Should allow the creation of a one-time custom location', function(){
 

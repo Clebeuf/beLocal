@@ -28,7 +28,14 @@ angular.module('clientApp')
   		AuthService.createCustomer().then(function(status) {
   			if(status === 304) {
           $scope.accountAlreadyCreated = true;
-  			}
+  			} else {
+          angular.element('#createUserModal').modal('hide');
+          angular.element('#createUserModal').on('hide.bs.modal', function(){                         
+            if(StateService.getUserType() === 'CUS') {
+              $location.path('/');
+            }  
+          });         
+        }
   		});
   	}
 
@@ -38,7 +45,14 @@ angular.module('clientApp')
   		AuthService.createVendor().then(function(status) {
   			if(status === 304) {
           $scope.accountAlreadyCreated = true;          
-  			}
+  			} else {
+          angular.element('#createUserModal').modal('hide');
+          angular.element('#createUserModal').on('hide.bs.modal', function(){                         
+            if(StateService.getUserType() === 'VEN') {
+              $location.path('/vendor');
+            }  
+          });         
+        }
   		});
   	}
 

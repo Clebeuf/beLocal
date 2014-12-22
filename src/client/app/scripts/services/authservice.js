@@ -105,13 +105,7 @@ angular.module('clientApp')
               d.resolve(status)
             });
             promise.success(function(response, status) {
-              if(status !== 200) {                
-              } else {
-                if(StateService.getUserType() === 'CUS') {
-                    console.log("You're a customer!");
-                    $location.path('/');                    
-                }
-              }         
+                d.resolve(response);         
             });             
         })
         .fail(function (error) {
@@ -162,13 +156,7 @@ angular.module('clientApp')
               d.resolve(status)
             });
             promise.success(function(response, status) {
-              if(status !== 200) {
                 d.resolve(response);
-              } else {
-                if(StateService.getUserType() === 'VEN') {
-                    $location.path('/vendor');
-                }
-              }         
             });             
         })
         .fail(function (error) {

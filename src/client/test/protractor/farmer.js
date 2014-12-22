@@ -47,8 +47,8 @@ describe('The beLocal Farmer Splash Page', function() {
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor');
     });
 
-    // Can we edit company name?
-    it('Should allow editing of company name', function(){
+    // Can we edit user profile?
+    it('Should allow editing of user profile', function(){
         // Open edit profile modal
         element(by.css('[data-role="end"]')).click();
         browser.sleep(500);
@@ -189,7 +189,88 @@ describe('The beLocal Farmer Splash Page', function() {
 
         // Is the locaton gone?    
         expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(0);        
-    });                           
+    });
+
+    it('Should allow the creation of a recurring custom location', function(){
+
+        // Create a new recurring custom location
+        element(by.buttonText('Create New Location')).click();
+        browser.sleep(1000);
+        element(by.css('[ng-click="doCustomLocation()"]')).click();
+        element(by.css('[value="false"]')).click();
+        element(by.model('locationName')).clear().sendKeys('Recurring Farm Stand');
+
+        // Check/uncheck some days
+        element(by.name('day1Check')).click();
+        element(by.name('day3Check')).click();        
+        element(by.name('day5Check')).click();
+        element(by.name('day6Check')).click();
+
+        // This is a pretty nasty hack to get the typeahead to appear cross-OS since sendKeys() for OS X fakes key presses rather than
+        // sending them natively. Essentially, we're setting the value of the input normally, then triggering Angular's $setViewValue
+        // to fire the $parsers pipeline (which typeahead uses to know when to trigger itself).
+        var updateInput = "var input = document.getElementById('address-typeahead');" +
+            "input.value = 'University of Victoria, 3800 Finnerty Road, Victoria, BC V8P 5C2, Canada';" + 
+            "angular.element(input).scope().$apply(function(s) { s.locationForm[input.name].$setViewValue(input.value); });";
+        browser.executeScript(updateInput);
+
+        // We don't need to click the typeahead! Just press enter!
+        element(by.name('addressText')).click();
+        element(by.name('addressText')).sendKeys(protractor.Key.ENTER);        
+
+        // Did we actually create the location?
+        element(by.css('[ng-click="newLocationSubmit()"]')).click();
+        expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(1);
+
+        // Are the hours right?
+        expect(element.all(by.repeater('day in location.address.hours')).count()).toEqual(5);        
+
+        // Is the map showing?
+        expect(element(by.css('[ng-hide="marketLocations.length == 0 && sellerLocations.length == 0"]')).isDisplayed()).toBeTruthy();
+    });
+
+    it('Should allow the editing of a recurring custom location', function(){
+
+        element(by.css('[ng-click="editLocation(location)"]')).click();
+        browser.sleep(1000);
+
+        // Check/uncheck some days
+        element(by.name('day1Check')).click();
+        element(by.name('day3Check')).click();  
+
+        element(by.css('[ng-click="newLocationSubmit()"]')).click();
+
+        // Did the hours update?
+        expect(element.all(by.repeater('day in location.address.hours')).count()).toEqual(7);
+    }); 
+
+    it('Should allow the deletion of a recurring custom location', function(){
+        // Delete the location
+        element(by.css('[ng-click="deleteLocation(location)"]')).click();    
+
+        // Is the locaton gone?    
+        expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(0);
+
+        // Is the map hidden?
+        expect(element(by.css('[ng-hide="marketLocations.length == 0 && sellerLocations.length == 0"]')).isDisplayed()).toBeFalsy();
+    }); 
+
+    it('Should allow undoing the deletion of a recurring location', function(){
+        // Delete the location
+        element(by.css('[ng-click="restoreLocation(deletedLocation)"]')).click();    
+
+        // Is the locaton back?    
+        expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(1);
+
+        // Is the map back?
+        expect(element(by.css('[ng-hide="marketLocations.length == 0 && sellerLocations.length == 0"]')).isDisplayed()).toBeTruthy();
+
+        // Delete the location again
+        element(by.css('[ng-click="deleteLocation(location)"]')).click();    
+
+        // Is the locaton gone?    
+        expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(0);        
+    });                                        
 
     it('Should allow the creation of a product', function(){
         // Load the picture of pears

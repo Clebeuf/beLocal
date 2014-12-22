@@ -22,50 +22,32 @@ angular.module('clientApp')
         }, 250);
   	}
 
-    // Try signing up as a customer with Facebook. If there is already an account associated with the currently authenticated Facebook
-    // account, a 304 will be returned from the server, prompting an error message to be displayed.
-  	$scope.signUpAsCustomer = function() {
-  		AuthService.createCustomer().then(function(status) {
-  			if(status === 304) {
-          $scope.accountAlreadyCreated = true;
-  			}
-  		});
-  	}
 
-    // Try signing up as a vendor with Facebook. If there is already an account associated with the currently authenticated Facebook
-    // account, a 304 will be returned from the server, prompting an error message to be displayed.
-  	$scope.signUpAsVendor = function() {
-  		AuthService.createVendor().then(function(status) {
-  			if(status === 304) {
-          $scope.accountAlreadyCreated = true;          
-  			}
-  		});
-  	}
-
-    // Set a flag to sign up as a vendor (this changes the appearance of some modals in the HTML)
-    $scope.signUpAsVendorNoFB = function() {
-      $scope.accountAlreadyCreated = false;
-      $scope.registerAsVendor = true;
-    }
-
-    // Set a flag to sign up as a customer (this changes the appearance of some modals in the HTML)
-    $scope.signUpAsCustomerNoFB = function() {
-      $scope.accountAlreadyCreated = false;
-      $scope.registerAsVendor = false;
-    }
-
-    // If a user presses the "Start Browsing Now" button, we set a cookie to hide the splash page next time they visit beLocal
-  	$scope.getStarted = function() {
-  		ipCookie('beLocalBypass', true, {expires: 14});  		
-  		$location.path('/');
-  	}  
-
-    // The function calls our Mandrill Api and sends the vendor email template to new vendors
-    $scope.vendorSendEmail = function (){
+    $scope.sendTemplateEmail = function (params){
 
         // create a new instance of the Mandrill class with your API key
         // This API key can only send template emails so there is no security risk for having it straight in the code
         var m = new mandrill.Mandrill('CaG6Ld7MlGVaM8_KFM1u6w');
+
+        // send the email to belocal
+        m.messages.sendTemplate(
+            params, 
+            function a(res) {
+                console.log("sent email");
+                console.log(res[0]);
+
+            }, 
+            function b(err) {
+                console.log("error sending");
+                console.log(err[0]);
+            }
+        );
+
+    };
+
+
+    // The function calls our Mandrill Api and sends the vendor email template to the new vendor
+    $scope.vendorSendEmail = function (){
 
         // create a variable for the API call parameters
         var params = {
@@ -85,28 +67,13 @@ angular.module('clientApp')
             }
         };
 
-        // send the vendor email
-        m.messages.sendTemplate(
-            params, 
-            function a(res) {
-                console.log("sent email");
-                console.log(res[0]);
-
-            }, 
-            function b(err) {
-                console.log("error sending");
-                console.log(err[0]);
-            }
-        );
+        //send the welcome email to the vendor
+        $scope.sendTemplateEmail(params);
 
     };
 
     // The function calls our Mandrill Api and sends the foodie email template to newly registered foodies
     $scope.foodieSendEmail = function (){
-
-        // create a new instance of the Mandrill class with your API key
-        // This API key can only send template emails so there is no security risk for having it straight in the code
-        var m = new mandrill.Mandrill('KJu3pTuBNBRancggJyYRKg');
 
         // create a variable for the API call parameters
         var params = {
@@ -126,28 +93,13 @@ angular.module('clientApp')
             }
         };
 
-        // send the foodie email
-        m.messages.sendTemplate(
-            params, 
-            function a(res) {
-                console.log("sent email");
-                console.log(res[0]);
-
-            }, 
-            function b(err) {
-                console.log("error sending");
-                console.log(err[0]);
-            }
-        );
+        //send the welcome email to the foodie
+        $scope.sendTemplateEmail(params);
 
     };
 
     // The function calls our Mandrill Api and sends the foodie email template to newly registered foodies
     $scope.sendNewVendorEmail = function (){
-
-        // create a new instance of the Mandrill class with your API key
-        // This API key can only send template emails so there is no security risk for having it straight in the code
-        var m = new mandrill.Mandrill('KJu3pTuBNBRancggJyYRKg');
 
         // create a variable for the API call parameters
         var params = {
@@ -204,22 +156,50 @@ angular.module('clientApp')
             }
         };
 
-
-        // send the email to belocal
-        m.messages.sendTemplate(
-            params, 
-            function a(res) {
-                console.log("sent email");
-                console.log(res[0]);
-
-            }, 
-            function b(err) {
-                console.log("error sending");
-                console.log(err[0]);
-            }
-        );
+        //send us an email to belocal account to let us know about the new vendor
+        $scope.sendTemplateEmail(params);
 
     };
+
+
+    // Try signing up as a customer with Facebook. If there is already an account associated with the currently authenticated Facebook
+    // account, a 304 will be returned from the server, prompting an error message to be displayed.
+  	$scope.signUpAsCustomer = function() {
+  		AuthService.createCustomer().then(function(status) {
+  			if(status === 304) {
+          $scope.accountAlreadyCreated = true;
+  			}
+  		});
+  	}
+
+    // Try signing up as a vendor with Facebook. If there is already an account associated with the currently authenticated Facebook
+    // account, a 304 will be returned from the server, prompting an error message to be displayed.
+  	$scope.signUpAsVendor = function() {
+  		AuthService.createVendor().then(function(status) {
+  			if(status === 304) {
+          $scope.accountAlreadyCreated = true;          
+  			}
+  		});
+  	}
+
+    // Set a flag to sign up as a vendor (this changes the appearance of some modals in the HTML)
+    $scope.signUpAsVendorNoFB = function() {
+      $scope.accountAlreadyCreated = false;
+      $scope.registerAsVendor = true;
+    }
+
+    // Set a flag to sign up as a customer (this changes the appearance of some modals in the HTML)
+    $scope.signUpAsCustomerNoFB = function() {
+      $scope.accountAlreadyCreated = false;
+      $scope.registerAsVendor = false;
+    }
+
+    // If a user presses the "Start Browsing Now" button, we set a cookie to hide the splash page next time they visit beLocal
+  	$scope.getStarted = function() {
+  		ipCookie('beLocalBypass', true, {expires: 14});  		
+  		$location.path('/');
+  	}  
+
 
     // Create a new vendor without Facebook
     $scope.newVendorSubmit = function() {

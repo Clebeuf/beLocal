@@ -47,11 +47,42 @@ describe('The beLocal Farmer Splash Page', function() {
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor');
     });
 
+    // Can we change profile pictures?
+    it('Should allow editing of profile photo', function() {
+        element(by.css('[data-role="end"]')).click();
+        browser.sleep(500);
+
+        var oldProfilePictureSrc = undefined;
+        var newProfilePictureSrc = undefined;
+
+        var oldProfilePictureSrc = element(by.id('vendorProfileImage')).getAttribute('src').then(function(src) {
+            return src;
+        });
+
+        element(by.css('[ng-click="launchProfileImageModal()"]')).click();
+
+        // Upload new profile picture
+        var path = require('path');
+        var fileToUpload = 'pears.jpg';
+        var absolutePath = path.resolve(__dirname, fileToUpload);
+
+        element(by.id('profile-image')).sendKeys(absolutePath);
+
+        browser.sleep(500);
+
+        element(by.css('[ng-click="uploadProfileImage()"]')).click();
+        browser.waitForAngular();
+
+        newProfilePictureSrc = element(by.id('vendorProfileImage')).getAttribute('src').then(function(src) {
+            return src;
+        });
+
+        expect(oldProfilePictureSrc).toNotEqual(newProfilePictureSrc);
+    });
+
     // Can we edit user profile?
     it('Should allow editing of user profile', function(){
         // Open edit profile modal
-        element(by.css('[data-role="end"]')).click();
-        browser.sleep(500);
         var editProfileButton = element(by.css('[ng-click="editProfile()"]'));
         editProfileButton.click();
         browser.sleep(1000);

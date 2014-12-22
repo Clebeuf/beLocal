@@ -328,4 +328,32 @@ describe('The beLocal Farmer Splash Page', function() {
         expect(element.all(by.repeater('product in sellerItems')).count()).toEqual(0);        
     });
 
+    it('The My Profile button should take you back to your account', function(){
+        browser.get('http://127.0.0.1:9000');
+        // Go to vendor page
+        element(by.id('vendor-dropdown-toggle')).click();        
+        element(by.id('vendor-display-account')).click(); 
+        browser.waitForAngular();
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor');      
+    }); 
+
+    it('The vendor tour button should show the tour', function(){
+        // Show tour
+        element(by.id('xs-dropdown-toggle')).click();        
+        element(by.id('vendorTour')).click(); 
+        browser.waitForAngular();
+        expect(element(by.css('[data-role="end"]')).isDisplayed()).toBeTruthy();
+        browser.waitForAngular();        
+        element(by.css('[data-role="end"]')).click();
+        browser.sleep(500);                     
+    });
+
+    it('Should allow vendors to log out', function(){
+        // Logout
+        element(by.id('xs-dropdown-toggle')).click();        
+        element(by.id('xs-logout')).click(); 
+        browser.waitForAngular();
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/welcome');                     
+    });          
+
 });

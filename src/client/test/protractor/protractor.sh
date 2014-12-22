@@ -5,6 +5,6 @@ python manage.py syncdb --noinput
 python manage.py shell < scripts/updateMarkets.py
 python manage.py shell < scripts/updateTagCategory.py
 cd ../client/test/protractor/
-protractor vendor-setup
+protractor farmer-setup
 protractor foodie-setup
 protractor facebook-farmer

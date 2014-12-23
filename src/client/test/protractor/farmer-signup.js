@@ -1,11 +1,11 @@
-describe('Sign Up as a Foodie and Farmer With Facebook', function() {
+describe('Sign Up as a Farmer With and Without Facebook', function() {
     beforeEach(function(){
         browser.manage().deleteAllCookies();
         browser.driver.manage().deleteAllCookies();
+        browser.get('http://127.0.0.1:9000');        
     });
 
-    it('Should allow sign up as a farmer with Facebook', function() {
-        browser.get('http://127.0.0.1:9000');        
+    it('Should allow sign up as a farmer with Facebook', function() {       
         element(by.css('[ng-click="signUpAsVendorNoFB()"]')).click();
         browser.sleep(1000);
 
@@ -42,5 +42,22 @@ describe('Sign Up as a Foodie and Farmer With Facebook', function() {
             browser.waitForAngular();
             expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/welcome');            
         });        
+    });
+
+    it('Should allow sign up as a farmer without Facebook', function() {
+        element(by.css('[ng-click="signUpAsVendorNoFB()"]')).click();
+        browser.sleep(1000);
+
+        element(by.model('newVendorFirstName')).clear().sendKeys('Test');
+        element(by.model('newVendorLastName')).clear().sendKeys('Farmer');
+        element(by.model('newVendorUserName')).clear().sendKeys('testfarmer');
+        element(by.model('newVendorEmail')).clear().sendKeys('testfarmer@belocalvictoria.me');
+        element(by.model('newVendorPassword')).clear().sendKeys('belocal');
+
+        element(by.css('[ng-click="newVendorSubmit()"]')).click();
+
+        browser.sleep(1000);
+        browser.waitForAngular();
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor');
     });
 });

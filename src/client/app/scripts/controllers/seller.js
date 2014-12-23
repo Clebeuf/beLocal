@@ -926,6 +926,7 @@ angular.module('clientApp')
 
     $scope.init();
 
+
     // ---- BOOTSTRAP TOUR --------
 
     // Instance the tour

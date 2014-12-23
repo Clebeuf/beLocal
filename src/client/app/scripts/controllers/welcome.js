@@ -33,13 +33,13 @@ angular.module('clientApp')
         m.messages.sendTemplate(
             params, 
             function a(res) {
-                console.log("sent email");
-                console.log(res[0]);
+                console.log("Sent email");
+                // console.log(res[0]);
 
             }, 
             function b(err) {
-                console.log("error sending");
-                console.log(err[0]);
+                console.log("Error sending email");
+                // console.log(err[0]);
             }
         );
 

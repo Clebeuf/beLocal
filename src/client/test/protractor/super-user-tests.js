@@ -5,7 +5,7 @@ exports.config = {
 		maxInstances: 1 
 	},
 	seleniumAddress: 'http://localhost:4444/wd/hub', 
-	specs: ['foodie-splash.js', 'foodie-signup.js'],
+	specs: ['super-user.js'],
 	allScriptsTimeout: 100000,
 
 }

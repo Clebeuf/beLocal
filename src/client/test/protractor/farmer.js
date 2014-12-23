@@ -200,6 +200,7 @@ describe('The beLocal Farmer Splash Page', function() {
 
         // We don't need to click the typeahead! Just press enter!
         element(by.name('addressText')).click();
+        browser.sleep(500);
         element(by.name('addressText')).sendKeys(protractor.Key.ENTER);        
 
         // Did we actually create the location?
@@ -274,6 +275,7 @@ describe('The beLocal Farmer Splash Page', function() {
 
         // We don't need to click the typeahead! Just press enter!
         element(by.name('addressText')).click();
+        browser.sleep(500);
         element(by.name('addressText')).sendKeys(protractor.Key.ENTER);        
 
         // Did we actually create the location?

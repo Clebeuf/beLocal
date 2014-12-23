@@ -5,7 +5,7 @@ exports.config = {
 		maxInstances: 1 
 	},
 	seleniumAddress: 'http://localhost:4444/wd/hub', 
-	specs: ['farmer_splash.js', 'farmer-signup.js'],
+	specs: ['farmer-splash.js', 'farmer-signup.js'],
 	allScriptsTimeout: 100000,
 
 }

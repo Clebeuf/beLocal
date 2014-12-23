@@ -26,7 +26,7 @@
     </div>
     <div ng-show="currentState.name === 'manage'" class="col-sm-5" style="text-align:right;">
       <button class="btn btn-danger" ng-show="vendor.is_active" ng-click="activateVendor(vendor)">Deactivate</button>
-      <button class="btn btn-success" ng-hide="vendor.is_active" ng-click="activateVendor(vendor)">Activate</button>      
+      <button class="btn btn-success lg-activate-button" ng-hide="vendor.is_active" ng-click="activateVendor(vendor)">Activate</button>      
     </div>
     <div ng-show="vendor.products.length < 4" class="col-sm-{{4 - vendor.products.length}}"></div>
     <div class="col-sm-1 no-padding" ng-repeat="product in vendor.products | limitTo:4">
@@ -70,8 +70,8 @@
         </div>
     </div>
     <div ng-show="currentState.name === 'manage'" class="col-sm-5" style="text-align:right;">
-      <button class="btn btn-danger" ng-show="vendor.is_active" ng-click="activateVendor(vendor)">Deactivate</button>
-      <button class="btn btn-success" ng-hide="vendor.is_active" ng-click="activateVendor(vendor)">Activate</button>      
+      <button class="btn btn-danger sm-deactivate-button" ng-show="vendor.is_active" ng-click="activateVendor(vendor)">Deactivate</button>
+      <button class="btn btn-success sm-activate-button" ng-hide="vendor.is_active" ng-click="activateVendor(vendor)">Activate</button>      
     </div>    
     <div ng-show="vendor.products.length < 4" class="col-sm-{{4 - vendor.products.length}}"></div>    
     <div class="col-xs-1 no-padding" ng-repeat="product in vendor.products | limitTo:4">

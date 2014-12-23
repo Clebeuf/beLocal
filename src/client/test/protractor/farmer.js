@@ -1,4 +1,4 @@
-describe('The beLocal Farmer Splash Page', function() {
+describe('Testing farmer tasks', function() {
 
     browser.manage().deleteAllCookies();
     browser.driver.manage().deleteAllCookies();

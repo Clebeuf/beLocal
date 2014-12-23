@@ -3,6 +3,7 @@
 angular.module('clientApp')
   .controller('WelcomeCtrl', function ($scope, AuthService, StateService, $location, ipCookie, $timeout, $http, $filter) {
     $scope.AuthService = AuthService;
+    $scope.FacebookSignup = false;
 
     // Scroll to a DOM element with a specific id
     // 1250 represents the duration of the animation
@@ -99,6 +100,11 @@ angular.module('clientApp')
 
     // The function calls our Mandrill Api and sends the foodie email template to newly registered foodies
     $scope.sendNewVendorEmail = function (){
+        var signUpMethod = 'Non-Facebook (Email)';
+
+        if($scope.FacebookSignup == true){
+          signUpMethod = 'Facebook';
+        }
 
         // create a variable for the API call parameters
         var params = {
@@ -126,23 +132,23 @@ angular.module('clientApp')
                       "vars": [
                           {
                               "name": "FNAME",
-                              "content": $scope.newVendorFirstName
+                              "content": StateService.getCurrentUser().first_name
                           },
                           {
                               "name": "LNAME",
-                              "content": $scope.newVendorLastName
+                              "content": StateService.getCurrentUser().last_name
                           },
                           {
                               "name": "UNAME",
-                              "content": $scope.newVendorUserName
+                              "content": StateService.getCurrentUser().name
                           },
                           {
                               "name": "UEMAIL",
-                              "content": $scope.newVendorEmail
+                              "content": StateService.getCurrentUser().email
                           },
                           {
                               "name": "SMETHOD",
-                              "content": "Non-Facebook (Email)"
+                              "content": signUpMethod
                           },
                           {
                               "name": "RTIME",
@@ -173,6 +179,7 @@ angular.module('clientApp')
       });
     }
 
+
     // Try signing up as a vendor with Facebook. If there is already an account associated with the currently authenticated Facebook
     // account, a 304 will be returned from the server, prompting an error message to be displayed.
     $scope.signUpAsVendor = function() {
@@ -180,7 +187,7 @@ angular.module('clientApp')
         if(status === 304) {
           $scope.accountAlreadyCreated = true;          
         } else {
-          console.log(StateService.getCurrentUser());
+          $scope.FacebookSignup = true;
           angular.element('#createUserModal').modal('hide');        
         }
       });
@@ -221,8 +228,6 @@ angular.module('clientApp')
       AuthService.createNonFacebookVendor(data)
       .success(function() {
         angular.element('#createUserModal').modal('hide');  
-        $scope.vendorSendEmail();
-        $scope.sendNewVendorEmail();
       })
       .error(function(response) {
         // Catch any serverside errors and display them on the client (duplicate email/username are the only things we check for currently)
@@ -251,7 +256,6 @@ angular.module('clientApp')
       AuthService.createNonFacebookCustomer(data)
       .success(function() {
         angular.element('#createUserModal').modal('hide');
-        $scope.foodieSendEmail();  
       })
       .error(function(response) {
         // Set a flag to sign up as a vendor (this changes the appearance of some modals in the HTML)
@@ -268,14 +272,17 @@ angular.module('clientApp')
       $timeout(function() {
         if(StateService.getCurrentUser()){        
           if(StateService.getUserType() === 'CUS') {
+              // SEND THE WELCOME EMAIL TO NEW FOODIE
+              $scope.foodieSendEmail();
               $timeout(function() {
                 $location.path('/');                    
               });
           } else if(StateService.getUserType() === 'VEN') {
-              console.log(StateService.getCurrentUser());
-              console.log("hit");
+              // SEND THE WELCOME EMAIL TO NEW VENDOR
+              $scope.vendorSendEmail();
+              // SEND US A NOTIFICATION EMAIL
+              $scope.sendNewVendorEmail();
               $timeout(function() {
-                console.log('please work!!!!!!');
                 $location.path('/vendor');
               });
           }

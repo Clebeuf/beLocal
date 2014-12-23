@@ -15,7 +15,7 @@ src/server/media/*
 src/server/be_local_server/static/media/*
 
 !src/client/*.jpg
-
 *.jpg
-
 *.jpeg
+
+logs/

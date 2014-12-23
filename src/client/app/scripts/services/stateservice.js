@@ -315,7 +315,7 @@ angular.module('clientApp')
 
     // Return server address
     this.getServerAddress = function() {
-      return 'http://localhost:8000/';
+      return 'http://localhost:80/api/';
     };
 
     // Upload a product photo to the server

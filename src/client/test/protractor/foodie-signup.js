@@ -3,7 +3,25 @@ describe('Sign Up as a Foodie With and Without Facebook', function() {
         browser.manage().deleteAllCookies();
         browser.driver.manage().deleteAllCookies();       
         browser.get('http://127.0.0.1:9000'); 
-    });
+    });  
+    
+    it('Should allow sign up as a foodie without Facebook', function() {
+        // This account will be deleted after superuser tests
+        element(by.css('[ng-click="signUpAsCustomerNoFB()"]')).click();
+        browser.sleep(1000);
+
+        element(by.model('newVendorFirstName')).clear().sendKeys('To Be');
+        element(by.model('newVendorLastName')).clear().sendKeys('Deleted');
+        element(by.model('newVendorUserName')).clear().sendKeys('tobedeleted');
+        element(by.model('newVendorEmail')).clear().sendKeys('tobedeleted@belocalvictoria.me');
+        element(by.model('newVendorPassword')).clear().sendKeys('belocal');
+
+        element(by.css('[ng-click="newCustomerSubmit()"]')).click();
+
+        browser.sleep(1000);
+        browser.waitForAngular();
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/');
+    });      
 
     it('Should allow sign up as a foodie with Facebook', function() {
         element(by.css('[ng-click="signUpAsCustomerNoFB()"]')).click();
@@ -53,5 +71,5 @@ describe('Sign Up as a Foodie With and Without Facebook', function() {
         browser.sleep(1000);
         browser.waitForAngular();
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/');
-    });
+    });   
 });

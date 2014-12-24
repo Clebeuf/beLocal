@@ -32,7 +32,7 @@ describe('Testing superuser tasks', function() {
         browser.waitForAngular();
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/manage');
         expect(element.all(by.repeater('vendor in inactiveVendors')).count()).toEqual(2);        
-        expect(element.all(by.repeater('user in users')).count()).toEqual(5);
+        expect(element.all(by.repeater('user in users')).count()).toEqual(6);
     });
 
     it('Should allow superusers to activate vendors', function() {
@@ -51,6 +51,6 @@ describe('Testing superuser tasks', function() {
         prompt.sendKeys('$gituvicsoup');
         prompt.accept();
         browser.waitForAngular();
-        expect(element.all(by.repeater('user in users')).count()).toEqual(4);
+        expect(element.all(by.repeater('user in users')).count()).toEqual(5);
     });         
 });

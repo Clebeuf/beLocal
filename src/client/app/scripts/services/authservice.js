@@ -6,27 +6,27 @@ angular.module('clientApp')
 
     // Performs a login with Facebook
     this.processLogin = function(result) {
-    	var loggedIn = false;
-    	var backend = 'facebook';
-  		var token = "Token " + result.access_token;
-  		var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/login/' + backend + '/', headers: {'Authorization': token}});
+      var loggedIn = false;
+      var backend = 'facebook';
+      var token = "Token " + result.access_token;
+      var loginPromise = $http({method:'POST', url: 'http://127.0.0.1:8000/login/' + backend + '/', headers: {'Authorization': token}});
 
-  		loginPromise.then(function (result) {
-  		  loggedIn = true;
+      loginPromise.then(function (result) {
+        loggedIn = true;
 
         // If the login was successful and we have a user token coming back from the server, set all cookies
-  		  if(result.data.token) {
-  		  	ipCookie('beLocalToken', result.data.token, {expires: 14});
+        if(result.data.token) {
+          ipCookie('beLocalToken', result.data.token, {expires: 14});
           ipCookie('beLocalUser', result.data, {expires: 14});
           ipCookie('beLocalBypass', true, {expires: 14});          
-  			  $http.defaults.headers.common.Authorization = 'Token ' + result.data.token;
+          $http.defaults.headers.common.Authorization = 'Token ' + result.data.token;
           $http.defaults.headers.patch.Authorization = 'Token ' + result.data.token;          
-  		  }
-            StateService.setProfile(result.data);		  
-  		});
+        }
+            StateService.setProfile(result.data);     
+      });
 
-  		return loginPromise;
-  	}
+      return loginPromise;
+    }
 
     // Creates a new vendor with Facebook
     this.createVendorRequest = function(result) {

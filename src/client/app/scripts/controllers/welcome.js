@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('WelcomeCtrl', function ($scope, AuthService, StateService, $location, ipCookie, $timeout, $http) {
-  	$scope.AuthService = AuthService;
+  .controller('WelcomeCtrl', function ($scope, AuthService, StateService, $location, ipCookie, $timeout, $http, $filter) {
+    $scope.AuthService = AuthService;
+    $scope.FacebookSignup = false;
 
     // Scroll to a DOM element with a specific id
     // 1250 represents the duration of the animation
@@ -14,19 +15,163 @@ angular.module('clientApp')
 
     // Check to see if there is a hashtag in the url when coming to this page. If so, it means we have to extract it and scroll
     // to a certain part of the page. (This is how the register dropdown works when you're not signed in)
-  	var url = document.location.toString();
-  	if (url.split('#')[2]) {
+    var url = document.location.toString();
+    if (url.split('#')[2]) {
         $timeout(function(){
-  	      $scope.scrollTo('#' + url.split('#')[2]);
+          $scope.scrollTo('#' + url.split('#')[2]);
           $location.hash('');
         }, 250);
-  	}
+    }
+
+    $scope.sendTemplateEmail = function (params){
+
+        // create a new instance of the Mandrill class with your API key
+        // This API key can only send template emails so there is no security risk for having it straight in the code
+        var m = new mandrill.Mandrill('CaG6Ld7MlGVaM8_KFM1u6w');
+
+        // send the email to belocal
+        m.messages.sendTemplate(
+            params, 
+            function a(res) {
+                console.log("Sent email");
+                // console.log(res[0]);
+
+            }, 
+            function b(err) {
+                console.log("Error sending email");
+                // console.log(err[0]);
+            }
+        );
+
+    };
+
+
+    // The function calls our Mandrill Api and sends the vendor email template to the new vendor
+    $scope.vendorSendEmail = function (){
+
+        // create a variable for the API call parameters
+        var params = {
+            "template_name": "vendor-welcome",
+            "template_content": [
+                {
+                    "name": "Welcome to beLocal Victoria!",
+                    "content": "Thank you for registering as a Farmer or Foodmaker with beLocal Victoria."
+                }
+            ],
+            "message": {
+                "from_email":"belocalvictoria@gmail.com",
+                "template_name" : "vendor-welcome",
+                "to":[{"email": StateService.getCurrentUser().email }],
+                "subject": "Welcome to beLocal Victoria!"
+                
+            }
+        };
+
+        //send the welcome email to the vendor
+        $scope.sendTemplateEmail(params);
+
+    };
+
+    // The function calls our Mandrill Api and sends the foodie email template to newly registered foodies
+    $scope.foodieSendEmail = function (){
+
+        // create a variable for the API call parameters
+        var params = {
+            "template_name": "foodie-welcome",
+            "template_content": [
+                {
+                    "name": "Welcome to beLocal Victoria!",
+                    "content": "Thank you for registering as a foodie with beLocal Victoria."
+                }
+            ],
+            "message": {
+                "from_email":"belocalvictoria@gmail.com",
+                "template_name" : "foodie-welcome",
+                "to":[{"email": StateService.getCurrentUser().email }],
+                "subject": "Welcome to beLocal Victoria!"
+                
+            }
+        };
+
+        //send the welcome email to the foodie
+        $scope.sendTemplateEmail(params);
+
+    };
+
+    // The function calls our Mandrill Api and sends the foodie email template to newly registered foodies
+    $scope.sendNewVendorEmail = function (){
+        var signUpMethod = 'Non-Facebook (Email)';
+
+        if($scope.FacebookSignup == true){
+          signUpMethod = 'Facebook';
+        }
+
+        // create a variable for the API call parameters
+        var params = {
+            "template_name": "new-vendor",
+            "template_content": [
+                {
+                    "name": "Welcome to beLocal Victoria!",
+                    "content": "Thank you for registering as a foodie with beLocal Victoria."
+                }
+            ],
+            "message": {
+                "from_email":"belocalvictoria@gmail.com",
+                "template_name" : "new-vendor",
+                "to":[{"email": "belocalvictoria@gmail.com" }],
+                "subject": "New Vendor on beLocal",
+                "global_merge_vars": [
+                    {
+                        "name": "var1",
+                        "content": "Global Value 1"
+                    }
+                ],
+                "merge_vars": [
+                  {
+                      "rcpt": "belocalvictoria@gmail.com",
+                      "vars": [
+                          {
+                              "name": "FNAME",
+                              "content": StateService.getCurrentUser().first_name
+                          },
+                          {
+                              "name": "LNAME",
+                              "content": StateService.getCurrentUser().last_name
+                          },
+                          {
+                              "name": "UNAME",
+                              "content": StateService.getCurrentUser().name
+                          },
+                          {
+                              "name": "UEMAIL",
+                              "content": StateService.getCurrentUser().email
+                          },
+                          {
+                              "name": "SMETHOD",
+                              "content": signUpMethod
+                          },
+                          {
+                              "name": "RTIME",
+                              "content": $filter('date')(new Date(), 'medium')
+                          }
+                      ]
+                  }
+            ]
+                
+            }
+        };
+
+        //send us an email to belocal account to let us know about the new vendor
+        $scope.sendTemplateEmail(params);
+
+    };
+
 
     // Try signing up as a customer with Facebook. If there is already an account associated with the currently authenticated Facebook
     // account, a 304 will be returned from the server, prompting an error message to be displayed.
-  	$scope.signUpAsCustomer = function() {
-  		AuthService.createCustomer().then(function(status) {
-  			if(status === 304) {
+    $scope.signUpAsCustomer = function() {
+      AuthService.createCustomer().then(function(status) {
+        if(status === 304) {
           $scope.accountAlreadyCreated = true;
   			} else {
           angular.element('#createUserModal').modal('hide');         
@@ -36,9 +181,9 @@ angular.module('clientApp')
 
     // Try signing up as a vendor with Facebook. If there is already an account associated with the currently authenticated Facebook
     // account, a 304 will be returned from the server, prompting an error message to be displayed.
-  	$scope.signUpAsVendor = function() {
-  		AuthService.createVendor().then(function(status) {
-  			if(status === 304) {
+    $scope.signUpAsVendor = function() {
+      AuthService.createVendor().then(function(status) {
+        if(status === 304) {
           $scope.accountAlreadyCreated = true;          
   			} else {
           angular.element('#createUserModal').modal('hide');        
@@ -59,10 +204,10 @@ angular.module('clientApp')
     }
 
     // If a user presses the "Start Browsing Now" button, we set a cookie to hide the splash page next time they visit beLocal
-  	$scope.getStarted = function() {
-  		ipCookie('beLocalBypass', true, {expires: 14});  		
-  		$location.path('/');
-  	}  
+    $scope.getStarted = function() {
+      ipCookie('beLocalBypass', true, {expires: 14});     
+      $location.path('/');
+    }  
 
     // Create a new vendor without Facebook
     $scope.newVendorSubmit = function() {
@@ -108,7 +253,7 @@ angular.module('clientApp')
       }
       AuthService.createNonFacebookCustomer(data)
       .success(function() {
-        angular.element('#createUserModal').modal('hide');  
+        angular.element('#createUserModal').modal('hide');
       })
       .error(function(response) {
         // Set a flag to sign up as a vendor (this changes the appearance of some modals in the HTML)
@@ -125,10 +270,16 @@ angular.module('clientApp')
       $timeout(function() {
         if(StateService.getCurrentUser()){        
           if(StateService.getUserType() === 'CUS') {
+              // SEND THE WELCOME EMAIL TO NEW FOODIE
+              $scope.foodieSendEmail();
               $timeout(function() {
                 $location.path('/');                    
               });
           } else if(StateService.getUserType() === 'VEN') {
+              // SEND THE WELCOME EMAIL TO NEW VENDOR
+              $scope.vendorSendEmail();
+              // SEND US A NOTIFICATION EMAIL
+              $scope.sendNewVendorEmail();
               $timeout(function() {
                 $location.path('/vendor');
               });

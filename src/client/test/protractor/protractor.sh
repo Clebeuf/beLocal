@@ -12,3 +12,4 @@ protractor super-user-setup
 python ../../../server/manage.py shell < ../../../server/scripts/addSuperUser.py
 protractor super-user-tests
 protractor facebook-farmer-tests
+protractor facebook-foodie-tests

@@ -44,6 +44,16 @@ describe('Sign Up as a Farmer With and Without Facebook', function() {
         });        
     });
 
+    it('Should prevent sign up as a farmer with an already used Facebook account', function() {
+        element(by.css('[ng-click="signUpAsVendorNoFB()"]')).click();
+        browser.sleep(1000);
+
+        element(by.css('[ng-click="signUpAsVendor()"]')).click();
+        browser.sleep(1000);        
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/welcome');
+        expect(element(by.css('[ng-show="accountAlreadyCreated"]')).isDisplayed()).toBeTruthy();
+    });
+
     it('Should allow sign up as a farmer without Facebook', function() {
         element(by.css('[ng-click="signUpAsVendorNoFB()"]')).click();
         browser.sleep(1000);
@@ -60,4 +70,40 @@ describe('Sign Up as a Farmer With and Without Facebook', function() {
         browser.waitForAngular();
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor');
     });
+
+    it('Should prevent sign up as a farmer without Facebook when an username that already exists is entered', function() {
+        element(by.css('[ng-click="signUpAsVendorNoFB()"]')).click();
+        browser.sleep(1000);
+
+        element(by.model('newVendorFirstName')).clear().sendKeys('Test');
+        element(by.model('newVendorLastName')).clear().sendKeys('Farmer');
+        element(by.model('newVendorUserName')).clear().sendKeys('testfarmer');
+        element(by.model('newVendorEmail')).clear().sendKeys('testfarmer1@belocalvictoria.me');
+        element(by.model('newVendorPassword')).clear().sendKeys('belocal');
+
+        element(by.css('[ng-click="newVendorSubmit()"]')).click();
+
+        browser.sleep(1000);
+        browser.waitForAngular();
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/welcome');
+        expect(element(by.css('[ng-show="usernameErrorMessage != null"]')).isDisplayed()).toBeTruthy();
+    });
+
+    it('Should prevent sign up as a farmer without Facebook when an email that already exists is entered', function() {
+        element(by.css('[ng-click="signUpAsVendorNoFB()"]')).click();
+        browser.sleep(1000);
+
+        element(by.model('newVendorFirstName')).clear().sendKeys('Test');
+        element(by.model('newVendorLastName')).clear().sendKeys('Farmer');
+        element(by.model('newVendorUserName')).clear().sendKeys('testfarmer1');
+        element(by.model('newVendorEmail')).clear().sendKeys('testfarmer@belocalvictoria.me');
+        element(by.model('newVendorPassword')).clear().sendKeys('belocal');
+
+        element(by.css('[ng-click="newVendorSubmit()"]')).click();
+
+        browser.sleep(1000);
+        browser.waitForAngular();
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/welcome');
+        expect(element(by.css('[ng-show="emailErrorMessage != null"]')).isDisplayed()).toBeTruthy();
+    });    
 });

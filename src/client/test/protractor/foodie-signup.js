@@ -68,7 +68,7 @@ describe('Sign Up as a Foodie With and Without Facebook', function() {
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/');
     });
 
-    it('Should prevent sign up as a foodie with a already used Facebook account', function() {
+    it('Should prevent sign up as a foodie with an already used Facebook account', function() {
         element(by.css('[ng-click="signUpAsCustomerNoFB()"]')).click();
         browser.sleep(1000);
 

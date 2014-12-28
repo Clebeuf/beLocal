@@ -52,6 +52,7 @@ describe('Sign Up as a Foodie With and Without Facebook', function() {
             //Switch back to main window (is this even necessary?)
             browser.driver.switchTo().window(handles[0]);
             browser.waitForAngular();
+            browser.sleep(1000);
             expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/welcome');
             expect(element(by.css('[ng-show="noFacebookAccountError"]')).isDisplayed()).toBeTruthy();
         });        

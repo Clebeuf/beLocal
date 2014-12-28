@@ -65,7 +65,7 @@ describe('Testing farmer tasks', function() {
 
         // Upload new profile picture
         var path = require('path');
-        var fileToUpload = 'pears.jpg';
+        var fileToUpload = 'images/farmers.jpg';
         var absolutePath = path.resolve(__dirname, fileToUpload);
 
         element(by.id('profile-image')).sendKeys(absolutePath);
@@ -247,7 +247,7 @@ describe('Testing farmer tasks', function() {
         element(by.css('[ng-click="deleteLocation(location)"]')).click();    
 
         // Is the locaton gone?    
-        expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(0);        
+        expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(0);      
     });
 
     it('Should allow the creation of a recurring custom location', function(){
@@ -323,19 +323,13 @@ describe('Testing farmer tasks', function() {
         expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(1);
 
         // Is the map back?
-        expect(element(by.css('[ng-hide="marketLocations.length == 0 && sellerLocations.length == 0"]')).isDisplayed()).toBeTruthy();
-
-        // Delete the location again
-        element(by.css('[ng-click="deleteLocation(location)"]')).click();    
-
-        // Is the locaton gone?    
-        expect(element.all(by.repeater('location in sellerLocations')).count()).toEqual(0);        
+        expect(element(by.css('[ng-hide="marketLocations.length == 0 && sellerLocations.length == 0"]')).isDisplayed()).toBeTruthy();       
     });                                        
 
     it('Should allow the creation of a product', function(){
         // Load the picture of pears
         var path = require('path');
-        var fileToUpload = 'pears.jpg';
+        var fileToUpload = 'images/pears.jpg';
         var absolutePath = path.resolve(__dirname, fileToUpload);
 
         // Create a new item
@@ -381,11 +375,7 @@ describe('Testing farmer tasks', function() {
     it('Should allow undoing the deletion of a product', function(){
         // Undo the deletion of the item
         element(by.css('[ng-click="restoreProduct(deletedProduct)"]')).click();        
-        expect(element.all(by.repeater('product in sellerItems')).count()).toEqual(1);
-
-        // Delete the item again
-        element(by.css('[ng-click="deleteProduct(product)"]')).click();        
-        expect(element.all(by.repeater('product in sellerItems')).count()).toEqual(0);        
+        expect(element.all(by.repeater('product in sellerItems')).count()).toEqual(1);        
     });
 
     it('The My Profile button should take you back to your account', function(){
@@ -414,6 +404,5 @@ describe('Testing farmer tasks', function() {
         element(by.id('xs-logout')).click(); 
         browser.waitForAngular();
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/welcome');                     
-    });          
-
+    }); 
 });

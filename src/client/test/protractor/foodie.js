@@ -42,10 +42,34 @@ describe('Testing foodie tasks', function() {
 
     // MAKE SURE AN ACCOUNT FOR THE CREDENTIALS ABOVE EXISTS IN YOUR APPLICATION
     // This will fail if the account doesn't exist. Not sure how to work around this right now.
-    it('Should allow Facebook sign in as a foodie', function(){
+    it('Should allow Facebook sign in as a foodie', function() {
         foodieSignInWithFacebook(); 
         browser.waitForAngular();
+        browser.sleep(1000);
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/');
     });
 
+    it('Should allow showing of all products by clicking the All Products category', function() {
+        element.all(by.css('[ng-click="getProductsWithCategory(category)"]')).get(5).click();
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(1);
+    });
+
+    it('Should allow filtering of products by category', function() {
+        element(by.css('[ng-click="getAllProducts(\'category\')"]')).click();
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(8);
+    }); 
+    
+    it('Should allow filtering of products by tag', function() {
+        element.all(by.className('tag-picker-item')).get(1).click();
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(1);
+
+        element.all(by.className('tag-picker-item')).get(2).click();
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(1);
+
+        element.all(by.className('tag-picker-item')).get(2).click();
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(1); 
+
+        element.all(by.className('tag-picker-item')).get(1).click();
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(8);                              
+    });        
 });

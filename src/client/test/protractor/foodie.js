@@ -49,12 +49,12 @@ describe('Testing foodie tasks', function() {
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/');
     });
 
-    it('Should allow showing of all products by clicking the All Products category', function() {
+    it('Should allow filtering of products by category', function() {
         element.all(by.css('[ng-click="getProductsWithCategory(category)"]')).get(5).click();
         expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(1);
     });
 
-    it('Should allow filtering of products by category', function() {
+    it('Should allow showing of all products by clicking the All Products category', function() {
         element(by.css('[ng-click="getAllProducts(\'category\')"]')).click();
         expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(8);
     }); 
@@ -71,5 +71,39 @@ describe('Testing foodie tasks', function() {
 
         element.all(by.className('tag-picker-item')).get(1).click();
         expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(8);                              
-    });        
+    });
+
+    it('Should allow filtering of products by tag within a category', function() {
+        element.all(by.css('[ng-click="getProductsWithCategory(category)"]')).get(0).click();
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(1);
+
+        element.all(by.className('tag-picker-item')).get(1).click();
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(0); 
+        
+        element.all(by.className('tag-picker-item')).get(1).click();
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(1);
+
+        element.all(by.css('[ng-click="getProductsWithCategory(category)"]')).get(5).click();
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(1);
+    }); 
+
+    it('Should allow filtering by tag from the product details modal on the trending page', function() {
+        element.all(by.repeater('item in trendingProducts')).get(0).click();
+        browser.sleep(1000);
+
+        element.all(by.repeater('tag in product.tags')).get(0).click();
+        browser.sleep(1000);
+        expect(element(by.css('.new-heading-style')).getText()).toEqual('Baked Goods');
+        expect(element.all(by.css('[ng-show="tagSelected(tag.name)"]')).get(1).isDisplayed()).toBeTruthy();
+    });
+
+    it('Should allow liking and unliking of products', function() {
+        element(by.css('[ng-click="likeUnlikeItem(item, \'product\')"]')).click();
+        browser.sleep(1000);
+        expect(element(by.css('[ng-show="item.is_liked"]')).isDisplayed()).toBeTruthy();
+
+        element(by.css('[ng-click="likeUnlikeItem(item, \'product\')"]')).click();
+        browser.sleep(1000);
+        expect(element(by.css('[ng-show="item.is_liked"]')).isDisplayed()).toBeFalsy();        
+    });    
 });

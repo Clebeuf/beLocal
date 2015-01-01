@@ -140,12 +140,21 @@ describe('Testing foodie tasks', function() {
         element.all(by.className('pro-vendor-name')).get(1).click();
         browser.sleep(1000);
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor/details/2');
+    });
+
+    it('Should allow liking of vendors from the vendor details page', function() {
+        element.all(by.css('[ng-click="likeUnlikeItem(vendorDetails.vendor, \'vendor\')"]')).get(0).click();
+        browser.sleep(1000);
+        expect(element.all(by.css('[ng-show="vendorDetails.vendor.is_liked"]')).get(0).isDisplayed()).toBeTruthy(); 
+        element.all(by.css('[ng-click="likeUnlikeItem(vendorDetails.vendor, \'vendor\')"]')).get(0).click();
+        browser.sleep(1000);
+        expect(element.all(by.css('[ng-show="vendorDetails.vendor.is_liked"]')).get(0).isDisplayed()).toBeFalsy();  
 
         // This also inadvertently tests some back button behaviour 
         browser.navigate().back();
         browser.sleep(1000);
-        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/#vendors');
-    });
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/#vendors');                
+    });     
 
     it('Should open a product details modal when a product in a vendor card is clicked', function() {
         // Get the second product for small screen sizes
@@ -165,5 +174,42 @@ describe('Testing foodie tasks', function() {
         browser.sleep(1000);
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/#vendors');        
         expect(element(by.className('product-details-model')).isDisplayed()).toBeFalsy();        
-    });                           
+    });   
+
+    it('Should allow users to view the markets tab', function() {
+        element(by.className('pro-market-tab')).click();
+        browser.sleep(500);
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/#markets');
+    });
+
+    it('Should take users to the market details page when a market is clicked', function() {
+        element.all(by.repeater('market in marketList')).get(0).click();
+        browser.sleep(1000);
+        expect(browser.getCurrentUrl()).toContain('http://127.0.0.1:9000/#/market/details/');                        
+    });
+
+    it('Should allow liking of markets from the market details page', function() {
+        element(by.css('[ng-click="likeUnlikeItem(marketDetails, \'market\')"]')).click();
+        browser.sleep(1000);
+        expect(element(by.css('[ng-show="marketDetails.is_liked"]')).isDisplayed()).toBeTruthy(); 
+        element(by.css('[ng-click="likeUnlikeItem(marketDetails, \'market\')"]')).click();
+        browser.sleep(1000);
+        expect(element(by.css('[ng-show="marketDetails.is_liked"]')).isDisplayed()).toBeFalsy();                
+
+        // Check back button behaviour
+        browser.navigate().back();
+        browser.sleep(1000);
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/#markets');         
+    });
+
+    it('Should allow liking of markets from the markets tab', function() {
+        browser.executeScript('scrollTo(0,0);'); 
+        browser.sleep(500);        
+        element.all(by.css('[ng-click="likeUnlikeItem(market, \'market\')"]')).get(0).click();
+        browser.sleep(1000);
+        expect(element.all(by.css('[ng-show="market.is_liked"]')).get(0).isDisplayed()).toBeTruthy(); 
+        element.all(by.css('[ng-click="likeUnlikeItem(market, \'market\')"]')).get(0).click();
+        browser.sleep(1000);
+        expect(element.all(by.css('[ng-show="market.is_liked"]')).get(0).isDisplayed()).toBeFalsy();          
+    });
 });

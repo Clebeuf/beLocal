@@ -184,12 +184,13 @@ angular.module('clientApp')
     $scope.signUpAsVendor = function() {
       AuthService.createVendor().then(function(status) {
         if(status === 304) {
-          $scope.accountAlreadyCreated = true;          
-  			} else {
+          $scope.accountAlreadyCreated = true;
+        } else {
+          $scope.FacebookSignup = true;
           angular.element('#createUserModal').modal('hide');        
         }
-  		});
-  	}
+      });
+    }
 
     // Set a flag to sign up as a vendor (this changes the appearance of some modals in the HTML)
     $scope.signUpAsVendorNoFB = function() {

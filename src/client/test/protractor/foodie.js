@@ -105,5 +105,65 @@ describe('Testing foodie tasks', function() {
         element(by.css('[ng-click="likeUnlikeItem(item, \'product\')"]')).click();
         browser.sleep(1000);
         expect(element(by.css('[ng-show="item.is_liked"]')).isDisplayed()).toBeFalsy();        
-    });    
+    });
+
+    it('Should take users to the vendor page when they click a vendor\'s name in a product card', function() {
+        element(by.css('[ng-click="displayVendor(item.vendor.id)"]')).click();
+        browser.sleep(1000);
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor/details/2');
+
+        browser.navigate().back();
+        browser.sleep(1000);
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/#trending');        
+    }); 
+
+    it('Should take users to the vendor page when they click a vendor\'s name in a product\'s details modal', function() {
+        element.all(by.repeater('item in trendingProducts')).get(0).click();
+        browser.sleep(1000);
+        element(by.className('product-detail-vendor')).click();
+        browser.sleep(1000);
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor/details/2');
+
+        browser.navigate().back();
+        browser.sleep(1000);
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/#trending');
+    }); 
+
+    it('Should allow users to view the vendor tab', function() {
+        element(by.className('pro-vendor-tab')).click();
+        browser.sleep(500);
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/#vendors');
+    }); 
+
+    it('Should take users to the vendor page when they click a vendor\'s name on a vendor card', function() {
+        // Get the vendor name object for small screen sizes
+        element.all(by.className('pro-vendor-name')).get(1).click();
+        browser.sleep(1000);
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/vendor/details/2');
+
+        // This also inadvertently tests some back button behaviour 
+        browser.navigate().back();
+        browser.sleep(1000);
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/#vendors');
+    });
+
+    it('Should open a product details modal when a product in a vendor card is clicked', function() {
+        // Get the second product for small screen sizes
+        element.all(by.repeater('product in vendor.products')).get(5).click();
+        browser.sleep(1000);
+        expect(element(by.className('product-details-model')).isDisplayed()).toBeTruthy();
+    });
+
+    it('Should allow filtering by tag from a product details modal on a page other than the trending page', function() {
+        element.all(by.repeater('tag in product.tags')).get(0).click();
+        browser.sleep(1000);
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/#trending');        
+        expect(element.all(by.css('[ng-show="tagSelected(tag.name)"]')).get(1).isDisplayed()).toBeTruthy();
+
+        // Check back button behaviour again
+        browser.navigate().back();
+        browser.sleep(1000);
+        expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/#vendors');        
+        expect(element(by.className('product-details-model')).isDisplayed()).toBeFalsy();        
+    });                           
 });

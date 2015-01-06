@@ -11,6 +11,7 @@ from taggit.models import GenericTaggedItemBase, TagBase
 import secretballot
 from PIL import Image, ImageOps
 from pilkit.processors import Transpose
+from recurrence.fields import RecurrenceField
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -163,6 +164,7 @@ class OpeningHours(models.Model):
     )
     from_hour = models.TimeField()
     to_hour = models.TimeField()
+    recurrences = RecurrenceField(null=True)
     unique_together=(weekday, address)
 
     def get_day_display(self):

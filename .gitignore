@@ -19,3 +19,4 @@ src/server/be_local_server/static/media/*
 *.jpeg
 
 logs/
+static/

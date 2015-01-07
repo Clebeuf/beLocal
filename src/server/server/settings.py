@@ -172,12 +172,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'be_local_server/static/')
+STATIC_ROOT = os.path.join('/home/sheoranjs24/Projects/beLocal/static/')
 STATIC_URL = 'http://127.0.0.1:80/static/'
 
 # User-uploaded images
 # https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user
-MEDIA_ROOT = os.path.join(BASE_DIR, 'be_local_server/static/media/')
+MEDIA_ROOT = os.path.join('/home/sheoranjs24/Projects/beLocal/static/media/')
 MEDIA_URL = 'http://127.0.0.1:80/static/media/'
 ADMIN_MEDIA_PREFIX = '/admin-media/'
 

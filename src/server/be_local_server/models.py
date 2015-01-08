@@ -138,6 +138,8 @@ class SellerLocation(TrashableMixin, models.Model):
     phone = models.CharField(max_length=25, blank=True, null=True)
     description = models.CharField(max_length=800, blank=True, null=True)
 
+    recurrences = RecurrenceField(null=True)
+
 class MarketPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='markets', blank=True)
     
@@ -154,6 +156,8 @@ class Market(models.Model):
     webpage = models.CharField(max_length=400, null=True, blank=True)
     facebook_url = models.CharField(max_length=400, null=True, blank=True)   
     twitter_url = models.CharField(max_length=400, null=True, blank=True)
+
+    recurrences = RecurrenceField(null=True)    
     
 secretballot.enable_voting_on(Market)
 
@@ -164,7 +168,6 @@ class OpeningHours(models.Model):
     )
     from_hour = models.TimeField()
     to_hour = models.TimeField()
-    recurrences = RecurrenceField(null=True)
     unique_together=(weekday, address)
 
     def get_day_display(self):

@@ -4,6 +4,7 @@ import be_local_server.models
 from django.contrib.auth.models import User
 from secretballot.models import Vote
 from taggit.models import Tag
+from datetime import datetime
 
 class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -183,7 +184,22 @@ class SellerLocationSerializer(serializers.ModelSerializer):
     address = AddAddressSerializer() 
     class Meta:
         model = be_local_server.models.SellerLocation
-        fields = ('id', 'address', 'name', 'date', 'vendor', 'email', 'phone', 'description')        
+        fields = ('id', 'address', 'name', 'date', 'vendor', 'email', 'phone', 'description')
+
+class ListSellerLocationSerializer(serializers.ModelSerializer):
+    recurrences = serializers.SerializerMethodField('get_recurrence_info')
+    address = AddAddressSerializer() 
+
+    def get_recurrence_info(self, obj):
+      if obj.recurrences:
+        next = obj.recurrences.after(datetime.now(), inc=True)
+        text = obj.recurrences.rrules[0].to_text() 
+
+        return {"next" : next, "text" : text}
+
+    class Meta:
+        model = be_local_server.models.SellerLocation
+        fields = ('id', 'address', 'name', 'date', 'vendor', 'email', 'phone', 'description', 'recurrences')                
 
 class TagListSerializer(serializers.WritableField):
 

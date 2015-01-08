@@ -39,6 +39,10 @@ from base64 import b64decode
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import sys
+import recurrence
+from recurrence import choices
+from recurrence.models import Param, Recurrence, Rule
+from datetime import datetime
 
 class DeleteUserView(generics.CreateAPIView):
     """
@@ -981,7 +985,7 @@ class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    serializer_class = serializers.SellerLocationSerializer
+    serializer_class = serializers.ListSellerLocationSerializer
 
     def get_queryset(self):
         vendor = Vendor.objects.get(user=self.request.user)
@@ -1048,9 +1052,29 @@ class AddSellerLocationView(generics.CreateAPIView):
 
         serializer = serializers.SellerLocationSerializer(data=request.DATA, many=False)
 
-        if serializer.is_valid(): 
+        if serializer.is_valid():
             current_location = serializer.save()
-            address = current_location.address.id;             
+
+            if('recurrences' in request.DATA.keys()):
+                    limits = Recurrence.objects.create(
+                        dtstart=datetime.strptime(request.DATA["recurrences"]["dtstart"], "%Y-%m-%d") if request.DATA["recurrences"]["dtstart"] is not None else None,
+                    )
+
+                    rule = Rule.objects.create(
+                        recurrence = limits,
+                        mode=choices.INCLUSION,
+                        freq=request.DATA["recurrences"]["rule"]["freq"],
+                        interval=request.DATA["recurrences"]["rule"]["interval"],
+                        until=datetime.strptime(request.DATA["recurrences"]["rule"]["until"], "%Y-%m-%d") if request.DATA["recurrences"]["rule"]["until"] is not None else None
+                    )
+
+                    limits = limits.to_recurrence_object()
+
+                    field = RecurrenceField()
+                    value = recurrence.serialize(limits)
+
+                    current_location.recurrences = value
+                    current_location.save()            
 
             return HttpResponse(status=status.HTTP_201_CREATED)
 

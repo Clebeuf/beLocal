@@ -315,7 +315,7 @@ angular.module('clientApp')
 
     // Return server address
     this.getServerAddress = function() {
-      return '//belocalvictoria.me/';
+      return 'https://belocalvictoria.me/api/';
     };
 
     // Upload a product photo to the server

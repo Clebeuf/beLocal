@@ -10,7 +10,7 @@
         <div style="float:right">
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-              <a class="dropdown-toggle pointer">Register <span class="caret"></span></a>
+              <a id="register-dropdown" class="dropdown-toggle pointer">Register <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li><a class="pointer white-text" ng-click="showCustomerSignUp()">As a Foodie</a></li>
                 <li><a class="pointer white-text" ng-click="showFarmerSignUp()">As a Farmer or Foodmaker</a></li>
@@ -24,9 +24,9 @@
       <div ng-show="AuthService.isAuthenticated() && StateService.getUserType() === 'VEN'">
         <ul class="nav navbar-nav navbar-right">
           <li class="dropdown">
-            <a class="dropdown-toggle pointer">My Account<span class="caret"></span></a>
+            <a class="dropdown-toggle pointer" id="vendor-dropdown-toggle">My Account<span class="caret"></span></a>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-              <li><a class="pointer" ng-click="displayAccountPage()">My Profile</a></li> 
+              <li><a class="pointer" id="vendor-display-account" ng-click="displayAccountPage()">My Profile</a></li> 
               <li><a class="pointer" ng-click="showVendorTour()" id="vendorTour">Vendor Tutorial</a></li>         
               <li class="divider"></li>
               <li><a class="pointer" ng-click="AuthService.logout()">Logout</a></li>
@@ -82,11 +82,11 @@
             <span class="hidden-sm hidden-xs no-block">In Season Now</span>
             <span class="hidden-md hidden-lg no-block">In Season</span>
           </a></li>
-          <li><a data-target="#vendors" class="pointer" data-toggle="tab" ng-click="setHash('vendors');" id="vendorsTab">
+          <li><a data-target="#vendors" class="pointer pro-vendor-tab" data-toggle="tab" ng-click="setHash('vendors');" id="vendorsTab">
             <span class="hidden-sm hidden-xs no-block">Farmers & Foodmakers</span>
             <span class="hidden-md hidden-lg no-block">Local Producers</span>
           </a></li>
-          <li><a data-target="#markets" class="pointer" data-toggle="tab" ng-click="setHash('markets');" id="marketsTab">
+          <li><a data-target="#markets" class="pointer pro-market-tab" data-toggle="tab" ng-click="setHash('markets');" id="marketsTab">
             <span class="hidden-sm hidden-xs no-block">Local Markets</span>
             <span class="hidden-md hidden-lg no-block">Markets</span>
           </a></li>  

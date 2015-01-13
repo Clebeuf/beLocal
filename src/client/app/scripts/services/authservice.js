@@ -9,7 +9,7 @@ angular.module('clientApp')
       var loggedIn = false;
       var backend = 'facebook';
       var token = "Token " + result.access_token;
-      var loginPromise = $http({method:'POST', url: '//belocalvictoria.me/login/' + backend + '/', headers: {'Authorization': token}});
+  		var loginPromise = $http({method:'POST', url: StateService.getServerAddress() + 'login/' + backend + '/', headers: {'Authorization': token}});
 
       loginPromise.then(function (result) {
         loggedIn = true;
@@ -33,7 +33,7 @@ angular.module('clientApp')
       var loggedIn = false;
       var backend = 'facebook';
       var token = "Token " + result.access_token;
-      var loginPromise = $http({method:'POST', url: '//belocalvictoria.me/vendor/' + backend + '/create/', headers: {'Authorization': token}});
+      var loginPromise = $http({method:'POST', url: StateService.getServerAddress() + 'vendor/' + backend + '/create/', headers: {'Authorization': token}});
 
       // If the login was successful and we have a user token coming back from the server, set all cookies
       loginPromise.then(function (result) {
@@ -55,7 +55,7 @@ angular.module('clientApp')
       var loggedIn = false;
       var backend = 'facebook';
       var token = "Token " + result.access_token;
-      var loginPromise = $http({method:'POST', url: '//belocalvictoria.me/customer/' + backend + '/create/', headers: {'Authorization': token}});
+      var loginPromise = $http({method:'POST', url: StateService.getServerAddress() + 'customer/' + backend + '/create/', headers: {'Authorization': token}});
 
       // If the login was successful and we have a user token coming back from the server, set all cookies      
       loginPromise.then(function (result) {        
@@ -117,7 +117,7 @@ angular.module('clientApp')
 
     // Create a vendor without Facebook
     this.createNonFacebookVendor = function(vendor) {
-      var loginPromise = $http({method:'POST', url: '//belocalvictoria.me/vendor/no-fb-create/', data: vendor});  
+      var loginPromise = $http({method:'POST', url: StateService.getServerAddress() + 'vendor/no-fb-create/', data: vendor});  
       loginPromise.success(function(result) {
           if(result.token) {
             ipCookie('beLocalToken', result.token, {expires: 14});
@@ -132,7 +132,7 @@ angular.module('clientApp')
 
     // Create a customer without Facebook
     this.createNonFacebookCustomer = function(customer) {
-      var loginPromise = $http({method:'POST', url: '//belocalvictoria.me/customer/no-fb-create/', data: customer});  
+      var loginPromise = $http({method:'POST', url: StateService.getServerAddress() + 'customer/no-fb-create/', data: customer});  
       loginPromise.success(function(result) {
           if(result.token) {
             ipCookie('beLocalToken', result.token, {expires: 14});
@@ -189,7 +189,7 @@ angular.module('clientApp')
 
     // This attempts to log in without Facebook
     this.tryLoginWithoutFaceboook = function(username, password) {
-      var loginPromise = $http.post('//belocalvictoria.me/login-no-fb/', {username: username, password: password});
+      var loginPromise = $http.post(StateService.getServerAddress() + 'login-no-fb/', {username: username, password: password});
 
       loginPromise.then(function (result) {        
         if(result.data.token) {

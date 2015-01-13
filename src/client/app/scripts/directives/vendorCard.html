@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="col-sm-5">
-      <h4 class="no-bottom-margin no-top-margin"><a class="pointer vendor-card-name" ng-click="displayVendor(vendor.id)">{{vendor.company_name}}</a></h4>
+      <h4 class="no-bottom-margin no-top-margin"><a class="pointer vendor-card-name pro-vendor-name" ng-click="displayVendor(vendor.id)">{{vendor.company_name}}</a></h4>
         <div class="plain-text">
           <a href="tel:{{vendor.phone}}" ng-show="vendor.phone != null">
             <span class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}<br>
@@ -26,7 +26,7 @@
     </div>
     <div ng-show="currentState.name === 'manage'" class="col-sm-5" style="text-align:right;">
       <button class="btn btn-danger" ng-show="vendor.is_active" ng-click="activateVendor(vendor)">Deactivate</button>
-      <button class="btn btn-success" ng-hide="vendor.is_active" ng-click="activateVendor(vendor)">Activate</button>      
+      <button class="btn btn-success lg-activate-button" ng-hide="vendor.is_active" ng-click="activateVendor(vendor)">Activate</button>      
     </div>
     <div ng-show="vendor.products.length < 4" class="col-sm-{{4 - vendor.products.length}}"></div>
     <div class="col-sm-1 no-padding" ng-repeat="product in vendor.products | limitTo:4">
@@ -56,7 +56,7 @@
       </div>
     </div>
     <div class="col-xs-5">
-      <h4 class="no-bottom-margin no-top-margin"><a class="pointer vendor-card-name" ng-click="displayVendor(vendor.id)">{{vendor.company_name}}</a></h4>
+      <h4 class="no-bottom-margin no-top-margin"><a class="pointer vendor-card-name pro-vendor-name" ng-click="displayVendor(vendor.id)">{{vendor.company_name}}</a></h4>
         <div class="plain-text">
           <a href="tel:{{vendor.phone}}" ng-show="vendor.phone != null">
             <span class="glyphicon glyphicon-earphone"></span> {{vendor.phone}}<br>
@@ -70,8 +70,8 @@
         </div>
     </div>
     <div ng-show="currentState.name === 'manage'" class="col-sm-5" style="text-align:right;">
-      <button class="btn btn-danger" ng-show="vendor.is_active" ng-click="activateVendor(vendor)">Deactivate</button>
-      <button class="btn btn-success" ng-hide="vendor.is_active" ng-click="activateVendor(vendor)">Activate</button>      
+      <button class="btn btn-danger sm-deactivate-button" ng-show="vendor.is_active" ng-click="activateVendor(vendor)">Deactivate</button>
+      <button class="btn btn-success sm-activate-button" ng-hide="vendor.is_active" ng-click="activateVendor(vendor)">Activate</button>      
     </div>    
     <div ng-show="vendor.products.length < 4" class="col-sm-{{4 - vendor.products.length}}"></div>    
     <div class="col-xs-1 no-padding" ng-repeat="product in vendor.products | limitTo:4">

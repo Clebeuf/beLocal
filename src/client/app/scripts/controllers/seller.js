@@ -359,7 +359,24 @@ angular.module('clientApp')
             }
             $scope.locationDate = new Date(); // This shouldn't be necessary, but it is.
             $scope.locationHours = hours;  
-            $scope.locationType = 'false'; // Remember, false means recurring event. I'm sorry this had to be done, but it's used in the HTML       
+            $scope.locationType = 'false'; // Remember, false means recurring event. I'm sorry this had to be done, but it's used in the HTML 
+
+            // Set recurrence information
+            $scope.recurrenceStartDate = new Date(location.recurrences.start_date); 
+            $scope.recurrenceStartDate.setTime($scope.recurrenceStartDate.getTime() + $scope.recurrenceStartDate.getTimezoneOffset() * 60000);
+
+            $scope.recurrenceFrequency = location.recurrences.freq;
+            $scope.recurrenceInterval = location.recurrences.interval;
+
+            if(location.recurrences.end_date !== null) {
+                $scope.repeatUntil = 'endDate';
+                $scope.recurrenceEndDate = new Date(location.recurrences.end_date); 
+                $scope.recurrenceEndDate.setTime($scope.recurrenceEndDate.getTime() + $scope.recurrenceEndDate.getTimezoneOffset() * 60000);                
+            } else {
+                $scope.repeatUntil = 'never';
+                $scope.recurrenceEndDate = new Date();
+            }
+            
         } else {
             $scope.locationType = 'true'; // Remember, false means non-recurring event.
             $scope.locationDate = new Date(location.date); // Set the date

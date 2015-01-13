@@ -656,8 +656,14 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
             address.date = None
             address.save()
             hours = OpeningHours.objects.filter(address=address)
+            
+            # Delete the hours in the hours object. These will be recreated with partial_update
             for hour in hours:
                 hour.delete()
+
+            if('recurrences' in request.DATA.keys()):                
+                # This line of code will overwrite the existing recurrence object with a new one.
+                AddSellerLocationView.createRecurrences(location, request)
 
         self.id = location_id
         return self.partial_update(request)
@@ -1046,6 +1052,28 @@ class AddSellerLocationView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
+    @classmethod
+    def createRecurrences(self, current_location, request):
+        limits = Recurrence.objects.create(
+            dtstart=datetime.strptime(request.DATA["recurrences"]["dtstart"], "%Y-%m-%d") if request.DATA["recurrences"]["dtstart"] is not None else None,
+        )
+
+        rule = Rule.objects.create(
+            recurrence = limits,
+            mode=choices.INCLUSION,
+            freq=request.DATA["recurrences"]["rule"]["freq"],
+            interval=request.DATA["recurrences"]["rule"]["interval"],
+            until=datetime.strptime(request.DATA["recurrences"]["rule"]["until"], "%Y-%m-%d") if request.DATA["recurrences"]["rule"]["until"] is not None else None
+        )
+
+        limits = limits.to_recurrence_object()
+
+        field = RecurrenceField()
+        value = recurrence.serialize(limits)
+
+        current_location.recurrences = value
+        current_location.save()         
+
     def post(self, request, *args, **kwargs):
         vendor = Vendor.objects.get(user=request.user)
         request.DATA['vendor'] = vendor.id       
@@ -1055,26 +1083,8 @@ class AddSellerLocationView(generics.CreateAPIView):
         if serializer.is_valid():
             current_location = serializer.save()
 
-            if('recurrences' in request.DATA.keys()):
-                    limits = Recurrence.objects.create(
-                        dtstart=datetime.strptime(request.DATA["recurrences"]["dtstart"], "%Y-%m-%d") if request.DATA["recurrences"]["dtstart"] is not None else None,
-                    )
-
-                    rule = Rule.objects.create(
-                        recurrence = limits,
-                        mode=choices.INCLUSION,
-                        freq=request.DATA["recurrences"]["rule"]["freq"],
-                        interval=request.DATA["recurrences"]["rule"]["interval"],
-                        until=datetime.strptime(request.DATA["recurrences"]["rule"]["until"], "%Y-%m-%d") if request.DATA["recurrences"]["rule"]["until"] is not None else None
-                    )
-
-                    limits = limits.to_recurrence_object()
-
-                    field = RecurrenceField()
-                    value = recurrence.serialize(limits)
-
-                    current_location.recurrences = value
-                    current_location.save()            
+            if('recurrences' in request.DATA.keys()): 
+                self.createRecurrences(current_location, request)          
 
             return HttpResponse(status=status.HTTP_201_CREATED)
 

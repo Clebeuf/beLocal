@@ -194,8 +194,10 @@ class ListSellerLocationSerializer(serializers.ModelSerializer):
       if obj.recurrences:
         next = obj.recurrences.after(datetime.now(), inc=True)
         text = obj.recurrences.rrules[0].to_text() 
+        start_date = obj.recurrences.dtstart
+        end_date = obj.recurrences.rrules[0].until
 
-        return {"next" : next, "text" : text}
+        return {"next" : next, "text" : text, "start_date" : start_date, "end_date" : end_date}
 
     class Meta:
         model = be_local_server.models.SellerLocation

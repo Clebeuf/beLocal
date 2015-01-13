@@ -693,6 +693,13 @@ angular.module('clientApp')
       return errorString;
     }
 
+    $scope.getMonday = function(d) {
+      d = new Date(d);
+      var day = d.getDay(),
+          diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+      return new Date(d.setDate(diff));
+    }    
+
     // Submit a new location for creation/editing
     $scope.newLocationSubmit = function() {       
         $scope.newLocationSubmitted = true;
@@ -752,6 +759,9 @@ angular.module('clientApp')
                 };
 
                 if($scope.locationType !== 'true') {
+
+                    var mondayOfWeek = $scope.getMonday($scope.recurrenceStartDate);
+
                     var rule = {
                         'freq' : $scope.recurrenceFrequency,
                         'interval' : $scope.recurrenceInterval,
@@ -759,7 +769,7 @@ angular.module('clientApp')
                     };
 
                     var recurrence = {
-                        'dtstart' : $scope.recurrenceStartDate instanceof Date ? $scope.recurrenceStartDate.getFullYear() + '-' + ('0' + ($scope.recurrenceStartDate.getMonth() + 1)).slice(-2) + '-' + ('0' + $scope.recurrenceStartDate.getDate()).slice(-2) : $scope.recurrenceStartDate,
+                        'dtstart' : mondayOfWeek instanceof Date ? mondayOfWeek.getFullYear() + '-' + ('0' + (mondayOfWeek.getMonth() + 1)).slice(-2) + '-' + ('0' + mondayOfWeek.getDate()).slice(-2) : mondayOfWeek,
                         'rule' : rule,
                     };
 

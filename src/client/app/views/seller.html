@@ -742,7 +742,7 @@
                                                     <input type="radio" name="endDateOptions" value="endDate" ng-model="repeatUntil" /> On
                                                     <div class="form-group">                     
                                                       <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && recurrenceForm.recurrenceStartDateField.$invalid }">
-                                                        <input ng-disabled="repeatUntil === 'never'" required type="text" name="recurrenceStartDateField" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="recurrenceEndDate" is-open="endOpened" min-date="minDate" max-date="'2015-06-22'" close-text="Close" />
+                                                        <input ng-disabled="repeatUntil === 'never'" required type="text" name="recurrenceStartDateField" class="form-control date-picker cursor-default" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="recurrenceEndDate" is-open="endOpened" min-date="minDate" max-date="'2015-06-22'" close-text="Close" />
                                                         <span class="input-group-btn">
                                                           <button ng-disabled="repeatUntil === 'never'" class="btn btn-default" ng-click="openEnd($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                                         </span>                       

@@ -173,19 +173,18 @@ angular.module('clientApp')
       AuthService.createCustomer().then(function(status) {
         if(status === 304) {
           $scope.accountAlreadyCreated = true;
-        } else {
+  			} else {
           angular.element('#createUserModal').modal('hide');         
         }
-      });
-    }
-
+  		});
+  	}
 
     // Try signing up as a vendor with Facebook. If there is already an account associated with the currently authenticated Facebook
     // account, a 304 will be returned from the server, prompting an error message to be displayed.
     $scope.signUpAsVendor = function() {
       AuthService.createVendor().then(function(status) {
         if(status === 304) {
-          $scope.accountAlreadyCreated = true;          
+          $scope.accountAlreadyCreated = true;
         } else {
           $scope.FacebookSignup = true;
           angular.element('#createUserModal').modal('hide');        

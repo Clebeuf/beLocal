@@ -101,7 +101,7 @@
                             </span>                      
                             <a class="plain-text-font" ng-click="doTagFilter('All Products')">All Products</a>
                       </li>
-                      <li class="" ng-repeat="tag in tagList">
+                      <li class="tag-picker-item" ng-repeat="tag in tagList">
                         <span ng-hide="tagSelected(tag.name)">
                           <a class="pointer tag-check" ng-click="doTagFilter(tag.name)" ><i class="fa fa-circle-o"></i></a>
                         </span>

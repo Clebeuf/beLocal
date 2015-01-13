@@ -168,7 +168,7 @@ describe('The Vendor Page', function(){
     });
 });
 
-ddescribe('Foodies', function(){
+describe('Foodies', function(){
     console.log("Testing Foodies");        
 
     beforeEach(function(){

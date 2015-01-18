@@ -1,9 +1,10 @@
 from rest_framework import serializers
+from rest_framework import pagination
 from django.core.exceptions import ValidationError
-import be_local_server.models
 from django.contrib.auth.models import User
 from secretballot.models import Vote
 from taggit.models import Tag
+import be_local_server.models
 
 class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -292,6 +293,13 @@ class ProductDisplaySerializer(serializers.ModelSerializer):
                   'tags',
                   'category'
         )           
+
+class PaginatedProductDisplaySerializer(pagination.PaginationSerializer):
+    """
+    Serializes page objects of product querysets.
+    """
+    class Meta:
+        object_serializer_class = ProductDisplaySerializer
 
 class CustomerVendorSerializer(serializers.ModelSerializer):
   products = serializers.SerializerMethodField('get_in_stock_products')

@@ -830,6 +830,9 @@ class TrendingProductView(generics.ListAPIView):
     """   
     permission_classes = (AllowAny,)
     serializer_class = serializers.ProductDisplaySerializer
+    #paginate_by = 2
+    #paginate_by_param = 'page_size'
+    #max_paginate_by = 100
     
     def post(self, request):
         """ 
@@ -873,8 +876,25 @@ class TrendingProductView(generics.ListAPIView):
         if products is not None:
             for product in products:
                 product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
-        serializer = serializers.ProductDisplaySerializer(products, many=True)
+        #serializer = serializers.ProductDisplaySerializer(products, many=True)
 
+        # Pagination Logic
+        paginator = Paginator(products, 5)     
+        page = request.QUERY_PARAMS.get('page') 
+             
+        try:         
+            productsPage = paginator.page(page) 
+        except PageNotAnInteger:         
+            # If page is not an integer, deliver first page.         
+             productsPage = paginator.page(1)     
+        except EmptyPage:         
+            # If page is out of range (e.g. 9999),         
+            # deliver last page of results.         
+             productsPage = paginator.page(paginator.num_pages)  
+        
+        serializer_context = {'request': request}  
+        serializer = serializers.PaginatedProductDisplaySerializer(productsPage, context=serializer_context)
+        
         return Response(serializer.data)
 
 class ListMarketsView(generics.ListAPIView):

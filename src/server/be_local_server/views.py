@@ -878,10 +878,18 @@ class TrendingProductView(generics.ListAPIView):
                 product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
         #serializer = serializers.ProductDisplaySerializer(products, many=True)
 
-        # Pagination Logic
-        paginator = Paginator(products, 5)     
-        page = request.QUERY_PARAMS.get('page') 
-             
+        # Pagination Logic    
+        page = request.DATA.get('page')
+        page_size = request.DATA.get('page_size') 
+        
+        # Create pages of given size     
+        if page_size is not None:
+            paginator = Paginator(products, page_size)
+        else:
+            # default page size
+            paginator = Paginator(products, 5)
+         
+        # Get the asked page
         try:         
             productsPage = paginator.page(page) 
         except PageNotAnInteger:         

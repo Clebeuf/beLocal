@@ -72,7 +72,7 @@
                 {{selectedCategory}}
               </div> 
               <div infinite-scroll="trendingProductsNextPage()" infinite-scroll-distance="1" infinite-scroll-disabled='fetchingData'>
-              <div class="row" style="padding-top:5px" masonry="{transitionDuration:'0'}" preserve-order reload-on-show>
+              <div class="row" style="padding-top:5px" masonry="{transitionDuration:'0'}"  reload-on-show>
                 <div class="col-trending col-lg-3 col-md-4 col-xs-6 masonry-brick"  on-finish-render ng-repeat="item in trendingProducts.results | filterMultiple:productFilterExpr | unique:id" >
                   <product-card data="item"></product-card>
                 </div>

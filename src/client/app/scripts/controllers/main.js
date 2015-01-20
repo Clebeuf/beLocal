@@ -67,10 +67,10 @@ angular.module('clientApp')
     });
 
     // Construct masonry for product cards instantly (no timeout). This is used for filtering
-    $scope.instantTrendingMasonry = function() {
+    $scope.instantTrendingMasonry = function() { console.log("reload");
       $timeout(function() {
         $rootScope.$broadcast('masonry.reload');
-      }, 250); 
+      }, 400); 
     };    
 
     // Set filters for products and tags
@@ -87,7 +87,7 @@ angular.module('clientApp')
       else {
         $scope.productFilterExpr = {category : $scope.selectedCategory, tags : $scope.selectedTags};
       }
-    }
+    };
     
     // Returns true if the tag with name tagName is selected, false otherwise
     $scope.tagSelected = function(tagName) {
@@ -101,12 +101,13 @@ angular.module('clientApp')
         }
       }
       return false;
-    }
+    };
 
     // This is what does tag selection/deselection
-    $scope.doTagFilter = function(tagName) {
+    $scope.doTagFilter = function(tagName) { 
       if (tagName.match('All Products')){
         $scope.getAllProducts('tag'); // Display all products
+        return;
       } 
       else {
         var index = $scope.selectedTags.indexOf(tagName);         
@@ -115,6 +116,7 @@ angular.module('clientApp')
             $scope.selectedTags.splice(index, 1); 
             if ($scope.selectedTags.length == 0) { 
               $scope.getAllProducts('tag');
+              return;
             }
         } else { 
           // Otherwise the tag is deselected, so we should select it.
@@ -130,7 +132,7 @@ angular.module('clientApp')
       
       $scope.setProductFilter(); // Update filter for tags and categories
       $scope.instantTrendingMasonry(); // Reinitialize product card masonry
-    }
+    };
     
     // If the current user is a vendor and they have clicked themselves, take them to their vendor page.
     // Otherwise, take them to the vendor details page for the vendor they have clicked
@@ -268,7 +270,7 @@ angular.module('clientApp')
         $scope.dropdownCategory = $scope.dropdownCategoryList[i];
         break;
       }
-    }
+    } 
     $scope.setProductFilter();
     $scope.instantTrendingMasonry();
   }
@@ -283,7 +285,7 @@ angular.module('clientApp')
     else if (resetSelection.match('tag')) {
       $scope.showTag = false;
       $scope.selectedTags = 'All Products';
-    }
+    } 
     // Refilter products and apply masonry
     $scope.setProductFilter();
     $scope.instantTrendingMasonry();

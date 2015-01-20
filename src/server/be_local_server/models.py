@@ -137,6 +137,7 @@ class SellerLocation(TrashableMixin, models.Model):
     email = models.CharField(max_length=50, blank=True, null=True)
     phone = models.CharField(max_length=25, blank=True, null=True)
     description = models.CharField(max_length=800, blank=True, null=True)
+    real_start = models.DateField(blank=True, null=True)
 
     recurrences = RecurrenceField(null=True)
 

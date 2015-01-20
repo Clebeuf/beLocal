@@ -30,6 +30,7 @@ angular.module('clientApp')
     $scope.buttonsDisabledForTour = false;
     $scope.recurrenceFrequency = 2;
     $scope.recurrenceInterval = 1;
+    $scope.compareDate = new Date();
 
     var geocoder = new google.maps.Geocoder(); // Create a geocoder for looking up addresses
 
@@ -90,6 +91,19 @@ angular.module('clientApp')
     StateService.getCategories().then(function() {
       $scope.categoryList = StateService.getCategoryList();
     });
+
+    $scope.getMonday = function(d) {
+      d = new Date(d);
+      var day = d.getDay(),
+          diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+      return new Date(d.setDate(diff));
+    }
+
+    $scope.initDate = function(d) {
+        var date = new Date(d)
+        date.setTime(date.getTime() + date.getTimezoneOffset() * 60000);
+        return date;        
+    }    
 
     // Hide the inactive alert
     $scope.hideInactiveAlert = function() {
@@ -710,13 +724,6 @@ angular.module('clientApp')
       return errorString;
     }
 
-    $scope.getMonday = function(d) {
-      d = new Date(d);
-      var day = d.getDay(),
-          diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
-      return new Date(d.setDate(diff));
-    }    
-
     // Submit a new location for creation/editing
     $scope.newLocationSubmit = function() {       
         $scope.newLocationSubmitted = true;
@@ -773,6 +780,8 @@ angular.module('clientApp')
                     'email' : $scope.emailAtLocation,
                     'phone' : $scope.phoneAtLocation,
                     'description' : $scope.locationDescription,
+                    'real_start' : $scope.recurrenceStartDate instanceof Date ? $scope.recurrenceStartDate.getFullYear() + '-' + ('0' + ($scope.recurrenceStartDate.getMonth() + 1)).slice(-2) + '-' + ('0' + $scope.recurrenceStartDate.getDate()).slice(-2) : $scope.recurrenceStartDate,
+
                 };
 
                 if($scope.locationType !== 'true') {

@@ -198,12 +198,16 @@
                                     {{location.address.hours[0].from_hour}} - 
                                     {{location.address.hours[0].to_hour}}
                                 </p>
+                                <p ng-show="location.recurrences"><b>DATES:</b>
+                                    {{location.recurrences.text | capitalize}} from {{location.real_start | date:"MMMM d'"}}
+                                    <span ng-show="location.recurrences.end_date"> to {{location.recurrences.end_date | date:"MMMM d'"}}</span>
+                                </p>                                
 
                                 <div ng-show="location.date == null" >
-                                <p><b>HOURS:</b>
+                                <p><b>HOURS<span ng-show="location.recurrences"> FOR THE WEEK OF {{getMonday(initDate(location.recurrences.next)) | date:"MMMM d'" | uppercase}}</span>:</b>
                                         <ul class="list-inline store-hours">&nbsp
                                         <li ng-repeat="day in location.address.hours">
-                                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                            <span ng-hide="compareDates(getMonday(initDate(location.recurrences.next)), initDate(location.recurrences.start_date)) && day.weekday < initDate(location.real_start).getDay()"><b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}</span>
                                         </li>
 
                                         </ul>

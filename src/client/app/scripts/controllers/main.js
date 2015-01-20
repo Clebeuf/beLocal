@@ -240,7 +240,7 @@ angular.module('clientApp')
         }
         
         $scope.fetchingData = false;
-        // TODO: load masonry : $container.masonry( 'appended', $newElems, true );
+        // TODO: load masonry : $element.masonry( 'appended', $newElems, true ); or reload();
       }); 
     }
   }

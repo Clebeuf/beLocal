@@ -830,9 +830,6 @@ class TrendingProductView(generics.ListAPIView):
     """   
     permission_classes = (AllowAny,)
     serializer_class = serializers.ProductDisplaySerializer
-    #paginate_by = 2
-    #paginate_by_param = 'page_size'
-    #max_paginate_by = 100
     
     def post(self, request):
         """ 
@@ -872,15 +869,17 @@ class TrendingProductView(generics.ListAPIView):
            
             return Response(serializer.data)
         """
-        products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True).order_by('?')
+        # Commenting order_by(?), as it allows duplicates when using pagination
+        #products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True).order_by('?')
+        products = Product.objects.filter(stock=Product.IN_STOCK).filter(vendor__is_active=True)
         if products is not None:
             for product in products:
                 product.is_liked = Product.objects.from_request(self.request).get(pk=product.id).user_vote
         #serializer = serializers.ProductDisplaySerializer(products, many=True)
 
         # Pagination Logic    
-        page = request.DATA.get('page')
-        page_size = request.DATA.get('page_size') 
+        page = request.QUERY_PARAMS.get('page')  
+        page_size = request.QUERY_PARAMS.get('page_size') 
         
         # Create pages of given size     
         if page_size is not None:
@@ -893,12 +892,14 @@ class TrendingProductView(generics.ListAPIView):
         try:         
             productsPage = paginator.page(page) 
         except PageNotAnInteger:         
-            # If page is not an integer, deliver first page.         
-             productsPage = paginator.page(1)     
+            # If page is null, deliver first page.
+            if page is None:
+                productsPage = paginator.page(1)   
+            else:
+                raise Http404(_("page number cannot be converted to an int.")) 
         except EmptyPage:         
-            # If page is out of range (e.g. 9999),         
-            # deliver last page of results.         
-             productsPage = paginator.page(paginator.num_pages)  
+            # If page is out of range (e.g. 9999), flag error
+            raise Http404(_("page not found."))  
         
         serializer_context = {'request': request}  
         serializer = serializers.PaginatedProductDisplaySerializer(productsPage, context=serializer_context)

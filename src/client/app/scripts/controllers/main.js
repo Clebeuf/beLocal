@@ -9,6 +9,7 @@ angular.module('clientApp')
     $scope.selectedTags = 'All Products'; // Name of currently selected tag ('All Products' is a special value)
     $scope.productFilterExpr = {}; // Expression to filter products by
     $scope.showXSNav = false; // Should we be showing the XS nav bar?
+    $scope.fetchingData = false;
 
     // This line of code is used when a tag in a product details modal is clicked. We store the tag that was clicked in StateService
     // then read it here and display the correct filtering options accordingly.
@@ -197,9 +198,52 @@ angular.module('clientApp')
   
   // Get a list of all trending products from database 
   // Eventually, we should fix this to include pagination
-  StateService.getTrendingProducts().then(function() {
+  /*StateService.getTrendingProducts().then(function() {
     $scope.trendingProducts = StateService.getTrendingProductsList();
-  });
+  });*/
+  
+  // Get next page of trending products from database
+  $scope.trendingProductsNextPage = function() {
+    
+    if ($scope.fetchingData) { 
+      return;   
+    }
+
+    // Get the first page
+    if (!$scope.trendingProducts){
+      $scope.fetchingData = true;
+      
+      StateService.getTrendingProducts().then(function() {
+        $scope.trendingProducts = StateService.getTrendingProductsList();
+        $scope.fetchingData = false;
+      });
+      
+    } else {
+     
+      // check if all pages are already fetched
+      if (!$scope.trendingProducts.next) { console.log("no more pages.");
+        return;
+      }
+      
+      // Get next page
+      $scope.fetchingData = true;     
+      StateService.getTrendingProductsPage($scope.trendingProducts.next).then(function() {
+        var pageData = StateService.getTrendingProductsList();
+        
+        // update trendingProducts
+        $scope.trendingProducts.next = pageData.next;
+        $scope.trendingProducts.previous = pageData.previous;
+        
+        var last = $scope.trendingProducts.results.length;       
+        for(var i = 0; i < pageData.results.length; i++) {
+          $scope.trendingProducts.results.push(pageData.results[i]);
+        }
+        
+        $scope.fetchingData = false;
+        // TODO: load masonry : $container.masonry( 'appended', $newElems, true );
+      }); 
+    }
+  }
 
   // Get a list of all vendors from database
   StateService.getVendors().then(function() {

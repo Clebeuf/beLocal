@@ -11,6 +11,7 @@ var app = angular.module('clientApp', [
   'ui.bootstrap',
   'mgcrea.ngStrap.timepicker',
   'wu.masonry',
+  'infinite-scroll'
 ])
   .config(function ($stateProvider, $httpProvider, $urlRouterProvider, $locationProvider, $anchorScrollProvider) {
 

@@ -187,12 +187,23 @@ angular.module('clientApp')
 
     // Get a list of trending/in season products from the server
     this.getTrendingProducts = function() {
-      return $http.post(this.getServerAddress() + 'products/trending/', {'user_position':currentLocation})
-      .success(function(data) {
+      return $http.post(this.getServerAddress() + 'products/trending/?page=1', {'user_position':currentLocation})
+      .success(function(data) { console.log("data: %o", data);
         trendingProducts = data; 
       })
       .error(function(data) {
         console.log('Error retrieving trending products');
+      });
+    };
+    
+    // Get a page of trending/in season products from the server
+    this.getTrendingProductsPage = function(page_url) {
+      return $http.post(page_url, {'user_position':currentLocation})
+      .success(function(data) { console.log("data: %o", data);
+        trendingProducts = data;
+      })
+      .error(function(data) {
+        console.log('Error retrieving trending products page.');
       });
     };
 
@@ -315,7 +326,7 @@ angular.module('clientApp')
 
     // Return server address
     this.getServerAddress = function() {
-      return 'http://localhost:80/api/';
+      return 'http://127.0.0.1:80/api/';
     };
 
     // Upload a product photo to the server

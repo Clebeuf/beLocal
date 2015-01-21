@@ -376,7 +376,7 @@ angular.module('clientApp')
             $scope.locationType = 'false'; // Remember, false means recurring event. I'm sorry this had to be done, but it's used in the HTML 
 
             // Set recurrence information
-            $scope.recurrenceStartDate = new Date(location.recurrences.start_date); 
+            $scope.recurrenceStartDate = new Date(location.real_start); 
             $scope.recurrenceStartDate.setTime($scope.recurrenceStartDate.getTime() + $scope.recurrenceStartDate.getTimezoneOffset() * 60000);
 
             $scope.recurrenceFrequency = location.recurrences.freq;

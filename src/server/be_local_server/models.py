@@ -153,12 +153,11 @@ class Market(models.Model):
     name = models.CharField(max_length=100)
     address = models.ForeignKey(Address)
     description = models.CharField(max_length=400)
+    date_string = models.CharField(max_length=400, null=True, blank=True)
     vendors = models.ManyToManyField(Vendor, related_name='vendors', blank=True)
     webpage = models.CharField(max_length=400, null=True, blank=True)
     facebook_url = models.CharField(max_length=400, null=True, blank=True)   
-    twitter_url = models.CharField(max_length=400, null=True, blank=True)
-
-    recurrences = RecurrenceField(null=True)    
+    twitter_url = models.CharField(max_length=400, null=True, blank=True)   
     
 secretballot.enable_voting_on(Market)
 

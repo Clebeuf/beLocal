@@ -6,6 +6,17 @@ angular.module('clientApp')
     $scope.users = []; // list of all users for beLocal
     $scope.showXSNav = true;
 
+    // Used to display weekday strings in various spots on this page.
+    $scope.weekdays = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+    ];    
+
     // Get a list of vendors and users from the server
     $scope.initialize = function() {
         StateService.getManageVendors().then(function(response) {
@@ -15,6 +26,10 @@ angular.module('clientApp')
         StateService.getManageUsers().then(function(response) {
             $scope.users = response.data;
         }); 
+
+        StateService.getMarkets().then(function() {
+            $scope.marketList = StateService.getMarketList();
+        });
     }
 
     // Go to vendor details page for vendor with specified id
@@ -30,7 +45,12 @@ angular.module('clientApp')
                 $scope.initialize();
             });
         }
-    }    
+    } 
+
+    // Comparison function used to sort weekdays in order from Monday - Sunday
+    function compareWeekday(a,b) {
+      return a.weekday - b.weekday;
+    }     
 
     // Activate or deactivate a vendor
     $scope.activateVendor = function(vendor) {

@@ -67,10 +67,10 @@ angular.module('clientApp')
     });
 
     // Construct masonry for product cards instantly (no timeout). This is used for filtering
-    $scope.instantTrendingMasonry = function() { console.log("reload");
+    $scope.instantTrendingMasonry = function() { 
       $timeout(function() {
         $rootScope.$broadcast('masonry.reload');
-      }, 400); 
+      }, 0); 
     };    
 
     // Set filters for products and tags

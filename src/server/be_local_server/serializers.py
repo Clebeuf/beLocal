@@ -172,7 +172,12 @@ class PhotoPathSerializer(serializers.ModelSerializer):
 class ProductPhotoSerializer(serializers.ModelSerializer):
   class Meta:
       model = be_local_server.models.ProductPhoto
-      fields = ('id', 'image')      
+      fields = ('id', 'image') 
+
+class MarketPhotoSerializer(serializers.ModelSerializer):
+  class Meta:
+      model = be_local_server.models.MarketPhoto
+      fields = ('id', 'image')           
 
 class AddSellerLocationSerializer(serializers.ModelSerializer):
     address = OpeningHoursSerializer() 

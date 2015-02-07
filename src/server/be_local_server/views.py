@@ -737,6 +737,15 @@ class AddProductPhotoView(generics.CreateAPIView):
     serializer_class = serializers.ProductPhotoSerializer
     model = ProductPhoto
 
+class AddMarketPhotoView(generics.CreateAPIView):
+    """
+    This view provides an endpoint to save market photo. 
+    """
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+    serializer_class = serializers.MarketPhotoSerializer
+    model = MarketPhoto    
+
 class AddVendorPhotoView(generics.CreateAPIView):
     """
     This view provides an endpoint to save vendor photo.

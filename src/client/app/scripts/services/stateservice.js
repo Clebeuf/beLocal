@@ -328,6 +328,17 @@ angular.module('clientApp')
       })
     };
 
+
+    // Upload a product photo to the server
+    this.uploadMarketFile = function(file) {
+      var fd = new FormData();
+      fd.append('image', file);
+      return $http.post(this.getServerAddress() + 'markets/photo/add/', fd, {
+        headers: {'Content-Type' : undefined},
+        transformRequest: angular.identity,
+      })
+    };    
+
     // Upload a profile photo to the server
     this.uploadProfileFile = function(file, selImgCoords) {
       var fd = new FormData();

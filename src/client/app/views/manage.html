@@ -107,7 +107,7 @@
 </div>
 
 <!-- Add Market Modal  -->
-<div class="modal fade" id="locationModal">
+<div class="modal fade" id="marketModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header edit-location-modal-header">
@@ -119,7 +119,19 @@
                 <div class="container-fluid">                                
                     <form role="form" name="locationForm" novalidate>
                         <div class="row">
-                            <div class="col-xs-6 col-md-6">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.imageField.$invalid }">
+                                    <label ng-hide="isEditingItem" for="item-image">Add Image</label>
+                                    <label ng-show="isEditingItem" for="item-image">Change Image</label><br />
+                                    <img ng-show="displayItemThumbnail" src="#" id="itemPreview" />
+                                    <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="item-image">
+                                    <p ng-show="marketImageError != null" class="help-block"><small style="color: #a94442;" >{{marketImageError}}</small></p>                                      
+                                </div>
+                               
+                            </div>
+                        </div>                    
+                        <div class="row">
+                            <div class="col-xs-12">
                                 <div class="form-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationField.$invalid }">
                                     <label class="control-label">Location Name</label>
                                     <input required ng-model="locationName" type="text" name="locationField" class="form-control" id="item-name" placeholder="Location Name" maxlength="35"/>
@@ -127,44 +139,7 @@
                                         The location's name is required.
                                     </span>
                                 </div>
-                            </div>                        
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Location Type</label><br />
-                                    <label class="radio-inline">
-                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="farmRadio" value="true"><p>One Time Event</p>
-                                    </label>
-                                    <label class="radio-inline radio-inline-responsive">
-                                      <input type="radio" ng-model="locationType" name="locationTypeOptions" id="marketRadio" value="false"><p>Recurring Event</p>
-                                    </label>                            
-                                </div>
-                            </div>                        
-                        </div>
-                        <!-- One Time Date Options -->
-                        <div ng-show="locationType" class="row">
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                  <label>Date:</label>                      
-                                  <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.dateField.$invalid }">
-                                    <input required type="text" name="dateField" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="locationDate" is-open="opened" min-date="minDate" close-text="Close" />
-                                    <span class="input-group-btn">
-                                      <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                    </span>                       
-                                  </div>
-                                </div>                               
-                            </div>                        
-                            <div class="col-xs-3 col-md-3">
-                                <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.startField.$invalid}">
-                                    <label class="control-label"><i class="fa fa-clock-o"></i> Start Time</label>
-                                    <input required type="text" class="form-control" size="8" ng-model="startTime" name="startField" bs-timepicker>
-                                </div>
-                            </div>
-                            <div class="col-xs-3 col-md-3">
-                                <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.endField.$invalid}">
-                                    <label class="control-label"><i class="fa fa-clock-o"></i> End Time</label>
-                                    <input required type="text" class="form-control" size="8" ng-model="endTime" name="endField" bs-timepicker>
-                                </div>
-                            </div>
+                            </div>                       
                         </div>
                         <!-- Regular Hour Options -->
                         <div ng-hide="locationType">
@@ -285,23 +260,6 @@
                                     </span>
                                   </div>
                             </div>                                                                                               
-                        </div>                                            
-                        <div class="row">
-                            <div class="col-xs-6 col-md-6" ng-class="{'has-error': newLocationSubmitted && locationForm.phoneField.$invalid}">
-                                <div class="form-group">
-                                    <label class="control-label">Phone Number</label>
-                                    <input phone ng-model="phoneAtLocation" type="text" class="form-control" id="item-name" name="phoneField" placeholder="Optional Phone Number" maxlength="20"/>
-                                    <span class="error pull-right" ng-show="newLocationSubmitted && locationForm.phoneField.$invalid">
-                                        Please enter a valid phone number.
-                                    </span>                                            
-                                </div>
-                            </div>
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.emailField.$invalid}">
-                                    <label class="control-label">Email</label>
-                                    <input type="text" ng-model="emailAtLocation" class="form-control" id="item-name" name="emailField" placeholder="Optional Email" maxlength="40"/>
-                                </div>
-                            </div>                                                                   
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-md-12">

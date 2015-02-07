@@ -10,6 +10,7 @@
         </div>
 
         <div class="tab-content">
+            <!-- USERS TAB -->
             <div role="tabpanel" class="tab-pane active" id="users">
                 <div class="new-heading-style ng-binding">
                     All Vendors ({{inactiveVendors.length}} Currently Registered)
@@ -26,24 +27,43 @@
                     <strong>Email:</strong> {{user.email}}
                 </p>
             </div>
+            <!-- MARKETS TAB -->
             <div role="tabpanel" class="tab-pane" id="markets">
-                <div class="new-heading-style">
-                        Markets
+
+                <div class="row">
+                    <div class="col-xs-12">
+                    </div>
                 </div>
-                <!-- repeating for each location that seller has in the db -->
-                <div ng-repeat="location in marketList" class="container-for-cards">
+
+                <div>
+                    <span class="new-heading-style">Markets</span>
+                    <span class="pull-right">
+                        <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="resetMarketModal()" data-target="#marketModal" id="addMarketBtn">
+                            <div class="hidden-mobile">Create New Market</div>
+                            <div class="show-mobile">+</div>
+                        </button>
+                    </span>                        
+                </div>
+                <!-- repeating <font></font>r each location that seller has in the db -->
+                <div ng-repeat="location in marketList | orderBy:'address.hours.length':true" class="container-for-cards">
                     <div class="card-formatting" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)">
                         <div class="row">
 
                             <!-- Display the locations name -->
-                            <div class="col-xs-9 card-lable-style">
+                            <div class="col-sm-2">
+                              <div class="vendor-image-container">
+                                <div class="vendor-images pointer" style="background-image:url({{location.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;" ng-click="displayVendor(vendor.id)">
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-7 card-lable-style">
                                 {{location.name}}
                             </div>
 
                             <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
                             <div class="col-xs-3 edit-delete-buttons">
                                 <span data-toggle="tooltip" data-placement="left" title="Leave Market">
-                                    <span class="edit-text glyphicon glyphicon-trash" ng-click="leaveMarket(location)" data-toggle="modal" data-target="TBA"></span>
+                                    <span class="edit-text glyphicon glyphicon-edit" ng-click="editMarket(location)" data-toggle="modal"></span>
                                 </span>
                             </div> 
 
@@ -57,16 +77,25 @@
                                 {{location.address.state}}, 
                                 {{location.address.zipcode}}
                             </p>
-                            <p><b>HOURS:</b>
+                            <p>
+                                <b>HOURS:</b>
+                                <div ng-show="location.address.hours.length === 0">
                                     <ul class="list-inline store-hours">&nbsp
-                                    <li ng-repeat="day in location.address.hours">
-                                        <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                                    </li>
-
+                                        <li>
+                                            <span style="color:red;"><b>Closed</b></span>
+                                        </li>
+                                    </ul>                                        
+                                </div>
+                                <div ng-hide="location.address.hours.length === 0">
+                                    <ul class="list-inline store-hours">&nbsp
+                                        <li ng-repeat="day in location.address.hours">
+                                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                        </li>
                                     </ul>
+                                </div>
                             </p>
 
-                           <p class="indent-after-first-line"><b>DETAILS:</b>
+                           <p class="indent-after-first-line"><b>DETAILS:<br></b>
                                  {{location.description}}
                             </p>
                         </div>    

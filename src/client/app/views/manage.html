@@ -39,7 +39,7 @@
                     <span class="new-heading-style">Markets</span>
                     <span class="pull-right">
                         <button class="btn beLocal-btn-filled" data-toggle="modal" ng-click="resetMarketModal()" data-target="#marketModal" id="addMarketBtn">
-                            <div class="hidden-mobile">Create New Market</div>
+                            <div class="hidden-mobile" ng-click="resetLocationModal()">Create New Market</div>
                             <div class="show-mobile">+</div>
                         </button>
                     </span>                        
@@ -261,6 +261,14 @@
                                   </div>
                             </div>                                                                                               
                         </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.websiteField.$invalid}">
+                                    <label class="control-label">Website</label>
+                                    <input type="text" ng-model="website" class="form-control" id="item-name" name="websiteField" placeholder="Optional Website" maxlength="100"/>
+                                </div>
+                            </div>                                                                   
+                        </div>                        
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
                                 <div class="form-group no-bottom-margin" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationDescriptionField.$invalid }">

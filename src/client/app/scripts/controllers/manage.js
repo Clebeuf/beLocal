@@ -1,13 +1,20 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('ManageCtrl', function ($scope, StateService, $location) {
+  .controller('ManageCtrl', function ($scope, StateService, $location, $q, $timeout) {
     $scope.inactiveVendors = []; // list of inactive vendors
     $scope.users = []; // list of all users for beLocal
     $scope.showXSNav = true;
     $scope.submitLocationButtonText = 'Add Market';
     $scope.newLocationSubmitted = false;
     $scope.displayItemThumbnail = false;
+    $scope.repeatUntil = 'never'; // Default is that recurring events will repeat indefinitely
+    $scope.recurrenceFrequency = 2;
+    $scope.recurrenceInterval = 1;
+    $scope.compareDate = new Date();
+    $scope.minDate = new Date(); // Minimum accepted date for datepicker (set to current date)
+
+    var geocoder = new google.maps.Geocoder(); // Create a geocoder for looking up addresses
 
     // Used to display weekday strings in various spots on this page.
     $scope.weekdays = [
@@ -19,6 +26,57 @@ angular.module('clientApp')
         'Saturday',
         'Sunday'
     ]; 
+
+    $scope.range = function(n) {
+        return new Array(n);
+    };      
+
+    // Open the date picker. This was required due to some weird event handling that AngularUI (3rd party library whose datepicker
+    // we are using) was doing.
+    $scope.open = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.opened = true;
+    };
+
+    $scope.openStart = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.startOpened = true;
+    }; 
+
+    $scope.openEnd = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.endOpened = true;
+    };    
+
+    // Reset all fields in new location modal
+    $scope.resetLocationModal = function() {
+        $scope.addressSearchText = undefined; // Reset address search text
+        $scope.newLocationSubmitted = false; // Reset has submitted flag
+        $scope.isEditingLocation = false; // Reset is editing location flag
+        $scope.recurrenceFrequency = 2; // Reset recurrence value
+        $scope.recurrenceInterval = 1; // Reset frequency value
+
+        var tempDate = new Date();
+        tempDate.setHours(tempDate.getHours() + 1);
+        $scope.recurrenceStartDate = new Date(); // Reset recurrence start date to today's date        
+        $scope.recurrenceEndDate = new Date(); // Reset recurrence start date to today's date          
+        $scope.locationHours = $scope.buildHoursObject(); // Build hours object for recurring location hours
+
+        $scope.locationAddress = undefined; // Reset address field 
+        $scope.locationCity = undefined; // Reset city field
+        $scope.locationProvince = undefined; // Reset province field
+        $scope.locationCountry = undefined; // Reset country field
+        $scope.locationPostalCode = undefined; // Reset postal code field
+        $scope.locationName = undefined; // Reset location name field
+        $scope.website = undefined; // Reset website
+        $scope.locationDescription = undefined;  // Reset description field
+    }    
 
     $scope.getMonday = function(d) {
       d = new Date(d);
@@ -103,6 +161,78 @@ angular.module('clientApp')
         });
     }
 
+    // Format the user entered address string in a way that the geocoder can parse.
+    $scope.formatAddress = function(address) {
+      return address.replace(' ', '+');
+    }      
+
+    // Get a location asynchroneously from the geocoder
+    $scope.getLocation = function(value) {
+        var d = $q.defer();
+          if(value !== undefined) {
+            geocoder.geocode( { 'address': $scope.formatAddress(value)}, function(results, status) {
+              if (status == google.maps.GeocoderStatus.OK) {
+                $timeout(function() {
+                    d.resolve(results)              
+                });
+              }
+            });
+        }
+
+        return d.promise;
+    }
+
+    // More dirty code to ensure that we parse the correct results from the geocoder in each case.
+    // This SUCKS because Google chooses to return addresses in one of the most useless formats I've ever seen.
+    // As a result, there's no way to parse them properly other than to step through each and every entry associated
+    // with them and see if it's the one we want. More on this here: https://developers.google.com/maps/documentation/geocoding/#JSON
+    $scope.parseGeocoderResult = function(result) {
+        var location = {}
+        for(var i = 0; i < result.address_components.length; i++) {
+            var component = result.address_components[i];
+
+            if($scope.compareGeocoderType(component.types, 'street_number')) 
+                location.street_number = component.short_name;
+            else if($scope.compareGeocoderType(component.types, 'route'))
+                location.route = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'sublocality'))
+                location.city = component.long_name;      
+            else if($scope.compareGeocoderType(component.types, 'locality'))
+                location.city = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'administrative_area_level_1'))
+                location.state = component.short_name;
+            else if($scope.compareGeocoderType(component.types, 'country'))
+                location.country = component.long_name;            
+            else if($scope.compareGeocoderType(component.types, 'postal_code'))
+                location.postal_code = component.long_name;              
+        }
+        return location;
+    }
+
+    // Geocoder results can have nested component types and order is not guranteed. As a result, we have to step through ALL components
+    // to see if the result has the ones we want/need.
+    $scope.compareGeocoderType = function(types, compareTo) {
+        for(var i = 0; i < types.length; i++) {
+            if(types[i] === compareTo) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Called when a user selects a value from the geocoder dropdown
+    $scope.makeSelection = function(item) {
+        var parsedLocation = $scope.parseGeocoderResult(item);
+
+        $scope.locationAddress = parsedLocation.street_number + ' ' + parsedLocation.route;
+        $scope.locationCity = parsedLocation.city;
+        $scope.locationProvince = parsedLocation.state;
+        $scope.locationCountry = parsedLocation.country;
+        $scope.locationPostalCode = parsedLocation.postal_code;
+        $scope.latitude = item.geometry.location.lat();
+        $scope.longitude = item.geometry.location.lng();   
+    }    
+
     // Submit a new location for creation/editing
     $scope.newLocationSubmit = function() {       
         $scope.newLocationSubmitted = true;
@@ -147,7 +277,7 @@ angular.module('clientApp')
                 "name" : $scope.locationName,
                 'description' : $scope.locationDescription,
                 'real_start' : $scope.recurrenceStartDate instanceof Date ? $scope.recurrenceStartDate.getFullYear() + '-' + ('0' + ($scope.recurrenceStartDate.getMonth() + 1)).slice(-2) + '-' + ('0' + $scope.recurrenceStartDate.getDate()).slice(-2) : $scope.recurrenceStartDate,
-
+                "webpage" : $scope.website,
             };
 
 

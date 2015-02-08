@@ -1,8 +1,9 @@
+# Executables
 *.pyc
-*.log
 *.sql
 *.sqlite
 *.sqlite3
+celerybeat-schedule
 
 # Eclipse files
 .project
@@ -14,11 +15,13 @@ src/server/be_local_server/migrations/*
 src/server/media/*
 src/server/be_local_server/static/media/*
 
+# Images
 !src/client/*.jpg
 *.jpg
 *.jpeg
 
-# logs
+# Logs
+*.log
 log.txt
 src/server/log.txt
 src/server/out.txt

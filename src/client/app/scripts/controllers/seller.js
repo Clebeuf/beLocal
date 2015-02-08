@@ -557,7 +557,7 @@ angular.module('clientApp')
         }
 
         // Upload the new image
-        StateService.uploadMarketFile(file[0])
+        StateService.uploadFile(file[0])
         .success(function(response) {
             $scope.newImageID = response.id;
         })

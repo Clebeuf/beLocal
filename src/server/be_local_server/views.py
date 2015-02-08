@@ -668,6 +668,13 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
         self.id = location_id
         return self.partial_update(request)
 
+    def get_object(self):
+        try:
+            location = SellerLocation.objects.get(pk = self.id)  
+        except location.DoesNotExist:
+            raise Http404
+        return location        
+
 class RWDMarketView(generics.RetrieveUpdateAPIView):
     """
     This view provides an endpoint for deleting and modifying markets        

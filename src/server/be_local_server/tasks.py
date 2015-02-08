@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 logger = get_task_logger(__name__)
 
   
-# this will run every Saturday  
-@periodic_task(run_every=crontab(day_of_week="*", hour=0, minute=0))  
+# this will run every day at midnight  
+@periodic_task(run_every=crontab(hour=0, minute=0))  
 def empty_trashcans(*args):  
     
     logger.info("Job has started to empty Trashcans.")
@@ -77,8 +77,8 @@ def empty_trashcans(*args):
             
     logger.info("Total address deleted: %d", address_count)
     
-# this will run every Saturday
-@periodic_task(run_every=crontab(day_of_week="*", hour=0, minute=0))  
+# this will run every day at midnight
+@periodic_task(run_every=crontab(hour=0, minute=0))  
 def delete_expired_seller_locations(*args): 
 
     logger.info("Job has started to remove expired SellerLocations.")
@@ -111,8 +111,8 @@ def delete_expired_seller_locations(*args):
                 
     logger.info("Total address deleted: %d", address_count)
 
-# this will run every Saturday
-@periodic_task(run_every=crontab(day_of_week="*", hour=0, minute=0))  
+# this will run every day at midnight
+@periodic_task(run_every=crontab(hour=0, minute=0))  
 def delete_unused_photos(*args):    
 
     logger.info("Job has started to remove unreferenced photos.")

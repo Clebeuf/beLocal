@@ -24,7 +24,7 @@ DEBUG = False
 
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = ['belocalvictoria.me', 'api.belocalvictoria.me', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['belocalvictoria.me', '127.0.0.1', 'localhost']
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 #SESSION_COOKIE_HTTPONLY
@@ -162,6 +162,8 @@ djcelery.setup_loader()
 # Celery Configuration 
 CELERY_IMPORTS = ("be_local_server.tasks", )
 CELERY_ALWAYS_EAGER = True
+# Configure celery to use the django-celery backend
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

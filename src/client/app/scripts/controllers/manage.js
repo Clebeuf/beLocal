@@ -297,8 +297,6 @@ angular.module('clientApp')
 
             market.recurrences = recurrence;
 
-            console.log(market);                  
-
             // Create/edit the selling location. Note here that whether we're creating or editing depends on $scope.isEditingLocation
             StateService.createMarket(market, $scope.isEditingLocation).then(function() {
                 StateService.getMarkets().then(function() {

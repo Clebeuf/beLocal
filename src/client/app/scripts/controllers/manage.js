@@ -278,6 +278,7 @@ angular.module('clientApp')
                 'description' : $scope.locationDescription,
                 'real_start' : $scope.recurrenceStartDate instanceof Date ? $scope.recurrenceStartDate.getFullYear() + '-' + ('0' + ($scope.recurrenceStartDate.getMonth() + 1)).slice(-2) + '-' + ('0' + $scope.recurrenceStartDate.getDate()).slice(-2) : $scope.recurrenceStartDate,
                 "webpage" : $scope.website,
+                "photo" : $scope.newImageID,
             };
 
 
@@ -298,13 +299,23 @@ angular.module('clientApp')
 
             console.log(market);                  
 
-            // // Create/edit the selling location. Note here that whether we're creating or editing depends on $scope.isEditingLocation
-            // StateService.createSellerLocation(market, $scope.isEditingLocation).then(function() {
-            //     $scope.getSellerLocations();
-            //     $scope.getSellerItems();
-            // });
+            // Create/edit the selling location. Note here that whether we're creating or editing depends on $scope.isEditingLocation
+            StateService.createMarket(market, $scope.isEditingLocation).then(function() {
+                StateService.getMarkets().then(function() {
+                    $scope.marketList = StateService.getMarketList();
+                });
+            });
         }
     } 
+
+    // Delete a location on the server, and also set the warning banner with the ability to undo this deletion if necessary
+    $scope.deleteLocation = function(location) {
+        StateService.trashMarket(location.id).then(function() {
+            StateService.getMarkets().then(function() {
+                $scope.marketList = StateService.getMarketList();
+            });           
+        });  
+    }    
 
     // Called when an market image changes (i.e. when a new image is selected using the image picker)
     $scope.fileNameChanged = function(file) {

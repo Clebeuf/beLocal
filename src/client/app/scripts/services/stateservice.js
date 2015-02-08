@@ -289,6 +289,14 @@ angular.module('clientApp')
       });
     };
 
+    // Delete a location
+    this.trashMarket = function(id) {
+      return $http.post(this.getServerAddress() + 'markets/delete/', {'id' : id})
+      .error(function(data) {
+        console.log('Error deleting market');
+      });
+    };    
+
     // Delete or restore a product
     this.trashOrRestoreProduct = function(id, action) {
       return $http.post(this.getServerAddress() + 'vendor/products/delete/', {'id' : id, 'action' : action})
@@ -449,6 +457,28 @@ angular.module('clientApp')
         })        
       }
     };
+
+    // Create or edit a selling location
+    this.createMarket = function(market, isEditing) {
+      if(isEditing) {
+        var url = this.getServerAddress() + 'vendor/location/' + market.id + '/';       
+        return $http({method: 'PATCH', url: url, data: market})
+        .success(function() {
+          console.log("Edited a location!");
+        })
+        .error(function() {
+          console.log("Error editing location!");
+        })         
+      } else {
+        return $http.post(this.getServerAddress() + 'markets/add/', market)
+        .success(function() {
+          console.log("Created a new market!");
+        })
+        .error(function() {
+          console.log("Error creating a new market!");
+        })        
+      }
+    };    
     
     // Join a market
     this.joinMarket = function(data) {

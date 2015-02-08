@@ -62,8 +62,11 @@
 
                             <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
                             <div class="col-xs-3 edit-delete-buttons">
-                                <span data-toggle="tooltip" data-placement="left" title="Leave Market">
-                                    <span class="edit-text glyphicon glyphicon-edit" ng-click="editMarket(location)" data-toggle="modal"></span>
+                                <span data-toggle="tooltip" data-placement="left" title="Edit Market">
+                                <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#marketModal" ng-click="editMarket(location)"></span>
+                                </span>
+                                <span data-toggle="tooltip" data-placement="left" title="Delete Market">
+                                <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
                                 </span>
                             </div> 
 

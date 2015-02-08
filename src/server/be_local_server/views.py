@@ -726,7 +726,24 @@ class DeleteProductView(generics.CreateAPIView):
                 else:
                     return Response("Product not found for trashing", status=status.HTTP_400_BAD_REQUEST) 
         else:
-            return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)               
+            return Response("id not provided", status=status.HTTP_400_BAD_REQUEST) 
+
+# Delete/restore a product
+class DeleteMarketView(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+    
+    def post(self, request):
+        if("id" in request.DATA.keys()):
+            market = Market.objects.get(pk=request.DATA["id"])
+
+            if market is not None:
+                market.delete()
+                return Response("Trashed market", status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response("Market not found for trashing", status=status.HTTP_400_BAD_REQUEST) 
+        else:
+            return Response("id not provided", status=status.HTTP_400_BAD_REQUEST)                           
 
 class AddProductPhotoView(generics.CreateAPIView):
     """
@@ -1055,7 +1072,27 @@ class LeaveMarketView(generics.CreateAPIView):
         market.vendors.remove(vendor)
         market.save()
 
-        return HttpResponse(status=status.HTTP_200_OK)        
+        return HttpResponse(status=status.HTTP_200_OK) 
+
+class AddMarketView(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,) 
+
+    def post(self, request, *args, **kwargs):   
+
+        serializer = serializers.AddMarketSerializer(data=request.DATA, many=False)
+
+        if serializer.is_valid():
+            current_location = serializer.save()
+
+            # if('recurrences' in request.DATA.keys()): 
+            #     self.createRecurrences(current_location, request)          
+
+            return HttpResponse(status=status.HTTP_201_CREATED)
+
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)                    
 
 class AddSellerLocationView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)

@@ -426,7 +426,20 @@ class PublicMarketSerializer(serializers.ModelSerializer):
                     'is_liked',
                     'photo',
                     'webpage',
-        )               
+        )    
+
+class AddMarketSerializer(serializers.ModelSerializer):
+    address = AddAddressSerializer()
+  
+    class Meta:
+        model = be_local_server.models.Market
+        fields = (
+                    'address',
+                    'name',
+                    'description',
+                    'photo',
+                    'webpage',
+        )                   
 
 class MarketDisplaySerializer(serializers.ModelSerializer):
     vendors = BusinessVendorSerializer(many=True)

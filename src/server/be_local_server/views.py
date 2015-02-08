@@ -668,12 +668,40 @@ class RWDSellerLocationView(generics.RetrieveUpdateAPIView):
         self.id = location_id
         return self.partial_update(request)
 
+class RWDMarketView(generics.RetrieveUpdateAPIView):
+    """
+    This view provides an endpoint for deleting and modifying markets        
+    """
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.AddMarketSerializer
+
+    def patch(self, request, market_id):
+
+        # Workaround for a Django bug that doesn't allow for multiple nested objects to be deserialized properly
+        # As a result, we need to clear out the hours for recurring events and re-add them each time
+        if(request.method == 'PATCH'):
+            market = Market.objects.get(pk=market_id)
+            address = market.address
+            hours = OpeningHours.objects.filter(address=address)
+            
+            # Delete the hours in the hours object. These will be recreated with partial_update
+            for hour in hours:
+                hour.delete()
+
+            if('recurrences' in request.DATA.keys()):                
+                # This line of code will overwrite the existing recurrence object with a new one.
+                AddSellerLocationView.createRecurrences(market, request)
+
+        self.id = market_id
+        return self.partial_update(request)        
+
     def get_object(self):
         try:
-            location = SellerLocation.objects.get(pk = self.id)  
-        except location.DoesNotExist:
+            market = Market.objects.get(pk = self.id)  
+        except market.DoesNotExist:
             raise Http404
-        return location
+        return market
 
 
 # Delete/restore a selling location
@@ -1078,6 +1106,27 @@ class AddMarketView(generics.CreateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,) 
 
+    def createRecurrences(self, current_location, request):
+        limits = Recurrence.objects.create(
+            dtstart=datetime.strptime(request.DATA["recurrences"]["dtstart"], "%Y-%m-%d") if request.DATA["recurrences"]["dtstart"] is not None else None,
+        )
+
+        rule = Rule.objects.create(
+            recurrence = limits,
+            mode=choices.INCLUSION,
+            freq=request.DATA["recurrences"]["rule"]["freq"],
+            interval=request.DATA["recurrences"]["rule"]["interval"],
+            until=datetime.strptime(request.DATA["recurrences"]["rule"]["until"], "%Y-%m-%d") if request.DATA["recurrences"]["rule"]["until"] is not None else None
+        )
+
+        limits = limits.to_recurrence_object()
+
+        field = RecurrenceField()
+        value = recurrence.serialize(limits)
+
+        current_location.recurrences = value
+        current_location.save()    
+
     def post(self, request, *args, **kwargs):   
 
         serializer = serializers.AddMarketSerializer(data=request.DATA, many=False)
@@ -1085,8 +1134,8 @@ class AddMarketView(generics.CreateAPIView):
         if serializer.is_valid():
             current_location = serializer.save()
 
-            # if('recurrences' in request.DATA.keys()): 
-            #     self.createRecurrences(current_location, request)          
+            if('recurrences' in request.DATA.keys()): 
+                self.createRecurrences(current_location, request)          
 
             return HttpResponse(status=status.HTTP_201_CREATED)
 

@@ -280,6 +280,26 @@ class MarketDetailsProductSerializer(serializers.ModelSerializer):
     photo = PhotoPathSerializer()    
     tags = TagListSerializer(blank=True)
     vendor = BusinessVendorSerializer()
+    recurrences = serializers.SerializerMethodField('get_recurrence_info') 
+
+    def get_recurrence_info(self, obj):
+      if obj.recurrences:
+        today = datetime.combine(date.today(), datetime.min.time())
+        thisWeekMonday = today - timedelta(days=today.weekday())
+
+        # Make sure that the recurrence we get back always has valid days
+        if (obj.real_start and obj.recurrences.dtstart == thisWeekMonday and obj.real_start.weekday() + 1 > obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
+          next = obj.recurrences.after(today + timedelta(days=today.weekday(), weeks=1), inc=True) 
+        else:
+          next = obj.recurrences.after(today - timedelta(days=today.weekday()), inc=True)        
+
+        text = obj.recurrences.rrules[0].to_text() 
+        start_date = obj.recurrences.dtstart
+        end_date = obj.recurrences.rrules[0].until
+        interval = obj.recurrences.rrules[0].interval
+        freq = obj.recurrences.rrules[0].freq
+
+        return {"next" : next, "text" : text, "start_date" : start_date, "end_date" : end_date, "interval" : interval, "freq" : freq}    
     
     class Meta:
         model = be_local_server.models.Product
@@ -290,7 +310,9 @@ class MarketDetailsProductSerializer(serializers.ModelSerializer):
                   'photo',
                   'stock',
                   'tags',
-                  'category'
+                  'category',
+                  'recurrences',
+                  'real_start'
         )        
 
 class VoteSerializer(serializers.ModelSerializer):
@@ -407,7 +429,7 @@ class MarketDetailsVendorSerializer(serializers.ModelSerializer):
                   'extension',
                   'products',
                   'photo',
-                  'address',
+                  'address'
       )  
 
 class PublicMarketSerializer(serializers.ModelSerializer):
@@ -415,6 +437,26 @@ class PublicMarketSerializer(serializers.ModelSerializer):
     total_likes = serializers.IntegerField(source='vote_total') 
     is_liked = serializers.IntegerField()
     photo = MarketPhotoPathSerializer()
+    recurrences = serializers.SerializerMethodField('get_recurrence_info') 
+
+    def get_recurrence_info(self, obj):
+      if obj.recurrences:
+        today = datetime.combine(date.today(), datetime.min.time())
+        thisWeekMonday = today - timedelta(days=today.weekday())
+
+        # Make sure that the recurrence we get back always has valid days
+        if (obj.real_start and obj.recurrences.dtstart == thisWeekMonday and obj.real_start.weekday() + 1 > obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
+          next = obj.recurrences.after(today + timedelta(days=today.weekday(), weeks=1), inc=True) 
+        else:
+          next = obj.recurrences.after(today - timedelta(days=today.weekday()), inc=True)        
+
+        text = obj.recurrences.rrules[0].to_text() 
+        start_date = obj.recurrences.dtstart
+        end_date = obj.recurrences.rrules[0].until
+        interval = obj.recurrences.rrules[0].interval
+        freq = obj.recurrences.rrules[0].freq
+
+        return {"next" : next, "text" : text, "start_date" : start_date, "end_date" : end_date, "interval" : interval, "freq" : freq}  
   
     class Meta:
         model = be_local_server.models.Market
@@ -426,6 +468,8 @@ class PublicMarketSerializer(serializers.ModelSerializer):
                     'is_liked',
                     'photo',
                     'webpage',
+                    'recurrences',
+                    'real_start'
         )    
 
 class AddMarketSerializer(serializers.ModelSerializer):
@@ -439,6 +483,7 @@ class AddMarketSerializer(serializers.ModelSerializer):
                     'description',
                     'photo',
                     'webpage',
+                    'real_start',
         )                   
 
 class MarketDisplaySerializer(serializers.ModelSerializer):
@@ -447,6 +492,26 @@ class MarketDisplaySerializer(serializers.ModelSerializer):
     total_likes = serializers.IntegerField(source='vote_total') 
     is_liked = serializers.IntegerField()
     photo = MarketPhotoPathSerializer()
+    recurrences = serializers.SerializerMethodField('get_recurrence_info') 
+
+    def get_recurrence_info(self, obj):
+      if obj.recurrences:
+        today = datetime.combine(date.today(), datetime.min.time())
+        thisWeekMonday = today - timedelta(days=today.weekday())
+
+        # Make sure that the recurrence we get back always has valid days
+        if (obj.real_start and obj.recurrences.dtstart == thisWeekMonday and obj.real_start.weekday() + 1 > obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
+          next = obj.recurrences.after(today + timedelta(days=today.weekday(), weeks=1), inc=True) 
+        else:
+          next = obj.recurrences.after(today - timedelta(days=today.weekday()), inc=True)        
+
+        text = obj.recurrences.rrules[0].to_text() 
+        start_date = obj.recurrences.dtstart
+        end_date = obj.recurrences.rrules[0].until
+        interval = obj.recurrences.rrules[0].interval
+        freq = obj.recurrences.rrules[0].freq
+
+        return {"next" : next, "text" : text, "start_date" : start_date, "end_date" : end_date, "interval" : interval, "freq" : freq}      
   
     class Meta:
         model = be_local_server.models.Market
@@ -459,6 +524,8 @@ class MarketDisplaySerializer(serializers.ModelSerializer):
                     'is_liked',
                     'photo',
                     'webpage',
+                    'recurrences',
+                    'real_start'
         )
 
 class MarketDetailsSerializer(serializers.ModelSerializer):
@@ -467,6 +534,26 @@ class MarketDetailsSerializer(serializers.ModelSerializer):
     total_likes = serializers.IntegerField(source='vote_total') 
     is_liked = serializers.IntegerField()
     photo = MarketPhotoPathSerializer()
+    recurrences = serializers.SerializerMethodField('get_recurrence_info') 
+
+    def get_recurrence_info(self, obj):
+      if obj.recurrences:
+        today = datetime.combine(date.today(), datetime.min.time())
+        thisWeekMonday = today - timedelta(days=today.weekday())
+
+        # Make sure that the recurrence we get back always has valid days
+        if (obj.real_start and obj.recurrences.dtstart == thisWeekMonday and obj.real_start.weekday() + 1 > obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
+          next = obj.recurrences.after(today + timedelta(days=today.weekday(), weeks=1), inc=True) 
+        else:
+          next = obj.recurrences.after(today - timedelta(days=today.weekday()), inc=True)        
+
+        text = obj.recurrences.rrules[0].to_text() 
+        start_date = obj.recurrences.dtstart
+        end_date = obj.recurrences.rrules[0].until
+        interval = obj.recurrences.rrules[0].interval
+        freq = obj.recurrences.rrules[0].freq
+
+        return {"next" : next, "text" : text, "start_date" : start_date, "end_date" : end_date, "interval" : interval, "freq" : freq}      
 
     def get_active_vendors(self, obj):
         vendors = obj.vendors.all().filter(is_active=True)
@@ -483,13 +570,35 @@ class MarketDetailsSerializer(serializers.ModelSerializer):
                     'total_likes',
                     'is_liked',
                     'photo',
-                    'webpage'
+                    'webpage',
+                    'recurrences',
+                    'real_start'
         )
         
 class MarketSearchSerializer(serializers.ModelSerializer):
     vendors = MarketDetailsVendorSerializer(many=True)
     address = AddAddressSerializer()
     photo = MarketPhotoPathSerializer()
+    recurrences = serializers.SerializerMethodField('get_recurrence_info') 
+
+    def get_recurrence_info(self, obj):
+      if obj.recurrences:
+        today = datetime.combine(date.today(), datetime.min.time())
+        thisWeekMonday = today - timedelta(days=today.weekday())
+
+        # Make sure that the recurrence we get back always has valid days
+        if (obj.real_start and obj.recurrences.dtstart == thisWeekMonday and obj.real_start.weekday() + 1 > obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
+          next = obj.recurrences.after(today + timedelta(days=today.weekday(), weeks=1), inc=True) 
+        else:
+          next = obj.recurrences.after(today - timedelta(days=today.weekday()), inc=True)        
+
+        text = obj.recurrences.rrules[0].to_text() 
+        start_date = obj.recurrences.dtstart
+        end_date = obj.recurrences.rrules[0].until
+        interval = obj.recurrences.rrules[0].interval
+        freq = obj.recurrences.rrules[0].freq
+
+        return {"next" : next, "text" : text, "start_date" : start_date, "end_date" : end_date, "interval" : interval, "freq" : freq}     
   
     class Meta:
         model = be_local_server.models.Market
@@ -499,12 +608,34 @@ class MarketSearchSerializer(serializers.ModelSerializer):
                     'name',
                     'description',
                     'photo',
-                    'webpage'
+                    'webpage',
+                    'recurrences',
+                    'real_start'
         )         
 
 class VendorMarketDisplaySerializer(serializers.ModelSerializer):
     vendors = BusinessVendorSerializer(many=True)
     address = AddAddressSerializer()
+    recurrences = serializers.SerializerMethodField('get_recurrence_info') 
+
+    def get_recurrence_info(self, obj):
+      if obj.recurrences:
+        today = datetime.combine(date.today(), datetime.min.time())
+        thisWeekMonday = today - timedelta(days=today.weekday())
+
+        # Make sure that the recurrence we get back always has valid days
+        if (obj.real_start and obj.recurrences.dtstart == thisWeekMonday and obj.real_start.weekday() + 1 > obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
+          next = obj.recurrences.after(today + timedelta(days=today.weekday(), weeks=1), inc=True) 
+        else:
+          next = obj.recurrences.after(today - timedelta(days=today.weekday()), inc=True)        
+
+        text = obj.recurrences.rrules[0].to_text() 
+        start_date = obj.recurrences.dtstart
+        end_date = obj.recurrences.rrules[0].until
+        interval = obj.recurrences.rrules[0].interval
+        freq = obj.recurrences.rrules[0].freq
+
+        return {"next" : next, "text" : text, "start_date" : start_date, "end_date" : end_date, "interval" : interval, "freq" : freq}     
   
     class Meta:
         model = be_local_server.models.Market
@@ -513,5 +644,7 @@ class VendorMarketDisplaySerializer(serializers.ModelSerializer):
                     'address',
                     'name',
                     'description',
+                    'recurrences',
+                    'real_start'
         )        
 

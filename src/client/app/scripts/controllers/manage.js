@@ -7,7 +7,7 @@ angular.module('clientApp')
     $scope.showXSNav = true;
     $scope.submitLocationButtonText = 'Add Market';
     $scope.newLocationSubmitted = false;
-    $scope.displayItemThumbnail = false;
+    $scope.displayMarketThumbnail = false;
     $scope.repeatUntil = 'never'; // Default is that recurring events will repeat indefinitely
     $scope.recurrenceFrequency = 2;
     $scope.recurrenceInterval = 1;
@@ -52,15 +52,111 @@ angular.module('clientApp')
         $event.stopPropagation();
 
         $scope.endOpened = true;
-    };    
+    };
+
+    // Set the time of a new date object. This is gross, but had to be done to get around silly timezone issues that were occuring
+    // by setting the time with built in functions. Javascript date/time objects are sometimes SO awful to work with.
+    $scope.setTime = function(time) {
+        var hour = parseInt(time.substr(0,2));
+        var minute = parseInt(time.substr(3,2));
+        var isPM = time.substr(5,2) === "PM"
+        if (isPM) hour += 12;
+        else if(!isPM && hour === 12) hour = 0;
+        var date = new Date();
+        date.setHours(hour);
+        date.setMinutes(minute);
+
+        return date;
+    }    
+
+    // Populate the edit location dialog fields with values coming in from the location parameter
+    $scope.editMarket = function(location) {
+
+        $scope.displayMarketThumbnail = location.photo ? true : false; 
+
+        if($scope.displayMarketThumbnail)
+            angular.element('#itemPreview').attr('src', location.photo.image_url).width(50).height(50);       
+
+        var hours = $scope.buildHoursObject();
+        var currentHour = 0;
+
+        var start = new Date();
+        var end = new Date();
+
+        start.setHours(8);
+        start.setMinutes(0,0);
+        end.setHours(16);
+        end.setMinutes(0,0);        
+
+        // This toggles the lovely day/time picker for recurring dates to match the location paramter's hours
+        for(var i = 0; i < hours.length; i++) {
+            if(currentHour < location.address.hours.length && hours[i].weekday === location.address.hours[currentHour].weekday) {
+                hours[i].checked = true;
+                hours[i].day = $scope.weekdays[i];
+                hours[i].from_hour = $scope.setTime(location.address.hours[currentHour].from_hour);
+                hours[i].to_hour = $scope.setTime(location.address.hours[currentHour].to_hour);
+                currentHour += 1;                    
+            } else {
+                hours[i].checked = false;
+                hours[i].from_hour = start;
+                hours[i].to_hour = end;
+            }
+        }
+
+        $scope.locationHours = hours;  
+        $scope.locationType = 'false'; // Remember, false means recurring event. I'm sorry this had to be done, but it's used in the HTML 
+
+        // Set recurrence information
+        if(location.real_start != null && location.recurrences != null) {
+            $scope.recurrenceStartDate = new Date(location.real_start); 
+            $scope.recurrenceStartDate.setTime($scope.recurrenceStartDate.getTime() + $scope.recurrenceStartDate.getTimezoneOffset() * 60000);
+
+            $scope.recurrenceFrequency = location.recurrences.freq;
+            $scope.recurrenceInterval = location.recurrences.interval;
+
+            if(location.recurrences.end_date !== null) {
+                $scope.repeatUntil = 'endDate';
+                $scope.recurrenceEndDate = new Date(location.recurrences.end_date); 
+                $scope.recurrenceEndDate.setTime($scope.recurrenceEndDate.getTime() + $scope.recurrenceEndDate.getTimezoneOffset() * 60000);                
+            } else {
+                $scope.repeatUntil = 'never';
+                $scope.recurrenceEndDate = new Date();
+            }
+        }
+
+        // Set various fields in the modal.
+        $scope.isEditingLocation = true;
+        $scope.newLocationSubmitted = false;
+        $scope.submitLocationButtonText = "Save Changes"; // This updates the submit button text.
+
+        $scope.addressSearchText = location.address.addr_line1 + ', ' + location.address.city + ', ' + location.address.state + ' ' + location.address.zipcode + ', ' + location.address.country;
+
+        $scope.locationAddress = location.address.addr_line1;
+        $scope.locationCity = location.address.city;
+        $scope.locationProvince = location.address.state;
+        $scope.locationCountry = location.address.country;
+        $scope.locationName = location.name;
+        $scope.locationPostalCode = location.address.zipcode;
+        $scope.locationId = location.id;
+        $scope.website = location.webpage;
+        $scope.locationDescription  = location.description;
+    }        
 
     // Reset all fields in new location modal
     $scope.resetLocationModal = function() {
+
+        $timeout(function() {
+            var e = angular.element('#market-image');
+            e.wrap('<form>').closest('form').get(0).reset();
+            e.unwrap();
+        });
+
         $scope.addressSearchText = undefined; // Reset address search text
         $scope.newLocationSubmitted = false; // Reset has submitted flag
         $scope.isEditingLocation = false; // Reset is editing location flag
         $scope.recurrenceFrequency = 2; // Reset recurrence value
         $scope.recurrenceInterval = 1; // Reset frequency value
+        $scope.displayMarketThumbnail = false;
 
         var tempDate = new Date();
         tempDate.setHours(tempDate.getHours() + 1);
@@ -321,7 +417,7 @@ angular.module('clientApp')
         
         if (file && file[0]) {
             var reader = new FileReader();
-            $scope.displayItemThumbnail = true;
+            $scope.displayMarketThumbnail = true;
             reader.onload = function(e) {
                 angular.element('#itemPreview')
                 .attr('src', e.target.result)

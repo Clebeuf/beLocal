@@ -436,7 +436,7 @@ angular.module('clientApp')
         var e = angular.element('#item-image');
         e.wrap('<form>').closest('form').get(0).reset();
         e.unwrap();
-        })
+        });
         
         /* clear checked tags */
         var len = $scope.tagList.length;

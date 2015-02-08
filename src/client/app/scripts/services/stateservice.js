@@ -461,7 +461,7 @@ angular.module('clientApp')
     // Create or edit a selling location
     this.createMarket = function(market, isEditing) {
       if(isEditing) {
-        var url = this.getServerAddress() + 'vendor/location/' + market.id + '/';       
+        var url = this.getServerAddress() + 'market/' + market.id + '/';       
         return $http({method: 'PATCH', url: url, data: market})
         .success(function() {
           console.log("Edited a location!");

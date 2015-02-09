@@ -271,16 +271,20 @@ angular.module('clientApp')
       $timeout(function() {
         if(StateService.getCurrentUser()){        
           if(StateService.getUserType() === 'CUS') {
+              /* Uncomment below code in production 
               // SEND THE WELCOME EMAIL TO NEW FOODIE
               $scope.foodieSendEmail();
+              */
               $timeout(function() {
                 $location.path('/');                    
               });
           } else if(StateService.getUserType() === 'VEN') {
+              /* Uncomment below code in production 
               // SEND THE WELCOME EMAIL TO NEW VENDOR
               $scope.vendorSendEmail();
               // SEND US A NOTIFICATION EMAIL
               $scope.sendNewVendorEmail();
+              */
               $timeout(function() {
                 $location.path('/vendor');
               });

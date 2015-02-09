@@ -190,6 +190,10 @@
     margin-left: 5px !important;
     text-align: left !important;
   }
+
+  .mobile-form-padding{
+    padding: 7px;
+  }
 }
 
 /*NAV BAR RESPONSIVENESS*/

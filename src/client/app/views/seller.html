@@ -68,7 +68,7 @@
 
             <hr>
             <div class="description-container">
-                <span ng-show="StateService.getCurrentUser().vendor.description == ''">Please enter a description for your business using the Edit Profile button above.</span>
+                <span ng-show="StateService.getCurrentUser().vendor.description == ''">Use this space to let your customers know what your company is all about! To enter a short description of your business, please click the "Edit Profile" button above.</span>
                 {{StateService.getCurrentUser().vendor.description}}
             </div>
         </div>
@@ -594,7 +594,7 @@
                     <div class="full-width-tabs" ng-show="isEditingLocation == false">
                         <ul class="nav nav-tabs location-tabs" role="tablist">
                               <li role="presentation" class="active full-width"><a id="marketLocationTab" href="/vendor/#marketLocation" ng-click="doMarketLocation()" role="tab" data-toggle="tab">Join Existing Market</a></li>
-                              <li role="presentation" class="full-width"><a id="customLocationTab" href="/vendor/#customLocation" ng-click="doCustomLocation()" role="tab" data-toggle="tab"><span class="hidden-mobile">Create</span> New Custom Location</a></li>
+                              <li role="presentation" class="full-width"><a id="customLocationTab" href="/vendor/#customLocation" ng-click="doCustomLocation()" role="tab" data-toggle="tab"><span class="show-500px">Create</span> New Custom Location</a></li>
                         </ul>
                     </div>
                     <div class="tab-content">
@@ -653,36 +653,47 @@
                                     <label>Hours:</label>
                                     <div class="well">
                                         <div class="row">
-                                            <div class="col-xs-6"> 
-                                                <label>Days You are Open:</label>
+                                            <div class="col-sm-6 col-xs-4"> 
+                                                <label>
+                                                    <span class="hidden-mobile">Days You are Open:</span>
+                                                    <span class="show-mobile">Weekday:</span>
+                                                </label>
                                             </div>
-                                            <div class="col-xs-3"> 
-                                                <label>Opening Time:</label>
+                                            <div class="col-xs-4 col-sm-3 week-padding"> 
+                                                <label>
+                                                    <span class="hidden-mobile">Opening Time:</span>
+                                                    <span class="show-mobile">Open:</span>
+                                                </label>
                                             </div>  
-                                            <div class="col-xs-3"> 
-                                                <label>Closing Time:</label>
+                                            <div class="col-xs-4 col-sm-3 week-padding"> 
+                                                <label>
+                                                    <span class="hidden-mobile">Closing Time:</span>
+                                                    <span class="show-mobile">Close:</span>
+                                                </label>
                                             </div>                                                              
                                         </div>
                                         <div ng-repeat="day in locationHours" class="row">
                                             <ng-form name="hoursForm">                                
-                                                <div class="col-xs-6">                              
+                                                <div class="col-sm-6 col-xs-4">                              
                                                     <div class="checkbox">
                                                       <label>
-                                                        <input name="day{{$index}}Check" ng-model="day.checked" type="checkbox">{{day.day}}
+                                                        <input name="day{{$index}}Check" ng-model="day.checked" type="checkbox">
+                                                            <span class="hidden-mobile">{{day.day}}</span>
+                                                            <span class="show-mobile">{{day.day | limitTo: 3}}</span>
                                                       </label>
                                                     </div>
                                                 </div>
-                                                <div ng-show="day.checked" class="col-xs-3 col-md-3">
+                                                <div ng-show="day.checked" class="col-xs-4 col-sm-3  week-padding">
                                                     <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.openHours.$invalid}">
                                                         <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.from_hour" name="openHours" bs-timepicker>
                                                     </div>
                                                 </div>
-                                                <div ng-show="day.checked" class="col-xs-3 col-md-3">
+                                                <div ng-show="day.checked" class="col-xs-4 col-sm-3  week-padding">
                                                     <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.closeHours.$invalid}">
                                                         <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.to_hour" name="closeHours" bs-timepicker>
                                                     </div>
                                                 </div> 
-                                                <div ng-hide="day.checked" class="col-xs-6 col-md-6 closed-container">
+                                                <div ng-hide="day.checked" class="col-xs-8 col-md-6 closed-container">
                                                     <p class="closed-string">Closed</p>
                                                 </div>
                                             </ng-form>                                        
@@ -802,29 +813,30 @@
                                     <label>Select the Market You're Selling At:</label>
                                     <select ng-show="StateService.getAvailableMarketList().length > 0" ng-model="newLocationMarket" id="modalMarketPicker" class="form-control" ng-options="market as market.name for market in StateService.getAvailableMarketList()"></select>
                                     <div ng-show="newLocationMarket.name != null && StateService.getAvailableMarketList().length > 0">
-                                        <!-- 
-                                        <p>{{newLocationMarket.name}} Details:</p> -->
-
                                         <br>
                                         <p>
                                             <b>Details for {{newLocationMarket.name}}:</b>
                                         </p>
-                                        <p class="indent">
-                                            <b>Address:</b>
-                                            <br>
-                                            <span class="store-hours">
-                                                {{newLocationMarket.address.addr_line1}},
-                                                {{newLocationMarket.address.city}}, 
-                                                {{newLocationMarket.address.state}}, 
-                                                {{newLocationMarket.address.zipcode}}
-                                            </span>
-                                        </p>
-                                        <span class="indent"><b>Hours:</b></span>
-                                        <ul class="list-inline store-hours indent">&nbsp
-                                            <li ng-repeat="day in newLocationMarket.address.hours">
-                                                <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                                            </li>
-                                        </ul>
+                                        <div style="padding-left: 15px;">
+                                            <!-- indenting after first line - overriding Bootstrap styles -->
+                                            <p style="text-indent: -25px !important; margin-left: 25px !important;">
+                                                <b>Address:</b>
+                                                    {{newLocationMarket.address.addr_line1}},
+                                                    {{newLocationMarket.address.city}}, 
+                                                    {{newLocationMarket.address.state}}, 
+                                                    {{newLocationMarket.address.zipcode}}
+                                            </p>
+                                            <!-- indenting after first line - overriding Bootstrap styles -->
+                                            <p style="text-indent: -25px !important; margin-left: 25px !important;">
+                                                <b>Description:</b> {{newLocationMarket.description}}
+                                            </p>
+                                            <b>Hours:</b>
+                                            <ul class="list-inline store-hours indent">&nbsp
+                                                <li ng-repeat="day in newLocationMarket.address.hours">
+                                                    <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
 
                                     <p ng-hide="StateService.getAvailableMarketList().length > 0" class="medium-margin">You're already selling at all the running markets in town! 

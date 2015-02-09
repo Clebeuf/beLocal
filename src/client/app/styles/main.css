@@ -80,10 +80,23 @@
     .hidden-mobile{
         display: none !important;
     }
+    .no-margin-mobile {
+      margin: 0px;
+    }
+    .week-padding {
+      padding-left: 3px !important;
+      padding-right: 3px !important;
+    }
 }
 
 @media screen and (min-width: 401px) {
     .show-mobile {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .show-500px{
         display: none !important;
     }
 }

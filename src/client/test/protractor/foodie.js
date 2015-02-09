@@ -49,6 +49,23 @@ describe('Testing foodie tasks', function() {
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/');
     });
 
+    var scrollToLastScreenScript = function (offset) {
+      window.scrollTo(0, document.body.scrollHeight - 2 * window.innerHeight + offset);
+    }
+    
+    it('Should allow infinite scroll of trending products', function() {
+      expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(5);
+      browser.driver.executeScript(scrollToLastScreenScript(-20)).then(function () {
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(5);
+      });
+      browser.driver.executeScript(scrollToLastScreenScript(20)).then(function () {
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(8);
+      });
+      browser.driver.executeScript('window.scrollTo(0,10000);').then(function () {
+        expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(8);
+      });
+    });
+    
     it('Should allow filtering of products by category', function() {
         element.all(by.css('[ng-click="getProductsWithCategory(category)"]')).get(5).click();
         expect(element.all(by.repeater('item in trendingProducts')).count()).toEqual(1);

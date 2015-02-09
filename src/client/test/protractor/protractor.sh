@@ -28,10 +28,16 @@ protractor facebook-farmer-tests
 protractor facebook-foodie-tests
 
 # Put back the backed up database
-cd ../../../server
-echo "Restoring the database"
-if [ -a db.sqlite3.backup ]; 
+read -p "Do you want to restore the database? <Y/N> " prompt 
+if [ $prompt == "y" || $prompt == "Y" ]; 
 then
-    rm db.sqlite3
-    mv db.sqlite3.backup db.sqlite3
+    cd ../../../server
+    if [ -a db.sqlite3.backup ]; 
+    then
+        rm db.sqlite3
+        mv db.sqlite3.backup db.sqlite3
+        echo "Database restored."
+    else
+        echo "Cannot restore database. No backup found."
+    fi
 fi

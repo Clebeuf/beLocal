@@ -2,15 +2,16 @@
 # Perform setup of database, markets and tags/categories
 clear
 cd ../../../server
-# Back current sqlite database
+echo "Backing up sqlite database"
 if [ -a db.sqlite3 ]; 
 then
+    echo "backing up sqlite3 database"
     mv db.sqlite3 db.sqlite3.backup
 fi
-#rm db.sqlite3
 python manage.py syncdb --noinput
 python manage.py shell < scripts/updateMarkets.py
 python manage.py shell < scripts/updateTagCategory.py
+
 cd ../client/test/protractor/
 # Set up Facebook and non-Facebook foodie accounts
 protractor foodie-setup
@@ -27,11 +28,10 @@ protractor facebook-farmer-tests
 protractor facebook-foodie-tests
 
 # Put back the backed up database
-if [ -a db.sqlite3 ]; 
-then
-    rm db.sqlite3
-fi
+cd ../../../server
+echo "Restoring the database"
 if [ -a db.sqlite3.backup ]; 
 then
+    rm db.sqlite3
     mv db.sqlite3.backup db.sqlite3
 fi

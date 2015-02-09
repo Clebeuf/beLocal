@@ -2,7 +2,12 @@
 # Perform setup of database, markets and tags/categories
 clear
 cd ../../../server
-rm db.sqlite3
+# Back current sqlite database
+if [ -a db.sqlite3 ]; 
+then
+    mv db.sqlite3 db.sqlite3.backup
+fi
+#rm db.sqlite3
 python manage.py syncdb --noinput
 python manage.py shell < scripts/updateMarkets.py
 python manage.py shell < scripts/updateTagCategory.py
@@ -20,3 +25,13 @@ protractor super-user-tests
 protractor facebook-farmer-tests
 # Test foodie functionality
 protractor facebook-foodie-tests
+
+# Put back the backed up database
+if [ -a db.sqlite3 ]; 
+then
+    rm db.sqlite3
+fi
+if [ -a db.sqlite3.backup ]; 
+then
+    mv db.sqlite3.backup db.sqlite3
+fi

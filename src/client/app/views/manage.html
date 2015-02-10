@@ -198,7 +198,7 @@
                             <div class="well">
                                 <ng-form name="recurrenceForm">                                       
                                     <div class="row">
-                                        <div class="col-xs-4">
+                                        <div class="col-sm-4 col-xs-6">
                                               <div class="form-group" ng-class="{ 'has-error' : (recurrenceForm.addressText.$invalid ) && newLocationSubmitted }">
                                                 <label class="control-label">Repeats:</label>
                                                 <select ng-model="recurrenceFrequency" id="frequencyPicker" class="form-control">
@@ -208,11 +208,11 @@
                                                 </select>
                                               </div>
                                         </div>                                                                                               
-                                        <div class="col-xs-4">
+                                        <div class="col-sm-4  col-xs-6">
                                               <div class="form-group" ng-class="{ 'has-error' : (recurrenceForm.addressText.$invalid ) && newLocationSubmitted }">
                                                   <label class="control-label">Repeats Every:</label>
                                                   <div>
-                                                  <select style="width:auto; display:inline; margin-right: 10px;" ng-model="recurrenceInterval" id="internvalPicker" class="form-control">
+                                                  <select style="width:auto; display:inline; margin-right: 5px;" ng-model="recurrenceInterval" id="internvalPicker" class="form-control ">
                                                       <option ng-repeat="a in range(10) track by $index" value="{{$index+1}}">{{$index + 1}}</option>
                                                   </select>
                                                   <span ng-show="recurrenceFrequency == 2">week<span ng-show="recurrenceInterval !== 1">s</span></span>
@@ -221,7 +221,7 @@
                                                   </div>
                                               </div>
                                         </div>                                                 
-                                        <div class="col-xs-4">
+                                        <div class="col-sm-4">
                                             <div class="form-group">
                                               <label>Start Date:</label>                      
                                               <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && recurrenceForm.recurrenceStartDateField.$invalid }">
@@ -239,23 +239,23 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-1"></div>
-                                        <div class="col-xs-11">
+                                        <div class="col-xs-12">
                                             <input type="radio" name="endDateOptions" value="never" ng-model="repeatUntil" /> Never
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-1"></div>
-                                        <div class="col-xs-11">
+                                        <div class="col-xs-3 col-sm-2" style="padding-right: 0px; padding-top: 6px;">
                                             <input type="radio" name="endDateOptions" value="endDate" ng-model="repeatUntil" /> On
-                                            <div class="form-group">                     
+                                        </div>
+                                        <div class="form-group col-xs-9 col-sm-10"> 
                                               <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && recurrenceForm.recurrenceStartDateField.$invalid }">
-                                                <input ng-disabled="repeatUntil === 'never'" required type="text" name="recurrenceStartDateField" class="form-control date-picker cursor-default" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="recurrenceEndDate" is-open="endOpened" min-date="minDate" close-text="Close" />
-                                                <span class="input-group-btn">
-                                                  <button ng-disabled="repeatUntil === 'never'" class="btn btn-default" ng-click="openEnd($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                                </span>                       
+                                                    <input ng-disabled="repeatUntil === 'never'" required type="text" name="recurrenceStartDateField" class="form-control date-picker cursor-default" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="recurrenceEndDate" is-open="endOpened" min-date="minDate" close-text="Close" />
+                                                    <span class="input-group-btn">
+                                                        <button ng-disabled="repeatUntil === 'never'" class="btn btn-default" ng-click="openEnd($event)">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                    </span>                       
                                               </div>
-                                            </div>
                                         </div>
                                     </div>                                            
                                 </ng-form>                                        

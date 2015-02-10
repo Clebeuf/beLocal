@@ -362,6 +362,13 @@ class VendorTabSerializer(serializers.ModelSerializer):
                   'selling_locations'
       )       
 
+class PaginatedVendorTabSerializer(pagination.PaginationSerializer):
+    """
+    Serializes page objects of vendor querysets.
+    """
+    class Meta:
+        object_serializer_class = VendorTabSerializer
+
 class MarketDetailsVendorSerializer(serializers.ModelSerializer):
   products = serializers.SerializerMethodField('get_in_stock_products')
   photo = VendorPhotoPathSerializer()

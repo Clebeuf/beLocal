@@ -1,44 +1,40 @@
 import simplejson as sjson
 from rest_framework import generics, status, viewsets, mixins, parsers, renderers, status, generics
 from rest_framework.authtoken.models import Token
-from rest_framework.views import APIView
-from rest_framework.authentication import get_authorization_header
-from rest_framework.response import Response
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authentication import get_authorization_header, TokenAuthentication
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.authentication import TokenAuthentication
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.files import File 
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+from django.contrib.auth.views import password_reset, password_reset_confirm
 from django.contrib.contenttypes.models import ContentType
+from django.db.models.base import ModelBase
+from django.forms.models import model_to_dict
 from django.http import HttpResponse, HttpResponseServerError, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models.base import ModelBase
-from django.forms.models import model_to_dict
 from social.apps.django_app.utils import psa
 from secretballot import views
 from secretballot.models import Vote
-from be_local_server import serializers
-from be_local_server.models import *
 from haystack.query import SearchQuerySet
-import datetime, json
 from geopy.distance import vincenty
 from operator import itemgetter, attrgetter, methodcaller
 from taggit.models import Tag
-from django.contrib.auth import authenticate
-from django.core.files import File 
-from PIL import Image, ImageOps
-import urllib
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
-from django.contrib.auth.views import password_reset, password_reset_confirm
-import StringIO
+from PIL import Image, ImageOps 
 from base64 import b64decode
-from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import InMemoryUploadedFile
-import sys
+import sys, datetime, json, urllib, StringIO
+from be_local_server import serializers
+from be_local_server.models import *
 
 class DeleteUserView(generics.CreateAPIView):
     """
@@ -971,6 +967,10 @@ class VendorsView(generics.ListAPIView):
         return vendors
 
     def post(self, request):
+        # Pagination Logic    
+        page = request.QUERY_PARAMS.get('page')  
+        page_size = request.QUERY_PARAMS.get('page_size') 
+           
         # Unused geolocation-dependent code 
         if ('user_position' in request.DATA.keys() and request.DATA['user_position'] is not None):
 
@@ -993,18 +993,42 @@ class VendorsView(generics.ListAPIView):
                     vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote 
                     vendors.append(vendor)
                     
-            serializer = serializers.VendorTabSerializer(vendors, many=True)
-            return Response(serializer.data)
+            #serializer = serializers.VendorTabSerializer(vendors, many=True)
+            #return Response(serializer.data)
 
         else: 
             vendors = Vendor.objects.filter(is_active=True)
-            
+        
             if vendors is not None:
                 for vendor in vendors:
                     vendor.is_liked = Vendor.objects.from_request(self.request).get(pk=vendor.id).user_vote
             
-            serializer = serializers.VendorTabSerializer(vendors, many=True)
-            return Response(serializer.data)
+            #serializer = serializers.VendorTabSerializer(vendors, many=True)
+            #return Response(serializer.data)
+        
+        # Create pages of given size     
+        if page_size is not None:
+            paginator = Paginator(vendors, page_size)
+        else:
+            # default page size
+            paginator = Paginator(vendors, 5)
+         
+        # Get the asked page
+        try:         
+            vendorsPage = paginator.page(page) 
+        except PageNotAnInteger:         
+            # If page is null, deliver first page.
+            if page is None:
+                vendorsPage = paginator.page(1) 
+            else:
+                raise Http404(_("page number cannot be converted to an int.")) 
+        except EmptyPage:         
+            # If page is out of range (e.g. 9999), flag error
+            raise Http404(_("page not found."))  
+        
+        serializer_context = {'request': request}  
+        serializer = serializers.PaginatedVendorTabSerializer(vendorsPage, context=serializer_context)
+        return Response(serializer.data)
 
 class ListVendorLocations(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)

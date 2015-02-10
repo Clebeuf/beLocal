@@ -68,7 +68,7 @@
 
             <hr>
             <div class="description-container">
-                <span ng-show="StateService.getCurrentUser().vendor.description == ''">Please enter a description for your business using the Edit Profile button above.</span>
+                <span ng-show="StateService.getCurrentUser().vendor.description == ''">Use this space to let your customers know what your company is all about! To enter a short description of your business, please click the "Edit Profile" button above.</span>
                 {{StateService.getCurrentUser().vendor.description}}
             </div>
         </div>
@@ -594,14 +594,14 @@
                     <div class="full-width-tabs" ng-show="isEditingLocation == false">
                         <ul class="nav nav-tabs location-tabs" role="tablist">
                               <li role="presentation" class="active full-width"><a id="marketLocationTab" href="/vendor/#marketLocation" ng-click="doMarketLocation()" role="tab" data-toggle="tab">Join Existing Market</a></li>
-                              <li role="presentation" class="full-width"><a id="customLocationTab" href="/vendor/#customLocation" ng-click="doCustomLocation()" role="tab" data-toggle="tab">Create New Custom Location</a></li>
+                              <li role="presentation" class="full-width"><a id="customLocationTab" href="/vendor/#customLocation" ng-click="doCustomLocation()" role="tab" data-toggle="tab"><span class="show-500px">Create</span> New Custom Location</a></li>
                         </ul>
                     </div>
                     <div class="tab-content">
                         <div class="tab-pane" id="customLocation" class="profile-modal">                                 
                             <form role="form" name="locationForm" novalidate>
                                 <div class="row">
-                                    <div class="col-xs-6 col-md-6">
+                                    <div class="col-xs-12 col-sm-6">
                                         <div class="form-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationField.$invalid }">
                                             <label class="control-label">Location Name</label>
                                             <input required ng-model="locationName" type="text" name="locationField" class="form-control" id="item-name" placeholder="Location Name" maxlength="35"/>
@@ -610,13 +610,13 @@
                                             </span>
                                         </div>
                                     </div>                        
-                                    <div class="col-xs-6 col-md-6">
+                                    <div class="col-xs-12 col-sm-6">
                                         <div class="form-group">
-                                            <label class="control-label">Location Type</label><br />
+                                            <label class="control-label">Location Type</label><br/>
                                             <label class="radio-inline">
                                               <input type="radio" ng-model="locationType" name="locationTypeOptions" id="farmRadio" value="true"><p>One Time Event</p>
                                             </label>
-                                            <label class="radio-inline radio-inline-responsive">
+                                            <label class="radio-inline">
                                               <input type="radio" ng-model="locationType" name="locationTypeOptions" id="marketRadio" value="false"><p>Recurring Event</p>
                                             </label>                            
                                         </div>
@@ -624,7 +624,7 @@
                                 </div>
                                 <!-- One Time Date Options -->
                                 <div ng-show="locationType" class="row">
-                                    <div class="col-xs-6 col-md-6">
+                                    <div class="col-xs-12 col-md-6">
                                         <div class="form-group">
                                           <label>Date:</label>                      
                                           <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.dateField.$invalid }">
@@ -635,16 +635,16 @@
                                           </div>
                                         </div>                               
                                     </div>                        
-                                    <div class="col-xs-3 col-md-3">
+                                    <div class="col-xs-6 col-md-3">
                                         <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.startField.$invalid}">
                                             <label class="control-label"><i class="fa fa-clock-o"></i> Start Time</label>
-                                            <input required type="text" class="form-control" size="8" ng-model="startTime" name="startField" bs-timepicker>
+                                            <input required type="text" class="form-control mobile-form-padding" size="8" ng-model="startTime" name="startField" bs-timepicker>
                                         </div>
                                     </div>
-                                    <div class="col-xs-3 col-md-3">
+                                    <div class="col-xs-6 col-md-3">
                                         <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.endField.$invalid}">
                                             <label class="control-label"><i class="fa fa-clock-o"></i> End Time</label>
-                                            <input required type="text" class="form-control" size="8" ng-model="endTime" name="endField" bs-timepicker>
+                                            <input required type="text" class="form-control mobile-form-padding" size="8" ng-model="endTime" name="endField" bs-timepicker>
                                         </div>
                                     </div>
                                 </div>
@@ -653,36 +653,47 @@
                                     <label>Hours:</label>
                                     <div class="well">
                                         <div class="row">
-                                            <div class="col-xs-6"> 
-                                                <label>Days You are Open:</label>
+                                            <div class="col-sm-6 col-xs-4"> 
+                                                <label>
+                                                    <span class="hidden-mobile">Days You are Open:</span>
+                                                    <span class="show-mobile">Weekday:</span>
+                                                </label>
                                             </div>
-                                            <div class="col-xs-3"> 
-                                                <label>Opening Time:</label>
+                                            <div class="col-xs-4 col-sm-3 week-padding"> 
+                                                <label>
+                                                    <span class="hidden-mobile">Opening Time:</span>
+                                                    <span class="show-mobile">Open:</span>
+                                                </label>
                                             </div>  
-                                            <div class="col-xs-3"> 
-                                                <label>Closing Time:</label>
+                                            <div class="col-xs-4 col-sm-3 week-padding"> 
+                                                <label>
+                                                    <span class="hidden-mobile">Closing Time:</span>
+                                                    <span class="show-mobile">Close:</span>
+                                                </label>
                                             </div>                                                              
                                         </div>
                                         <div ng-repeat="day in locationHours" class="row">
                                             <ng-form name="hoursForm">                                
-                                                <div class="col-xs-6">                              
+                                                <div class="col-sm-6 col-xs-4">                              
                                                     <div class="checkbox">
                                                       <label>
-                                                        <input name="day{{$index}}Check" ng-model="day.checked" type="checkbox">{{day.day}}
+                                                        <input name="day{{$index}}Check" ng-model="day.checked" type="checkbox">
+                                                            <span class="hidden-mobile">{{day.day}}</span>
+                                                            <span class="show-mobile">{{day.day | limitTo: 3}}</span>
                                                       </label>
                                                     </div>
                                                 </div>
-                                                <div ng-show="day.checked" class="col-xs-3 col-md-3">
+                                                <div ng-show="day.checked" class="col-xs-4 col-sm-3  week-padding">
                                                     <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.openHours.$invalid}">
                                                         <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.from_hour" name="openHours" bs-timepicker>
                                                     </div>
                                                 </div>
-                                                <div ng-show="day.checked" class="col-xs-3 col-md-3">
+                                                <div ng-show="day.checked" class="col-xs-4 col-sm-3  week-padding">
                                                     <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.closeHours.$invalid}">
                                                         <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.to_hour" name="closeHours" bs-timepicker>
                                                     </div>
                                                 </div> 
-                                                <div ng-hide="day.checked" class="col-xs-6 col-md-6 closed-container">
+                                                <div ng-hide="day.checked" class="col-xs-8 col-md-6 closed-container">
                                                     <p class="closed-string">Closed</p>
                                                 </div>
                                             </ng-form>                                        
@@ -694,7 +705,7 @@
                                     <div class="well">
                                         <ng-form name="recurrenceForm">                                       
                                             <div class="row">
-                                                <div class="col-xs-4">
+                                                <div class="col-sm-4 col-xs-6">
                                                       <div class="form-group" ng-class="{ 'has-error' : (recurrenceForm.addressText.$invalid ) && newLocationSubmitted }">
                                                         <label class="control-label">Repeats:</label>
                                                         <select ng-model="recurrenceFrequency" id="frequencyPicker" class="form-control">
@@ -704,11 +715,11 @@
                                                         </select>
                                                       </div>
                                                 </div>                                                                                               
-                                                <div class="col-xs-4">
+                                                <div class="col-sm-4  col-xs-6">
                                                       <div class="form-group" ng-class="{ 'has-error' : (recurrenceForm.addressText.$invalid ) && newLocationSubmitted }">
                                                           <label class="control-label">Repeats Every:</label>
                                                           <div>
-                                                          <select style="width:auto; display:inline; margin-right: 10px;" ng-model="recurrenceInterval" id="internvalPicker" class="form-control">
+                                                          <select style="width:auto; display:inline; margin-right: 5px;" ng-model="recurrenceInterval" id="internvalPicker" class="form-control ">
                                                               <option ng-repeat="a in range(10) track by $index" value="{{$index+1}}">{{$index + 1}}</option>
                                                           </select>
                                                           <span ng-show="recurrenceFrequency == 2">week<span ng-show="recurrenceInterval !== 1">s</span></span>
@@ -717,7 +728,7 @@
                                                           </div>
                                                       </div>
                                                 </div>                                                 
-                                                <div class="col-xs-4">
+                                                <div class="col-sm-4">
                                                     <div class="form-group">
                                                       <label>Start Date:</label>                      
                                                       <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && recurrenceForm.recurrenceStartDateField.$invalid }">
@@ -735,23 +746,23 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-xs-1"></div>
-                                                <div class="col-xs-11">
+                                                <div class="col-xs-12">
                                                     <input type="radio" name="endDateOptions" value="never" ng-model="repeatUntil" /> Never
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-xs-1"></div>
-                                                <div class="col-xs-11">
+                                                <div class="col-xs-3 col-sm-2" style="padding-right: 0px; padding-top: 6px;">
                                                     <input type="radio" name="endDateOptions" value="endDate" ng-model="repeatUntil" /> On
-                                                    <div class="form-group">                     
+                                                </div>
+                                                <div class="form-group col-xs-9 col-sm-10"> 
                                                       <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && recurrenceForm.recurrenceStartDateField.$invalid }">
-                                                        <input ng-disabled="repeatUntil === 'never'" required type="text" name="recurrenceStartDateField" class="form-control date-picker cursor-default" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="recurrenceEndDate" is-open="endOpened" min-date="minDate" close-text="Close" />
-                                                        <span class="input-group-btn">
-                                                          <button ng-disabled="repeatUntil === 'never'" class="btn btn-default" ng-click="openEnd($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                                        </span>                       
+                                                            <input ng-disabled="repeatUntil === 'never'" required type="text" name="recurrenceStartDateField" class="form-control date-picker cursor-default" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="recurrenceEndDate" is-open="endOpened" min-date="minDate" close-text="Close" />
+                                                            <span class="input-group-btn">
+                                                                <button ng-disabled="repeatUntil === 'never'" class="btn btn-default" ng-click="openEnd($event)">
+                                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                                </button>
+                                                            </span>                       
                                                       </div>
-                                                    </div>
                                                 </div>
                                             </div>                                            
                                         </ng-form>                                        
@@ -802,29 +813,30 @@
                                     <label>Select the Market You're Selling At:</label>
                                     <select ng-show="StateService.getAvailableMarketList().length > 0" ng-model="newLocationMarket" id="modalMarketPicker" class="form-control" ng-options="market as market.name for market in StateService.getAvailableMarketList()"></select>
                                     <div ng-show="newLocationMarket.name != null && StateService.getAvailableMarketList().length > 0">
-                                        <!-- 
-                                        <p>{{newLocationMarket.name}} Details:</p> -->
-
                                         <br>
                                         <p>
                                             <b>Details for {{newLocationMarket.name}}:</b>
                                         </p>
-                                        <p class="indent">
-                                            <b>Address:</b>
-                                            <br>
-                                            <span class="store-hours">
-                                                {{newLocationMarket.address.addr_line1}},
-                                                {{newLocationMarket.address.city}}, 
-                                                {{newLocationMarket.address.state}}, 
-                                                {{newLocationMarket.address.zipcode}}
-                                            </span>
-                                        </p>
-                                        <span class="indent"><b>Hours:</b></span>
-                                        <ul class="list-inline store-hours indent">&nbsp
-                                            <li ng-repeat="day in newLocationMarket.address.hours">
-                                                <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                                            </li>
-                                        </ul>
+                                        <div style="padding-left: 15px;">
+                                            <!-- indenting after first line - overriding Bootstrap styles -->
+                                            <p style="text-indent: -25px !important; margin-left: 25px !important;">
+                                                <b>Address:</b>
+                                                    {{newLocationMarket.address.addr_line1}},
+                                                    {{newLocationMarket.address.city}}, 
+                                                    {{newLocationMarket.address.state}}, 
+                                                    {{newLocationMarket.address.zipcode}}
+                                            </p>
+                                            <!-- indenting after first line - overriding Bootstrap styles -->
+                                            <p style="text-indent: -25px !important; margin-left: 25px !important;">
+                                                <b>Description:</b> {{newLocationMarket.description}}
+                                            </p>
+                                            <b>Hours:</b>
+                                            <ul class="list-inline store-hours indent">&nbsp
+                                                <li ng-repeat="day in newLocationMarket.address.hours">
+                                                    <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
 
                                     <p ng-hide="StateService.getAvailableMarketList().length > 0" class="medium-margin">You're already selling at all the running markets in town! 

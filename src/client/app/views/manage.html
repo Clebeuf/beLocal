@@ -262,7 +262,7 @@
                             </div>
                         </div>                                                       
                         <div class="row">
-                            <div class="col-xs-12 col-md-12">
+                            <div class="col-xs-12">
                                   <div class="form-group" ng-class="{ 'has-error' : (locationForm.addressText.$invalid ) && newLocationSubmitted }">
                                     <label class="control-label">Address</label>
                                     <input id="address-typeahead" type="text" autocomplete="off" name="addressText" typeahead="result.formatted_address for result in getLocation($viewValue)" typeahead-on-select="makeSelection($item)" class="form-control" ng-model="addressSearchText" placeholder="Search for an Address" required>
@@ -281,10 +281,10 @@
                             </div>                                                                   
                         </div>                        
                         <div class="row">
-                            <div class="col-xs-12 col-md-12">
+                            <div class="col-xs-12">
                                 <div class="form-group no-bottom-margin" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationDescriptionField.$invalid }">
                                     <label class="control-label">Location Details</label>
-                                    <textarea ng-model="locationDescription" type="text" name="locationDescriptionField" class="form-control" placeholder="Optional description about this selling location." maxlength="300"/>
+                                    <textarea ng-model="locationDescription" type="text" required name="locationDescriptionField" class="form-control" placeholder="Description about this market." maxlength="600"/>
 
                                 </div>
                             </div>                        

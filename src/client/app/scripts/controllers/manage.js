@@ -291,10 +291,16 @@ angular.module('clientApp')
                 location.street_number = component.short_name;
             else if($scope.compareGeocoderType(component.types, 'route'))
                 location.route = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'point_of_interest') && location.route == undefined)
+                location.route = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'establishment') && location.route == undefined)
+                location.route = component.long_name;                                
             else if($scope.compareGeocoderType(component.types, 'sublocality'))
                 location.city = component.long_name;      
-            else if($scope.compareGeocoderType(component.types, 'locality'))
+            else if($scope.compareGeocoderType(component.types, 'locality') && location.city == undefined)
                 location.city = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'administrative_area_level_3') && location.city == undefined)
+                location.city = component.long_name;            
             else if($scope.compareGeocoderType(component.types, 'administrative_area_level_1'))
                 location.state = component.short_name;
             else if($scope.compareGeocoderType(component.types, 'country'))
@@ -320,7 +326,7 @@ angular.module('clientApp')
     $scope.makeSelection = function(item) {
         var parsedLocation = $scope.parseGeocoderResult(item);
 
-        $scope.locationAddress = parsedLocation.street_number + ' ' + parsedLocation.route;
+        $scope.locationAddress = parsedLocation.street_number != undefined ? parsedLocation.street_number + ' ' : '' + parsedLocation.route;
         $scope.locationCity = parsedLocation.city;
         $scope.locationProvince = parsedLocation.state;
         $scope.locationCountry = parsedLocation.country;

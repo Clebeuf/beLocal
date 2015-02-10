@@ -146,42 +146,53 @@
                             <label>Hours:</label>
                             <div class="well">
                                 <div class="row">
-                                    <div class="col-xs-6"> 
-                                        <label>Days You are Open:</label>
+                                    <div class="col-sm-6 col-xs-4"> 
+                                        <label>
+                                            <span class="hidden-mobile">Days You are Open:</span>
+                                            <span class="show-mobile">Weekday:</span>
+                                        </label>
                                     </div>
-                                    <div class="col-xs-3"> 
-                                        <label>Opening Time:</label>
+                                    <div class="col-xs-4 col-sm-3 week-padding"> 
+                                        <label>
+                                            <span class="hidden-mobile">Opening Time:</span>
+                                            <span class="show-mobile">Open:</span>
+                                        </label>
                                     </div>  
-                                    <div class="col-xs-3"> 
-                                        <label>Closing Time:</label>
+                                    <div class="col-xs-4 col-sm-3 week-padding"> 
+                                        <label>
+                                            <span class="hidden-mobile">Closing Time:</span>
+                                            <span class="show-mobile">Close:</span>
+                                        </label>
                                     </div>                                                              
                                 </div>
                                 <div ng-repeat="day in locationHours" class="row">
                                     <ng-form name="hoursForm">                                
-                                        <div class="col-xs-6">                              
+                                        <div class="col-sm-6 col-xs-4">                              
                                             <div class="checkbox">
                                               <label>
-                                                <input name="day{{$index}}Check" ng-model="day.checked" type="checkbox">{{day.day}}
+                                                <input name="day{{$index}}Check" ng-model="day.checked" type="checkbox">
+                                                    <span class="hidden-mobile">{{day.day}}</span>
+                                                    <span class="show-mobile">{{day.day | limitTo: 3}}</span>
                                               </label>
                                             </div>
                                         </div>
-                                        <div ng-show="day.checked" class="col-xs-3 col-md-3">
+                                        <div ng-show="day.checked" class="col-xs-4 col-sm-3  week-padding">
                                             <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.openHours.$invalid}">
                                                 <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.from_hour" name="openHours" bs-timepicker>
                                             </div>
                                         </div>
-                                        <div ng-show="day.checked" class="col-xs-3 col-md-3">
+                                        <div ng-show="day.checked" class="col-xs-4 col-sm-3  week-padding">
                                             <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.closeHours.$invalid}">
                                                 <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.to_hour" name="closeHours" bs-timepicker>
                                             </div>
                                         </div> 
-                                        <div ng-hide="day.checked" class="col-xs-6 col-md-6 closed-container">
+                                        <div ng-hide="day.checked" class="col-xs-8 col-md-6 closed-container">
                                             <p class="closed-string">Closed</p>
                                         </div>
                                     </ng-form>                                        
                                 </div>
                             </div>
-                        </div>
+                        </div>                        
                         <div ng-hide="locationType">
                             <label>Repeat:</label>
                             <div class="well">

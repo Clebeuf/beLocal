@@ -25,7 +25,31 @@ angular.module('clientApp')
         'Friday',
         'Saturday',
         'Sunday'
-    ]; 
+    ];
+
+    // Compare two dates to see if they are equal. (This is necessary in order to ignore times)
+    // Also use getFullYear() and not getYear(). 
+    $scope.compareDates = function(date1, date2) {
+        if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
+            return true;
+        else
+            return false;
+    };
+
+    $scope.checkEndDate = function(today, endDate) {
+        if(endDate == null || $scope.compareDates(today, endDate))
+            return true;
+
+        if(today.getTime() > endDate.getTime())
+            return false;
+        else
+            return true;
+    }
+
+    $scope.addDays = function(d, n) {
+        d.setDate(d.getDate() + n);
+        return d;
+    };        
 
     $scope.range = function(n) {
         return new Array(n);
@@ -182,6 +206,9 @@ angular.module('clientApp')
     }
 
     $scope.initDate = function(d) {
+        if(d == null)
+            return null;
+
         var date = new Date(d)
         date.setTime(date.getTime() + date.getTimezoneOffset() * 60000);
         return date;        

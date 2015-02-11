@@ -77,24 +77,30 @@
                                 {{location.address.state}}, 
                                 {{location.address.zipcode}}
                             </p>
-                            <p>
-                                <b>HOURS:</b>
-                                <div ng-show="location.address.hours.length === 0">
-                                    <ul class="list-inline store-hours">&nbsp
-                                        <li>
-                                            <span style="color:red;"><b>Closed</b></span>
-                                        </li>
-                                    </ul>                                        
-                                </div>
-                                <div ng-hide="location.address.hours.length === 0">
-                                    <ul class="list-inline store-hours">&nbsp
-                                        <li ng-repeat="day in location.address.hours">
-                                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </p>
-
+                            <p ng-show="location.recurrences && location.address.hours.length !== 0 && checkEndDate(minDate, initDate(location.recurrences.end_date))"><b>DATES:</b>
+                                {{location.recurrences.text | capitalize}} from {{location.real_start | date:"MMMM d'"}}
+                                <span ng-show="location.recurrences.end_date"> to {{location.recurrences.end_date | date:"MMMM d'"}}</span>
+                            </p>                              
+                            <span ng-show="compareDates(getMonday(minDate), initDate(location.recurrences.start_date))">
+                                <p><b>HOURS<span ng-show="location.recurrences && location.address.hours.length != 0"> FOR THIS WEEK</span>:</b></p>
+                            </span>                                
+                            <span ng-hide="compareDates(getMonday(minDate), initDate(location.recurrences.start_date))">
+                                <p><b>HOURS<span ng-show="location.recurrences && checkEndDate(minDate, initDate(location.recurrences.end_date))"> FOR THE WEEK OF {{getMonday(initDate(location.recurrences.next)) | date:"MMMM d'" | uppercase}} TO {{addDays(getMonday(initDate(location.recurrences.next)), 6) | date:"MMMM d'" | uppercase}}</span>:</b></p>
+                            </span>
+                            <div ng-show="location.address.hours.length === 0 || !checkEndDate(minDate, initDate(location.recurrences.end_date))">
+                                <ul class="list-inline store-hours">&nbsp
+                                    <li>
+                                        <span style="color:red;"><b>Closed for the season</b></span>
+                                    </li>
+                                </ul>                                        
+                            </div>
+                            <div ng-hide="location.address.hours.length === 0 || !checkEndDate(minDate, initDate(location.recurrences.end_date))">
+                                <ul class="list-inline store-hours">&nbsp
+                                    <li ng-repeat="day in location.address.hours">
+                                        <span ng-hide="compareDates(getMonday(initDate(location.recurrences.next)), initDate(location.recurrences.start_date)) && day.weekday < initDate(location.real_start).getDay()"><b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}</span>
+                                    </li>
+                                </ul> 
+                            </div>
                            <p class="indent-after-first-line"><b>DETAILS:<br></b>
                                  {{location.description}}
                             </p>
@@ -249,7 +255,7 @@
                                         </div>
                                         <div class="form-group col-xs-9 col-sm-10"> 
                                               <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && recurrenceForm.recurrenceStartDateField.$invalid }">
-                                                    <input ng-disabled="repeatUntil === 'never'" required type="text" name="recurrenceStartDateField" class="form-control date-picker cursor-default" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="recurrenceEndDate" is-open="endOpened" min-date="minDate" close-text="Close" />
+                                                    <input ng-disabled="repeatUntil === 'never'" required type="text" name="recurrenceStartDateField" class="form-control date-picker cursor-default" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="recurrenceEndDate" is-open="endOpened" close-text="Close" />
                                                     <span class="input-group-btn">
                                                         <button ng-disabled="repeatUntil === 'never'" class="btn btn-default" ng-click="openEnd($event)">
                                                             <i class="glyphicon glyphicon-calendar"></i>

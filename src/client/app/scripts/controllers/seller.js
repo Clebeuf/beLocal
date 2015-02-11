@@ -92,6 +92,11 @@ angular.module('clientApp')
       $scope.categoryList = StateService.getCategoryList();
     });
 
+    $scope.addDays = function(d, n) {
+        d.setDate(d.getDate() + n);
+        return d;
+    }
+
     $scope.getMonday = function(d) {
       d = new Date(d);
       var day = d.getDay(),

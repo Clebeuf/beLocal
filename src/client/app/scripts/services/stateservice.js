@@ -232,10 +232,8 @@ angular.module('clientApp')
       return $http.get(this.getServerAddress() + 'vendor/markets/available/')
       .success(function(data) {
         for(var i = 0; i < data.length; i++) {
-          if(data[i].address.hours.length !== 0) {
-            data[i].address.hours.sort(compareWeekday);
-            availableMarkets.push(data[i]);
-          }
+          data[i].address.hours.sort(compareWeekday);
+          availableMarkets.push(data[i]);
         }
       })
       .error(function(data) {

@@ -36,6 +36,17 @@ angular.module('clientApp')
             return false;
     };
 
+    $scope.isBeforeRecurrence = function(today, startDate) {
+        return today.getTime() < startDate.getTime();
+    }    
+
+    $scope.isInsideRecurrence = function(today, startDate, endDate) {
+        if(endDate == undefined)
+            return today.getTime() > startDate.getTime() || $scope.compareDates(today, startDate);
+        else
+            return (today.getTime() < endDate.getTime() && today.getTime() > startDate.getTime()) || ($scope.compareDates(today, startDate) || $scope.compareDates(today, endDate));
+    }
+
     $scope.checkEndDate = function(today, endDate) {
         if(endDate == null || $scope.compareDates(today, endDate))
             return true;

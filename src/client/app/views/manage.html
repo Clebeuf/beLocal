@@ -80,19 +80,21 @@
                             <p ng-show="location.recurrences && location.address.hours.length !== 0 && checkEndDate(minDate, initDate(location.recurrences.end_date))"><b>DATES:</b>
                                 {{location.recurrences.text | capitalize}} from {{location.real_start | date:"MMMM d'"}}
                                 <span ng-show="location.recurrences.end_date"> to {{location.recurrences.end_date | date:"MMMM d'"}}</span>
-                            </p>                              
+                            </p>
+                            <span ng-show="isInsideRecurrence(minDate, initDate(location.recurrences.start_date), initDate(location.recurrences.end_date)) && location.address.hours.length != 0">
+                                OPEN
+                            </span>
+                            <span ng-show="isBeforeRecurrence(minDate, initDate(location.recurrences.start_date))">
+                                REOPENING FOR THE SEASON <span style="color: black">ON</span>
+                            </span>                                                          
                             <span ng-show="compareDates(getMonday(minDate), initDate(location.recurrences.start_date))">
-                                <p><b>HOURS<span ng-show="location.recurrences && location.address.hours.length != 0"> FOR THIS WEEK</span>:</b></p>
-                            </span>                                
+                                <b><span ng-show="location.recurrences && location.address.hours.length != 0"> THIS WEEK:</span></b>
+                            </span>
                             <span ng-hide="compareDates(getMonday(minDate), initDate(location.recurrences.start_date))">
-                                <p><b>HOURS<span ng-show="location.recurrences && checkEndDate(minDate, initDate(location.recurrences.end_date))"> FOR THE WEEK OF {{getMonday(initDate(location.recurrences.next)) | date:"MMMM d'" | uppercase}} TO {{addDays(getMonday(initDate(location.recurrences.next)), 6) | date:"MMMM d'" | uppercase}}</span>:</b></p>
+                                <b><span ng-show="location.recurrences && checkEndDate(minDate, initDate(location.recurrences.end_date))">THE WEEK OF {{getMonday(initDate(location.recurrences.next)) | date:"MMMM d'" | uppercase}} TO {{addDays(getMonday(initDate(location.recurrences.next)), 6) | date:"MMMM d'" | uppercase}}:</span></b>
                             </span>
                             <div ng-show="location.address.hours.length === 0 || !checkEndDate(minDate, initDate(location.recurrences.end_date))">
-                                <ul class="list-inline store-hours">&nbsp
-                                    <li>
-                                        <span style="color:red;"><b>Closed for the season</b></span>
-                                    </li>
-                                </ul>                                        
+                                <b>CLOSED FOR THE SEASON</b>
                             </div>
                             <div ng-hide="location.address.hours.length === 0 || !checkEndDate(minDate, initDate(location.recurrences.end_date))">
                                 <ul class="list-inline store-hours">&nbsp
@@ -221,9 +223,9 @@
                                                   <select style="width:auto; display:inline; margin-right: 5px;" ng-model="recurrenceInterval" id="internvalPicker" class="form-control ">
                                                       <option ng-repeat="a in range(10) track by $index" value="{{$index+1}}">{{$index + 1}}</option>
                                                   </select>
-                                                  <span ng-show="recurrenceFrequency == 2">week<span ng-show="recurrenceInterval !== 1">s</span></span>
-                                                  <span ng-show="recurrenceFrequency == 1">month<span ng-show="recurrenceInterval !== 1">s</span></span>
-                                                  <span ng-show="recurrenceFrequency == 0">year<span ng-show="recurrenceInterval !== 1">s</span></span>  
+                                                  <span ng-show="recurrenceFrequency == 2">week<span ng-show="recurrenceInterval != 1">s</span></span>
+                                                  <span ng-show="recurrenceFrequency == 1">month<span ng-show="recurrenceInterval != 1">s</span></span>
+                                                  <span ng-show="recurrenceFrequency == 0">year<span ng-show="recurrenceInterval != 1">s</span></span>  
                                                   </div>
                                               </div>
                                         </div>                                                 

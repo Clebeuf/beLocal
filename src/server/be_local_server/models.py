@@ -11,6 +11,7 @@ from taggit.models import GenericTaggedItemBase, TagBase
 import secretballot
 from PIL import Image, ImageOps
 from pilkit.processors import Transpose
+from recurrence.fields import RecurrenceField
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -137,6 +138,9 @@ class SellerLocation(TrashableMixin, models.Model):
     email = models.CharField(max_length=50, blank=True, null=True)
     phone = models.CharField(max_length=25, blank=True, null=True)
     description = models.CharField(max_length=800, blank=True, null=True)
+    real_start = models.DateField(blank=True, null=True)
+
+    recurrences = RecurrenceField(null=True)
 
 class MarketPhoto(models.Model):
     image = models.ImageField(storage = fs, upload_to='markets', blank=True)
@@ -154,6 +158,8 @@ class Market(models.Model):
     webpage = models.CharField(max_length=400, null=True, blank=True)
     facebook_url = models.CharField(max_length=400, null=True, blank=True)   
     twitter_url = models.CharField(max_length=400, null=True, blank=True)
+
+    recurrences = RecurrenceField(null=True)    
     
 secretballot.enable_voting_on(Market)
 

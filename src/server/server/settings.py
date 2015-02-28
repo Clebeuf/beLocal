@@ -58,6 +58,7 @@ INSTALLED_APPS = (
     'secretballot',
     'kombu.transport.django',
     'djcelery',
+    'recurrence',
 )
 
 MIDDLEWARE_CLASSES = (

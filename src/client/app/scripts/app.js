@@ -203,6 +203,12 @@ app.directive('head', ['$rootScope','$compile',
 
 /* FILTERS */
 
+app.filter('capitalize', function() {
+  return function(input, all) {
+    return (!!input) ? input.replace(/([^\W_]+[^\s-]*) */g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) : '';
+  }
+});
+
 /* Filter Multiple fields */
 app.filter('filterMultiple',['$filter',function ($filter) {
   return function (items, keyObj) { 

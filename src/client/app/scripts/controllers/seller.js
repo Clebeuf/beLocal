@@ -17,6 +17,7 @@ angular.module('clientApp')
     $scope.warningHTML = ''; // HTML string that will go into the warning (yellow) alert
     $scope.locationResults = {}; // Object for storing location search results
     $scope.locationType = 'true'; // True if one time location, false if recurring.
+    $scope.repeatUntil = 'never'; // Default is that recurring events will repeat indefinitely
     $scope.facebookChecked = false; // True if the user wishes to post to Facebook
     $scope.twitterChecked = false; // True if the user wishes to post to Twitter
     $scope.sellingToday = false; // True if the user is selling today
@@ -27,6 +28,9 @@ angular.module('clientApp')
     $scope.showXSNav = true; // True if we should be showing the XS nav bar.
     $scope.tour = undefined; // The tour object for bootstrap tour
     $scope.buttonsDisabledForTour = false;
+    $scope.recurrenceFrequency = 2;
+    $scope.recurrenceInterval = 1;
+    $scope.compareDate = new Date();
 
     var geocoder = new google.maps.Geocoder(); // Create a geocoder for looking up addresses
 
@@ -34,6 +38,10 @@ angular.module('clientApp')
         if($scope.tour)
             $scope.tour.end();
     })
+
+    $scope.range = function(n) {
+        return new Array(n);
+    };    
 
     $scope.safeApply = function(fn) {
       var phase = this.$root.$$phase;
@@ -83,6 +91,24 @@ angular.module('clientApp')
     StateService.getCategories().then(function() {
       $scope.categoryList = StateService.getCategoryList();
     });
+
+    $scope.addDays = function(d, n) {
+        d.setDate(d.getDate() + n);
+        return d;
+    }
+
+    $scope.getMonday = function(d) {
+      d = new Date(d);
+      var day = d.getDay(),
+          diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+      return new Date(d.setDate(diff));
+    }
+
+    $scope.initDate = function(d) {
+        var date = new Date(d)
+        date.setTime(date.getTime() + date.getTimezoneOffset() * 60000);
+        return date;        
+    }    
 
     // Hide the inactive alert
     $scope.hideInactiveAlert = function() {
@@ -280,12 +306,16 @@ angular.module('clientApp')
         $scope.addressSearchText = undefined; // Reset address search text
         $scope.newLocationSubmitted = false; // Reset has submitted flag
         $scope.isEditingLocation = false; // Reset is editing location flag
+        $scope.recurrenceFrequency = 2; // Reset recurrence value
+        $scope.recurrenceInterval = 1; // Reset frequency value
 
         var tempDate = new Date();
         tempDate.setHours(tempDate.getHours() + 1);
         $scope.startTime = $scope.roundTimeToNearestFive(new Date()); // Reset start time with current time
         $scope.endTime = $scope.roundTimeToNearestFive(tempDate); // Reset end time with current time + 1 hr
         $scope.locationDate = new Date(); // Reset location date to today's date
+        $scope.recurrenceStartDate = new Date(); // Reset recurrence start date to today's date        
+        $scope.recurrenceEndDate = new Date(); // Reset recurrence start date to today's date          
         $scope.locationHours = $scope.buildHoursObject(); // Build hours object for recurring location hours
 
         $scope.locationAddress = undefined; // Reset address field 
@@ -348,7 +378,24 @@ angular.module('clientApp')
             }
             $scope.locationDate = new Date(); // This shouldn't be necessary, but it is.
             $scope.locationHours = hours;  
-            $scope.locationType = 'false'; // Remember, false means recurring event. I'm sorry this had to be done, but it's used in the HTML       
+            $scope.locationType = 'false'; // Remember, false means recurring event. I'm sorry this had to be done, but it's used in the HTML 
+
+            // Set recurrence information
+            $scope.recurrenceStartDate = new Date(location.real_start); 
+            $scope.recurrenceStartDate.setTime($scope.recurrenceStartDate.getTime() + $scope.recurrenceStartDate.getTimezoneOffset() * 60000);
+
+            $scope.recurrenceFrequency = location.recurrences.freq;
+            $scope.recurrenceInterval = location.recurrences.interval;
+
+            if(location.recurrences.end_date !== null) {
+                $scope.repeatUntil = 'endDate';
+                $scope.recurrenceEndDate = new Date(location.recurrences.end_date); 
+                $scope.recurrenceEndDate.setTime($scope.recurrenceEndDate.getTime() + $scope.recurrenceEndDate.getTimezoneOffset() * 60000);                
+            } else {
+                $scope.repeatUntil = 'never';
+                $scope.recurrenceEndDate = new Date();
+            }
+            
         } else {
             $scope.locationType = 'true'; // Remember, false means non-recurring event.
             $scope.locationDate = new Date(location.date); // Set the date
@@ -541,6 +588,20 @@ angular.module('clientApp')
         $scope.opened = true;
     };
 
+    $scope.openStart = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.startOpened = true;
+    }; 
+
+    $scope.openEnd = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.endOpened = true;
+    };       
+
     // Get all items that a vendor is currently selling
     $scope.getSellerItems = function() {
         StateService.getSellerItems().then(function(response) {
@@ -698,14 +759,16 @@ angular.module('clientApp')
                     }];
                 } else {
                     // We are a recurring location... set hours accordingly
-                    var hours = [];
+                    var hours = [];                    
+
                     $scope.locationDate = null;
                     for(var i = 0; i < $scope.locationHours.length; i++) {
                         if($scope.locationHours[i].checked) {
                             hours.push({
                                 "weekday" : $scope.locationHours[i].weekday,
                                 "from_hour" : $scope.locationHours[i].from_hour.getHours() + ':' + $scope.locationHours[i].from_hour.getMinutes(),
-                                "to_hour" : $scope.locationHours[i].to_hour.getHours() + ':' + $scope.locationHours[i].to_hour.getMinutes()
+                                "to_hour" : $scope.locationHours[i].to_hour.getHours() + ':' + $scope.locationHours[i].to_hour.getMinutes(),
+                                "recurrences" : recurrence,
                             });
                         }
                     }             
@@ -722,7 +785,27 @@ angular.module('clientApp')
                     'email' : $scope.emailAtLocation,
                     'phone' : $scope.phoneAtLocation,
                     'description' : $scope.locationDescription,
+                    'real_start' : $scope.recurrenceStartDate instanceof Date ? $scope.recurrenceStartDate.getFullYear() + '-' + ('0' + ($scope.recurrenceStartDate.getMonth() + 1)).slice(-2) + '-' + ('0' + $scope.recurrenceStartDate.getDate()).slice(-2) : $scope.recurrenceStartDate,
+
                 };
+
+                if($scope.locationType !== 'true') {
+
+                    var mondayOfWeek = $scope.getMonday($scope.recurrenceStartDate);
+
+                    var rule = {
+                        'freq' : $scope.recurrenceFrequency,
+                        'interval' : $scope.recurrenceInterval,
+                        'until' : $scope.repeatUntil !== 'never' ? $scope.recurrenceEndDate instanceof Date ? $scope.recurrenceEndDate.getFullYear() + '-' + ($scope.recurrenceEndDate.getMonth() + 1) + '-' + $scope.recurrenceEndDate.getDate() : $scope.recurrenceEndDate : null,
+                    };
+
+                    var recurrence = {
+                        'dtstart' : mondayOfWeek instanceof Date ? mondayOfWeek.getFullYear() + '-' + ('0' + (mondayOfWeek.getMonth() + 1)).slice(-2) + '-' + ('0' + mondayOfWeek.getDate()).slice(-2) : mondayOfWeek,
+                        'rule' : rule,
+                    };
+
+                    sellerLocation.recurrences = recurrence;                    
+                }
 
                 // Create/edit the selling location. Note here that whether we're creating or editing depends on $scope.isEditingLocation
                 StateService.createSellerLocation(sellerLocation, $scope.isEditingLocation).then(function() {

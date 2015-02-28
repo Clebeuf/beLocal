@@ -4,6 +4,7 @@ import be_local_server.models
 from django.contrib.auth.models import User
 from secretballot.models import Vote
 from taggit.models import Tag
+from datetime import datetime, date, timedelta
 
 class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -183,7 +184,34 @@ class SellerLocationSerializer(serializers.ModelSerializer):
     address = AddAddressSerializer() 
     class Meta:
         model = be_local_server.models.SellerLocation
-        fields = ('id', 'address', 'name', 'date', 'vendor', 'email', 'phone', 'description')        
+        fields = ('id', 'address', 'name', 'date', 'vendor', 'email', 'phone', 'description', 'real_start')
+
+class ListSellerLocationSerializer(serializers.ModelSerializer):
+    recurrences = serializers.SerializerMethodField('get_recurrence_info')
+    address = AddAddressSerializer() 
+
+    def get_recurrence_info(self, obj):
+      if obj.recurrences:
+        today = datetime.combine(date.today(), datetime.min.time())
+        thisWeekMonday = today - timedelta(days=today.weekday())
+
+        # Make sure that the recurrence we get back always has valid days
+        if(obj.real_start and obj.address.hours.all().count() > 0 and obj.recurrences.dtstart == thisWeekMonday and obj.real_start.weekday() + 1 > obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
+          next = obj.recurrences.after(today + timedelta(days=today.weekday(), weeks=1), inc=True) 
+        else:
+          next = obj.recurrences.after(today - timedelta(days=today.weekday()), inc=True)        
+
+        text = obj.recurrences.rrules[0].to_text() 
+        start_date = obj.recurrences.dtstart
+        end_date = obj.recurrences.rrules[0].until
+        interval = obj.recurrences.rrules[0].interval
+        freq = obj.recurrences.rrules[0].freq
+
+        return {"next" : next, "text" : text, "start_date" : start_date, "end_date" : end_date, "interval" : interval, "freq" : freq}
+
+    class Meta:
+        model = be_local_server.models.SellerLocation
+        fields = ('id', 'address', 'name', 'date', 'vendor', 'email', 'phone', 'description', 'recurrences', 'real_start')                
 
 class TagListSerializer(serializers.WritableField):
 
@@ -351,7 +379,7 @@ class VendorTabSerializer(serializers.ModelSerializer):
                   'address',
                   'total_likes',
                   'is_liked',
-                  'selling_locations'
+                  'selling_locations',
       )       
 
 class MarketDetailsVendorSerializer(serializers.ModelSerializer):

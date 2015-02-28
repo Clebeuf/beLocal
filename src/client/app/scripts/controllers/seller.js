@@ -864,10 +864,12 @@ angular.module('clientApp')
                 location.street_number = component.short_name;
             else if($scope.compareGeocoderType(component.types, 'route'))
                 location.route = component.long_name;
-            else if($scope.compareGeocoderType(component.types, 'sublocality'))
+            else if($scope.compareGeocoderType(component.types, 'sublocality') && location.city == undefined)
                 location.city = component.long_name;      
-            else if($scope.compareGeocoderType(component.types, 'locality'))
+            else if($scope.compareGeocoderType(component.types, 'locality') && location.city == undefined)
                 location.city = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'neighborhood') && location.city == undefined)
+                location.city = component.long_name;            
             else if($scope.compareGeocoderType(component.types, 'administrative_area_level_1'))
                 location.state = component.short_name;
             else if($scope.compareGeocoderType(component.types, 'country'))
@@ -916,71 +918,71 @@ angular.module('clientApp')
 
     $scope.launchProfileImageModal = function(){
         if (!$scope.buttonsDisabledForTour){
-    	   angular.element('#profileImageModal').modal('show');
+           angular.element('#profileImageModal').modal('show');
         }
     }
 
     $scope.resetProfileImageModal = function(){
-    	$scope.profileImageError = undefined;
-    	$scope.profileImage = undefined;
-    	$scope.showImageSelectButton = true;
-    	$scope.showImageCroppingText = false;
-    	$scope.disableProfileImageSubmit = true;
+        $scope.profileImageError = undefined;
+        $scope.profileImage = undefined;
+        $scope.showImageSelectButton = true;
+        $scope.showImageCroppingText = false;
+        $scope.disableProfileImageSubmit = true;
     }
 
     $scope.resetProfileImageModal();
 
-   	angular.element('#profileImageModal').on('hide.bs.modal', function(){
-   		$scope.resetProfileImageModal();
-   	})
+    angular.element('#profileImageModal').on('hide.bs.modal', function(){
+        $scope.resetProfileImageModal();
+    })
 
     $scope.handleProfileImageFileSelect=function(file) {
         if(file && file[0]) {
-        	if(file[0].size > 3000000){
-        		
-        		$scope.safeApply(function($scope){
-        			$scope.profileImageError = 'The selected file is too big. Please select a file less than 3 MB.';
-        		})
-        	} else {
-        				$scope.profileImageError = null;
-        		    	$scope.showImageSelectButton = false;
-    					$scope.showImageCroppingText = true;
-	            var reader = new FileReader();
-	            reader.onload = function (evt) {
-	                $scope.safeApply(function($scope){
-	                    $scope.profileImage = evt.target.result;
-	                    $scope.disableProfileImageSubmit = false;
-	                });
-	            };
-	            reader.readAsDataURL(file[0]);
-	        }
+            if(file[0].size > 3000000){
+                
+                $scope.safeApply(function($scope){
+                    $scope.profileImageError = 'The selected file is too big. Please select a file less than 3 MB.';
+                })
+            } else {
+                        $scope.profileImageError = null;
+                        $scope.showImageSelectButton = false;
+                        $scope.showImageCroppingText = true;
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+                    $scope.safeApply(function($scope){
+                        $scope.profileImage = evt.target.result;
+                        $scope.disableProfileImageSubmit = false;
+                    });
+                };
+                reader.readAsDataURL(file[0]);
+            }
             //cloning and replacing the file input element with itself in order to clear it
             //this is because the onchange event doesn't get triggered if the user selects the
             //same file as last time.
             angular.element('#profile-image').replaceWith(angular.element('#profile-image').clone(true));
-	            //angular.element('#profileImageModal').modal('show');
+                //angular.element('#profileImageModal').modal('show');
         }
     };
 
      $scope.selected = function(x) {
-    	$scope.profileImageCoords = [x.x, x.y, x.x2, x.y2];
-  	};
+        $scope.profileImageCoords = [x.x, x.y, x.x2, x.y2];
+    };
 
-  	$scope.triggerImageSelect = function () {
-		  $timeout(function() {
-		    angular.element('#profile-image').trigger('click');
-		  }, 100);
-		};
+    $scope.triggerImageSelect = function () {
+          $timeout(function() {
+            angular.element('#profile-image').trigger('click');
+          }, 100);
+        };
 
-	$scope.uploadProfileImage = function() {
-		//change the Done button to a loader to prevent clicks while uploading
-		angular.element('#uploadProfileImage').button('loading');
-		if($scope.profileImage){
+    $scope.uploadProfileImage = function() {
+        //change the Done button to a loader to prevent clicks while uploading
+        angular.element('#uploadProfileImage').button('loading');
+        if($scope.profileImage){
             StateService.uploadProfileFile($scope.profileImage, $scope.profileImageCoords)
             .success(function(response) {
               //   angular.element('#profileImage').css({
-              //   	'background-image': 'url(' + response.image_url +')'
-            		// });
+              //    'background-image': 'url(' + response.image_url +')'
+                    // });
                 StateService.getCurrentUser().vendor.photo.image_url = response.image_url;
                 StateService.getCurrentUser().vendor.photo.id = response.id;
                 $scope.currentUser = StateService.getCurrentUser();
@@ -993,7 +995,7 @@ angular.module('clientApp')
                 $scope.profileImageError = response;
             });
          }
-	}
+    }
 
     // Initialize the seller page.
     $scope.init = function() {

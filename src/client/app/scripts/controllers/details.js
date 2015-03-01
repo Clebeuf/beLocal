@@ -5,6 +5,24 @@ angular.module('clientApp')
 
     StateService.setVendorToDisplay($stateParams.vendorid);
 
+    $scope.addDays = function(d, n) {
+        d.setDate(d.getDate() + n);
+        return d;
+    }
+
+    $scope.getMonday = function(d) {
+      d = new Date(d);
+      var day = d.getDay(),
+          diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+      return new Date(d.setDate(diff));
+    }
+
+    $scope.initDate = function(d) {
+        var date = new Date(d)
+        date.setTime(date.getTime() + date.getTimezoneOffset() * 60000);
+        return date;        
+    } 
+
     // Required for AngularJS to finish its digest loop
     $scope.safeApply = function(fn) {
       var phase = this.$root.$$phase;

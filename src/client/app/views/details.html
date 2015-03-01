@@ -139,55 +139,71 @@
                         <div class="row">
 
                             <!-- Display the locations name -->
-                            <div class="col-xs-12 card-lable-style">
+                            <div class="col-xs-9 card-lable-style">
                                 {{location.name}}
                             </div>
 
+                            <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
+                            <div class="col-xs-3 edit-delete-buttons">
+                                <span data-toggle="tooltip" data-placement="left" title="Edit Location">
+                                <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
+                                </span>
+                                <span data-toggle="tooltip" data-placement="left" title="Delete Location">
+                                <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
+                                </span>
+                            </div> 
+
                         </div>
 
-                        <div class="row seller-location-details">
-                            <div class="col-xs-12">
+                        <div class="location-details seller-location-details">
+                            <span ng-show="location.address">
+                                <p><b>LOCATION:</b>
+                                    {{location.address.addr_line1}},
+                                    {{location.address.city}}, 
+                                    {{location.address.state}}, 
+                                    {{location.address.zipcode}}
+                                </p>
+                            </span>
+                            <span ng-show="location.address">
                                 <p ng-show="location.date"><b>DATE:</b>
                                     {{location.date | date:" EEEE',' MMMM d'"}},
                                     {{location.address.hours[0].from_hour}} - 
                                     {{location.address.hours[0].to_hour}}
                                 </p>
-                            </div>
-                            <div class="col-xs-12" ng-show="location.address !== null">
-                                <p><b>LOCATION:</b>
-                                    <a href="http://maps.google.com/?q={{location.address.latitude}},{{location.address.longitude}}" target="_blank">
-                                    {{location.address.addr_line1}},
-                                    {{location.address.city}}, 
-                                    {{location.address.state}}, 
-                                    {{location.address.zipcode}}
-                                </a>
-                                </p>
-                            </div>
-                            <div class="col-xs-12">
-                                <div ng-hide="location.date">
-                                <p><b>HOURS:</b>
+                                <p ng-show="location.recurrences"><b>DATES:</b>
+                                    {{location.recurrences.text | capitalize}} from {{location.real_start | date:"MMMM d'"}}
+                                    <span ng-show="location.recurrences.end_date"> to {{location.recurrences.end_date | date:"MMMM d'"}}</span>
+                                </p>                                
+
+                                <div ng-show="location.date == null">
+                                <span ng-show="compareDates(getMonday(minDate), initDate(location.recurrences.start_date))">
+                                    <p><b>HOURS<span ng-show="location.recurrences"> FOR THIS WEEK</span>:</b></p>
+                                </span>                                
+                                <span ng-hide="compareDates(getMonday(minDate), initDate(location.recurrences.start_date))">
+                                    <p><b>HOURS<span ng-show="location.recurrences"> FOR THE WEEK OF {{getMonday(initDate(location.recurrences.next)) | date:"MMMM d'" | uppercase}} TO {{addDays(getMonday(initDate(location.recurrences.next)), 6) | date:"MMMM d'" | uppercase}}</span>:</b></p>
+                                </span>
                                         <ul class="list-inline store-hours">&nbsp
                                         <li ng-repeat="day in location.address.hours">
-                                            <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
+                                            <span ng-hide="compareDates(getMonday(initDate(location.recurrences.next)), initDate(location.recurrences.start_date)) && day.weekday < initDate(location.real_start).getDay()"><b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}</span>
                                         </li>
 
                                         </ul>
                                 </p>
                                 </div>
-                            </div>
-                            <div class="col-xs-12" ng-show="location.phone !== null && location.email !== null">
-                                <p class="indent-after-first-line">
-                                    <b>CONTACT INFORMATION:</b>
-                                    <a href="tel:{{location.phone}}">{{location.phone}}</a>
+                            </span>
+
+                            <span ng-show="location.email || location.phone">
+                                <p><b>CONTACT INFORMATION:</b>
+                                    {{location.phone}}
                                     <span ng-show="location.email && location.phone"> | </span>
-                                    <a href="mailto:{{location.email}}">{{location.email}}</a>
+                                    {{location.email}}
                                 </p>
-                            </div>
-                            <div class="col-xs-12" ng-show="location.description !== null">
+                            </span>
+                            <span ng-show="location.description">
                                 <p class="indent-after-first-line"><b>DETAILS:</b>
-                                    {{location.description}}
+                                    <span id="pro-cust-description">{{location.description}}</span>
                                 </p>
-                            </div>
+                            </span>
                         </div>
                     </div>
                 </div>

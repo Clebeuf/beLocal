@@ -871,10 +871,12 @@ angular.module('clientApp')
                 location.street_number = component.short_name;
             else if($scope.compareGeocoderType(component.types, 'route'))
                 location.route = component.long_name;
-            else if($scope.compareGeocoderType(component.types, 'sublocality'))
+            else if($scope.compareGeocoderType(component.types, 'sublocality') && location.city == undefined)
                 location.city = component.long_name;      
-            else if($scope.compareGeocoderType(component.types, 'locality'))
+            else if($scope.compareGeocoderType(component.types, 'locality') && location.city == undefined)
                 location.city = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'neighborhood') && location.city == undefined)
+                location.city = component.long_name;            
             else if($scope.compareGeocoderType(component.types, 'administrative_area_level_1'))
                 location.state = component.short_name;
             else if($scope.compareGeocoderType(component.types, 'country'))

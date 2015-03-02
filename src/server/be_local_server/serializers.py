@@ -187,13 +187,12 @@ class SellerLocationSerializer(serializers.ModelSerializer):
     def get_recurrence_info(self, obj):
       if obj.recurrences:
         today = datetime.combine(date.today(), datetime.min.time())
-        thisWeekMonday = today - timedelta(days=(today.weekday() if today.weekday() != 0 else 7))
 
         # Make sure that the recurrence we get back always has valid days
-        if(obj.real_start and obj.address.hours.all().count() > 0 and obj.recurrences.dtstart == thisWeekMonday and (obj.real_start.weekday() if obj.real_start.weekday() != 0 else 7) <= obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
-          next = obj.recurrences.after(today, inc=True) 
+        if(obj.real_start and obj.address.hours.all().count() > 0 and obj.real_start.weekday() + 1 > obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
+          next = obj.recurrences.after(today + timedelta(days=today.weekday(), weeks=1), inc=True)
         else:
-          next = obj.recurrences.after(today - timedelta(days=(today.weekday() if today.weekday() != 0 else 7)), inc=True)        
+          next = obj.recurrences.after(today, inc=True)      
 
         text = obj.recurrences.rrules[0].to_text() 
         start_date = obj.recurrences.dtstart
@@ -214,13 +213,12 @@ class ListSellerLocationSerializer(serializers.ModelSerializer):
     def get_recurrence_info(self, obj):
       if obj.recurrences:
         today = datetime.combine(date.today(), datetime.min.time())
-        thisWeekMonday = today - timedelta(days=(today.weekday() if today.weekday() != 0 else 7))
 
         # Make sure that the recurrence we get back always has valid days
-        if(obj.real_start and obj.address.hours.all().count() > 0 and obj.recurrences.dtstart == thisWeekMonday and (obj.real_start.weekday() if obj.real_start.weekday() != 0 else 7) <= obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
-          next = obj.recurrences.after(today, inc=True) 
+        if(obj.real_start and obj.address.hours.all().count() > 0 and obj.real_start.weekday() + 1 > obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
+          next = obj.recurrences.after(today + timedelta(days=today.weekday(), weeks=1), inc=True)
         else:
-          next = obj.recurrences.after(today - timedelta(days=(today.weekday() if today.weekday() != 0 else 7)), inc=True)       
+          next = obj.recurrences.after(today, inc=True)     
 
         text = obj.recurrences.rrules[0].to_text() 
         start_date = obj.recurrences.dtstart

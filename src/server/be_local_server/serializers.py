@@ -190,7 +190,7 @@ class SellerLocationSerializer(serializers.ModelSerializer):
         thisWeekMonday = today - timedelta(days=(today.weekday() if today.weekday() != 0 else 7))
 
         # Make sure that the recurrence we get back always has valid days
-        if(obj.real_start and obj.address.hours.all().count() > 0 and obj.recurrences.dtstart == thisWeekMonday and (obj.real_start.weekday() if obj.real_start.weekday() != 0 else 7) < obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
+        if(obj.real_start and obj.address.hours.all().count() > 0 and obj.recurrences.dtstart == thisWeekMonday and (obj.real_start.weekday() if obj.real_start.weekday() != 0 else 7) <= obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
           next = obj.recurrences.after(today, inc=True) 
         else:
           next = obj.recurrences.after(today - timedelta(days=(today.weekday() if today.weekday() != 0 else 7)), inc=True)        
@@ -217,7 +217,7 @@ class ListSellerLocationSerializer(serializers.ModelSerializer):
         thisWeekMonday = today - timedelta(days=(today.weekday() if today.weekday() != 0 else 7))
 
         # Make sure that the recurrence we get back always has valid days
-        if(obj.real_start and obj.address.hours.all().count() > 0 and obj.recurrences.dtstart == thisWeekMonday and (obj.real_start.weekday() if obj.real_start.weekday() != 0 else 7) < obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
+        if(obj.real_start and obj.address.hours.all().count() > 0 and obj.recurrences.dtstart == thisWeekMonday and (obj.real_start.weekday() if obj.real_start.weekday() != 0 else 7) <= obj.address.hours.all()[obj.address.hours.all().count() - 1].weekday):
           next = obj.recurrences.after(today, inc=True) 
         else:
           next = obj.recurrences.after(today - timedelta(days=(today.weekday() if today.weekday() != 0 else 7)), inc=True)       

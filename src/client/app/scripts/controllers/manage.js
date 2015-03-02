@@ -27,9 +27,18 @@ angular.module('clientApp')
         'Sunday'
     ];
 
+    $scope.getDate = function(date) {
+        if(date.getDay() == 0)
+            return 7;
+        else
+            return date.getDay();
+    }     
+
     // Compare two dates to see if they are equal. (This is necessary in order to ignore times)
     // Also use getFullYear() and not getYear(). 
     $scope.compareDates = function(date1, date2) {
+        if(date1 == null || date2 == null)
+            return false;
         if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
             return true;
         else

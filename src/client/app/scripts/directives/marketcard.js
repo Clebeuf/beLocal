@@ -1,6 +1,6 @@
 'use strict';
 angular.module('clientApp')
-  .directive('marketCard', function (StateService, $timeout, $compile, $location) {
+  .directive('marketCard', function (StateService, $timeout, $compile, $location, $filter) {
     return {
       templateUrl: 'scripts/directives/marketCard.html',
       restrict: 'E',
@@ -81,7 +81,12 @@ angular.module('clientApp')
                 return false;
             else
                 return true;
-        } 
+        }
+
+        scope.addDays = function(d, n) {
+            d.setDate(d.getDate() + n);
+            return d;
+        }         
 
         scope.initDate = function(d) {
             if(d == null)
@@ -100,6 +105,32 @@ angular.module('clientApp')
                 if(scope.market.address.hours[j].weekday == today && scope.isInsideRecurrence(scope.initDate(new Date()), scope.initDate(scope.market.real_start), scope.initDate(scope.market.recurrences.end_date))) {
                     scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open today:</span></strong> " + scope.market.address.hours[j].from_hour + ' - ' + scope.market.address.hours[j].to_hour;
                 }
+            }
+
+            if(scope.openString === undefined && scope.market.recurrences.next && scope.market.address.hours.length != 0) {
+                var nextDate = scope.initDate(scope.market.recurrences.next);
+
+                // If we're not inside a our recurrence, we should do something about that.
+                if(!scope.isInsideRecurrence(nextDate, scope.initDate(scope.market.real_start), scope.initDate(scope.market.recurrences.end_date))) {
+                    // Adjust if necessary to ensure we're inside recurrence
+                    while(!scope.isInsideRecurrence(nextDate, scope.initDate(scope.market.real_start), scope.initDate(scope.market.recurrences.end_date)))
+                        nextDate = scope.addDays(nextDate, 1);
+
+                    // Calculate which day we're going to display
+                    var dayShift = 0;
+                    for(var j = 0; j < scope.market.address.hours.length; j++) {
+                        if(scope.market.address.hours[j].weekday < scope.getDate(nextDate))
+                            continue;
+
+                        dayShift = scope.market.address.hours[j].weekday;
+                        break;
+
+                    }
+
+                    nextDate = scope.addDays(nextDate, dayShift - scope.getDate(nextDate));
+                }
+
+                scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Next open: </span></strong>" + $filter('date')(nextDate, "MMMM d") + ' from ' + scope.market.address.hours[scope.getDate(nextDate) - 1].from_hour + ' - ' + scope.market.address.hours[scope.getDate(nextDate) - 1].to_hour;
             }
 
             // // If it's not open today, get the next day the market will be open

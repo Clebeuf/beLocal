@@ -204,15 +204,15 @@
                                 </p>                                
 
                                 <div ng-show="location.date == null">
-                                <span ng-show="compareDates(getMonday(minDate), initDate(location.recurrences.start_date))">
+                                <span ng-show="compareDates(getMonday(minDate), initDate(location.recurrences.next))">
                                     <p><b>HOURS<span ng-show="location.recurrences"> FOR THIS WEEK</span>:</b></p>
                                 </span>                                
-                                <span ng-hide="compareDates(getMonday(minDate), initDate(location.recurrences.start_date))">
+                                <span ng-hide="compareDates(getMonday(minDate), initDate(location.recurrences.next))">
                                     <p><b>HOURS<span ng-show="location.recurrences"> FOR THE WEEK OF {{getMonday(initDate(location.recurrences.next)) | date:"MMMM d'" | uppercase}} TO {{addDays(getMonday(initDate(location.recurrences.next)), 6) | date:"MMMM d'" | uppercase}}</span>:</b></p>
                                 </span>
                                         <ul class="list-inline store-hours">&nbsp
                                         <li ng-repeat="day in location.address.hours">
-                                            <span ng-hide="compareDates(getMonday(initDate(location.recurrences.next)), initDate(location.recurrences.start_date)) && day.weekday < initDate(location.real_start).getDay()"><b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}</span>
+                                            <span ng-hide="compareDates(getMonday(initDate(location.recurrences.next)), initDate(location.recurrences.start_date)) && day.weekday < getDate(initDate(location.real_start))"><b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}</span>
                                         </li>
 
                                         </ul>

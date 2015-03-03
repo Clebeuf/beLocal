@@ -81,11 +81,11 @@
                                 {{location.recurrences.text | capitalize}} from {{location.real_start | date:"MMMM d'"}}
                                 <span ng-show="location.recurrences.end_date"> to {{location.recurrences.end_date | date:"MMMM d'"}}</span>
                             </p>
-                            <span ng-show="isInsideRecurrence(minDate, initDate(location.recurrences.start_date), initDate(location.recurrences.end_date)) && location.address.hours.length != 0">
-                                OPEN
+                            <span ng-show="location.recurrences && isInsideRecurrence(minDate, initDate(location.recurrences.start_date), initDate(location.recurrences.end_date)) && location.address.hours.length != 0">
+                                <b>OPEN</b>
                             </span>
-                            <span ng-show="isBeforeRecurrence(minDate, initDate(location.recurrences.start_date))">
-                                REOPENING FOR THE SEASON <span style="color: black">ON</span>
+                            <span ng-show="location.recurrences && isBeforeRecurrence(minDate, initDate(location.recurrences.start_date))">
+                                <b>REOPENING FOR THE SEASON <span style="color: black">ON</span></b>
                             </span>                                                          
                             <span ng-show="compareDates(getMonday(minDate), initDate(location.recurrences.next))">
                                 <b><span ng-show="location.recurrences && location.address.hours.length != 0"> THIS WEEK:</span></b>

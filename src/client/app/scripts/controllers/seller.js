@@ -92,6 +92,13 @@ angular.module('clientApp')
       $scope.categoryList = StateService.getCategoryList();
     });
 
+    $scope.getDate = function(date) {
+        if(date.getDay() == 0)
+            return 7;
+        else
+            return date.getDay();
+    };    
+
     $scope.addDays = function(d, n) {
         d.setDate(d.getDate() + n);
         return d;
@@ -864,16 +871,18 @@ angular.module('clientApp')
                 location.street_number = component.short_name;
             else if($scope.compareGeocoderType(component.types, 'route'))
                 location.route = component.long_name;
-            else if($scope.compareGeocoderType(component.types, 'sublocality'))
+            else if($scope.compareGeocoderType(component.types, 'sublocality') && location.city == undefined)
                 location.city = component.long_name;      
-            else if($scope.compareGeocoderType(component.types, 'locality'))
+            else if($scope.compareGeocoderType(component.types, 'locality') && location.city == undefined)
                 location.city = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'neighborhood') && location.city == undefined)
+                location.city = component.long_name;            
             else if($scope.compareGeocoderType(component.types, 'administrative_area_level_1'))
                 location.state = component.short_name;
             else if($scope.compareGeocoderType(component.types, 'country'))
                 location.country = component.long_name;            
             else if($scope.compareGeocoderType(component.types, 'postal_code'))
-                location.postal_code = component.long_name;              
+                location.postal_code = component.long_name;             
         }
         return location;
     }

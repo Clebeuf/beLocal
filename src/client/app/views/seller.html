@@ -626,7 +626,7 @@
                                     </div>                        
                                 </div>
                                 <!-- One Time Date Options -->
-                                <div ng-show="locationType" class="row">
+                                <div ng-show="locationType == 'true'" class="row">
                                     <div class="col-xs-12 col-md-6">
                                         <div class="form-group">
                                           <label>Date:</label>                      
@@ -652,7 +652,7 @@
                                     </div>
                                 </div>
                                 <!-- Regular Hour Options -->
-                                <div ng-hide="locationType">
+                                <div ng-hide="locationType == 'true'">
                                     <label>Hours:</label>
                                     <div class="well">
                                         <div class="row">
@@ -703,7 +703,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div ng-hide="locationType">
+                                <div ng-hide="locationType == 'true'">
                                     <label>Repeat:</label>
                                     <div class="well">
                                         <ng-form name="recurrenceForm">                                       

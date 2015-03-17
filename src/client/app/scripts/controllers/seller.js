@@ -93,11 +93,46 @@ angular.module('clientApp')
     });
 
     $scope.getDate = function(date) {
+        if(date == null)
+            return -1;
+        
         if(date.getDay() == 0)
             return 7;
         else
             return date.getDay();
-    };    
+    }    
+
+    // Compare two dates to see if they are equal. (This is necessary in order to ignore times)
+    // Also use getFullYear() and not getYear(). 
+    $scope.compareDates = function(date1, date2) {
+        if(date1 == null || date2 == null)
+            return false;
+        if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
+            return true;
+        else
+            return false;
+    };
+
+    $scope.isBeforeRecurrence = function(today, startDate) {
+        return today.getTime() < startDate.getTime();
+    }    
+
+    $scope.isInsideRecurrence = function(today, startDate, endDate) {
+        if(endDate == undefined)
+            return today.getTime() > startDate.getTime() || $scope.compareDates(today, startDate);
+        else
+            return (today.getTime() < endDate.getTime() && today.getTime() > startDate.getTime() && minDate.getTime()) || ($scope.compareDates(today, startDate) || $scope.compareDates(today, endDate));
+    }
+
+    $scope.checkEndDate = function(today, endDate) {
+        if(endDate == null || $scope.compareDates(today, endDate))
+            return true;
+
+        if(today.getTime() > endDate.getTime())
+            return false;
+        else
+            return true;
+    }       
 
     $scope.addDays = function(d, n) {
         d.setDate(d.getDate() + n);
@@ -112,10 +147,13 @@ angular.module('clientApp')
     }
 
     $scope.initDate = function(d) {
+        if(d == null)
+            return null;
+
         var date = new Date(d)
         date.setTime(date.getTime() + date.getTimezoneOffset() * 60000);
         return date;        
-    }    
+    }  
 
     // Hide the inactive alert
     $scope.hideInactiveAlert = function() {
@@ -169,15 +207,6 @@ angular.module('clientApp')
                 $scope.twitterChecked = true;
             });
         });
-    }
-
-    // Compare two dates to see if they are equal. (This is necessary in order to ignore times)
-    // Also use getFullYear() and not getYear(). 
-    $scope.compareDates = function(date1, date2) {
-        if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
-            return true;
-        else
-            return false;
     }
 
     // Generate the vendor url.

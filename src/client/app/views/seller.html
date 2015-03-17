@@ -850,12 +850,32 @@
                                             <p style="text-indent: -25px !important; margin-left: 25px !important;">
                                                 <b>Description:</b> {{newLocationMarket.description}}
                                             </p>
-                                            <b>Hours:</b>
-                                            <ul class="list-inline store-hours indent">&nbsp
-                                                <li ng-repeat="day in newLocationMarket.address.hours">
-                                                    <b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}
-                                                </li>
-                                            </ul>
+                                            <p ng-show="newLocationMarket.recurrences && newLocationMarket.address.hours.length !== 0 && checkEndDate(minDate, initDate(newLocationMarket.recurrences.end_date))"><b>DATES:</b>
+                                                {{newLocationMarket.recurrences.text | capitalize}} from {{newLocationMarket.real_start | date:"MMMM d'"}}
+                                                <span ng-show="newLocationMarket.recurrences.end_date"> to {{newLocationMarket.recurrences.end_date | date:"MMMM d'"}}</span>
+                                            </p>
+                                            <span ng-show="newLocationMarket.recurrences && isInsideRecurrence(minDate, initDate(newLocationMarket.recurrences.start_date), initDate(newLocationMarket.recurrences.end_date)) && newLocationMarket.address.hours.length != 0">
+                                                <b>OPEN</b>
+                                            </span>
+                                            <span ng-show="newLocationMarket.recurrences && isBeforeRecurrence(minDate, initDate(newLocationMarket.recurrences.start_date))">
+                                                <b>REOPENING FOR THE SEASON <span style="color: black">ON</span></b>
+                                            </span>                                                          
+                                            <span ng-show="compareDates(getMonday(minDate), initDate(newLocationMarket.recurrences.next))">
+                                                <b><span ng-show="newLocationMarket.recurrences && newLocationMarket.address.hours.length != 0"> THIS WEEK:</span></b>
+                                            </span>
+                                            <span ng-hide="compareDates(getMonday(minDate), initDate(newLocationMarket.recurrences.next))">
+                                                <b><span ng-show="newLocationMarket.recurrences && checkEndDate(minDate, initDate(newLocationMarket.recurrences.end_date))">THE WEEK OF {{getMonday(initDate(newLocationMarket.recurrences.next)) | date:"MMMM d'" | uppercase}} TO {{addDays(getMonday(initDate(newLocationMarket.recurrences.next)), 6) | date:"MMMM d'" | uppercase}}:</span></b>
+                                            </span>
+                                            <div ng-show="newLocationMarket.address.hours.length === 0 || !checkEndDate(minDate, initDate(newLocationMarket.recurrences.end_date))">
+                                                <b>CLOSED FOR THE SEASON</b>
+                                            </div>
+                                            <div ng-hide="newLocationMarket.address.hours.length === 0 || !checkEndDate(minDate, initDate(newLocationMarket.recurrences.end_date))">
+                                                <ul class="list-inline store-hours">&nbsp
+                                                    <li ng-repeat="day in newLocationMarket.address.hours">
+                                                        <span ng-hide="compareDates(getMonday(minDate), initDate(newLocationMarket.recurrences.start_date)) && compareDates(getMonday(minDate), initDate(newLocationMarket.recurrences.next)) && (day.weekday < getDate(initDate(newLocationMarket.real_start))) || (checkEndDate(minDate, initDate(newLocationMarket.recurrences.end_date)) && (day.weekday < getDate(initDate(newLocationMarket.real_start))))"><b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}</span>
+                                                    </li>
+                                                </ul> 
+                                            </div>
                                         </div>
                                     </div>
 

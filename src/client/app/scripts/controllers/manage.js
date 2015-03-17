@@ -28,6 +28,9 @@ angular.module('clientApp')
     ];
 
     $scope.getDate = function(date) {
+        if(date == null)
+            return -1;
+        
         if(date.getDay() == 0)
             return 7;
         else
@@ -53,7 +56,7 @@ angular.module('clientApp')
         if(endDate == undefined)
             return today.getTime() > startDate.getTime() || $scope.compareDates(today, startDate);
         else
-            return (today.getTime() < endDate.getTime() && today.getTime() > startDate.getTime()) || ($scope.compareDates(today, startDate) || $scope.compareDates(today, endDate));
+            return (today.getTime() < endDate.getTime() && today.getTime() > startDate.getTime() && minDate.getTime()) || ($scope.compareDates(today, startDate) || $scope.compareDates(today, endDate));
     }
 
     $scope.checkEndDate = function(today, endDate) {

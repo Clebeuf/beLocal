@@ -21,6 +21,8 @@ angular.module('clientApp')
             'Sunday'
         ];
 
+        scope.currentDate = new Date();
+
         // Go to the market details page for a specific market
         scope.displayMarket = function (id) {
           $location.path('market/details/'+id);
@@ -107,7 +109,7 @@ angular.module('clientApp')
                 }
             }
 
-            if(scope.openString === undefined && scope.market.recurrences.next && scope.market.address.hours.length != 0) {
+            if(scope.openString === undefined && scope.market.recurrences && scope.market.recurrences.next && scope.market.address.hours.length != 0) {
                 var nextDate = scope.initDate(scope.market.recurrences.next);
 
                 // If we're not inside a our recurrence, we should do something about that.
@@ -128,9 +130,17 @@ angular.module('clientApp')
                     }
 
                     nextDate = scope.addDays(nextDate, dayShift - scope.getDate(nextDate));
+                    scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Next open: </span></strong>" + $filter('date')(nextDate, "MMMM d") + ' from ' + scope.market.address.hours[scope.getDate(nextDate) - 1].from_hour + ' - ' + scope.market.address.hours[scope.getDate(nextDate) - 1].to_hour;
+                    return;
+                } else if(scope.isInsideRecurrence(scope.currentDate, scope.initDate(scope.market.recurrences.start_date), scope.initDate(scope.market.recurrences.end_date))) {
+                    // We are inside the current recurrence
+                    nextDate = new Date();
+                    while(scope.getDate(nextDate) < scope.market.address.hours[0].weekday)
+                        nextDate = scope.addDays(nextDate, 1);
+
+                    scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Next open: </span></strong>" + $filter('date')(nextDate, "MMMM d") + ' from ' + scope.market.address.hours[0].from_hour + ' - ' + scope.market.address.hours[0].to_hour;                    
                 }
 
-                scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Next open: </span></strong>" + $filter('date')(nextDate, "MMMM d") + ' from ' + scope.market.address.hours[scope.getDate(nextDate) - 1].from_hour + ' - ' + scope.market.address.hours[scope.getDate(nextDate) - 1].to_hour;
             }
 
             // // If it's not open today, get the next day the market will be open

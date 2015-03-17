@@ -212,7 +212,7 @@
                                 </span>
                                         <ul class="list-inline store-hours">&nbsp
                                         <li ng-repeat="day in location.address.hours">
-                                            <span ng-hide="compareDates(getMonday(minDate), initDate(location.recurrences.start_date)) && compareDates(getMonday(minDate), initDate(location.recurrences.next)) && (day.weekday < getDate(initDate(location.real_start)) || day.weekday < getDate(minDate))"><b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}</span>
+                                            <span ng-hide="compareDates(getMonday(minDate), initDate(location.recurrences.start_date)) && compareDates(getMonday(minDate), initDate(location.recurrences.next)) && (day.weekday < getDate(initDate(location.real_start))) || (checkEndDate(minDate, initDate(location.recurrences.end_date)) && (day.weekday < getDate(initDate(location.real_start))))"><b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}</span>
                                         </li>
                                         </ul>
                                 </div>

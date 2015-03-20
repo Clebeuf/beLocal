@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('DetailsCtrl', function ($scope, $timeout, $stateParams, StateService, $rootScope, $window, $location) {
+  .controller('DetailsCtrl', function ($scope, $timeout, $stateParams, StateService, $rootScope, $window, $location, DateService) {
+
+    $scope.DateService = DateService;
 
     StateService.setVendorToDisplay($stateParams.vendorid);
 

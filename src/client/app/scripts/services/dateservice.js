@@ -2,7 +2,7 @@
 
 angular.module('clientApp')
     .service('DateService', function DateService() {
-        this.minDate = new Date();
+        this.currentDate = new Date();
 
         this.getDate = function(date) {
             if(date == null)
@@ -38,7 +38,7 @@ angular.module('clientApp')
             if(endDate == undefined)
                 return today.getTime() > startDate.getTime() || this.compareDates(today, startDate);
             else
-                return (today.getTime() < endDate.getTime() && today.getTime() > startDate.getTime() && this.minDate.getTime()) || (this.compareDates(today, startDate) || this.compareDates(today, endDate));
+                return (today.getTime() < endDate.getTime() && today.getTime() > startDate.getTime() && this.currentDate.getTime()) || (this.compareDates(today, startDate) || this.compareDates(today, endDate));
         };
 
         this.checkEndDate = function(today, endDate) {
@@ -73,52 +73,53 @@ angular.module('clientApp')
         };
 
         this.showDates = function(location) {
-            return location != undefined && location.recurrences && location.address.hours.length !== 0 && this.checkEndDate(this.minDate, this.initDate(location.recurrences.end_date));
+            return location != undefined && location.recurrences && location.address.hours.length !== 0 && this.checkEndDate(this.currentDate, this.initDate(location.recurrences.end_date));
         };
 
         this.showOpenString = function(location) {
-            return location != undefined && location.recurrences && this.isInsideRecurrence(this.minDate, this.initDate(location.recurrences.start_date), this.initDate(location.recurrences.end_date)) && location.address.hours.length != 0;            
+            return location != undefined && location.recurrences && this.isInsideRecurrence(this.currentDate, this.initDate(location.recurrences.start_date), this.initDate(location.recurrences.end_date)) && location.address.hours.length != 0;            
         };
 
         this.showReopeningString = function(location) {
-            return location != undefined && location.recurrences && this.isBeforeRecurrence(this.minDate, this.initDate(location.recurrences.start_date));
+            return location != undefined && location.recurrences && this.isBeforeRecurrence(this.currentDate, this.initDate(location.recurrences.start_date));
         };
 
         this.showThisWeekString = function(location) {
-            return location != undefined && location.recurrences && this.compareDates(this.getMonday(this.minDate), this.initDate(location.recurrences.next));
+            return location != undefined && location.recurrences && this.compareDates(this.getMonday(this.currentDate), this.initDate(location.recurrences.next));
         };
 
         this.hideTheWeekOfContainer = function(location) {
-            return location != undefined && location.recurrences && this.compareDates(this.getMonday(this.minDate), this.initDate(location.recurrences.next));
+            return location != undefined && location.recurrences && this.compareDates(this.getMonday(this.currentDate), this.initDate(location.recurrences.next));
         };
 
         this.showTheWeekOfString = function(location) {
-            return location != undefined && location.recurrences && this.checkEndDate(this.minDate, this.initDate(location.recurrences.end_date));
+            return location != undefined && location.recurrences && this.checkEndDate(this.currentDate, this.initDate(location.recurrences.end_date));
         };
 
         this.showClosedForTheSeasonString = function(location) {
             if(location == undefined || (!location.recurrences && location.address.hours.length !== 0))
                 return false
             else
-                return location.address.hours.length === 0 || !this.checkEndDate(this.minDate, this.initDate(location.recurrences.end_date));            
+                return location.address.hours.length === 0 || !this.checkEndDate(this.currentDate, this.initDate(location.recurrences.end_date));            
         };
 
         this.hideWeekdayContainer = function(location) {
             if(location == undefined || (!location.recurrences && location.address.hours.length !== 0))
                 return false
             else
-                return location.address.hours.length === 0 || !this.checkEndDate(this.minDate, this.initDate(location.recurrences.end_date));
+                return location.address.hours.length === 0 || !this.checkEndDate(this.currentDate, this.initDate(location.recurrences.end_date));
         };
 
         this.hideWeekday = function(location, day) {
             if(location == undefined || !location.recurrences)
                 return false
             else
-                return this.compareDates(this.getMonday(this.minDate), this.initDate(location.recurrences.start_date)) && (day.weekday < this.getDate(this.initDate(location.real_start))) || 
-                (location.recurrences.end_date && this.compareDates(this.getMonday(this.minDate), this.getMonday(this.initDate(location.recurrences.end_date))) && (day.weekday > this.getDate(this.initDate(location.recurrences.end_date))));
-            // return this.compareDates(this.getMonday(this.minDate), this.initDate(location.recurrences.start_date)) && 
-            // this.compareDates(this.getMonday(this.minDate), this.initDate(location.recurrences.next)) && 
-            // (day.weekday < this.getDate(this.initDate(location.real_start))) || (this.checkEndDate(this.minDate, this.initDate(location.recurrences.end_date)) && 
+                return this.compareDates(this.getMonday(this.currentDate), this.initDate(location.recurrences.start_date)) && (day.weekday < this.getDate(this.initDate(location.real_start))) || 
+                (location.recurrences.end_date && this.compareDates(this.getMonday(this.currentDate), this.getMonday(this.initDate(location.recurrences.end_date))) && (day.weekday > this.getDate(this.initDate(location.recurrences.end_date)))) ||
+                (this.isBeforeRecurrence(this.currentDate, this.initDate(location.recurrences.start_date)) && day.weekday < this.getDate(this.initDate(location.real_start)));
+            // return this.compareDates(this.getMonday(this.currentDate), this.initDate(location.recurrences.start_date)) && 
+            // this.compareDates(this.getMonday(this.currentDate), this.initDate(location.recurrences.next)) && 
+            // (day.weekday < this.getDate(this.initDate(location.real_start))) || (this.checkEndDate(this.currentDate, this.initDate(location.recurrences.end_date)) && 
             //     (day.weekday < this.getDate(this.initDate(location.real_start))));            
         };        
     });

@@ -6,6 +6,41 @@ angular.module('clientApp')
     $scope.DateService = DateService;
 
     StateService.setVendorToDisplay($stateParams.vendorid);
+    $scope.minDate = new Date();    
+
+    $scope.getDate = function(date) {
+        if(date.getDay() == 0)
+            return 7;
+        else
+            return date.getDay();
+    }; 
+
+    // Compare two dates to see if they are equal. (This is necessary in order to ignore times)
+    // Also use getFullYear() and not getYear(). 
+    $scope.compareDates = function(date1, date2) {
+        if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
+            return true;
+        else
+            return false;
+    }
+
+    $scope.addDays = function(d, n) {
+        d.setDate(d.getDate() + n);
+        return d;
+    }
+
+    $scope.getMonday = function(d) {
+      d = new Date(d);
+      var day = d.getDay(),
+          diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+      return new Date(d.setDate(diff));
+    }
+
+    $scope.initDate = function(d) {
+        var date = new Date(d)
+        date.setTime(date.getTime() + date.getTimezoneOffset() * 60000);
+        return date;        
+    } 
 
     // Required for AngularJS to finish its digest loop
     $scope.safeApply = function(fn) {

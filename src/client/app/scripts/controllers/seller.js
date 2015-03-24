@@ -82,6 +82,13 @@ angular.module('clientApp')
         'Saturday',
         'Sunday'
     ];
+
+    $scope.getDate = function(date) {
+        if(date.getDay() == 0)
+            return 7;
+        else
+            return date.getDay();
+    };       
     
     // Get a list of all tags from the server.
     StateService.getTags().then(function() {

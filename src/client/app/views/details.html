@@ -161,18 +161,7 @@
                             <!-- Display the locations name -->
                             <div class="col-xs-9 card-lable-style">
                                 {{location.name}}
-                            </div>
-
-                            <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
-                            <div class="col-xs-3 edit-delete-buttons">
-                                <span data-toggle="tooltip" data-placement="left" title="Edit Location">
-                                <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#locationModal" ng-click="editLocation(location)"></span>
-                                </span>
-                                <span data-toggle="tooltip" data-placement="left" title="Delete Location">
-                                <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
-                                </span>
                             </div> 
-
                         </div>
 
                         <div class="location-details seller-location-details">
@@ -204,8 +193,7 @@
                                 </span>
                                         <ul class="list-inline store-hours">&nbsp
                                         <li ng-repeat="day in location.address.hours">
-                                            <span ng-hide="DateService.hideWeekday(location, day)"><b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}</span>
-                                        </li>
+                                            <span ng-hide="DateService.hideWeekday(location, day)"><b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}</span>                                        </li>
                                         </ul>
                                 </div>
                             </span>

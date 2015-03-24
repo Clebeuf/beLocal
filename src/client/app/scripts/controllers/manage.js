@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('ManageCtrl', function ($scope, StateService, $location, $q, $timeout) {
+  .controller('ManageCtrl', function ($scope, StateService, $location, $q, $timeout, DateService) {
     $scope.inactiveVendors = []; // list of inactive vendors
     $scope.users = []; // list of all users for beLocal
     $scope.showXSNav = true;
@@ -13,6 +13,7 @@ angular.module('clientApp')
     $scope.recurrenceInterval = 1;
     $scope.compareDate = new Date();
     $scope.minDate = new Date(); // Minimum accepted date for datepicker (set to current date)
+    $scope.DateService = DateService;
 
     var geocoder = new google.maps.Geocoder(); // Create a geocoder for looking up addresses
 
@@ -25,54 +26,7 @@ angular.module('clientApp')
         'Friday',
         'Saturday',
         'Sunday'
-    ];
-
-    $scope.getDate = function(date) {
-        if(date == null)
-            return -1;
-        
-        if(date.getDay() == 0)
-            return 7;
-        else
-            return date.getDay();
-    }     
-
-    // Compare two dates to see if they are equal. (This is necessary in order to ignore times)
-    // Also use getFullYear() and not getYear(). 
-    $scope.compareDates = function(date1, date2) {
-        if(date1 == null || date2 == null)
-            return false;
-        if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
-            return true;
-        else
-            return false;
-    };
-
-    $scope.isBeforeRecurrence = function(today, startDate) {
-        return today.getTime() < startDate.getTime();
-    }    
-
-    $scope.isInsideRecurrence = function(today, startDate, endDate) {
-        if(endDate == undefined)
-            return today.getTime() > startDate.getTime() || $scope.compareDates(today, startDate);
-        else
-            return (today.getTime() < endDate.getTime() && today.getTime() > startDate.getTime() && minDate.getTime()) || ($scope.compareDates(today, startDate) || $scope.compareDates(today, endDate));
-    }
-
-    $scope.checkEndDate = function(today, endDate) {
-        if(endDate == null || $scope.compareDates(today, endDate))
-            return true;
-
-        if(today.getTime() > endDate.getTime())
-            return false;
-        else
-            return true;
-    }
-
-    $scope.addDays = function(d, n) {
-        d.setDate(d.getDate() + n);
-        return d;
-    };        
+    ];  
 
     $scope.range = function(n) {
         return new Array(n);
@@ -219,23 +173,7 @@ angular.module('clientApp')
         $scope.locationName = undefined; // Reset location name field
         $scope.website = undefined; // Reset website
         $scope.locationDescription = undefined;  // Reset description field
-    }    
-
-    $scope.getMonday = function(d) {
-      d = new Date(d);
-      var day = d.getDay(),
-          diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
-      return new Date(d.setDate(diff));
-    }
-
-    $scope.initDate = function(d) {
-        if(d == null)
-            return null;
-
-        var date = new Date(d)
-        date.setTime(date.getTime() + date.getTimezoneOffset() * 60000);
-        return date;        
-    }    
+    }      
 
     // Build default hours object for recurring locations. (Default right now is 8am-4pm, closed on days 6 and 7 [Saturday and Sunday])
     $scope.buildHoursObject = function() {
@@ -434,7 +372,7 @@ angular.module('clientApp')
             };
 
 
-            var mondayOfWeek = $scope.getMonday($scope.recurrenceStartDate);
+            var mondayOfWeek = DateService.getMonday($scope.recurrenceStartDate);
 
             var rule = {
                 'freq' : $scope.recurrenceFrequency,

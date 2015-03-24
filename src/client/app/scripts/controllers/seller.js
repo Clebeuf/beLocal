@@ -8,8 +8,9 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q, $rootScope, $location, ipCookie) {
+  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q, $rootScope, $location, ipCookie, DateService) {
     $scope.StateService = StateService; // Required so that we can reference StateService in seller.html (adds it to the scope)
+    $scope.DateService = DateService;
     $scope.opened = false; // True if the datepicker on the create location modal is open
     $scope.minDate = new Date(); // Minimum accepted date for datepicker (set to current date)
     $scope.sellerLocations = []; // List of seller locations
@@ -64,7 +65,7 @@ angular.module('clientApp')
     // Get a list of all available markets to sell at
     StateService.getAvailableMarkets().then(function() {
         if(StateService.getAvailableMarketList().length > 0)
-            $scope.newLocationMarket = StateService.getAvailableMarketList()[0].id;
+            $scope.newLocationMarket = StateService.getAvailableMarketList()[0];
     });
 
     // True if a user has already authenticated with Twitter. False otherwise
@@ -90,70 +91,7 @@ angular.module('clientApp')
     // Get a list of all categories from the server.
     StateService.getCategories().then(function() {
       $scope.categoryList = StateService.getCategoryList();
-    });
-
-    $scope.getDate = function(date) {
-        if(date == null)
-            return -1;
-        
-        if(date.getDay() == 0)
-            return 7;
-        else
-            return date.getDay();
-    }    
-
-    // Compare two dates to see if they are equal. (This is necessary in order to ignore times)
-    // Also use getFullYear() and not getYear(). 
-    $scope.compareDates = function(date1, date2) {
-        if(date1 == null || date2 == null)
-            return false;
-        if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
-            return true;
-        else
-            return false;
-    };
-
-    $scope.isBeforeRecurrence = function(today, startDate) {
-        return today.getTime() < startDate.getTime();
-    }    
-
-    $scope.isInsideRecurrence = function(today, startDate, endDate) {
-        if(endDate == undefined)
-            return today.getTime() > startDate.getTime() || $scope.compareDates(today, startDate);
-        else
-            return (today.getTime() < endDate.getTime() && today.getTime() > startDate.getTime() && minDate.getTime()) || ($scope.compareDates(today, startDate) || $scope.compareDates(today, endDate));
-    }
-
-    $scope.checkEndDate = function(today, endDate) {
-        if(endDate == null || $scope.compareDates(today, endDate))
-            return true;
-
-        if(today.getTime() > endDate.getTime())
-            return false;
-        else
-            return true;
-    }       
-
-    $scope.addDays = function(d, n) {
-        d.setDate(d.getDate() + n);
-        return d;
-    }
-
-    $scope.getMonday = function(d) {
-      d = new Date(d);
-      var day = d.getDay(),
-          diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
-      return new Date(d.setDate(diff));
-    }
-
-    $scope.initDate = function(d) {
-        if(d == null)
-            return null;
-
-        var date = new Date(d)
-        date.setTime(date.getTime() + date.getTimezoneOffset() * 60000);
-        return date;        
-    }  
+    });  
 
     // Hide the inactive alert
     $scope.hideInactiveAlert = function() {
@@ -827,7 +765,7 @@ angular.module('clientApp')
 
                 if($scope.locationType !== 'true') {
 
-                    var mondayOfWeek = $scope.getMonday($scope.recurrenceStartDate);
+                    var mondayOfWeek = DateService.getMonday($scope.recurrenceStartDate);
 
                     var rule = {
                         'freq' : $scope.recurrenceFrequency,

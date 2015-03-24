@@ -89,25 +89,22 @@ angular.module('clientApp')
                     scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Next open: </span></strong>" + $filter('date')(nextDate, "MMMM d") + ' from ' + scope.market.address.hours[0].from_hour + ' - ' + scope.market.address.hours[0].to_hour;                    
                 }
 
+            } else if(scope.openString === undefined && scope.market.address.hours.length != 0) {
+                var today = DateService.getDate(new Date());
+
+                for(var j = 0; j < scope.market.address.hours.length; j++) {
+                    var nextDayOpen = 0;
+                    if(scope.market.address.hours[j].weekday >= today) {
+                        nextDayOpen = j;
+
+                        if(nextDayOpen < scope.market.address.hours.length) {
+                            scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open " + scope.weekdays[scope.market.address.hours[nextDayOpen].weekday - 1] + ":</span></strong> " +  scope.market.address.hours[nextDayOpen].from_hour + ' - ' + scope.market.address.hours[nextDayOpen].to_hour;
+                            return;
+                        }
+                    }
+                    scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open " + scope.weekdays[scope.market.address.hours[0].weekday - 1] + "</span></strong>: " +  scope.market.address.hours[0].from_hour + ' - ' + scope.market.address.hours[0].to_hour;
+                }           
             }
-
-            // // If it's not open today, get the next day the market will be open
-            // if(scope.openString === undefined) {
-            //     var today = DateService.getDate(new Date());
-
-            //     for(var j = 0; j < scope.market.address.hours.length; j++) {
-            //         var nextDayOpen = 0;
-            //         if(scope.market.address.hours[j].weekday >= today) {
-            //             nextDayOpen = j;
-
-            //             if(nextDayOpen < scope.market.address.hours.length) {
-            //                 scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open " + scope.weekdays[scope.market.address.hours[nextDayOpen].weekday - 1] + ":</span></strong> " +  scope.market.address.hours[nextDayOpen].from_hour + ' - ' + scope.market.address.hours[nextDayOpen].to_hour;
-            //                 return;
-            //             }
-            //         }
-            //         scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open " + scope.weekdays[scope.market.address.hours[0].weekday - 1] + "</span></strong>: " +  scope.market.address.hours[0].from_hour + ' - ' + scope.market.address.hours[0].to_hour;
-            //     }                    
-            // }
         }
 
         // Generate opening string on first load for each card

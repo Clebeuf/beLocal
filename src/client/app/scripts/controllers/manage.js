@@ -179,15 +179,15 @@ angular.module('clientApp')
     $scope.buildHoursObject = function() {
         var openHours = [];
 
-        var start = new Date();
-        var end = new Date();
-
-        start.setHours(8);
-        start.setMinutes(0,0);
-        end.setHours(16);
-        end.setMinutes(0,0);
-
         for(var i = 1; i < 8; i++) {
+            var start = new Date();
+            var end = new Date();
+
+            start.setHours(8);
+            start.setMinutes(0,0);
+            end.setHours(16);
+            end.setMinutes(0,0);
+            
             openHours.push({
                 weekday : i, 
                 day : $scope.weekdays[i - 1], 

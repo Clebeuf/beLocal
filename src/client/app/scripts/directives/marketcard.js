@@ -83,6 +83,11 @@ angular.module('clientApp')
                 } else if(DateService.isInsideRecurrence(scope.currentDate, DateService.initDate(scope.market.recurrences.start_date), DateService.initDate(scope.market.recurrences.end_date))) {
                     // We are inside the current recurrence
                     nextDate = new Date();
+
+                    if(DateService.getDate(nextDate) > scope.market.address.hours[0].weekday) {
+                        nextDate = DateService.getMonday(DateService.addDays(nextDate, 7));
+                    }
+
                     while(DateService.getDate(nextDate) < scope.market.address.hours[0].weekday)
                         nextDate = DateService.addDays(nextDate, 1);
 

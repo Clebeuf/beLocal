@@ -14,7 +14,6 @@ This is a project from CSC 485 - Startup Programming at the University of Victor
 ###Our Team
 [Scott Low](https://github.com/scottlow)  
 [Carly Lebeuf](https://github.com/clebeuf)  
-[Riz Panjwani](https://github.com/rpanjwani)  
 [Samuel Navarrete](https://github.com/cakebrewery)  
 [Jyoti Sheoran](https://github.com/sheoranjs24)
 

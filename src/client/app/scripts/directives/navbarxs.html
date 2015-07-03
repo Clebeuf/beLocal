@@ -51,6 +51,7 @@
           <li ng-class="{active : state.$current.name === 'main'}"><a class="pointer" data-target="#trending" data-toggle="tab" ng-click="setHash('trending');" id="trendingTab">In Season Now</a></li>
           <li><a data-target="#vendors" class="pointer" data-toggle="tab" ng-click="setHash('vendors');" id="vendorsTab">Farmers & Foodmakers</a></li>
           <li><a data-target="#markets" class="pointer" data-toggle="tab" ng-click="setHash('markets');" id="marketsTab">Local Markets</a></li>  
+          <li><a href="https://belocalvictoria.me/blog" class="pointer" id="marketsTab">Blog</a></li>          
         </ul>
       </div>
 
@@ -80,7 +81,7 @@
           <li class="dropdown">
             <a class="dropdown-toggle pointer">My Account<span class="caret"></span></a>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-              <li><a class="pointer" ng-click="goToManage()">Manage Vendors</a></li>        
+              <li><a class="pointer" ng-click="goToManage()">Manage Vendors and Markets</a></li>        
               <li class="divider"></li>
               <li><a class="pointer" ng-click="AuthService.logout()">Logout</a></li>
             </ul>

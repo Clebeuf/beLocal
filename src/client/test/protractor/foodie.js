@@ -167,7 +167,7 @@ describe('Testing foodie tasks', function() {
         element.all(by.repeater('tag in product.tags')).get(0).click();
         browser.sleep(1000);
         expect(browser.getCurrentUrl()).toEqual('http://127.0.0.1:9000/#/#trending');        
-        expect(element.all(by.css('[ng-show="tagSelected(tag.name)"]')).get(1).isDisplayed()).toBeTruthy();
+        expect(element.all(by.css('[ng-show="tagSelected(tag.name)"]')).get(0).isDisplayed()).toBeTruthy();
 
         // Check back button behaviour again
         browser.navigate().back();

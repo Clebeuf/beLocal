@@ -8,8 +8,9 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q, $rootScope, $location, ipCookie) {
+  .controller('SellerCtrl', function ($scope, StateService, $timeout, $q, $rootScope, $location, ipCookie, DateService) {
     $scope.StateService = StateService; // Required so that we can reference StateService in seller.html (adds it to the scope)
+    $scope.DateService = DateService;
     $scope.opened = false; // True if the datepicker on the create location modal is open
     $scope.minDate = new Date(); // Minimum accepted date for datepicker (set to current date)
     $scope.sellerLocations = []; // List of seller locations
@@ -64,7 +65,7 @@ angular.module('clientApp')
     // Get a list of all available markets to sell at
     StateService.getAvailableMarkets().then(function() {
         if(StateService.getAvailableMarketList().length > 0)
-            $scope.newLocationMarket = StateService.getAvailableMarketList()[0].id;
+            $scope.newLocationMarket = StateService.getAvailableMarketList()[0];
     });
 
     // True if a user has already authenticated with Twitter. False otherwise
@@ -97,25 +98,7 @@ angular.module('clientApp')
     // Get a list of all categories from the server.
     StateService.getCategories().then(function() {
       $scope.categoryList = StateService.getCategoryList();
-    });
-
-    $scope.addDays = function(d, n) {
-        d.setDate(d.getDate() + n);
-        return d;
-    }
-
-    $scope.getMonday = function(d) {
-      d = new Date(d);
-      var day = d.getDay(),
-          diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
-      return new Date(d.setDate(diff));
-    }
-
-    $scope.initDate = function(d) {
-        var date = new Date(d)
-        date.setTime(date.getTime() + date.getTimezoneOffset() * 60000);
-        return date;        
-    }    
+    });  
 
     // Hide the inactive alert
     $scope.hideInactiveAlert = function() {
@@ -169,15 +152,6 @@ angular.module('clientApp')
                 $scope.twitterChecked = true;
             });
         });
-    }
-
-    // Compare two dates to see if they are equal. (This is necessary in order to ignore times)
-    // Also use getFullYear() and not getYear(). 
-    $scope.compareDates = function(date1, date2) {
-        if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
-            return true;
-        else
-            return false;
     }
 
     // Generate the vendor url.
@@ -286,15 +260,15 @@ angular.module('clientApp')
     $scope.buildHoursObject = function() {
         var openHours = [];
 
-        var start = new Date();
-        var end = new Date();
-
-        start.setHours(8);
-        start.setMinutes(0,0);
-        end.setHours(16);
-        end.setMinutes(0,0);
-
         for(var i = 1; i < 8; i++) {
+            var start = new Date();
+            var end = new Date();
+
+            start.setHours(8);
+            start.setMinutes(0,0);
+            end.setHours(16);
+            end.setMinutes(0,0);
+            
             openHours.push({
                 weekday : i, 
                 day : $scope.weekdays[i - 1], 
@@ -798,7 +772,7 @@ angular.module('clientApp')
 
                 if($scope.locationType !== 'true') {
 
-                    var mondayOfWeek = $scope.getMonday($scope.recurrenceStartDate);
+                    var mondayOfWeek = DateService.getMonday($scope.recurrenceStartDate);
 
                     var rule = {
                         'freq' : $scope.recurrenceFrequency,
@@ -871,11 +845,17 @@ angular.module('clientApp')
                 location.street_number = component.short_name;
             else if($scope.compareGeocoderType(component.types, 'route'))
                 location.route = component.long_name;
-            else if($scope.compareGeocoderType(component.types, 'sublocality') && location.city == undefined)
+            else if($scope.compareGeocoderType(component.types, 'point_of_interest') && location.route == undefined)
+                location.route = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'establishment') && location.route == undefined)
+                location.route = component.long_name;                                
+            else if($scope.compareGeocoderType(component.types, 'sublocality'))
                 location.city = component.long_name;      
             else if($scope.compareGeocoderType(component.types, 'locality') && location.city == undefined)
                 location.city = component.long_name;
             else if($scope.compareGeocoderType(component.types, 'neighborhood') && location.city == undefined)
+                location.city = component.long_name;             
+            else if($scope.compareGeocoderType(component.types, 'administrative_area_level_3') && location.city == undefined)
                 location.city = component.long_name;            
             else if($scope.compareGeocoderType(component.types, 'administrative_area_level_1'))
                 location.state = component.short_name;
@@ -885,7 +865,8 @@ angular.module('clientApp')
                 location.postal_code = component.long_name;              
         }
         return location;
-    }
+    }        
+     
 
     // Geocoder results can have nested component types and order is not guranteed. As a result, we have to step through ALL components
     // to see if the result has the ones we want/need.
@@ -902,7 +883,7 @@ angular.module('clientApp')
     $scope.makeSelection = function(item) {
         var parsedLocation = $scope.parseGeocoderResult(item);
 
-        $scope.locationAddress = parsedLocation.street_number + ' ' + parsedLocation.route;
+        $scope.locationAddress = (parsedLocation.street_number != undefined ? parsedLocation.street_number + ' ' : '') + parsedLocation.route;
         $scope.locationCity = parsedLocation.city;
         $scope.locationProvince = parsedLocation.state;
         $scope.locationCountry = parsedLocation.country;

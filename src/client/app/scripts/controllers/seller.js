@@ -845,21 +845,28 @@ angular.module('clientApp')
                 location.street_number = component.short_name;
             else if($scope.compareGeocoderType(component.types, 'route'))
                 location.route = component.long_name;
-            else if($scope.compareGeocoderType(component.types, 'sublocality') && location.city == undefined)
+            else if($scope.compareGeocoderType(component.types, 'point_of_interest') && location.route == undefined)
+                location.route = component.long_name;
+            else if($scope.compareGeocoderType(component.types, 'establishment') && location.route == undefined)
+                location.route = component.long_name;                                
+            else if($scope.compareGeocoderType(component.types, 'sublocality'))
                 location.city = component.long_name;      
             else if($scope.compareGeocoderType(component.types, 'locality') && location.city == undefined)
                 location.city = component.long_name;
             else if($scope.compareGeocoderType(component.types, 'neighborhood') && location.city == undefined)
+                location.city = component.long_name;             
+            else if($scope.compareGeocoderType(component.types, 'administrative_area_level_3') && location.city == undefined)
                 location.city = component.long_name;            
             else if($scope.compareGeocoderType(component.types, 'administrative_area_level_1'))
                 location.state = component.short_name;
             else if($scope.compareGeocoderType(component.types, 'country'))
                 location.country = component.long_name;            
             else if($scope.compareGeocoderType(component.types, 'postal_code'))
-                location.postal_code = component.long_name;             
+                location.postal_code = component.long_name;              
         }
         return location;
-    }
+    }        
+     
 
     // Geocoder results can have nested component types and order is not guranteed. As a result, we have to step through ALL components
     // to see if the result has the ones we want/need.
@@ -876,7 +883,7 @@ angular.module('clientApp')
     $scope.makeSelection = function(item) {
         var parsedLocation = $scope.parseGeocoderResult(item);
 
-        $scope.locationAddress = parsedLocation.street_number + ' ' + parsedLocation.route;
+        $scope.locationAddress = (parsedLocation.street_number != undefined ? parsedLocation.street_number + ' ' : '') + parsedLocation.route;
         $scope.locationCity = parsedLocation.city;
         $scope.locationProvince = parsedLocation.state;
         $scope.locationCountry = parsedLocation.country;

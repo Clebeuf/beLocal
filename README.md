@@ -1,7 +1,5 @@
-=======
-Startup Programming - [beLocal](http://belocalvictoria.me)
-=======
-
+beLocal
+======
 
 ![beLocal Logo](http://drive.google.com/uc?id=0B5qWf9vc8yiRRFhhMENsRS11RUk)
 
@@ -28,4 +26,4 @@ Follow our team progress on [Trello](https://trello.com/b/3ivzzaQ3/belocal)
 [Public REST API](https://github.com/rpanjwani/beLocal/wiki/Public-REST-API)  
 [Third Party Libraries](https://github.com/rpanjwani/beLocal/wiki/Third-Party-Libraries)  
 [Tool & Installation Instructions](https://github.com/rpanjwani/beLocal/wiki/Tools-&-Installation-Instructions)  
-[User Guide](https://github.com/rpanjwani/beLocal/wiki/User-Guide)  
+[User Guide](https://github.com/rpanjwani/beLocal/wiki/User-Guide)

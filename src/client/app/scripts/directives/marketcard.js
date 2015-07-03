@@ -1,6 +1,6 @@
 'use strict';
 angular.module('clientApp')
-  .directive('marketCard', function (StateService, $timeout, $compile, $location) {
+  .directive('marketCard', function (StateService, $timeout, $compile, $location, $filter, DateService) {
     return {
       templateUrl: 'scripts/directives/marketCard.html',
       restrict: 'E',
@@ -20,6 +20,8 @@ angular.module('clientApp')
             'Saturday',
             'Sunday'
         ];
+
+        scope.currentDate = new Date();
 
         // Go to the market details page for a specific market
         scope.displayMarket = function (id) {
@@ -43,38 +45,52 @@ angular.module('clientApp')
           StateService.likeUnlikeItem(item, itemName).then(function() {
             item = StateService.getLikedUnlikedItem();
           });
-        };        
+        };             
 
-        // This is a silly hack I had to make since on the server, I accidentally started dates with 0 = Monday rather than 0 = Sunday. 
-        // As a result, we need to put this everywhere to ensure that dates coming back from the server are parsed correctly on the client
-        scope.getDate = function(date) {
-            if(date.getDay() == 0)
-                return 7;
-            else
-                return date.getDay();
-        }      
-
-        // Compare two dates regardless of time
-        scope.compareDates = function(date1, date2) {
-            if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
-                return true;
-            else
-                return false;
-        }
-        
         // Genenerate a string that says whether a specific market is open or closed today.
         scope.generateOpeningString = function() {
             // Check if open today first
             for(var j = 0; j < scope.market.address.hours.length; j++) {
-                var today = scope.getDate(new Date());
-                if(scope.market.address.hours[j].weekday == today) {
+                var today = DateService.getDate(new Date());
+                if(scope.market.address.hours[j].weekday == today && scope.market.recurrences && DateService.isInsideRecurrence(DateService.initDate(new Date()), DateService.initDate(scope.market.real_start), DateService.initDate(scope.market.recurrences.end_date))) {
                     scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open today:</span></strong> " + scope.market.address.hours[j].from_hour + ' - ' + scope.market.address.hours[j].to_hour;
                 }
             }
 
-            // If it's not open today, get the next day the market will be open
-            if(scope.openString === undefined) {
-                var today = scope.getDate(new Date());
+            if(scope.openString === undefined && scope.market.recurrences && scope.market.recurrences.next && scope.market.address.hours.length != 0) {
+                var nextDate = DateService.initDate(scope.market.recurrences.next);
+
+                // If we're not inside a our recurrence, we should do something about that.
+                if(!DateService.isInsideRecurrence(nextDate, DateService.initDate(scope.market.real_start), DateService.initDate(scope.market.recurrences.end_date))) {
+                    // Adjust if necessary to ensure we're inside recurrence
+                    while(!DateService.isInsideRecurrence(nextDate, DateService.initDate(scope.market.real_start), DateService.initDate(scope.market.recurrences.end_date)))
+                        nextDate = DateService.addDays(nextDate, 1);
+
+                    // Calculate which day we're going to display
+                    var dayShift = 0;
+                    for(var j = 0; j < scope.market.address.hours.length; j++) {
+                        if(scope.market.address.hours[j].weekday < DateService.getDate(nextDate))
+                            continue;
+
+                        dayShift = scope.market.address.hours[j].weekday;
+                        break;
+
+                    }
+
+                    nextDate = DateService.addDays(nextDate, dayShift - DateService.getDate(nextDate));
+                    scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Next open: </span></strong>" + $filter('date')(nextDate, "MMMM d") + ' from ' + scope.market.address.hours[DateService.getDate(nextDate) - 1].from_hour + ' - ' + scope.market.address.hours[DateService.getDate(nextDate) - 1].to_hour;
+                    return;
+                } else if(DateService.isInsideRecurrence(scope.currentDate, DateService.initDate(scope.market.recurrences.start_date), DateService.initDate(scope.market.recurrences.end_date))) {
+                    // We are inside the current recurrence
+                    nextDate = new Date();
+                    while(DateService.getDate(nextDate) < scope.market.address.hours[0].weekday)
+                        nextDate = DateService.addDays(nextDate, 1);
+
+                    scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Next open: </span></strong>" + $filter('date')(nextDate, "MMMM d") + ' from ' + scope.market.address.hours[0].from_hour + ' - ' + scope.market.address.hours[0].to_hour;                    
+                }
+
+            } else if(scope.openString === undefined && scope.market.address.hours.length != 0) {
+                var today = DateService.getDate(new Date());
 
                 for(var j = 0; j < scope.market.address.hours.length; j++) {
                     var nextDayOpen = 0;
@@ -87,7 +103,7 @@ angular.module('clientApp')
                         }
                     }
                     scope.openString = "<strong><span class='glyphicon glyphicon-time'></span>&nbsp;<span class='hours-string'>Open " + scope.weekdays[scope.market.address.hours[0].weekday - 1] + "</span></strong>: " +  scope.market.address.hours[0].from_hour + ' - ' + scope.market.address.hours[0].to_hour;
-                }                    
+                }           
             }
         }
 

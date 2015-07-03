@@ -153,13 +153,15 @@ class Market(models.Model):
     photo = models.ForeignKey(MarketPhoto, blank=True, null=True, on_delete=models.SET_NULL)    
     name = models.CharField(max_length=100)
     address = models.ForeignKey(Address)
-    description = models.CharField(max_length=1000)
+    description = models.CharField(max_length=600)
+    date_string = models.CharField(max_length=400, null=True, blank=True)
     vendors = models.ManyToManyField(Vendor, related_name='vendors', blank=True)
     webpage = models.CharField(max_length=400, null=True, blank=True)
     facebook_url = models.CharField(max_length=400, null=True, blank=True)   
     twitter_url = models.CharField(max_length=400, null=True, blank=True)
+    real_start = models.DateField(blank=True, null=True)    
 
-    recurrences = RecurrenceField(null=True)    
+    recurrences = RecurrenceField(null=True)       
     
 secretballot.enable_voting_on(Market)
 

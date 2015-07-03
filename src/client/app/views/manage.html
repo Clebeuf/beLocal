@@ -1,20 +1,311 @@
 <navbar-x-s></navbar-x-s>
 
-<div class="new-formatting-container customer-container">  
+<div class="new-formatting-container customer-container">     
     <div class="row">
-		<div class="new-heading-style ng-binding">
-	        All Vendors ({{inactiveVendors.length}} Currently Registered)
-	    </div>    
-	    <div ng-repeat="vendor in inactiveVendors">
-	  	    <vendor-card data="vendor"></vendor-card>
-	  	</div>
-		<div class="new-heading-style ng-binding">
-	        All Users ({{users.length}} Currently Registered)
-	    </div> 
-	    <p ng-repeat="user in users">
-            <a ng-click="deleteUser(user)" class="btn btn-md btn-danger" style="margin-right:10px; margin-left:10px; float:left">Delete</a>	    
-	    	<strong>Name:</strong> {{user.first_name}} {{user.last_name}}<br>
-	    	<strong>Email:</strong> {{user.email}}
-	    </p>	  	
+        <div class="full-width-tabs">
+            <ul class="nav nav-tabs location-tabs" role="tablist">
+                  <li role="presentation" class="active full-width"><a id="userTab" href="/manage/#users" role="tab" data-toggle="tab">Users</a></li>
+                  <li role="presentation" class="full-width"><a id="marketTab" href="/manage/#markets" ng-click="doCustomLocation()" role="tab" data-toggle="tab">Markets</a></li>
+            </ul>
+        </div>
+
+        <div class="tab-content">
+            <!-- USERS TAB -->
+            <div role="tabpanel" class="tab-pane active" id="users">
+                <div class="new-heading-style ng-binding">
+                    All Vendors ({{inactiveVendors.length}} Currently Registered)
+                </div>    
+                <div ng-repeat="vendor in inactiveVendors">
+                    <vendor-card data="vendor"></vendor-card>
+                </div>
+                <div class="new-heading-style ng-binding">
+                    All Users ({{users.length}} Currently Registered)
+                </div> 
+                <p ng-repeat="user in users">
+                    <a ng-click="deleteUser(user)" class="btn btn-md btn-danger" style="margin-right:10px; margin-left:10px; float:left">Delete</a>     
+                    <strong>Name:</strong> {{user.first_name}} {{user.last_name}}<br>
+                    <strong>Email:</strong> {{user.email}}
+                </p>
+            </div>
+            <!-- MARKETS TAB -->
+            <div role="tabpanel" class="tab-pane" id="markets">
+
+                <div class="row">
+                    <div class="col-xs-12">
+                    </div>
+                </div>
+
+                <div>
+                    <span class="new-heading-style">Markets</span>
+                    <span class="pull-right">
+                        <button class="btn beLocal-btn-filled" ng-click="resetLocationModal()" data-toggle="modal" data-target="#marketModal" id="addMarketBtn">Create New Market</button>
+                    </span>                        
+                </div>
+                <!-- repeating <font></font>r each location that seller has in the db -->
+                <div ng-repeat="location in marketList | orderBy:'address.hours.length':true" class="container-for-cards">
+                    <div class="card-formatting" ng-mouseenter="highlightPins(location)" ng-mouseleave="unHighlightPins(location)">
+                        <div class="row">
+
+                            <!-- Display the locations name -->
+                            <div class="col-sm-2">
+                              <div class="vendor-image-container">
+                                <div class="vendor-images pointer" style="background-image:url({{location.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;" ng-click="displayVendor(vendor.id)">
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-7 card-lable-style">
+                                {{location.name}}
+                            </div>
+
+                            <!-- Display icons which link to corresponding modals (tooltips are outer span tag) -->
+                            <div class="col-xs-3 edit-delete-buttons">
+                                <span data-toggle="tooltip" data-placement="left" title="Edit Market">
+                                <span class="edit-text glyphicon glyphicon-edit" data-toggle="modal" data-target="#marketModal" ng-click="editMarket(location)"></span>
+                                </span>
+                                <span data-toggle="tooltip" data-placement="left" title="Delete Market">
+                                <span class="edit-text glyphicon glyphicon-trash" ng-click="deleteLocation(location)" data-toggle="modal" data-target="TBA"></span>
+                                </span>
+                            </div> 
+
+
+                        </div>
+
+                        <div class="location-details seller-location-details">
+                            <p><b>LOCATION:</b>
+                                {{location.address.addr_line1}},
+                                {{location.address.city}}, 
+                                {{location.address.state}}, 
+                                {{location.address.zipcode}}
+                            </p>
+                            <p ng-show="DateService.showDateString(location)"><b>DATES:</b>
+                                {{location.recurrences.text | capitalize}} from {{location.real_start | date:"MMMM d'"}}
+                                <span ng-show="location.recurrences.end_date"> to {{location.recurrences.end_date | date:"MMMM d'"}}</span>
+                            </p>
+                            <span ng-show="DateService.showOpenString(location)">
+                                <b>OPEN</b>
+                            </span>
+                            <span ng-show="DateService.showReopeningString(location)">
+                                <b>REOPENING FOR THE SEASON <span style="color: black">ON</span></b>
+                            </span>                                                          
+                            <span ng-show="DateService.showThisWeekString(location)">
+                                <b><span ng-show="location.recurrences && location.address.hours.length != 0"> THIS WEEK:</span></b>
+                            </span>
+                            <span ng-hide="DateService.hideTheWeekOfContainer(location)">
+                                <b><span ng-show="DateService.showTheWeekOfString(location)">THE WEEK OF {{DateService.getMonday(DateService.initDate(location.recurrences.next)) | date:"MMMM d'" | uppercase}} TO {{DateService.addDays(DateService.getMonday(DateService.initDate(location.recurrences.next)), 6) | date:"MMMM d'" | uppercase}}:</span></b>
+                            </span>
+                            <div ng-show="DateService.showClosedForTheSeasonString(location)">
+                                <b>CLOSED FOR THE SEASON</b>
+                            </div>
+                            <div ng-hide="DateService.hideWeekdayContainer(location)">
+                                <ul class="list-inline store-hours">&nbsp
+                                    <li ng-repeat="day in location.address.hours">
+                                        <span ng-hide="DateService.hideWeekday(location, day)"><b>{{weekdays[day.weekday - 1]}}</b>: {{day.from_hour}} - {{day.to_hour}}</span>
+                                    </li>
+                                </ul> 
+                            </div>
+                           <p class="indent-after-first-line"><b>DETAILS:<br></b>
+                                 {{location.description}}
+                            </p>
+                        </div>    
+                    </div>
+                </div>            
+            </div>
+        </div>      
     </div>
+</div>
+
+<!-- Add Market Modal  -->
+<div class="modal fade" id="marketModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header edit-location-modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 ng-hide="isEditingLocation" class="modal-title">Add New Location<br /><small>Please complete the following fields to add a new location</small></h4>
+                <h4 ng-show="isEditingLocation" class="modal-title">Edit Location<br /><small>Please change any of the fields below to update an existing location</small></h4>      
+            </div>
+            <div class="modal-body edit-location-modal-body">  
+                <div class="container-fluid">                                
+                    <form role="form" name="locationForm" novalidate>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.imageField.$invalid }">
+                                    <label ng-hide="isEditingItem" for="market-image">Add Image</label>
+                                    <label ng-show="isEditingItem" for="market-image">Change Image</label><br />
+                                    <img ng-show="displayMarketThumbnail" src="#" id="itemPreview" />
+                                    <input onchange="angular.element(this).scope().fileNameChanged(this.files)" name="imageField" type="file" id="market-image">
+                                    <p ng-show="marketImageError != null" class="help-block"><small style="color: #a94442;" >{{marketImageError}}</small></p>                                      
+                                </div>
+                               
+                            </div>
+                        </div>                    
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationField.$invalid }">
+                                    <label class="control-label">Location Name</label>
+                                    <input required ng-model="locationName" type="text" name="locationField" class="form-control" id="item-name" placeholder="Location Name" maxlength="35"/>
+                                    <span class="error pull-right" ng-show="newLocationSubmitted && locationForm.locationField.$invalid">
+                                        The location's name is required.
+                                    </span>
+                                </div>
+                            </div>                       
+                        </div>
+                        <!-- Regular Hour Options -->
+                        <div ng-hide="locationType">
+                            <label>Hours:</label>
+                            <div class="well">
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-4"> 
+                                        <label>
+                                            <span class="hidden-mobile">Days You are Open:</span>
+                                            <span class="show-mobile">Weekday:</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-xs-4 col-sm-3 week-padding"> 
+                                        <label>
+                                            <span class="hidden-mobile">Opening Time:</span>
+                                            <span class="show-mobile">Open:</span>
+                                        </label>
+                                    </div>  
+                                    <div class="col-xs-4 col-sm-3 week-padding"> 
+                                        <label>
+                                            <span class="hidden-mobile">Closing Time:</span>
+                                            <span class="show-mobile">Close:</span>
+                                        </label>
+                                    </div>                                                              
+                                </div>
+                                <div ng-repeat="day in locationHours" class="row">
+                                    <ng-form name="hoursForm">                                
+                                        <div class="col-sm-6 col-xs-4">                              
+                                            <div class="checkbox">
+                                              <label>
+                                                <input name="day{{$index}}Check" ng-model="day.checked" type="checkbox">
+                                                    <span class="hidden-mobile">{{day.day}}</span>
+                                                    <span class="show-mobile">{{day.day | limitTo: 3}}</span>
+                                              </label>
+                                            </div>
+                                        </div>
+                                        <div ng-show="day.checked" class="col-xs-4 col-sm-3  week-padding">
+                                            <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.openHours.$invalid}">
+                                                <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.from_hour" name="openHours" bs-timepicker>
+                                            </div>
+                                        </div>
+                                        <div ng-show="day.checked" class="col-xs-4 col-sm-3  week-padding">
+                                            <div class="form-group hours-picker" ng-class="{'has-error': newLocationSubmitted && hoursForm.closeHours.$invalid}">
+                                                <input ng-required="day.checked" type="text" class="form-control" size="8" ng-model="day.to_hour" name="closeHours" bs-timepicker>
+                                            </div>
+                                        </div> 
+                                        <div ng-hide="day.checked" class="col-xs-8 col-md-6 closed-container">
+                                            <p class="closed-string">Closed</p>
+                                        </div>
+                                    </ng-form>                                        
+                                </div>
+                            </div>
+                        </div>                        
+                        <div ng-hide="locationType">
+                            <label>Repeat:</label>
+                            <div class="well">
+                                <ng-form name="recurrenceForm">                                       
+                                    <div class="row">
+                                        <div class="col-sm-4 col-xs-6">
+                                              <div class="form-group" ng-class="{ 'has-error' : (recurrenceForm.addressText.$invalid ) && newLocationSubmitted }">
+                                                <label class="control-label">Repeats:</label>
+                                                <select ng-model="recurrenceFrequency" id="frequencyPicker" class="form-control">
+                                                    <option value="2">Weekly</option>
+                                                    <option value="1">Monthly</option>
+                                                    <option value="0">Yearly</option>
+                                                </select>
+                                              </div>
+                                        </div>                                                                                               
+                                        <div class="col-sm-4  col-xs-6">
+                                              <div class="form-group" ng-class="{ 'has-error' : (recurrenceForm.addressText.$invalid ) && newLocationSubmitted }">
+                                                  <label class="control-label">Repeats Every:</label>
+                                                  <div>
+                                                  <select style="width:auto; display:inline; margin-right: 5px;" ng-model="recurrenceInterval" id="internvalPicker" class="form-control ">
+                                                      <option ng-repeat="a in range(10) track by $index" value="{{$index+1}}">{{$index + 1}}</option>
+                                                  </select>
+                                                  <span ng-show="recurrenceFrequency == 2">week<span ng-show="recurrenceInterval != 1">s</span></span>
+                                                  <span ng-show="recurrenceFrequency == 1">month<span ng-show="recurrenceInterval != 1">s</span></span>
+                                                  <span ng-show="recurrenceFrequency == 0">year<span ng-show="recurrenceInterval != 1">s</span></span>  
+                                                  </div>
+                                              </div>
+                                        </div>                                                 
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                              <label>Start Date:</label>                      
+                                              <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && recurrenceForm.recurrenceStartDateField.$invalid }">
+                                                <input required type="text" name="recurrenceStartDateField" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="recurrenceStartDate" is-open="startOpened" close-text="Close" />
+                                                <span class="input-group-btn">
+                                                  <button class="btn btn-default" ng-click="openStart($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                </span>                       
+                                              </div>
+                                            </div>                               
+                                        </div>                                             
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <label>End Date:</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <input type="radio" name="endDateOptions" value="never" ng-model="repeatUntil" /> Never
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-3 col-sm-2" style="padding-right: 0px; padding-top: 6px;">
+                                            <input type="radio" name="endDateOptions" value="endDate" ng-model="repeatUntil" /> On
+                                        </div>
+                                        <div class="form-group col-xs-9 col-sm-10"> 
+                                              <div class="input-group" ng-class="{ 'has-error' : newLocationSubmitted && recurrenceForm.recurrenceStartDateField.$invalid }">
+                                                    <input ng-disabled="repeatUntil === 'never'" required type="text" name="recurrenceStartDateField" class="form-control date-picker cursor-default" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="recurrenceEndDate" is-open="endOpened" close-text="Close" />
+                                                    <span class="input-group-btn">
+                                                        <button ng-disabled="repeatUntil === 'never'" class="btn btn-default" ng-click="openEnd($event)">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </button>
+                                                    </span>                       
+                                              </div>
+                                        </div>
+                                    </div>                                            
+                                </ng-form>                                        
+                            </div>
+                        </div>                                                       
+                        <div class="row">
+                            <div class="col-xs-12">
+                                  <div class="form-group" ng-class="{ 'has-error' : (locationForm.addressText.$invalid ) && newLocationSubmitted }">
+                                    <label class="control-label">Address</label>
+                                    <input id="address-typeahead" type="text" autocomplete="off" name="addressText" typeahead="result.formatted_address for result in getLocation($viewValue)" typeahead-on-select="makeSelection($item)" class="form-control" ng-model="addressSearchText" placeholder="Search for an Address" required>
+                                    <span class="error pull-right" ng-show="newLocationSubmitted && locationForm.addressText.$invalid">
+                                        {{addressErrorString}}.
+                                    </span>
+                                  </div>
+                            </div>                                                                                               
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group" ng-class="{'has-error': newLocationSubmitted && locationForm.websiteField.$invalid}">
+                                    <label class="control-label">Website</label>
+                                    <input type="text" ng-model="website" class="form-control" id="item-name" name="websiteField" placeholder="Optional Website" maxlength="100"/>
+                                </div>
+                            </div>                                                                   
+                        </div>                        
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group no-bottom-margin" ng-class="{ 'has-error' : newLocationSubmitted && locationForm.locationDescriptionField.$invalid }">
+                                    <label class="control-label">Location Details</label>
+                                    <textarea ng-model="locationDescription" type="text" required name="locationDescriptionField" class="form-control" placeholder="Description about this market." maxlength="600"/>
+
+                                </div>
+                            </div>                        
+                        </div>                                                          
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer no-top-margin">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" ng-click="newLocationSubmit()" class="beLocal-btn-filled btn">{{submitLocationButtonText}}</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>

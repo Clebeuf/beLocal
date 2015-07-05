@@ -26,7 +26,12 @@ angular.module('clientApp')
         'Friday',
         'Saturday',
         'Sunday'
-    ];  
+    ];
+
+    // Go to the market details page for a specific market
+    $scope.displayMarket = function (id) {
+      $location.path('market/details/'+id);
+    };      
 
     $scope.range = function(n) {
         return new Array(n);

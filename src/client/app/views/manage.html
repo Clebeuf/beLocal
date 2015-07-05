@@ -49,11 +49,11 @@
                             <!-- Display the locations name -->
                             <div class="col-sm-2">
                               <div class="vendor-image-container">
-                                <div class="vendor-images pointer" style="background-image:url({{location.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;" ng-click="displayVendor(vendor.id)">
+                                <div class="vendor-images pointer" style="background-image:url({{location.photo.image_url}}); background-size: cover; background-repeat: no-repeat; background-position: center;" ng-click="displayMarket(location.id)">
                                 </div>
                               </div>
                             </div>
-                            <div class="col-xs-7 card-lable-style">
+                            <div class="col-xs-7 card-lable-style pointer" ng-click="displayMarket(location.id)">
                                 {{location.name}}
                             </div>
 

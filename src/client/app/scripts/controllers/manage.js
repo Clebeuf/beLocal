@@ -405,11 +405,14 @@ angular.module('clientApp')
 
     // Delete a location on the server, and also set the warning banner with the ability to undo this deletion if necessary
     $scope.deleteLocation = function(location) {
-        StateService.trashMarket(location.id).then(function() {
-            StateService.getMarkets().then(function() {
-                $scope.marketList = StateService.getMarketList();
-            });           
-        });  
+        var shouldDeleteMarket = confirm("Are you sure you want to delete this market?");
+        if(shouldDeleteMarket == true) {
+            StateService.trashMarket(location.id).then(function() {
+                StateService.getMarkets().then(function() {
+                    $scope.marketList = StateService.getMarketList();
+                });           
+            });
+        }
     }    
 
     // Called when an market image changes (i.e. when a new image is selected using the image picker)
